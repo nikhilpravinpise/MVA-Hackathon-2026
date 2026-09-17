@@ -1,0 +1,616 @@
+/* ── Color and themes ── */
+:root {
+  font-size: 17px;
+  --c-heading:     #0a4f6e;
+  --c-text:        #3a4f60;
+  --c-text-soft:   #4a6070;
+  --c-text-muted:  #3d6070;
+  --c-caption:     #4a6272;
+  --c-link:        #0d7fa5;
+  --c-bg-card:     #f0f6fa;
+  --c-bg-alt:      #ffffff;
+  --c-border:      #c8dfe8;
+  --c-border-soft: #d0e8f0;
+  --c-fmt-bg:      #e4f0f6;
+  --c-fmt-text:    #3a5060;
+  --c-tip-bg:      #1a2b3c;
+  --c-tip-fg:      #ffffff;
+  /* prize cards */
+  --c-gold-bg: #fef9e7;   --c-gold-br: #f5c842;  --c-gold-tx: #7a5a00;
+  --c-silver-bg: #f4f6f7; --c-silver-br: #b0bec5; --c-silver-tx: #37474f;
+  --c-bronze-bg: #fdf0e8; --c-bronze-br: #e0926a; --c-bronze-tx: #7a3a10;
+  --c-special-bg: #edf6f0; --c-special-br: #5cb88a; --c-special-tx: #1a5c38;
+}
+.dark {
+  --c-heading:     #7cc8e0;
+  --c-text:        #b0cede;
+  --c-text-soft:   #8aaabb;
+  --c-text-muted:  #6a8898;
+  --c-caption:     #4a6878;
+  --c-link:        #4ab8d4;
+  --c-bg-card:     #1a2d3e;
+  --c-bg-alt:      #162030;
+  --c-border:      #2a4558;
+  --c-border-soft: #223548;
+  --c-fmt-bg:      #1a3448;
+  --c-fmt-text:    #7a9aaa;
+  --c-tip-bg:      #e8f0f6;
+  --c-tip-fg:      #1a2b3c;
+  --c-gold-bg: #2a2010;    --c-gold-br: #906020;   --c-gold-tx: #d0a840;
+  --c-silver-bg: #1e2830;  --c-silver-br: #506070;  --c-silver-tx: #90aaba;
+  --c-bronze-bg: #2a1a10;  --c-bronze-br: #905040;  --c-bronze-tx: #b08060;
+  --c-special-bg: #10201a; --c-special-br: #306850;  --c-special-tx: #60b880;
+}
+body, .gradio-container, button, input, select, textarea, table, th, td, p, h1, h2, h3, h4, li {
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+/* ── Hero ── */
+.challenge-hero {
+  background: linear-gradient(135deg, #0a4f6e 0%, #0d7fa5 60%, #12a89d 100%);
+  border-radius: 12px;
+  color: #fff !important;
+  padding: 2.5rem 2rem 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.challenge-hero h1 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin: 0.5rem 0 0.75rem;
+  font-family: 'DM Sans', sans-serif !important;
+  color: #fff !important;
+}
+.challenge-hero p {
+  color: rgba(255,255,255,0.88) !important;
+  font-size: 1rem;
+  max-width: 700px;
+  margin: 0 auto 1.5rem;
+}
+.challenge-hero h3 { color: #fff !important; }
+.challenge-hero .badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 999px;
+  padding: 0.25rem 0.9rem;
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.04em;
+}
+/* ── Hero sponsor row ── */
+.sponsor-row {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+.sponsor-row-label {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.55) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.sponsor-row-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding: 1rem 2rem;
+  background: rgba(255,255,255,0.92);
+  border-radius: 10px;
+}
+.sponsor-row-logos img {
+  height: 42px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
+}
+.sponsor-logo-rounded { border-radius: 4px; }
+
+/* Login CTA */
+.login-cta { text-align: center; margin: 0 !important; padding: 0 !important; }
+#login-btn { margin-bottom: 1.5rem !important; }
+
+/* ── Tab navigation - centered ── */
+.tab-container {
+  justify-content: center !important;
+}
+
+/* ── Mark / highlight ── */
+mark {
+  background: #fff3b0;
+  color: #3a3000;
+  padding: 0.1em 0.25em;
+  border-radius: 3px;
+  font-style: normal;
+}
+.dark mark {
+  background: #4a3a00;
+  color: #ffe880;
+}
+
+/* ── Content layout ── */
+.container {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Sections ── */
+.section {
+  padding: 2.5rem 0;
+}
+main > .section:first-child {
+  padding-top: 1rem;
+}
+.section-alt {
+  background: var(--c-bg-alt);
+  border-radius: 8px;
+}
+.section-alt .container {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+.section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--c-heading);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #0d7fa5;
+  display: inline-block;
+}
+.section p, .section li {
+  color: var(--c-text);
+  font-size: 1rem;
+  margin-top: 0.6rem;
+}
+.section ul, .section ol {
+  padding-left: 1.4rem;
+  margin-top: 0.8rem;
+}
+.section li { margin-bottom: 0.4rem; }
+.section a { color: var(--c-link); text-decoration: none; }
+.section a:hover { text-decoration: underline; }
+
+/* ── Small note / disclaimer text ── */
+.note-small, .section .note-small {
+  font-size: 0.88rem;
+  color: var(--c-text-muted);
+  margin-top: 0.6rem;
+}
+
+/* ── Card grid ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+.info-card {
+  background: var(--c-bg-card);
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+}
+.quota-card {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+.info-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--c-heading);
+  margin-bottom: 0.3rem;
+  margin-top: 0;
+}
+.info-card p {
+  font-size: 0.9rem;
+  color: var(--c-text-soft);
+  margin: 0.3rem 0 0;
+}
+/* ── Track cards ── */
+.track-card { display: flex; flex-direction: column; gap: 0.5rem; }
+
+
+/* ── Story section ── */
+.story-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.story-text {
+  flex: 1 1 480px;
+  min-width: 280px;
+}
+.story-figure {
+  flex: 0 0 260px;
+  margin: 0;
+  text-align: center;
+}
+.story-drawing {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--c-border);
+  box-shadow: 0 2px 12px rgba(10, 79, 110, 0.1);
+}
+.story-figure figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--c-caption);
+}
+@media (max-width: 720px) {
+  .story-container { flex-direction: column; }
+  .story-figure { order: -1; flex: 0 0 auto; max-width: 220px; margin: 0 auto; }
+}
+
+/* ── Prize grid ── */
+.prize-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+.prize-card {
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.prize-place {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+.prize-amount {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+.prize-card.gold   { background: var(--c-gold-bg);   border-color: var(--c-gold-br);   color: var(--c-gold-tx); }
+.prize-card.silver { background: var(--c-silver-bg); border-color: var(--c-silver-br); color: var(--c-silver-tx); }
+.prize-card.bronze { background: var(--c-bronze-bg); border-color: var(--c-bronze-br); color: var(--c-bronze-tx); }
+.prize-card.special { background: var(--c-special-bg); border-color: var(--c-special-br); color: var(--c-special-tx); }
+
+/* ── Steps list ── */
+.steps {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 0;
+}
+.step-num {
+  min-width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d7fa5;
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.steps strong {
+  display: block;
+  color: var(--c-heading);
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+.steps p {
+  margin: 0;
+  color: var(--c-text-soft);
+  font-size: 0.95rem;
+}
+
+/* ── Sub-headings inside cards ── */
+.sub-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--c-heading);
+  margin: 1rem 0 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid var(--c-border);
+  display: block;
+}
+
+/* ── Judging criteria ── */
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+.criterion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--c-border-soft);
+}
+.criterion:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.criteria-stacked-bar {
+  display: flex;
+  height: 14px;
+  border-radius: 999px;
+  overflow: visible;
+  margin: 0.75rem 0 1rem;
+  gap: 2px;
+}
+.csb-seg {
+  flex: 0 0 var(--w);
+  background: var(--c);
+  position: relative;
+  cursor: default;
+  transition: filter 0.15s ease;
+}
+.criteria-stacked-bar > .csb-seg:first-child { border-radius: 999px 0 0 999px; }
+.criteria-stacked-bar > .csb-seg:last-child  { border-radius: 0 999px 999px 0; }
+.csb-seg:hover { filter: brightness(1.15); z-index: 1; }
+.csb-seg::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--c-tip-bg);
+  color: var(--c-tip-fg);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+}
+.csb-seg:hover::after { opacity: 1; }
+.criterion-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--c);
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.criterion-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--c-text);
+}
+.criterion-label strong { color: var(--c-heading); }
+.criterion-desc {
+  font-size: 0.83rem;
+  color: var(--c-text-muted);
+  margin: 0.1rem 0 0;
+}
+
+/* ── Track goal accent ── */
+.track-goal {
+  border-left: 3px solid #0d7fa5;
+  border-radius: 0 6px 6px 0;
+  background: var(--c-fmt-bg);
+  color: var(--c-text);
+  padding: 0.65rem 1rem;
+  margin: 0.5rem 0 0.9rem;
+  font-size: 0.95rem;
+}
+.track-goal strong { color: var(--c-heading); }
+
+/* ── Timeline table ── */
+.timeline-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+  color: var(--c-text);
+}
+.timeline-table th {
+  text-align: left;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  color: var(--c-heading);
+  border-bottom: 2px solid #0d7fa5;
+  background: transparent;
+}
+.timeline-table td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--c-border-soft);
+  vertical-align: top;
+}
+.timeline-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.timeline-table tbody tr:hover td {
+  background: var(--c-bg-card);
+}
+
+/* ── Back to top ── */
+.back-to-top-row { text-align: center; padding: 2.5rem 0 1rem; }
+.back-to-top {
+  display: inline-block !important;
+  padding: 0.55rem 1.6rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.92rem !important;
+  font-family: 'DM Sans', sans-serif !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  color: #0a4f6e !important;
+  border: 2px solid #0a4f6e !important;
+}
+.back-to-top:hover { background: #0a4f6e !important; color: #fff !important; }
+.back-to-top:visited { color: #0a4f6e !important; }
+
+/* ── FAQ Accordions ── */
+.faq-accordion {
+  background: var(--c-bg-card) !important;
+  border: 1px solid var(--c-border) !important;
+  border-left: 3px solid var(--c-link) !important;
+  border-radius: 10px !important;
+  margin-bottom: 0.55rem !important;
+  overflow: hidden;
+  box-shadow: none !important;
+}
+.faq-accordion .label-wrap {
+  padding: 0.2rem 0.4rem !important;
+}
+.faq-accordion button,
+.faq-accordion button span,
+.faq-accordion button p,
+.faq-accordion button div {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: var(--c-heading) !important;
+  font-family: 'DM Sans', sans-serif !important;
+}
+.faq-accordion .gap {
+  border-top: 1px solid var(--c-border-soft) !important;
+  padding: 0.85rem 1.1rem !important;
+}
+.faq-accordion .gap p,
+.faq-accordion .gap li {
+  color: var(--c-text) !important;
+  font-size: 0.95rem !important;
+}
+
+/* ── Overrides for markdown ── */
+.prose p, .prose li {
+  font-size: 1rem !important;
+  color: var(--c-text);
+}
+.prose h2 { font-size: 1.4rem !important; color: var(--c-heading); }
+.prose h3 { font-size: 1.1rem !important; color: var(--c-heading); }
+.prose h4 { font-size: 1rem !important; color: var(--c-heading); }
+
+
+/* ── Layout and legibility fixes ── */
+
+/* Hero was full-bleed while all content sits in a 1040px column. */
+.challenge-hero {
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 3rem 2rem 2.25rem;
+  border-radius: 16px;
+}
+
+/* Login button was rendering full viewport width (1856px on a 1920px screen). */
+#login-btn {
+  max-width: 320px !important;
+  width: 100% !important;
+  margin: 0.35rem auto 1.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  white-space: nowrap !important;
+  padding: 0.7rem 1.25rem !important;
+  font-size: 1rem !important;
+  line-height: 1.2 !important;
+}
+#login-btn * {
+  display: inline !important;
+  white-space: nowrap !important;
+}
+.login-cta p { font-size: 1.02rem !important; }
+
+/* The medical disclaimer previously reused .sponsor-row-label and inherited its
+   55% opacity. Uppercase and tracking are kept; contrast and leading are raised
+   so the line is actually readable. Own class so it no longer changes whenever
+   the sponsor label is restyled. */
+.hero-disclaimer {
+  display: block;
+  max-width: 700px;
+  margin: 1.35rem auto 0;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+/* Lift the sponsor panel off the gradient. */
+.sponsor-row-logos {
+  background: rgba(255, 255, 255, 0.96);
+  padding: 0.9rem 1.75rem;
+  gap: 1.75rem;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.18);
+}
+
+/* Gradio applies padding: 2px 8px to every anchor, which opens a visible gap
+   before the following comma or period. Reset it for body copy links, but keep
+   the back-to-top control, which is styled as a button. */
+.section a:not(.back-to-top),
+.prose a:not(.back-to-top) {
+  padding: 0 !important;
+}
+
+/* The family's decision reads as its own statement rather than a clause
+   buried at the end of the description. */
+.challenge-hero .hero-lede {
+  margin-top: 0.9rem !important;
+  margin-bottom: 1.25rem !important;
+  font-size: 1.02rem !important;
+  color: rgba(255, 255, 255, 0.96) !important;
+}
+
+/* Centered text stops working past about three lines: every line starts at a
+   different x-position, so the eye has to hunt for each one. The headline,
+   badge and status chip stay centered; the body copy does not. Desktop is
+   unaffected, where the paragraph caps at 700px and lands at three lines. */
+@media (max-width: 640px) {
+  .challenge-hero p,
+  .challenge-hero .hero-disclaimer {
+    text-align: left;
+  }
+}
+
+/* The Powered by AWS lockup is a 5.7:1 horizontal mark. The default 150px cap would
+   render it at about 26px tall beside 42px logos, so it gets a wider ceiling. */
+.sponsor-row-logos img.sponsor-logo-wide {
+  max-width: 250px;
+}
+
+/* Sponsor marks range from 1:1 to 6.15:1. With object-fit: contain, a tight max-width
+   makes wide wordmarks render shorter than square ones: Sage was showing 24px tall beside
+   42px logos. Normalise on a height at which every logo renders uncapped on one row. */
+.sponsor-row-logos {
+  gap: 1.5rem;
+}
+.sponsor-row-logos img {
+  height: 36px;
+  max-width: 280px;
+}
+
+.template-dl-btn {
+  width: auto !important;
+  flex: none !important;
+  padding: 12px !important;
+}

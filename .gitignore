@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Patient data - NEVER commit (gated dataset, deletion required post-hackathon)
+data/
+results/
+local_dev/
+
+# Secrets
+.env
+*.pem
+*.key
+
+# OS artifacts
+nul
+Thumbs.db
+.DS_Store
