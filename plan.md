@@ -28,9 +28,13 @@ Every load-bearing claim is tagged `[verified: <source>]` or `[assumption: <why>
   union of variants in rows with `epcr ≥ t` (`evaluation.py:162-186`). F=1.0 requires a threshold where the
   predicted set is exactly the two true variants (tp=2, fp=0, fn=0).
   **Consequence:** any junk row *at or above* the pair's epcr destroys F=1.0. Junk rows *below* it are free.
-- Max 10 rows; `epcr ∈ (0,1]`; `finding_type ∈ {primary, secondary}` (lowercased before check,
-  `evaluation.py:94-99`); `notes` ignored by scorer. `proband_id` must be `PROBAND01`
-  (`submit_track1.py:119-124`).
+- Max 10 rows **per proband** (`evaluation.py:104-105`); `epcr ∈ (0,1]` — `nan`/`inf` also rejected;
+  `finding_type ∈ {primary, secondary}` (lowercased before check, `evaluation.py:94-99`);
+  `notes` ignored by scorer. `proband_id` must be `PROBAND01` (`submit_track1.py:119-124`).
+- **Multi-proband footgun [verified empirically]:** `load_submission` groups rows by `proband_id` and
+  the app scores ONLY the first proband group encountered (`submit_track1.py:118-119`). A stray
+  non-`PROBAND01` row placed *first* gets the whole submission rejected; the same row placed *after*
+  your real rows is silently ignored. One proband per file, always.
 - Server-side filename becomes `model{N}_{filename}` where N = your per-user submission count
   (`submit_track1.py:167,192`) — that string shows in the leaderboard "Model" column, so the filename
   itself is write-up surface. Name it like a methods summary.
@@ -198,8 +202,9 @@ oracle vendored and parity test green; `git status` clean.
       demonstrates more data literacy than most submissions.
 
 **GATE 1:** `tests/test_data_integrity.py` green — asserts: contig set has no `chr` prefix; PGT/PID in
-FORMAT; variant count in expected WGS range; Ti/Tv in [1.9, 2.1]; all FILTER values enumerated; HPO list
-non-empty and all codes match `HP:\d{7}`; FASTQ read counts within 20% of expectation (when available).
+FORMAT; variant count in [3M, 7M] (WGS expectation, adjust bounds after EDA with justification logged);
+Ti/Tv in [1.9, 2.1]; all FILTER values enumerated; HPO list non-empty and all codes match `HP:\d{7}`;
+FASTQ read counts within 20% of expectation (when available).
 *Falsification: any assertion red = stop and explain the anomaly in `docs/decisions.md` before proceeding.*
 
 ### Phase 2 — The prioritization model (the thing judges grade)
@@ -223,7 +228,7 @@ N-of-1 diagnostics (Exomiser-class), not a trained black box. Two arms that must
    and X-linked models for completeness. Output = ranked *genotype hypotheses*, not variants —
    matches the submission format exactly (pair in one row).
 5. **Phenotype scoring** (`pheno.py`): HPO semantic similarity (resnik/lin over the HPO DAG via
-   `ontology` lib or Exomiser's phenodigm), plus gene→disease prior from OMIM/Orphanet/PanelApp.
+   `pyhpo` or Exomiser's phenodigm), plus gene→disease prior from OMIM/Orphanet/PanelApp.
 6. **Rank:** combine variant-damage + gene-phenotype + inheritance-fit into epcr; epcr is a *ranking
    artifact*, calibrated only by ordering — document that.
 
@@ -335,9 +340,10 @@ watch for proceedings). Ground in the MVA Society publications canon (deep dive 
       factual claim carries a primary-source citation; red-team pass by reading as a skeptical clinician.
 - [ ] Submit **once, last** (only the latest of 3 is reviewed) — after mock judging, before deadline.
 
-**GATE 7:** rubric self-score ≥ 85% with citations for every claim; scope check passes (all candidates
-market-approved); methods-xlsx T2 questions all answered incl. GenAI disclosure; video <3:00, uploaded,
-link verified; submitted as the final entry.
+**GATE 7:** each rubric criterion (35/25/25/15) has a written self-assessment ≥ 85% with justification;
+100% citation coverage on factual claims (script checks every quantitative/mechanistic sentence has a
+reference); scope check passes (all candidates market-approved); methods-xlsx T2 questions all answered
+incl. GenAI disclosure; video ≤ 3:00, uploaded, link verified; submitted as the final entry.
 
 ### Phase 8 — Close-out & the award surface
 
@@ -386,15 +392,25 @@ fragile = reported honestly.
 | perfect pair | row1=GT pair, epcr .95 | 100 / 1.000 | oracle wiring broken |
 | chr-prefix wrong | `CHR15` vs `chr15` | 0.0 / 0.000 | case-sensitivity trap |
 | no prefix | `15` vs `chr15` | 0.0 / 0.000 | coordinate-convention trap |
-| pos off-by-one | pos±1 | 0.0 | coordinate handling |
-| ref/alt swap | swapped alleles | 0.0 | allele handling |
-| one true variant | row={v1,junk} | 50 pts / F≤.5 | partial-credit path |
+| pos off-by-one, single | {v1 pos+1} alone | 0.0 / 0.000 | coordinate exactness |
+| pos off-by-one, paired | {v1pos+1, v2} | 50 pts / 0.500 | partial credit survives one corrupted allele — exactness tests must use single-variant rows |
+| ref/alt swap, single | {v1 swapped} alone | 0.0 / 0.000 | allele exactness |
+| one true variant | row={v1,junk} | 50 pts / 0.500 | partial-credit path |
 | pair split across rows | {v1}@0.95, {v2}@0.94, nothing else | 50 pts but **F=1.0** | union-at-threshold semantics: F-max ignores row structure; only rank points need the pair in ONE row — the Remek failure mode, and why clean unions still can't save you |
-| Remek reproduction | junk@0.96; {v1},{v2},+3 junk singles @0.95 | 25 pts, F=0.571 | exact replay of the leaderboard's 25/0.571 signature: partial at rank≤3 + union of 5 variants at t=0.95 (tp2/fp3) — proves we understand the scorer, not just the format |
+| Remek reproduction A | junk×3 @0.95, pair @0.90 | 25 pts / 0.571 | exact replay of the leaderboard's 25/0.571 signature: full match at rank 4 + union of 5 variants at t=0.90 (tp2/fp3) |
+| Remek reproduction B | junk@0.96; {v1}@0.95; {v2,j1}@0.90; {j2}@0.90 | 25 pts / 0.571 | same signature via never-paired rows — proves we understand the scorer, not just the format |
 | split-pair ordering | {v1}@0.95, {v2}@0.94, clean rows below | 50 pts, F=1.0 | junk BELOW the completing threshold can't hurt F — only junk at-or-above does |
+| degenerate pair | row={v1, v1} (same variant twice) | 50 pts / 0.667 | frozenset collapses duplicates → 1-variant row → partial only |
 | whitespace chrom | ` chr15 ` (spaces) | matches GT (strip only) | documents `.strip()`-but-no-uppercase asymmetry |
 | missing chrom_1 | blank primary | ValueError | required-field enforcement |
 | non-integer pos | `pos="abc"` | error raised | `int(pos)` contract |
+| epcr nan/inf | `nan`, `inf` | ValueError | range check catches non-finite |
+| epcr=1.0 | — | 100 / 1.000 | upper bound inclusive |
+| renamed header | `chrom1` not `chrom_1` | KeyError | exact column-name contract |
+| minimal header | only proband_id,chrom_1,pos_1,ref_1,alt_1,epcr | parses (50/0.667 for a single-variant row) | `*_2`,`finding_type`,`notes` are optional (`.get` defaults) but `epcr` is required — its absence is KeyError |
+| header-only CSV | no data rows | app rejects: "No valid rows" | empty submission contract |
+| extra proband rows | FAKE01 row before PROBAND01 | whole file rejected | app scores only first proband group — footgun |
+| extra proband rows after | FAKE01 row after real rows | silently ignored | per-proband grouping + 10-row cap |
 | F-max dilution | pair + 5 junk ALL @0.95 | 100 pts but F<1.0 | epcr-structure rule |
 | junk below top epcr | pair@0.95 + 9 junk@0.3 | 100 / 1.000 | our real CSV shape |
 | epcr=0, 1.0001, -x | — | ValueError | range check (0,1] |
@@ -454,7 +470,9 @@ Community check-in every ~3 days: discussions, rules changes, organizer announce
 
 ## 9. Verified-facts register (claim → source)
 
-- Scoring semantics, row cap, epcr range, chrom case sensitivity, sort order → `hackathon-app/evaluation.py`
+- Scoring semantics, row cap, epcr range, chrom case sensitivity, sort order → `hackathon-app/evaluation.py`;
+  **every expected score in §6 re-verified by executing the vendored scorer on fixture CSVs** (2026-09-17),
+  including both Remek-signature reproductions and the multi-proband footgun
 - Submission requirements (GitHub/report/CSV), `model{N}_` naming, PROBAND01 check → `tabs/submit_track1.py`
 - Track 2 latest-only rule, video requirement → `tabs/submit_track2.py`, `tabs/faq.py`
 - Best-per-team grouping + earliest-tie-break sort → `utils.py:180-202`
