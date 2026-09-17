@@ -127,8 +127,9 @@ hackathon's own scoring code published in the public Space — attribute and lin
 
 ## 3. Compute & environment budget
 
-Local machine [verified: this host]: Ryzen 7 260 (8C/16T), ~24 GB RAM, RTX 5050 4 GB, 751 GB free on C:,
-Docker Desktop 29.6 + WSL2, Python 3.12 venv with `huggingface_hub`+`hf_transfer`.
+Local machine [verified: this host via WMI + `nvidia-smi`, 2026-09-17]: Ryzen 7 260 (8C/16T), 24 GB RAM,
+RTX 5050 Laptop GPU (8 GB), ~750 GB free on C:, Docker Desktop (engine 29.6) + WSL2, Python 3.12 venv
+with `huggingface_hub`+`hf_transfer`.
 
 | Job | Where | Estimate | Notes |
 |---|---|---|---|
@@ -138,7 +139,7 @@ Docker Desktop 29.6 + WSL2, Python 3.12 venv with `huggingface_hub`+`hf_transfer
 | VEP 116 offline annotation, ~5M variants | local Docker/WSL | 4-12 h | cache ~20-30 GB; two-pass: prefilter → annotate candidates |
 | Exomiser genome mode | local JVM | hours; -Xmx12-16G, `PASS_ONLY` fallback to 4 GB [verified: Exomiser docs] | data dir ~50-100 GB |
 | bwa-mem2 realign 404M read pairs | local 16T **or** cloud spot | ~12-24 h local; ~3-4 h on 64-vCPU spot (~few $) | decision point after download; both paths scripted |
-| Annotation DBs (VEP cache, dbNSFP 5.3.1, gnomAD v4.1, ClinVar, Exomiser data, ref fasta) | local disk | ~60-100 GB total, one-time downloads | fits comfortably in 751 GB free |
+| Annotation DBs (VEP cache, dbNSFP 5.3.1, gnomAD v4.1, ClinVar, Exomiser data, ref fasta) | local disk | ~60-100 GB total, one-time downloads | fits comfortably in ~750 GB free |
 | DeepVariant 1.10 WGS | cloud spot or overnight local | ~2 h on 96 vCPU [verified: DV metrics]; ~10-14 h on 16T | `--regions` for locus-only runs in minutes |
 | DeepVariant BUB1B locus only | local | <1 h | the cheap high-value run |
 | CNV/SV calling (Manta/CNVpytor) on our BAM | local | hours | differentiator: VCF is SNV/indel only |
@@ -407,11 +408,11 @@ fragile = reported honestly.
 | epcr nan/inf | `nan`, `inf` | ValueError | range check catches non-finite |
 | epcr=1.0 | — | 100 / 1.000 | upper bound inclusive |
 | renamed header | `chrom1` not `chrom_1` | KeyError | exact column-name contract |
-| minimal header | only proband_id,chrom_1,pos_1,ref_1,alt_1,epcr | parses (50/0.667 for a single-variant row) | `*_2`,`finding_type`,`notes` are optional (`.get` defaults) but `epcr` is required — its absence is KeyError |
+| minimal header | only proband_id,chrom_1,pos_1,ref_1,alt_1,epcr | parses (50/0.667 when the single variant is a true one; a junk singleton parses too but scores 0/0) | `*_2`,`finding_type`,`notes` are optional (`.get` defaults) but `epcr` is required — its absence is KeyError |
 | header-only CSV | no data rows | app rejects: "No valid rows" | empty submission contract |
 | extra proband rows | FAKE01 row before PROBAND01 | whole file rejected | app scores only first proband group — footgun |
 | extra proband rows after | FAKE01 row after real rows | silently ignored | per-proband grouping + 10-row cap |
-| F-max dilution | pair + 5 junk ALL @0.95 | 100 pts but F<1.0 | epcr-structure rule |
+| F-max dilution | pair listed first, then 5 junk ALL @0.95 | 100 pts but F<1.0 | epcr-structure rule; pair must be first among the tied rows (file-order tie-break, `evaluation.py:107`) - listed last it would sit at rank 6 → only 10 pts |
 | junk below top epcr | pair@0.95 + 9 junk@0.3 | 100 / 1.000 | our real CSV shape |
 | epcr=0, 1.0001, -x | — | ValueError | range check (0,1] |
 | 11 rows | — | ValueError | row cap |
@@ -480,6 +481,9 @@ Community check-in every ~3 days: discussions, rules changes, organizer announce
 - Methods xlsx question inventory incl. required GenAI disclosure → `static/templates/methods_description_form.xlsx`
 - Judging rubric 35/25/25/15, timeline, prizes → `tabs/about.py`, `tabs/rules.py`
 - Leaderboard live state (122 rows / 116 perfect) → Gradio API pull, 2026-09-17
+- Host specs → WMI/CIM + `nvidia-smi` on this machine, 2026-09-17: Ryzen 7 260 (8C/16T), 24 GB RAM,
+  **RTX 5050 *Laptop* GPU with 8 GB** (corrected from "4 GB"), ~750 GB free, Docker engine 29.6.2 via the
+  `docker-desktop` WSL2 distro, `.venv` Python 3.12.13 with `huggingface_hub` 1.31 + `hf_transfer`
 - VEP 116 current, plugins incl. AlphaMissense/SpliceAI/dbNSFP 5.3.1 → Ensembl release notes
 - DeepVariant v1.10.0, ~2h WGS @96 vCPU, `--regions` support → github.com/google/deepvariant
 - Exomiser genome-mode ~12-16 GB RAM, `PASS_ONLY` fallback, ~50-100 GB data → exomiser.readthedocs.io
