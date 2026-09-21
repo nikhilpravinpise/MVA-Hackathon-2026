@@ -1,8 +1,8 @@
 # MVA Hackathon 2026 — Execution Plan
 
-**Status date:** 2026-09-17 · **Deadline:** 2026-10-24 23:59 UTC (T-minus ~37 days) · **Winners:** ~Nov 25
+**Status date:** 2026-09-18 (exhaustive re-audit pass) · **Deadline:** 2026-10-24 23:59 UTC (T-minus ~36 days) · **Winners:** ~Nov 25
 **Ground truth sources:** `docs/DEEP_DIVE.md`, vendored app source in `hackathon-app/`, live leaderboard
-(pulled 2026-09-17: **122 rows, 116 at 100.0/1.000** — tie-break is earliest submission, so Track 1 rank is
+(re-pulled 2026-09-18: **122 rows, 116 at 100.0/1.000** - tie-break is earliest submission, so Track 1 rank is
 locked; differentiation is the methods write-up + Track 2).
 
 This plan is written against the *actual scorer source* (`hackathon-app/evaluation.py`,
@@ -31,13 +31,14 @@ Every load-bearing claim is tagged `[verified: <source>]` or `[assumption: <why>
 - Max 10 rows **per proband** (`evaluation.py:104-105`); `epcr ∈ (0,1]` — `nan`/`inf` also rejected;
   `finding_type ∈ {primary, secondary}` (lowercased before check, `evaluation.py:94-99`);
   `notes` ignored by scorer. `proband_id` must be `PROBAND01` (`submit_track1.py:119-124`).
-- **Multi-proband footgun [verified empirically]:** `load_submission` groups rows by `proband_id` and
-  the app scores ONLY the first proband group encountered (`submit_track1.py:118-119`). A stray
-  non-`PROBAND01` row placed *first* gets the whole submission rejected; the same row placed *after*
-  your real rows is silently ignored. One proband per file, always.
-- Server-side filename becomes `model{N}_{filename}` where N = your per-user submission count
-  (`submit_track1.py:167,192`) — that string shows in the leaderboard "Model" column, so the filename
-  itself is write-up surface. Name it like a methods summary.
+- **Multi-proband footgun [verified empirically]:** `load_submission` groups rows by `proband_id`
+  (whitespace-stripped, so ` PROBAND01 ` still matches) and the app scores ONLY the first proband
+  group encountered (`submit_track1.py:118-119`). A stray non-`PROBAND01` row placed *first* gets the
+  whole submission rejected; a stray group placed *after* your real rows is ignored for scoring but
+  still parsed and capped - >10 rows in it still fails the file. One proband per file, always.
+- Server-side filename becomes `model{N}_{filename}` where N = this submission's 1-based index
+  (prior per-user count + 1) (`submit_track1.py:167,192`) - that string shows in the leaderboard
+  "Model" column, so the filename itself is write-up surface. Name it like a methods summary.
 - Leaderboard groups by `display_name`, keeps best `(rank_points, f_max)`, sorts ties by earliest
   `submitted_at` (`utils.py:180-202`). All 6 quota are per-HF-user; teammates' quotas group under an
   identical team name.
@@ -63,7 +64,7 @@ methods write-up "counts just as much" and "Track 2 is where the biggest unmet n
 ### 1.3 The answer we are NOT allowed to assume
 
 Leaderboard forensics + the leaked participant Space point to a **BUB1B compound-het pair in trans**;
-leading hypothesis {chr15:40,209,701 T>G (p.Leu737Ter, nonsense) + chr15:40,220,612 T>G (missense)} on
+leading hypothesis {chr15:40,209,701 T>G (p.Leu737Ter, nonsense) + chr15:40,220,612 T>G (p.Asn1002Lys, missense)} on
 MANE Select ENST00000287598.11 / NM_001211.6 [verified: Ensembl 115, ClinGen], alternate involves
 40,216,470 A>G (deep intronic). **This is intelligence, not ground truth.** The leaked Space contains
 LLM-fabricated claims (deep dive §9a). Rule: the pipeline output is the submission; forensics only set
@@ -118,8 +119,10 @@ hackathon's own scoring code published in the public Space — attribute and lin
   state containing genotypes, prompts/logs with pasted variant blocks, fine-tuned models on raw genome.
 - Publication rule: a handful of *named* variants in the report = a finding; genome-scale genotype
   tables = prohibited derived data (deep dive §9a — the leaked Space crossed this line).
-- LLM use: commercial/API tier only, no-training terms; a running `docs/llm_log.md` records
-  provider/tier/data-handling per session so the required GenAI disclosure writes itself
+- LLM use: commercial/API tier only, no-training terms - organizer-endorsed (discussion #21,
+  resolved 2026-09-15: consumer tier acceptable only if its terms are verifiable, API/commercial
+  recommended otherwise); a running `docs/llm_log.md` records provider/tier/data-handling per
+  session so the required GenAI disclosure writes itself
   (methods xlsx Q: "(required)" — verified in `methods_description_form.xlsx` shared strings).
 - No recontact of family/MVA Society; no resharing data; WCG IRB protocol #20252010 governs.
 
@@ -133,7 +136,7 @@ with `huggingface_hub`+`hf_transfer`.
 
 | Job | Where | Estimate | Notes |
 |---|---|---|---|
-| Download VCF+docx (~330 MB) | local | minutes | first; FASTQs (~85 GB) download in background via `hf_transfer` |
+| Download VCF+docx (~315 MB) | local | minutes | first; FASTQs (~85 GB) download in background via `hf_transfer` |
 | Download FASTQs (~85 GB) | local | ~30-60 min at 25-50 MB/s | 100-150 GB free required — we have it |
 | VCF QC (bcftools stats, mosdepth on VCF) | local | minutes | |
 | VEP 116 offline annotation, ~5M variants | local Docker/WSL | 4-12 h | cache ~20-30 GB; two-pass: prefilter → annotate candidates |
@@ -144,15 +147,21 @@ with `huggingface_hub`+`hf_transfer`.
 | DeepVariant BUB1B locus only | local | <1 h | the cheap high-value run |
 | CNV/SV calling (Manta/CNVpytor) on our BAM | local | hours | differentiator: VCF is SNV/indel only |
 
-Fallback cloud: AWS spot (aligns with sponsor), one `c6i.16xlarge`-class box for alignment+calling.
-Total expected spend: **< $50**. Every job's runtime+RAM+cost logged into `docs/runtime_log.md` —
-the methods form explicitly asks for it (xlsx Q: "estimate of run time and cost").
+Cloud burst: **Modal** is the default for all public-stand-in work (per-second billing, L4
+$0.80/h, $30/mo free credit, Volumes 1 TiB free - the dev workload plausibly fits the free tier)
+[verified: modal.com rate card + security docs, 2026-09-17; DeepVariant `make_examples` shards
+map cleanly onto Modal `.map()`, `call_variants` caps at 1 GPU]. **AWS spot** (sponsor infra,
+`c6i.16xlarge`-class) is reserved for proband-data jobs pending the attestation read - deep dive
+§11c. Total expected spend: **< $50**. Every job's runtime+RAM+cost logged into
+`docs/runtime_log.md` - the methods form explicitly asks for it (xlsx Q: "estimate of run time
+and cost").
 
 Repo layout:
 
 ```
-plan.md  docs/  hackathon-app/(reference)  src/{vcf_qc,triage,genes,pheno,prioritize,phasing,submit,track2}
-scorer/evaluation.py (vendored oracle)  tests/  data/ (GITIGNORED — patient data)  results/  env/
+docs/plan.md  docs/  hackathon-app/(reference)  src/{vcf_qc,triage,genes,pheno,prioritize,phasing,submit,track2}
+scorer/evaluation.py (vendored oracle)  tests/  tools/ (plan-audit scripts, already present)
+data/ (GITIGNORED - patient data)  results/  env/
 ```
 
 `data/` and `results/` carry a `RETENTION.md` manifest listing every file + keep/delete tag.
@@ -168,6 +177,9 @@ self-attestation. "Done" means the gate script is green.
 
 - [ ] HF account; request gated dataset access (form: institution-any, ~12 attestations; approval is
       the long pole — **submit today**). Register with a valid email; each member registers individually.
+- [ ] Read the attestation text for infrastructure/processor restrictions BEFORE patient data touches
+      third-party compute (the Modal-vs-AWS call hangs on this - deep dive §11c; if ambiguous, ask in
+      Discussions - a public answer helps everyone).
 - [ ] Decide ONE exact `display_name` string; record in `docs/team.md`. Mixed/absent team names create
       duplicate leaderboard entries (deep dive §3 — happened to Fernandosr85).
 - [ ] Create GitHub repo (private OK until Oct 24); push scaffold + this plan; first commit = clean
@@ -256,6 +268,8 @@ cis/trans is the documented community blocker (deep dive §7, discussion #22). W
 - [ ] Parse PGT/PID read-backed phasing fields → local phase sets; chain the two candidate alleles
       through intervening heterozygotes (candidates are ~4-11 kb apart — beyond read length but inside
       phase blocks; paired-end insert size + PID chains + LD via common hets is the honest mechanism).
+      External reference datasets are explicitly sanctioned if needed (organizer, discussion #22 -
+      All of Us Controlled Tier named as an option; fallback only, PGT/PID stays primary).
 - [ ] Re-align: bwa-mem2 → sorted BAM (full genome, or minimally all BUB1B-region reads + a 10% genome
       sample for coverage stats). `samtools view` the locus; IGV/screenshot reads supporting each allele;
       show no read/pair carries both alts = in-trans evidence; check for a shared read carrying ref at
@@ -288,7 +302,12 @@ justification; primary pair carries full ACMG criteria table in the report.
 ### Phase 5 — Submission engineering & the adversarial harness
 
 - [ ] `submit.py` builds the CSV: row 1 = the pair, `chr`-prefixed, highest epcr (0.95); secondary
-      rows below at strictly lower epcr; ≤10 rows.
+      rows below at strictly lower epcr; ≤10 rows. Writer contract (verified against the parse
+      path): emit **ASCII / UTF-8 *without* BOM** (`utf-8`, never `utf-8-sig` - a BOM makes the
+      first header `\ufeffproband_id` → `KeyError` → whole file rejected; "CSV UTF-8" Excel
+      exports carry BOM - generate programmatically, never via Excel); no trailing comma-only
+      lines (a `,,,,,,,,,,,` line parses to empty fields → `ValueError`, while fully-blank lines
+      are skipped); LF or CRLF both fine.
 - [ ] `tests/test_csv_contract.py` + `tests/test_adversarial.py` run the vendored oracle over a fixture
       battery (see §6). Required outcome on our real CSV: **rank_points 100.0, f_max 1.000, full match
       at rank 1** — locally, before upload.
@@ -301,6 +320,9 @@ justification; primary pair carries full ACMG criteria table in the report.
 behaves as specified; leaderboard shows the expected entry under the exact team name.
 
 ### Phase 6 — Track 1 write-up (submitted WITH the CSV)
+
+- [ ] Write `docs/report_map.md` - explicit mapping of every methods-xlsx question to the report
+      section that answers it (the GATE-6 checklist artifact).
 
 Answers every methods-xlsx question (13 T1 questions verified from `methods_description_form.xlsx`
 shared strings), including required GenAI disclosure. Contents: pipeline diagram; funnel table
@@ -332,9 +354,11 @@ watch for proceedings). Ground in the MVA Society publications canon (deep dive 
       center); senomorphics/mTOR (rapamycin); aneuploid-cell selective vulnerability (proteotoxic/energy
       stress: HSP90 inhibition, autophagy/AMPK axis); cancer interception/surveillance strategy given
       prior rhabdomyosarcoma.
-- [ ] **Testability matrix:** map each shortlisted candidate to the MVA Society's funded C. elegans
-      MVA repurposing screen (deep dive §7) — readout, feasibility, expected effect. Aligning to their
-      existing pipeline is a direct Impact+Scalability play.
+- [ ] **Testability matrix:** map each shortlisted candidate across ALL FOUR MVA Society funded
+      programs [verified: mvasociety.org/our-research-projects, 2026-09-17 - deep dive §11d] -
+      worm screen (functional rescue), patient fibroblasts (direct aneuploidy-rate readout),
+      scRNA-seq (signature reversal), supplements channel - with readout, feasibility, and expected
+      effect per program. Aligning to their actual lab portfolio is a direct Impact+Scalability play.
 - [ ] Pediatric dosing/safety section; explicit "hypothesis, not medical advice" framing.
 - [ ] Report + 3-min video (script→record→caption; video is judged too) + judge notes field.
 - [ ] Mock-judge: score our own draft against the 35/25/25/15 rubric with evidence-per-claim; every
@@ -350,8 +374,12 @@ incl. GenAI disclosure; video ≤ 3:00, uploaded, link verified; submitted as th
 
 - [ ] Public repo checklist: README (what/why/reproduce), LICENSE, env lockfiles, one-command demo that
       runs the pipeline on PUBLIC data (HG002 or synthetic — never patient data), `docs/` with methods.
-- [ ] Community/innovation artifact: family-facing plain-language explainer of the findings + the open
-      N-of-1 pipeline as a reusable tool (this is the $2k+$2k award play).
+- [ ] Community/innovation artifacts (the $2k+$2k award play - "exceptional creativity, community
+      impact, or patient-centered design", rules.py §9; menu in deep dive §11d):
+      (a) the pipeline as a public HF Space - HPO list + public VCF (HG002/synthetic) → ranked
+      genotype hypotheses + phasing evidence; reusable N-of-1 tooling with zero patient data;
+      (b) family-facing plain-language explainer offered to the MVA Society Information Hub;
+      (c) the answer-blind protocol packaged as a reusable template for future N-of-1 teams.
 - [ ] Post-Oct-24 runbook: repo public; delete all `data/` + derived genotype-scale files everywhere
       (local, cloud, caches, notebook state, prompt logs); email confirmation to
       RarediseaserealkidMVAhackathon2026@synapse.org — if it bounces (unregistered-sender rejection
@@ -404,6 +432,7 @@ fragile = reported honestly.
 | degenerate pair | row={v1, v1} (same variant twice) | 50 pts / 0.667 | frozenset collapses duplicates → 1-variant row → partial only |
 | whitespace chrom | ` chr15 ` (spaces) | matches GT (strip only) | documents `.strip()`-but-no-uppercase asymmetry |
 | missing chrom_1 | blank primary | ValueError | required-field enforcement |
+| empty ref_1/alt_1 | blank alleles | parses, scores 0/0 | only chrom+pos gate a variant's existence - empty alleles yield a real (non-matching) variant, not an error |
 | non-integer pos | `pos="abc"` | error raised | `int(pos)` contract |
 | epcr nan/inf | `nan`, `inf` | ValueError | range check catches non-finite |
 | epcr=1.0 | — | 100 / 1.000 | upper bound inclusive |
@@ -415,11 +444,23 @@ fragile = reported honestly.
 | F-max dilution | pair listed first, then 5 junk ALL @0.95 | 100 pts but F<1.0 | epcr-structure rule; pair must be first among the tied rows (file-order tie-break, `evaluation.py:107`) - listed last it would sit at rank 6 → only 10 pts |
 | junk below top epcr | pair@0.95 + 9 junk@0.3 | 100 / 1.000 | our real CSV shape |
 | epcr=0, 1.0001, -x | — | ValueError | range check (0,1] |
+| 10 rows exactly | pair+8 filler within cap | parses (boundary) | cap is strictly >10 |
 | 11 rows | — | ValueError | row cap |
 | `finding_type=X` | invalid | ValueError | enum check |
-| `SECONDARY` uppercase | — | accepted (lowercased) | normalization |
+| `SECONDARY` uppercase | finding_type='SECONDARY' | accepted (lowercased) | normalization; empty/missing `finding_type` silently defaults to `primary` |
 | blank chrom_2 fields | — | parses, 1-variant row | optional-field handling |
-| unsorted input | low-epcr pair listed last | still scored by epcr | sort behavior |
+| unsorted input | low-epcr pair listed last | still scored by epcr | sort is silent - the module docstring promises a "will warn" for unsorted files but no warning exists in code |
+| UTF-8 BOM prefix | `\xEF\xBB\xBF` + valid CSV | `KeyError: 'proband_id'` - whole file rejected | **the Excel footgun**: "CSV UTF-8" exports carry BOM; writer must emit `utf-8` not `utf-8-sig` (generate the CSV in `submit.py`, never via Excel) |
+| cp1252-only byte | `0xE9` byte in notes | `UnicodeDecodeError` under server UTF-8 locale (decodes silently under Windows cp1252 - local/prod divergence, run oracle checks with `PYTHONUTF8=1`) | writer emits ASCII-only |
+| trailing comma-only line | pair + `,,,,,,,,,,,` | `ValueError` (empty pid) - whole file rejected | DictReader skips only FULLY blank lines; a comma line parses to empty fields |
+| chrom_1 whitespace-only | `" "` | parses to empty-chrom variant, silent 0/0 | `not chrom` is checked BEFORE `.strip()` - whitespace-only != blank |
+| pos=-1 | negative coordinate | parses, silent 0/0 | no position range check exists |
+| chrom_2 set, pos_2 blank | secondary chrom only | silently a 1-variant row | `_parse_variant` needs chrom AND pos; orphan fields ignored |
+| `proband01` lowercase | case-variant pid | app-level reject | proband_id is case-sensitive after `.strip()` |
+| finding_type padded | `" SECONDARY "` | accepted | `.strip().lower()` handles whitespace+case |
+| extra column | 13th header col | tolerated | DictReader exposes extras; scorer ignores them |
+| shuffled columns | permuted header | parses fine | DictReader maps by name, order-independent |
+| CRLF + blank trailing line | Windows line endings / `\n\n` | parses fine | `newline=""` + blank-line skip |
 | proband_id≠PROBAND01 | — | app-level reject | proband check |
 | GT-wiring guard | monkeypatched GT | known scores | we're testing our fixtures, not the real key |
 | funnel monotonic | stage outputs | counts non-increasing, ⊆ | funnel bugs |
@@ -453,11 +494,11 @@ submit the pipeline's top answer anyway (with confidence stated) — the write-u
 
 ---
 
-## 8. Timeline (37 days, deadline Oct 24 23:59 UTC)
+## 8. Timeline (36 days from status date, deadline Oct 24 23:59 UTC)
 
 | Window | Work |
 |---|---|
-| Sep 17-20 | Phase 0 (access request OUT today) + Phase 1 on stand-ins; harness + oracle + tests built |
+| Sep 17-20 | Phase 0 (access request submitted day 1) + Phase 1 on stand-ins; harness + oracle + tests built |
 | Sep 20-27 | Phase 2 both arms on spike-in + proband (when access lands); Phase 3 phasing + realignment |
 | Sep 27-Oct 1 | Gates 2-4 green → **Track 1 submission #1** (~Oct 1); methods report v1 |
 | Oct 1-15 | Track 2 mechanism→drug pipeline, evidence tiers, testability matrix; report draft; video |
@@ -472,23 +513,65 @@ Community check-in every ~3 days: discussions, rules changes, organizer announce
 ## 9. Verified-facts register (claim → source)
 
 - Scoring semantics, row cap, epcr range, chrom case sensitivity, sort order → `hackathon-app/evaluation.py`;
-  **every expected score in §6 re-verified by executing the vendored scorer on fixture CSVs** (2026-09-17),
-  including both Remek-signature reproductions and the multi-proband footgun
+  **every expected score in §6 re-verified by executing the vendored scorer on fixture CSVs**
+  (57 fixtures incl. byte-level cases, all green 2026-09-18), including both Remek-signature
+  reproductions and the multi-proband footgun
 - Submission requirements (GitHub/report/CSV), `model{N}_` naming, PROBAND01 check → `tabs/submit_track1.py`
 - Track 2 latest-only rule, video requirement → `tabs/submit_track2.py`, `tabs/faq.py`
 - Best-per-team grouping + earliest-tie-break sort → `utils.py:180-202`
 - GT format + dataset names → `groundtruth.py`, `config.py`
 - Methods xlsx question inventory incl. required GenAI disclosure → `static/templates/methods_description_form.xlsx`
 - Judging rubric 35/25/25/15, timeline, prizes → `tabs/about.py`, `tabs/rules.py`
-- Leaderboard live state (122 rows / 116 perfect) → Gradio API pull, 2026-09-17
+- Leaderboard live state (122 rows / 116 perfect) → Gradio API pull, 2026-09-17; re-pulled
+  2026-09-18, unchanged: Arcadia Nexus = 116th perfect (submitted 2026-09-17 03:28); mateooSM's
+  displayed best flipped to `model4_..._T_G_A_C` - a SECOND failed-pair row, both hypotheses still
+  live (deep dive §11a)
+- Discussion resolutions → HF API, 2026-09-17: #21 consumer LLM tier (API/commercial recommended if
+  terms unverifiable - endorses our doctrine); #22 external datasets explicitly allowed (All of Us
+  named, cloud-compute costs contemplated); #23 closed with canned reply, leaked Space still live.
+  **All 22 discussions re-pulled and every attributed claim re-verified verbatim 2026-09-18**
+  (#2 Processor test, #5 market-approved, #7 quota 1→3, #15 bounce+manual-logging, #16
+  no-institution, #17 GRCh38+VCF-header, #19 retract+refund, #20 still unanswered)
+- Modal compute feasibility + governance → modal.com pricing + security docs, 2026-09-17
+  (deep dive §11c): Modal default for public-stand-in work; proband-data jobs gated on attestations
+- MVA Society 4-program portfolio (worm screen, fibroblasts, scRNA-seq, supplements) →
+  mvasociety.org/our-research-projects, 2026-09-17 (deep dive §11d)
 - Host specs → WMI/CIM + `nvidia-smi` on this machine, 2026-09-17: Ryzen 7 260 (8C/16T), 24 GB RAM,
   **RTX 5050 *Laptop* GPU with 8 GB** (corrected from "4 GB"), ~750 GB free, Docker engine 29.6.2 via the
   `docker-desktop` WSL2 distro, `.venv` Python 3.12.13 with `huggingface_hub` 1.31 + `hf_transfer`
-- VEP 116 current, plugins incl. AlphaMissense/SpliceAI/dbNSFP 5.3.1 → Ensembl release notes
-- DeepVariant v1.10.0, ~2h WGS @96 vCPU, `--regions` support → github.com/google/deepvariant
-- Exomiser genome-mode ~12-16 GB RAM, `PASS_ONLY` fallback, ~50-100 GB data → exomiser.readthedocs.io
+- VEP 116.x current (release 116 June 2026; 116.1 Aug 2026), plugins incl. dbNSFP 5.3.1 →
+  github.com/Ensembl/ensembl-vep releases, 2026-09-17
+- DeepVariant v1.10.0, ~2h WGS @96 vCPU, `--regions` support; `call_variants` caps at 1 GPU + 4-8 CPU
+  → github.com/google/deepvariant
+- Exomiser genome-mode ~12 GB RAM @4.4M variants, `PASS_ONLY` analysisMode → ~4 GB
+  → exomiser.readthedocs.io (input_files_and_options), re-verified 2026-09-17
 - ACMG SF **v3.3** current (84 genes; June 2025) → GIM 2025;101454 — supersedes deep dive's "v3.2"
-- BUB1B MANE Select ENST00000287598.11 / NM_001211.6 → Ensembl 115 / ClinGen
+- BUB1B MANE Select ENST00000287598.11 / NM_001211.6 → Ensembl 115 / ClinGen; **all three leaked
+  candidate consequences re-confirmed via live Ensembl REST VEP 2026-09-18**: 40,209,701 T>G =
+  stop_gained p.Leu737Ter (tTa→tGa), 40,220,612 T>G = missense p.Asn1002Lys, 40,216,470 A>G =
+  intron_variant; GRCh38 REF at 40,209,701 = T; NM_001211.6 = MANE RefSeq mate (xref lookup)
+- Reproducible audit tooling → `tools/audit_scorer_fixtures.py` (57-fixture scorer battery
+  incl. byte-level cases run under `-X utf8` to emulate the server locale; exit-code gated)
+  and `tools/check_citations.py` (full reference graph: file.py:line citations, deep-dive §N
+  refs, bare .py names classified exists/planned/external, docs/*.md deliverables)
+- Dataset file inventory + sizes → public HF API `/tree/main`, 2026-09-18: exactly 8 FASTQs
+  (S16_L001-L004 x R1/R2, ~10.2-11.0 GB each, 84.7 GB total - rules' "~85 GB" exact), VCF.gz
+  315 MB + .tbi, `Challenge_Clinical_Phenotype_1.docx`, sample ID WGS_EX2312012_HGWCNDSX7
+- Exhaustive re-audit 2026-09-18: scorer battery re-run (all pass; battery since grown to 57), incl. new
+  boundary cases: 10-row boundary, empty ref/alt silently parses to non-matching variant,
+  FAKE01-group >10 rows still fails whole file, stale "will warn" docstring noted); all
+  file:line citations re-checked; rules/about dates re-confirmed (Oct 24 23:59 UTC, winners
+  Nov 25, judging Oct 24-Nov 24); pyhpo 4.0.0 on PyPI; GIAB no-alt FASTA URL live (200);
+  DV WGS measured 1h09m on 96 vCPU (plan's "~2h" is conservative). Loop-2 (same day):
+  every vendored file read end-to-end (config/groundtruth/submit_t1/submit_t2/utils/faq/rules/
+  about/leaderboard/app/templates/PROVENANCE); dataset inventory + sizes verified via public
+  HF API; MVA conference + speaker list verified; citation checker extended to full reference
+  graph (section refs, bare filenames, docs/*.md, planned-vs-existing classification). Loop-3
+  (same day): scorer parse path probed beyond the table - 12 new edge cases verified incl.
+  UTF-8 BOM rejection (KeyError on `\ufeffproband_id`), cp1252 bytes rejected server-side
+  (UnicodeDecodeError under UTF-8 locale vs silent decode on Windows - oracle byte-checks run
+  under `-X utf8`), trailing comma-line rejection, whitespace-only chrom parsing to
+  empty-chrom variant, pos=-1 silent acceptance; writer contract added to Phase 5
 - Dataset contents, GRCh38 confirmation, PGT/PID, AF semantics, deletion/email rules, leaked-data
   forensics, Track-2 scope, community intel → `docs/DEEP_DIVE.md` (participant-reported items flagged)
 
