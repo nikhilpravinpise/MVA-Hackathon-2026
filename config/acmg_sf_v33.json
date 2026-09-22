@@ -1,0 +1,1228 @@
+{
+ "list_version": "ACMG SF v3.3",
+ "source": "ClinGen Secondary Findings Resource Download (docs.google.com/spreadsheets/d/1ecSUe0bJ-2gAMXBsrf5U1wMEDOmiIjtR_A5388uj7HY), ACMG SF v3.3 List tab",
+ "publication": "PMID 40568962, GIM 2025;27(8):101454",
+ "n_genes": 84,
+ "genes": {
+  "ABCD1": {
+   "gene_mim": "300371",
+   "conditions": [
+    {
+     "disease": "X-linked adrenoleukodystrophy",
+     "disease_mim": "300100",
+     "category": "Metabolic",
+     "moi": "XL",
+     "sf_version": "3.3",
+     "variants_to_report": "All hemi or homozygous P and LP or 2 het. P/LP variants"
+    }
+   ]
+  },
+  "ACTA2": {
+   "gene_mim": "102620",
+   "conditions": [
+    {
+     "disease": "Familial thoracic aortic aneurysm",
+     "disease_mim": "611788",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "ACTC1": {
+   "gene_mim": "102540",
+   "conditions": [
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "612098",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "ACVRL1": {
+   "gene_mim": "601284",
+   "conditions": [
+    {
+     "disease": "Hereditary hemorrhagic telangiectasia",
+     "disease_mim": "600376",
+     "category": "Other",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "APC": {
+   "gene_mim": "611731",
+   "conditions": [
+    {
+     "disease": "Familial adenomatous polyposis",
+     "disease_mim": "175100",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "APOB": {
+   "gene_mim": "107730",
+   "conditions": [
+    {
+     "disease": "Familial hypercholesterolemia",
+     "disease_mim": "144010",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "ATP7B": {
+   "gene_mim": "606882",
+   "conditions": [
+    {
+     "disease": "Wilson disease",
+     "disease_mim": "277900",
+     "category": "Other",
+     "moi": "AR",
+     "sf_version": "2",
+     "variants_to_report": "P and LP (2 variants)"
+    }
+   ]
+  },
+  "BAG3": {
+   "gene_mim": "603883",
+   "conditions": [
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "613881",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Myofibrillar myopathy",
+     "disease_mim": "612954",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "BMPR1A": {
+   "gene_mim": "601299",
+   "conditions": [
+    {
+     "disease": "Juvenile polyposis syndrome",
+     "disease_mim": "174900",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "BRCA1": {
+   "gene_mim": "113705",
+   "conditions": [
+    {
+     "disease": "Hereditary breast and ovarian cancer",
+     "disease_mim": "604370",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "BRCA2": {
+   "gene_mim": "600185",
+   "conditions": [
+    {
+     "disease": "Hereditary breast and ovarian cancer",
+     "disease_mim": "612555",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "BTD": {
+   "gene_mim": "609019",
+   "conditions": [
+    {
+     "disease": "Biotinidase deficiency",
+     "disease_mim": "253260",
+     "category": "Metabolic",
+     "moi": "AR",
+     "sf_version": "3",
+     "variants_to_report": "P and LP (2 variants)"
+    }
+   ]
+  },
+  "CACNA1S": {
+   "gene_mim": "114208",
+   "conditions": [
+    {
+     "disease": "Malignant hyperthermia",
+     "disease_mim": "601887",
+     "category": "Other",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "CALM1": {
+   "gene_mim": "114180",
+   "conditions": [
+    {
+     "disease": "Long-QT syndrome type 14",
+     "disease_mim": "616247",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.2",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Catecholaminergic polymorphic ventricular tachycardia",
+     "disease_mim": "614916",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.2",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "CALM2": {
+   "gene_mim": "114182",
+   "conditions": [
+    {
+     "disease": "Long-QT syndrome type 15",
+     "disease_mim": "616249",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.2",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Catecholaminergic polymorphic ventricular tachycardia",
+     "disease_mim": "616249",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.2",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "CALM3": {
+   "gene_mim": "114183",
+   "conditions": [
+    {
+     "disease": "Long-QT syndrome type 16",
+     "disease_mim": "618782",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.2",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Catecholaminergic polymorphic ventricular tachycardia",
+     "disease_mim": "618782",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.2",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "CASQ2": {
+   "gene_mim": "114251",
+   "conditions": [
+    {
+     "disease": "Catecholaminergic polymorphic ventricular tachycardia",
+     "disease_mim": "611938",
+     "category": "Cardiovascular",
+     "moi": "AR",
+     "sf_version": "3",
+     "variants_to_report": "P and LP (2 variants)"
+    }
+   ]
+  },
+  "COL3A1": {
+   "gene_mim": "120180",
+   "conditions": [
+    {
+     "disease": "Ehlers-Danlos syndrome, vascular type",
+     "disease_mim": "130050",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "CYP27A1": {
+   "gene_mim": "213700",
+   "conditions": [
+    {
+     "disease": "Cerebrotendinous xanthomatosis",
+     "disease_mim": "213700",
+     "category": "Metabolic",
+     "moi": "AR",
+     "sf_version": "3.3",
+     "variants_to_report": "P and LP (2 variants)"
+    }
+   ]
+  },
+  "DES": {
+   "gene_mim": "125660",
+   "conditions": [
+    {
+     "disease": "Dliated cardiomyopathy",
+     "disease_mim": "604765",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Myofibrillar myopathy",
+     "disease_mim": "601419",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "DSC2": {
+   "gene_mim": "125645",
+   "conditions": [
+    {
+     "disease": "Arrhythmogenic right ventricular cardiomyopathy",
+     "disease_mim": "610476",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "DSG2": {
+   "gene_mim": "125671",
+   "conditions": [
+    {
+     "disease": "Arrhythmogenic right ventricular cardiomyopathy",
+     "disease_mim": "610193",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "DSP": {
+   "gene_mim": "125647",
+   "conditions": [
+    {
+     "disease": "Arrhythmogenic right ventricular cardiomyopathy",
+     "disease_mim": "607450",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "615821",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "ENG": {
+   "gene_mim": "131195",
+   "conditions": [
+    {
+     "disease": "Hereditary hemorrhagic telangiectasia",
+     "disease_mim": "187300",
+     "category": "Other",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "FBN1": {
+   "gene_mim": "134797",
+   "conditions": [
+    {
+     "disease": "Marfan syndrome",
+     "disease_mim": "154700",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "FLNC": {
+   "gene_mim": "102565",
+   "conditions": [
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "617047",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Myofibrillar myopathy",
+     "disease_mim": "609524",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "GAA": {
+   "gene_mim": "606800",
+   "conditions": [
+    {
+     "disease": "Pompe disease",
+     "disease_mim": "232300",
+     "category": "Metabolic",
+     "moi": "AR",
+     "sf_version": "3",
+     "variants_to_report": "P and LP (2 variants)"
+    }
+   ]
+  },
+  "GLA": {
+   "gene_mim": "300644",
+   "conditions": [
+    {
+     "disease": "Fabry disease",
+     "disease_mim": "301500",
+     "category": "Cardiovascular\n Metabolic",
+     "moi": "XL",
+     "sf_version": "1",
+     "variants_to_report": "All hemi, het, homozygous P and LP"
+    }
+   ]
+  },
+  "HFE": {
+   "gene_mim": "613609",
+   "conditions": [
+    {
+     "disease": "Hereditary hemochromatosis (c.845G>A; p.C282Y homozygotes only)",
+     "disease_mim": "235200",
+     "category": "Other",
+     "moi": "AR",
+     "sf_version": "3",
+     "variants_to_report": "p.C282Y homozygotes only"
+    }
+   ]
+  },
+  "HNF1A": {
+   "gene_mim": "142410",
+   "conditions": [
+    {
+     "disease": "Maturity-Onset of Diabetes of the Young",
+     "disease_mim": "600496",
+     "category": "Other",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "KCNH2": {
+   "gene_mim": "152427",
+   "conditions": [
+    {
+     "disease": "Long-QT syndrome type 2",
+     "disease_mim": "613688",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "KCNQ1": {
+   "gene_mim": "607542",
+   "conditions": [
+    {
+     "disease": "Long-QT syndrome type 1",
+     "disease_mim": "192500",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "LDLR": {
+   "gene_mim": "606945",
+   "conditions": [
+    {
+     "disease": "Familial hypercholesterolemia",
+     "disease_mim": "143890",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "LMNA": {
+   "gene_mim": "150330",
+   "conditions": [
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "115200",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MAX": {
+   "gene_mim": "154950",
+   "conditions": [
+    {
+     "disease": "Hereditary paraganglioma-pheochromocytoma syndrome",
+     "disease_mim": "171300",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MEN1": {
+   "gene_mim": "613733",
+   "conditions": [
+    {
+     "disease": "Multiple endocrine neoplasia type 1",
+     "disease_mim": "131100",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MLH1": {
+   "gene_mim": "120436",
+   "conditions": [
+    {
+     "disease": "Lynch syndrome",
+     "disease_mim": "609310",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MSH2": {
+   "gene_mim": "609309",
+   "conditions": [
+    {
+     "disease": "Lynch syndrome",
+     "disease_mim": "120435",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MSH6": {
+   "gene_mim": "600678",
+   "conditions": [
+    {
+     "disease": "Lynch syndrome",
+     "disease_mim": "614350",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MUTYH": {
+   "gene_mim": "604933",
+   "conditions": [
+    {
+     "disease": "MUTYH-associated polyposis",
+     "disease_mim": "608456",
+     "category": "Cancer",
+     "moi": "AR",
+     "sf_version": "1",
+     "variants_to_report": "P and LP (2 variants)"
+    }
+   ]
+  },
+  "MYBPC3": {
+   "gene_mim": "600958",
+   "conditions": [
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "115197",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MYH11": {
+   "gene_mim": "160745",
+   "conditions": [
+    {
+     "disease": "Familial thoracic aortic aneurysm",
+     "disease_mim": "132900",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MYH7": {
+   "gene_mim": "160760",
+   "conditions": [
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "192600",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "613426",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MYL2": {
+   "gene_mim": "160781",
+   "conditions": [
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "608758",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "MYL3": {
+   "gene_mim": "160790",
+   "conditions": [
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "608751",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "NF2": {
+   "gene_mim": "607379",
+   "conditions": [
+    {
+     "disease": "NF2-related schwannomatosis",
+     "disease_mim": "101000",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "OTC": {
+   "gene_mim": "300461",
+   "conditions": [
+    {
+     "disease": "Ornithine transcarbamylase deficiency",
+     "disease_mim": "311250",
+     "category": "Metabolic",
+     "moi": "XL",
+     "sf_version": "2",
+     "variants_to_report": "All hemi, het, homozygous P and LP"
+    }
+   ]
+  },
+  "PALB2": {
+   "gene_mim": "610355",
+   "conditions": [
+    {
+     "disease": "Hereditary breast cancer",
+     "disease_mim": "114480",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "PCSK9": {
+   "gene_mim": "607786",
+   "conditions": [
+    {
+     "disease": "Familial hypercholesterolemia",
+     "disease_mim": "603776",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "PKP2": {
+   "gene_mim": "602861",
+   "conditions": [
+    {
+     "disease": "Arrhythmogenic right ventricular cardiomyopathy",
+     "disease_mim": "609040",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "PLN": {
+   "gene_mim": "172405",
+   "conditions": [
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "609909",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "PMS2": {
+   "gene_mim": "600259",
+   "conditions": [
+    {
+     "disease": "Lynch syndrome",
+     "disease_mim": "614337",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "PRKAG2": {
+   "gene_mim": "602743",
+   "conditions": [
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "600858",
+     "category": "Cardiovascular\n Metabolic",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "PTEN": {
+   "gene_mim": "601728",
+   "conditions": [
+    {
+     "disease": "PTEN hamartoma tumor syndrome",
+     "disease_mim": "158350",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "RB1": {
+   "gene_mim": "614041",
+   "conditions": [
+    {
+     "disease": "Retinoblastoma",
+     "disease_mim": "180200",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "RBM20": {
+   "gene_mim": "613171",
+   "conditions": [
+    {
+     "disease": "Dliated cardiomyopathy",
+     "disease_mim": "613172",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "RET": {
+   "gene_mim": "164761",
+   "conditions": [
+    {
+     "disease": "Familial medullary thyroid cancer",
+     "disease_mim": "155240",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Multiple endocrine neoplasia type 2A",
+     "disease_mim": "171400",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Multiple endocrine neoplasia type 2B",
+     "disease_mim": "162300",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "RPE65": {
+   "gene_mim": "180069",
+   "conditions": [
+    {
+     "disease": "RPE65-related retinopathy",
+     "disease_mim": "",
+     "category": "Other",
+     "moi": "AR",
+     "sf_version": "3",
+     "variants_to_report": "P and LP (2 variants)"
+    }
+   ]
+  },
+  "RYR1": {
+   "gene_mim": "180901",
+   "conditions": [
+    {
+     "disease": "Malignant hyperthermia",
+     "disease_mim": "145600",
+     "category": "Other",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "RYR2": {
+   "gene_mim": "180902",
+   "conditions": [
+    {
+     "disease": "Catecholaminergic polymorphic ventricular tachycardia",
+     "disease_mim": "604772",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "SCN5A": {
+   "gene_mim": "600163",
+   "conditions": [
+    {
+     "disease": "Long QT syndrome type 3",
+     "disease_mim": "603830",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Brugada syndrome",
+     "disease_mim": "601144",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "601154",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "SDHAF2": {
+   "gene_mim": "613019",
+   "conditions": [
+    {
+     "disease": "Hereditary paraganglioma-pheochromocytoma syndrome",
+     "disease_mim": "601650",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "SDHB": {
+   "gene_mim": "185470",
+   "conditions": [
+    {
+     "disease": "Hereditary paraganglioma-pheochromocytoma syndrome",
+     "disease_mim": "",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "SDHC": {
+   "gene_mim": "602413",
+   "conditions": [
+    {
+     "disease": "Hereditary paraganglioma-pheochromocytoma syndrome",
+     "disease_mim": "605373",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "SDHD": {
+   "gene_mim": "602690",
+   "conditions": [
+    {
+     "disease": "Hereditary paraganglioma-pheochromocytoma syndrome",
+     "disease_mim": "",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "SMAD3": {
+   "gene_mim": "603109",
+   "conditions": [
+    {
+     "disease": "Loeys-Dietz syndrome",
+     "disease_mim": "613795",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "SMAD4": {
+   "gene_mim": "600993",
+   "conditions": [
+    {
+     "disease": "Juvenile polyposis syndrome",
+     "disease_mim": "174900",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Hereditary hemorrhagic telangiectasia",
+     "disease_mim": "175050",
+     "category": "Other",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "STK11": {
+   "gene_mim": "602216",
+   "conditions": [
+    {
+     "disease": "Peutz-Jeghers syndrome",
+     "disease_mim": "175200",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TGFBR1": {
+   "gene_mim": "190181",
+   "conditions": [
+    {
+     "disease": "Loeys-Dietz syndrome",
+     "disease_mim": "609192",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TGFBR2": {
+   "gene_mim": "190182",
+   "conditions": [
+    {
+     "disease": "Loeys-Dietz syndrome",
+     "disease_mim": "610168",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TMEM127": {
+   "gene_mim": "613403",
+   "conditions": [
+    {
+     "disease": "Hereditary paraganglioma-pheochromocytoma syndrome",
+     "disease_mim": "171300",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TMEM43": {
+   "gene_mim": "612048",
+   "conditions": [
+    {
+     "disease": "Arrhythmogenic right ventricular cardiomyopathy",
+     "disease_mim": "604400",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TNNC1": {
+   "gene_mim": "191040",
+   "conditions": [
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "611879",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3.1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TNNI3": {
+   "gene_mim": "191044",
+   "conditions": [
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "613690",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TNNT2": {
+   "gene_mim": "191045",
+   "conditions": [
+    {
+     "disease": "Dilated cardiomyopathy",
+     "disease_mim": "601494",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "115195",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TP53": {
+   "gene_mim": "191170",
+   "conditions": [
+    {
+     "disease": "Li-Fraumeni syndrome",
+     "disease_mim": "151623",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TPM1": {
+   "gene_mim": "191010",
+   "conditions": [
+    {
+     "disease": "Hypertrophic cardiomyopathy",
+     "disease_mim": "115196",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TRDN": {
+   "gene_mim": "603283",
+   "conditions": [
+    {
+     "disease": "Catecholaminergic polymorphic ventricular tachycardia",
+     "disease_mim": "615441",
+     "category": "Cardiovascular",
+     "moi": "AR",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    },
+    {
+     "disease": "Long QT syndrome",
+     "disease_mim": "",
+     "category": "Cardiovascular",
+     "moi": "AR",
+     "sf_version": "3",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TSC1": {
+   "gene_mim": "605284",
+   "conditions": [
+    {
+     "disease": "Tuberous sclerosis complex",
+     "disease_mim": "191100",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TSC2": {
+   "gene_mim": "191092",
+   "conditions": [
+    {
+     "disease": "Tuberous sclerosis complex",
+     "disease_mim": "613254",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "TTN": {
+   "gene_mim": "188840",
+   "conditions": [
+    {
+     "disease": "Dilated cardiomyopathy (truncating variants only)",
+     "disease_mim": "604145",
+     "category": "Cardiovascular",
+     "moi": "AD",
+     "sf_version": "3",
+     "variants_to_report": "P and LP (truncating variants only)"
+    }
+   ]
+  },
+  "TTR": {
+   "gene_mim": "176300",
+   "conditions": [
+    {
+     "disease": "Hereditary transthyretin-related amyloidosis",
+     "disease_mim": "105210",
+     "category": "Other",
+     "moi": "AD",
+     "sf_version": "3.1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "VHL": {
+   "gene_mim": "608537",
+   "conditions": [
+    {
+     "disease": "Von Hippel-Lindau syndrome",
+     "disease_mim": "193300",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  },
+  "WT1": {
+   "gene_mim": "607102",
+   "conditions": [
+    {
+     "disease": "WT1-related Wilms tumor",
+     "disease_mim": "194070",
+     "category": "Cancer",
+     "moi": "AD",
+     "sf_version": "1",
+     "variants_to_report": "All P and LP"
+    }
+   ]
+  }
+ }
+}

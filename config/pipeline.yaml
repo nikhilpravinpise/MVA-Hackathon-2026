@@ -1,0 +1,114 @@
+# pipeline.yaml - FROZEN funnel configuration.
+#
+# Decision-freeze artifact (plan.md section 2.1.1): this file is committed to git
+# BEFORE the proband VCF is queried for the final call. Any post-freeze edit
+# requires a logged justification in docs/decisions.md with timestamp + reason.
+#
+# Every threshold below is a-priori. Sensitivity analysis over the AF grid is
+# reported in the write-up; it does not change these frozen values.
+
+meta:
+  config_version: "1.0.0"
+  frozen_at: "2026-09-22"
+  description: "Arm-B triage funnel: rarity -> consequence -> inheritance -> phenotype -> epcr"
+
+genotype_qc:
+  # Per-sample genotype sanity for candidate eligibility.
+  min_dp: 10            # min read depth at site
+  min_gq: 20            # min genotype quality
+  het_vaf_min: 0.20     # het allele-fraction window (ADR/(ADR+ADR_ref) or AF field)
+  het_vaf_max: 0.80
+  hom_vaf_min: 0.80     # hom-alt call needs >= this fraction
+  filters_allowed: ["PASS"]   # only PASS (or '.') variants are candidates
+
+rarity:
+  # pop-max AF = max over gnomAD exomes + genomes (all available subpop AFs).
+  af_max: 0.0001        # <=1e-4 = rare tier
+  absent_is_stronger: true   # variant absent from gnomAD gets a bonus vs present-but-rare
+  absent_bonus: 0.5     # added to rarity score when AF absent entirely
+  af_grid: [0.00001, 0.0001, 0.001]   # sensitivity grid (report, don't tune)
+
+consequence:
+  # VEP Sequence Ontology terms grouped into consequence tiers.
+  lof_terms:            # predicted loss-of-function (PVS1-class candidates)
+    - transcript_ablation
+    - splice_acceptor_variant
+    - splice_donor_variant
+    - stop_gained
+    - frameshift_variant
+    - stop_lost
+    - start_lost
+    - initiator_codon_variant
+    - transcript_amplification
+  missense_terms:
+    - missense_variant
+    - inframe_deletion
+    - inframe_insertion
+    - protein_altering_variant
+  splice_region_terms:
+    - splice_donor_5th_base_variant
+    - splice_region_variant
+    - splice_donor_region_variant
+    - splice_polypyrimidine_tract_variant
+  synonymous_terms:
+    - synonymous_variant
+    - start_retained_variant
+    - stop_retained_variant
+    - incomplete_terminal_codon_variant
+  # Damaging-missense ensemble: a missense is "damaging" if >=min_votes of the
+  # loaded predictors fire, OR spliceai_delta >= spliceai_min rescues any
+  # consequence class toward the damage tier.
+  predictors:
+    cadd_phred_min: 20.0
+    revel_min: 0.5
+    alphamissense_min: 0.564       # AM 'likely_pathogenic' boundary
+    spliceai_delta_min: 0.5
+    sift_deleterious: true          # SIFT == 'deleterious*' counts as a vote
+    polyphen_damaging: true         # PolyPhen == '*damaging' counts as a vote
+  min_votes: 2
+
+inheritance:
+  models: [compound_het, hom_alt, dominant_het, x_linked]
+  # compound-het enumeration needs >=2 eligible hets in the same gene;
+  # both hets must pass genotype_qc + rarity + consequence>=missense-ish tiers.
+  comphet_min_consequence: "other"   # include 'other' tier hets in pairs (LoF+missense canon)
+  max_hets_per_gene: 60              # safety cap for noisy genes (TTN-class)
+
+phenotype:
+  # HPO semantic similarity between proband HPO set and gene's disease HPO set.
+  # Resnik over the is_a DAG; score = best-match average (BMA) of Resnik IC.
+  enabled: true
+  ic_floor: 0.0
+  weight_in_score: 0.35              # contribution weight of pheno score to epcr
+
+scoring:
+  # epcr is a RANKING ARTIFACT (plan.md Phase 2.6): the combine below orders
+  # hypotheses; the final epcr emitted is a monotone map of rank into (0,1].
+  # Weights are frozen a-priori and documented as heuristic, not calibrated.
+  w_variant_damage: 0.45             # max variant-damage score in the hypothesis
+  w_phenotype: 0.35                  # HPO semantic similarity
+  w_inheritance: 0.20                # model fit (biallelic in recessive gene)
+  epcr_top: 0.95                     # top hypothesis epcr
+  epcr_floor: 0.05                   # lowest emitted row epcr
+  # Emit floor: hypotheses scoring below this are never emitted (no-call is a
+  # valid answer; the negative-control gate depends on it - plan.md Gate 2).
+  # Chosen so a zero-phenotype biallelic hypothesis (0.45*d + 0.20*i, max
+  # ~0.65) cannot masquerade as causal.
+  emit_floor: 0.70
+  inheritance_bonus:
+    compound_het: 1.0
+    hom_alt: 0.9
+    x_linked: 0.7
+    dominant_het: 0.5
+
+submission:
+  proband_id: "PROBAND01"
+  max_rows: 10
+  chrom_prefix: "chr"     # scorer requires 'chr15' strings; VCF contigs lack the
+                          # prefix -> writer must normalize via this map
+  secondary_epcr_cap: 0.30  # secondary-finding rows stay strictly below primaries
+
+negative_control:
+  # Genes famous for spurious rare-LoF hits (noise genes). A funnel that
+  # 'finds' a causal pair in these on a control VCF is a hallucination signal.
+  noise_genes: ["TTN", "MUC16", "OBSCN", "SYNE1", "RYR2", "DNAH11", "USH2A", "LAMA2"]
