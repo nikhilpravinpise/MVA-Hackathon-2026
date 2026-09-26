@@ -39,3 +39,5 @@ DELETE within 30 days of close (patient genotype-scale derived data):
 | results/real_spike_run/ | Funnel output on the real-stand-in case | KEEP | HG002 background + ClinVar PAH spike (public data) |
 | results/sensitivity.json | 3x3 threshold-grid sensitivity artifact | KEEP | Rank-1 robustness evidence |
 | results/eda_spike/ | EDA/QC report on the synthetic VCF | KEEP | Aggregate stats only |
+| results/arm_concordance.json | Arm A(Exomiser)/B(funnel) top-20 overlap + truth rank, real-spike | KEEP | Plan section-5 cross-method metric: PAH rank 1 both arms |
+| results/arm_concordance_spike.json | Same metric on the synthetic case | KEEP | Arm A absent for fake gene - no false confidence expected |
