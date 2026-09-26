@@ -47,7 +47,7 @@ def prow(v1, v2, epcr="0.95", pid="PROBAND01"):
                v2[0], str(v2[1]), v2[2], v2[3], epcr=epcr)
 
 
-def score_csv_text(text: str, gt=GT, emulate_app: bool = True):
+def score_csv_text(text: str, gt=GT):
     """Run the vendored oracle over CSV text the way submit_track1.py does:
     load -> first proband group -> PROBAND01 check -> score_proband.
 
@@ -59,15 +59,12 @@ def score_csv_text(text: str, gt=GT, emulate_app: bool = True):
         path = f.name
     try:
         subs = oracle.load_submission(path)
-        if emulate_app:
-            if not subs:
-                raise ValueError("No valid rows found in the CSV.")
-            pid = next(iter(subs))
-            if pid != "PROBAND01":
-                raise ValueError(
-                    f"Unknown proband_id '{pid}'. Only PROBAND01 is accepted.")
-            return oracle.score_proband(pid, subs[pid], gt)
+        if not subs:
+            raise ValueError("No valid rows found in the CSV.")
         pid = next(iter(subs))
+        if pid != "PROBAND01":
+            raise ValueError(
+                f"Unknown proband_id '{pid}'. Only PROBAND01 is accepted.")
         return oracle.score_proband(pid, subs[pid], gt)
     finally:
         Path(path).unlink(missing_ok=True)

@@ -90,11 +90,13 @@ EXTERNAL = {"hap.py"}  # Illumina hap.py benchmarking tool (jmcdani20/hap.py ima
 bare = set()
 for m in re.finditer(r"([A-Za-z_0-9]+\.py)(?!:)", plan):
     bare.add(m.group(1))
+_SKIP_DIRS = (".git", ".venv", "node_modules", "__pycache__")
 for f in sorted(bare):
-    hits = list(REPO.rglob(f))
-    exists = any(".git" not in str(h) for h in hits)
+    hits = [h for h in REPO.rglob(f)
+            if not any(s in h.parts for s in _SKIP_DIRS)]
+    exists = bool(hits)
     if exists:
-        print(f"  {f:28s} EXISTS ({[str(h.relative_to(REPO)) for h in hits if '.git' not in str(h)][0]})")
+        print(f"  {f:28s} EXISTS ({[str(h.relative_to(REPO)) for h in hits][0]})")
     elif f in EXTERNAL:
         print(f"  {f:28s} EXTERNAL TOOL (not a repo file)")
     elif f in declared:

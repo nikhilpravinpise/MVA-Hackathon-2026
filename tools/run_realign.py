@@ -58,8 +58,8 @@ def build_script(args) -> str:
     lane_align = "\n".join(
         f"{bwa} mem -t {t} "
         f"-R '@RG\\tID:{ln}\\tSM:{sample}\\tPL:ILLUMINA\\tPU:{ln}' "
-        f"$REF {fq}/{args.fastq_template.format(lane=ln, read='R1')} "
-        f"{fq}/{args.fastq_template.format(lane=ln, read='R2')} | \\\n"
+        f"\"$REF\" \"{fq}/{args.fastq_template.format(lane=ln, read='R1')}\" "
+        f"\"{fq}/{args.fastq_template.format(lane=ln, read='R2')}\" | \\\n"
         f"    {sam} sort -@4 -o $WORK/lane_{ln}.bam -"
         for ln in lanes)
     lane_bams = " ".join(f"$WORK/lane_{ln}.bam" for ln in lanes)
@@ -97,7 +97,7 @@ REGION="{region}"    # bare-contig form e.g. 1:1000000-1100000
 {sam} view $WORK/{sample}.dedup.bam $REGION | head  # sanity: non-empty
 
 # --- 6. whatshap phase on region BAM + shipped VCF (2nd phase opinion) ---
-{wh} phase -o $WORK/phased.vcf --reference=$REF {args.vcf} $WORK/region.bam
+{wh} phase -o $WORK/phased.vcf --reference="$REF" "{args.vcf}" $WORK/region.bam
 
 # --- 7. DeepVariant --regions: independent recall + GT concordance ---
 docker run --rm -v "$WORK":/work -v "$(dirname "$REF")":/refdir \\
