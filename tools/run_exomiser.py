@@ -10,15 +10,19 @@ This writes an exomiser-cli analysis YAML (Arm A, plan.md Phase 2) and prints
 the exact `java -jar` command. It does NOT launch java - Exomiser jobs are
 hours-long and are started deliberately, then logged into docs/runtime_log.md.
 
-REQUIRED ONE-TIME DOWNLOADS (~50-100 GB, plan.md section 3)
------------------------------------------------------------
-* exomiser-cli-<ver>.jar          (github.com/exomiser/Exomiser releases)
-* exomiser data directory        - `2502_phenotype` + `2502_hg38` bundles (or
-  current equivalent) unpacked under --data-dir; the YAML references the
-  assembly-specific subdir.
-* Note: hg38 bundle alone omits the CADD/local-frequency side files unless
-  the REMM/CADD add-ons are fetched - PASS_ONLY mode keeps RAM ~4-12 GB and
-  is the planned fallback if the 24 GB host struggles (plan.md section 3).
+REQUIRED ONE-TIME DOWNLOADS (~30 GB, plan.md section 3)
+---------------------------------------------------------
+* exomiser-cli-14.x distribution (data.monarchinitiative.org/exomiser/latest
+  or github.com/exomiser/Exomiser releases)
+* exomiser data directory        - `2406_phenotype` + `2406_hg38` bundles
+  unpacked under --data-dir; ``tools/fetch_big.py`` fetches them with
+  resumable byte ranges when a single stream throttles.
+* The hg38 bundle expects chr-prefixed contigs - the challenge VCF's bare
+  contigs need ``tools/normalize_contigs.py`` first (a `.chr.vcf` derived
+  copy; run_track1.find_vcf excludes it from case inputs).
+* CADD/REMM are optional datasources NOT inside the bundles - the emitted
+  YAML omits them deliberately (the jar halts if listed without the files);
+  PASS_ONLY keeps RAM ~4-12 GB (plan.md section 3).
 
 HPO ids are read from results/hpo_terms.json (the Phase-1 docx-extraction
 artifact: {"proband_id": ..., "hpo_terms": ["HP:...", ...]} - a bare list
