@@ -90,6 +90,7 @@ scoring:
   w_inheritance: 0.20                # model fit (biallelic in recessive gene)
   epcr_top: 0.95                     # top hypothesis epcr
   epcr_floor: 0.05                   # lowest emitted row epcr
+  epcr_decay: 0.55                   # geometric decay of epcr by rank (rank1=top)
   # Emit floor: hypotheses scoring below this are never emitted (no-call is a
   # valid answer; the negative-control gate depends on it - plan.md Gate 2).
   # Chosen so a zero-phenotype biallelic hypothesis (0.45*d + 0.20*i, max
