@@ -170,17 +170,22 @@ def _apply_rule(qfacts: list[VariantFacts], rule: dict,
         qfacts = [f for f in qfacts if _allele_match(f, rule["allele"])]
     hets = [f for f in qfacts if f.is_het]
     homs = [f for f in qfacts if f.is_hom_alt]
+    # hemizygous calls are reportable zygosity ONLY where the rule means
+    # it (any-zygosity + XL-hemi): for AR 'biallelic' / 'hom_only' a
+    # single haploid allele is NOT a homozygous finding
+    hemi = [f for f in qfacts if f.is_hemi]
     raw = rule["raw"]
     out: list[tuple[tuple[VariantFacts, ...], str, tuple]] = []
     kind = rule["kind"]
 
     if kind == "any":
         for f in qfacts:
-            if not (f.is_het or f.is_hom_alt):
+            if not (f.is_het or f.is_hom_alt or f.is_hemi):
                 # A ref-ref / uncalled genotype must never produce a
                 # finding: the proband does not carry the allele at all.
                 continue
-            zyg = "homozygous" if f.is_hom_alt else "heterozygous"
+            zyg = ("hemizygous" if f.is_hemi else
+                   "homozygous" if f.is_hom_alt else "heterozygous")
             note = f"{rule['moi']}: single {zyg} P/LP reportable ({raw})"
             out.append(((f,), note, ()))
     elif kind == "biallelic":
@@ -196,7 +201,7 @@ def _apply_rule(qfacts: list[VariantFacts], rule: dict,
                         f"AR: >=2 het P/LP variants - carrier pair "
                         f"reportable ({raw})", ("ar_carrier_pair",)))
     elif kind == "xl_hemi_or_pair":
-        for f in homs:
+        for f in homs + hemi:
             out.append(((f,), f"XL: homo/hemizygous P/LP reportable ({raw})",
                         ("sex_unknown",)))
         uniq_hets = {f.key: f for f in hets}

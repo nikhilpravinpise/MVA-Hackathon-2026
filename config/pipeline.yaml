@@ -107,6 +107,13 @@ scoring:
     x_linked: 0.7
     dominant_het: 0.5
 
+acmg:
+  # Genes where loss-of-function is the ASSERTED disease mechanism (gene
+  # biology, external knowledge) - only for these does PVS1 fire. Anything
+  # absent from this list gets PVS1 withheld + caveat rather than guessed.
+  lof_mechanism_genes:
+    - BUB1B    # biallelic LoF -> MVA1 (mosaic variegated aneuploidy 1)
+
 submission:
   proband_id: "PROBAND01"
   max_rows: 10

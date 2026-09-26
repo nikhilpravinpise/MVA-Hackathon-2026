@@ -792,3 +792,35 @@ class TestAuditRound4Acmg:
             "tier": "lof", "gnomad_present": True, "popmax_af": 0.001,
             "cadd": 30, "revel": 0.9}), {})
         assert "PP3" not in {c["code"] for c in r["criteria"]}
+
+
+class TestSFHemizygous:
+    """XL-hemi SF rules must see is_hemi calls; AR rules must not."""
+
+    def test_xl_hemi_finding(self):
+        from src.sf_scan import _apply_rule
+        from src.triage import VariantFacts
+        vf = VariantFacts(chrom="X", pos=100, ref="A", alt="G", gene="ABCD1",
+                          gene_id="ENSG", transcript="T", consequence="x",
+                          impact="HIGH", biotype="pc",
+                          is_hemi=True, gt="1", clinsig_pathogenic=True,
+                          qc_pass=True)
+        rule = {"kind": "xl_hemi_or_pair", "moi": "XL",
+                "raw": "P and LP (hemi or 2)", "allele": None,
+                "truncating_only": False}
+        findings = _apply_rule([vf], rule)
+        assert findings, "hemi P/LP on an XL gene must produce a finding"
+
+    def test_ar_hemi_not_homozygous(self):
+        from src.sf_scan import _apply_rule
+        from src.triage import VariantFacts
+        vf = VariantFacts(chrom="7", pos=100, ref="A", alt="G", gene="GAA",
+                          gene_id="ENSG", transcript="T", consequence="x",
+                          impact="HIGH", biotype="pc",
+                          is_hemi=True, gt="1", clinsig_pathogenic=True,
+                          qc_pass=True)
+        rule = {"kind": "biallelic", "moi": "AR",
+                "raw": "P and LP (2 variants)", "allele": None,
+                "truncating_only": False}
+        findings = _apply_rule([vf], rule)
+        assert not findings, "a haploid call is NOT a homozygous AR finding"

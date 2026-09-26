@@ -219,9 +219,15 @@ def main(argv=None) -> int:
         from src.acmg import acmg_report
         top = next((h for h in res["ranked"] if h["emitted"]), None)
         if top:
+            # lof_mechanism is gene biology, asserted only for genes on
+            # the config's explicit LoF-mechanism list - never inferred
+            # from the model name
+            lof_genes = set(cfg.get("acmg", {})
+                            .get("lof_mechanism_genes", ()))
             ctx = {"in_trans": top["in_trans"],
                    "pheno_score": top["pheno_score"],
-                   "gene_known_for_disease": top["pheno_score"] > 0}
+                   "gene_known_for_disease": top["pheno_score"] > 0,
+                   "lof_mechanism": top["gene"] in lof_genes}
             rep = acmg_report(top, ctx)
             (out / "acmg_report.json").write_text(json.dumps(rep, indent=1))
             summary["steps"]["acmg"] = rep.get(
