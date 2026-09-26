@@ -43,7 +43,7 @@ report:
 	  --real-spike-truth env/real_spike/truth.json \
 	  --out docs/report.md
 
-## scorer-fixture audit battery (57 fixtures vs vendored oracle)
+## scorer-fixture audit battery (60 fixtures vs vendored oracle)
 audit:
 	$(PY) tools/audit_scorer_fixtures.py
 

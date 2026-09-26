@@ -23,9 +23,12 @@ from src.pipeline import run_pipeline  # noqa: E402
 
 
 def pair_rank(ranked: list[dict], truth_pair: list[dict]) -> int | None:
-    want = sorted((v["pos"], v["alt"]) for v in truth_pair)
+    from src.vcf import from_submission_chrom as _norm
+    want = sorted((_norm(str(v["chrom"])), v["pos"], v["ref"], v["alt"])
+                  for v in truth_pair)
     for h in ranked:
-        got = sorted((v["pos"], v["alt"]) for v in h["variants"])
+        got = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                     for v in h["variants"])
         if h["model"] == "compound_het" and got == want:
             return h["rank"]
     return None

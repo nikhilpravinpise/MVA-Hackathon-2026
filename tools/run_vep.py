@@ -164,6 +164,9 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     if args.ann_dir is None:
         args.ann_dir = str(Path(args.cache_dir) / "vep_ann")
+    if args.forks < 1:
+        print("ERROR: --forks must be >= 1", file=sys.stderr)
+        return 2
 
     cmd = build_command(args)
     print("VEP 116 annotation command:")
