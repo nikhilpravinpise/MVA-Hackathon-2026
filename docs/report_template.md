@@ -72,7 +72,7 @@ The funnel was validated *blind* before the proband call:
 
 {{SENSITIVITY_TABLE}}
 
-## 4. Phasing and read-level in-trans evidence
+## 4. Phasing evidence (phase-set + read-level status)
 
 {{PHASING_SECTION}}
 

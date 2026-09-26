@@ -59,6 +59,9 @@ def main(argv=None) -> int:
         "source": Path(args.docx).name,
     }
     out = Path(args.out)
+    if out.is_dir():
+        print(f"ERROR: --out is a directory: {out}", file=sys.stderr)
+        return 2
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=1) + "\n", encoding="utf-8")
     print(f"wrote {len(terms)} HPO terms -> {out}")

@@ -20,6 +20,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+_SKIP_DIRS = (".git", ".venv", "node_modules", "__pycache__")
 
 plan = (REPO / "docs" / "plan.md").read_text(encoding="utf-8")
 dd_path = REPO / "docs" / "DEEP_DIVE.md"
@@ -42,9 +43,11 @@ for (f, rng), ctx in sorted(seen.items()):
 print("\n========== SOURCE LINES ==========")
 for (f, rng) in sorted(seen.keys()):
     path = None
-    for cand in [REPO / "hackathon-app" / f, REPO / "hackathon-app" / "tabs" / f]:
-        if cand.exists():
-            path = cand
+    # resolve under hackathon-app/ OR the repo tree (src/tools citeable too)
+    cands = [REPO / "hackathon-app" / f, REPO / "hackathon-app" / "tabs" / f]
+    cands += [h for h in REPO.rglob(f)
+              if not any(s in h.parts for s in _SKIP_DIRS)]
+    path = next((c for c in cands if c.exists()), None)
     if not path:
         fails.append((f, rng, "FILE NOT FOUND"))
         print(f"--- {f} {rng}: FILE NOT FOUND ---")
@@ -56,8 +59,9 @@ for (f, rng) in sorted(seen.keys()):
             a, b = (int(x) for x in part.split("-"))
         else:
             a = b = int(part)
-        if a < 1 or b > len(lines):
-            fails.append((f, rng, f"line range {a}-{b} exceeds file length {len(lines)}"))
+        if a < 1 or b > len(lines) or (b < a and "-" in part):
+            fails.append((f, rng, f"line range {a}-{b} invalid (file length "
+                                  f"{len(lines)})"))
         for i in range(a, min(b, a + 40) + 1):
             if i <= len(lines):
                 print(f"  {i:4d}: {lines[i - 1]}")
@@ -90,7 +94,6 @@ EXTERNAL = {"hap.py"}  # Illumina hap.py benchmarking tool (jmcdani20/hap.py ima
 bare = set()
 for m in re.finditer(r"([A-Za-z_0-9]+\.py)(?!:)", plan):
     bare.add(m.group(1))
-_SKIP_DIRS = (".git", ".venv", "node_modules", "__pycache__")
 for f in sorted(bare):
     hits = [h for h in REPO.rglob(f)
             if not any(s in h.parts for s in _SKIP_DIRS)]

@@ -26,8 +26,13 @@ from src.pipeline import ABLATION_SOURCES, run_pipeline  # noqa: E402
 
 def find_vcf(case_dir: Path) -> Path:
     vcfs = sorted(case_dir.glob("*.vcf")) + sorted(case_dir.glob("*.vcf.gz"))
+    vcfs += sorted(p for p in case_dir.iterdir()
+                   if p.suffix.upper() in (".VCF", ".GZ") and p not in vcfs)
     if not vcfs:
         raise FileNotFoundError(f"no .vcf in {case_dir}")
+    if len(vcfs) > 1:
+        print(f"WARNING: {len(vcfs)} VCFs in {case_dir} - using "
+              f"{vcfs[0].name} alphabetically", file=sys.stderr)
     return vcfs[0]
 
 
@@ -50,13 +55,39 @@ def main(argv=None) -> int:
     summary: dict = {"case": str(case), "steps": {}}
 
     hpo_file = case / "hpo_terms.json"
-    hpo = json.loads(hpo_file.read_text())
+    hpo = json.loads(hpo_file.read_text(encoding="utf-8-sig"))
     hpo = hpo["hpo_terms"] if isinstance(hpo, dict) else hpo
+    # "hpo_terms": "HP:0000001" (a STRING not a list) iterates into chars ->
+    # every term fails the ontology filter and phenotype scoring silently
+    # flatlines at 0. Validate the type here.
+    if not isinstance(hpo, list) or not all(isinstance(t, str) for t in hpo):
+        print(f"ERROR: {hpo_file} must carry a JSON list of strings "
+              f"(got {type(hpo).__name__})", file=sys.stderr)
+        return 2
     vcf = find_vcf(case)
+    truth_f = case / "truth.json"
+    truth = None
+    if truth_f.exists():
+        truth = json.loads(truth_f.read_text(encoding="utf-8"))
+        # validate BEFORE any step runs - a malformed truth crashing in the
+        # ablation block leaves eda/funnel artifacts with no run_summary
+        if not isinstance(truth, dict) or "pair" not in truth \
+                or len(truth["pair"]) != 2:
+            print(f"ERROR: {truth_f} must be an object with a 2-variant "
+                  "'pair' array", file=sys.stderr)
+            return 2
     corpus = {k: (case / v).resolve() if (case / v).exists() else None
               for k, v in (("obo_path", "hp.obo"),
                            ("hpoa_path", "phenotype.hpoa"),
                            ("g2d_path", "genes_to_disease.json"))}
+    # corpus absent -> empty ontology -> pheno 0 -> scores capped under the
+    # emit floor -> a guaranteed no_call that LOOKS like a legit negative.
+    # Surface it in the summary, not just in provenance (audit M4).
+    if hpo and not all(corpus.values()):
+        missing = [k for k, v in corpus.items() if v is None]
+        summary.setdefault("warnings", []).append(
+            f"corpus files missing {missing} - phenotype scoring is "
+            "disabled and the funnel cannot emit (degenerate run)")
 
     # -- step 1: EDA ---------------------------------------------------------
     if args.skip_eda:
@@ -76,17 +107,18 @@ def main(argv=None) -> int:
     summary["steps"]["funnel"] = res["funnel"]
 
     # -- step 3: ablations ----------------------------------------------------
-    truth_f = case / "truth.json"
-    truth = json.loads(truth_f.read_text()) if truth_f.exists() else None
     abl_out = {}
+    from src.vcf import from_submission_chrom as _norm
     for src in sorted(ABLATION_SOURCES):
         r = run_pipeline(vcf, hpo, sample=args.sample, cfg=cfg,
                          drops=frozenset({src}), **corpus)
         rank = None
         if truth:
-            want = sorted((v["pos"], v["alt"]) for v in truth["pair"])
+            want = sorted((_norm(str(v["chrom"])), v["pos"], v["ref"],
+                           v["alt"]) for v in truth["pair"])
             for h in r["ranked"]:
-                got = sorted((v["pos"], v["alt"]) for v in h["variants"])
+                got = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                             for v in h["variants"])
                 if h["model"] == "compound_het" and got == want:
                     rank = h["rank"]
                     break
@@ -94,9 +126,11 @@ def main(argv=None) -> int:
             # no truth: report rank of the baseline top pair
             base_top = next((h for h in res["ranked"] if h["emitted"]), None)
             if base_top:
-                want = sorted((v["pos"], v["alt"]) for v in base_top["variants"])
+                want = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                              for v in base_top["variants"])
                 for h in r["ranked"]:
-                    got = sorted((v["pos"], v["alt"]) for v in h["variants"])
+                    got = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                                 for v in h["variants"])
                     if h["model"] == base_top["model"] and got == want:
                         rank = h["rank"]
                         break
@@ -144,14 +178,21 @@ def main(argv=None) -> int:
             # (chrom,pos) alone can pick two facts of the SAME variant when
             # a site annotates into multiple genes or is multi-allelic,
             # which would falsely report 'cis' for a genuinely trans pair.
+            # Keys are still not unique when a variant annotates >=2 genes,
+            # so prefer the fact carrying the hypothesis's own gene.
             pair_keys = [(v["chrom"], v["pos"], v["ref"], v["alt"])
                          for v in top["variants"]]
-            pair = [f for k in pair_keys[:2]
-                    for f in facts if f.key == k]
+            pair = []
+            for k in pair_keys[:2]:
+                cand = [f for f in facts if f.key == k]
+                hit = next((f for f in cand if f.gene == top["gene"]),
+                           cand[0] if cand else None)
+                if hit is not None:
+                    pair.append(hit)
             if len(pair) >= 2:
                 call = determine_phase(pair[0], pair[1])
                 ph["evidence"].append(
-                    {"name": "PGT/PID read-backed phasing",
+                    {"name": "PGT/PID phase-set fields",
                      "mechanism": call.mechanism, "result": call.relation,
                      "detail": call.detail})
                 ph["agreement"] = call.relation
@@ -203,9 +244,16 @@ def main(argv=None) -> int:
             data = submission_bytes(rows)
             (out / "submission.csv").write_bytes(data)
             summary["steps"]["csv_rows"] = len(rows)
+            sf_status = str(summary["steps"].get("sf", ""))
+            if sf_status.startswith("skipped"):
+                summary.setdefault("warnings", []).append(
+                    f"SF scan failed ({sf_status}) but submission.csv was "
+                    "written - the file has NO secondary rows; do not "
+                    "upload until the SF step runs clean")
         if truth and rows:
+            from src.vcf import to_submission_chrom as _to_sub
             gt = frozenset(
-                (v["chrom"] if v["chrom"].startswith("chr") else "chr" + v["chrom"],
+                (_to_sub(str(v["chrom"])),
                  v["pos"], v["ref"], v["alt"]) for v in truth["pair"])
             score = validate_submission_bytes(data, gt)
             summary["steps"]["oracle"] = {

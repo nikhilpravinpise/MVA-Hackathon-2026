@@ -25,7 +25,9 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from pathlib import Path
 
-HPO_RE = re.compile(r"HP:\d{7}(?!\d)")
+# \b anchors the match to a token boundary - "CHIP:0000118"/"XHP:..." would
+# otherwise donate a false HP:0000118 term (audit LOW-8)
+HPO_RE = re.compile(r"\bHP:\d{7}(?!\d)")
 
 _W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 

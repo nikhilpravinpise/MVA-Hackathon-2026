@@ -48,6 +48,20 @@ class FunnelCounts:
         return bad
 
 
+def _vcf_sha(vcf_path) -> str | None:
+    """SHA-256 of the input VCF bytes (streamed - a real WGS file is GBs,
+    hash it in chunks). Provenance so 'sha-tracked' is literal."""
+    import hashlib
+    try:
+        h = hashlib.sha256()
+        with open(vcf_path, "rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 20), b""):
+                h.update(chunk)
+        return h.hexdigest()
+    except OSError:
+        return None
+
+
 def load_corpus(obo_path=None, hpoa_path=None, g2d_path=None):
     """Load the phenotype corpus: ontology, disease->HPO, gene->diseases."""
     ont = OboOntology.parse(obo_path) if obo_path else OboOntology()
@@ -216,6 +230,7 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
             # the effective rarity ceiling (a CLI --af-max override lands in
             # the dict hash but would otherwise be invisible in the artifact)
             "af_max": cfg.get("rarity", {}).get("af_max"),
+            "vcf_sha256": _vcf_sha(vcf_path),
             "drops": sorted(drops),
             "runtime_sec": round(time.time() - t0, 3),
             "corpus": {"obo": str(obo_path), "hpoa": str(hpoa_path),

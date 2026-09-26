@@ -25,7 +25,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
 from src.config import config_hash  # noqa: E402
-from src.vcf import to_submission_chrom  # noqa: E402
+from src.vcf import from_submission_chrom, to_submission_chrom  # noqa: E402
 
 TEMPLATE = REPO / "docs" / "report_template.md"
 
@@ -33,7 +33,17 @@ PENDING = "_Pending dataset access - artifact not yet produced._"
 
 
 def _j(path):
-    return json.loads(Path(path).read_text()) if path and Path(path).exists() else None
+    """Tolerant JSON loader for optional artifacts - a directory, a markdown
+    file, or corrupt JSON returns None (-> PENDING) instead of crashing."""
+    if not path:
+        return None
+    p = Path(path)
+    if not p.is_file():
+        return None
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return None
 
 
 def _fmt(x, nd=3):
@@ -79,8 +89,12 @@ def submission_summary(result: dict, truth: dict | None) -> str:
         f"ranked",
     ]
     if truth:
-        want = sorted((v["pos"], v["alt"]) for v in truth["pair"])
-        got = sorted((v["pos"], v["alt"]) for v in top["variants"])
+        # match on FULL variant key - (pos,alt) alone falsely 'MATCHES' a
+        # same-position/different-ref decoy
+        want = sorted((from_submission_chrom(str(v["chrom"])),
+                       v["pos"], v["ref"], v["alt"]) for v in truth["pair"])
+        got = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                     for v in top["variants"])
         lines.append(
             f"- External-validation check: recovered pair "
             f"{'== MATCHES' if got == want else 'DOES NOT MATCH'} the "
@@ -224,6 +238,17 @@ def phasing_section(ph: dict | None) -> str:
         lines.append(f"| {e.get('name','')} | {e.get('mechanism','')} | "
                      f"{e.get('result','')} |")
     lines.append(f"\nAgreement: **{ph.get('agreement','?')}**")
+    # honesty: if no read-level mechanism ran, say so - a phase-set parse
+    # alone is not 'read-level' evidence (Gate 3 expects >=2 independent)
+    if not any(e.get("mechanism") == "read_level" for e in ev):
+        lines.append(
+            "\nRead-level evidence: **not yet generated** - no BAM/SAM was "
+            "supplied for this run (run_track1 `--sam`, or run_realign + "
+            "WhatsHap on the patient FASTQs). The trans call above rests on "
+            "VCF phase-set fields only; Gate 3's >=2-evidence criterion is "
+            "currently met by the phasing report's agreement flag + the "
+            "synthetic SAM battery in tests (test_phasing), not by patient "
+            "read data.")
     return "\n".join(lines)
 
 
@@ -250,7 +275,8 @@ def runtime_section(runlog: dict | None, prov: dict) -> str:
     lines = [
         "| Job | Where | Time | Cost |", "|---|---|---|---|",
         f"| Arm-B funnel (this run) | local | {rt}s | $0 |",
-        f"| {battery_label} | local | not measured | $0 |",
+        f"| {battery_label} | local | seconds-scale (see "
+        "docs/runtime_log.md session rows) | $0 |",
     ]
     if runlog:
         for r in runlog.get("entries", []):
@@ -283,6 +309,9 @@ def main(argv=None) -> int:
     ap.add_argument("--sf", default=None)
     ap.add_argument("--acmg", default=None)
     ap.add_argument("--runlog", default=None)
+    ap.add_argument("--control-dir", default=None,
+                    help="funnel result dir of the negative-control run - "
+                         "CONTROL_RESULT is derived from it, not asserted")
     ap.add_argument("--real-spike-dir", default=None,
                     help="funnel result dir for the real external-validation run")
     ap.add_argument("--real-spike-build", default=None,
@@ -317,11 +346,49 @@ def main(argv=None) -> int:
                       else "the adversarial fixture battery")
 
     emitted = [h for h in result["ranked"] if h.get("emitted")]
-    spike_line = (
-        f"true pair recovered at **rank {emitted[0]['rank']}** "
-        f"(score {emitted[0]['score']:.3f}, in-trans: "
-        f"{emitted[0]['in_trans']})" if emitted else
-        "NOT recovered - see ablation report")
+    if not truth:
+        spike_line = ("external validation: not run (no --truth supplied) - "
+                      "the emitted call below is unverified")
+    elif not emitted:
+        spike_line = "NOT recovered - see ablation report"
+    else:
+        want = sorted((from_submission_chrom(str(v["chrom"])),
+                       v["pos"], v["ref"], v["alt"]) for v in truth["pair"])
+        hit = next((h for h in result["ranked"]
+                    if h["model"] == "compound_het"
+                    and sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                               for v in h["variants"]) == want), None)
+        spike_line = (
+            f"true pair recovered at **rank {hit['rank']}** "
+            f"(score {hit['score']:.3f}, in-trans: {hit['in_trans']})"
+            if hit else
+            "**NOT recovered** - the emitted top hypothesis does not match "
+            "the spiked truth (see ablation report)")
+
+    # Derived control claim: read the actual control-run artifact rather
+    # than asserting 'expected behaviour verified' (GATE-6: nothing typed).
+    control_line = "control run not wired - see tests/test_negative_control.py"
+    if args.control_dir:
+        cres = _j(Path(args.control_dir) / "result.json")
+        if cres:
+            n_em = len(cres.get("emitted", []))
+            control_line = (f"{n_em} hypotheses emitted "
+                            f"({'expected: funnel stays silent' if n_em == 0 else 'UNEXPECTED - investigate'})")
+
+    # Derived abstract numbers (no hand-typed stats): recovery rank from the
+    # run artifact, ablation ceiling from ablations.json, grid shape from
+    # sensitivity.json.
+    top_rank = emitted[0]["rank"] if emitted else None
+    abl_max = None
+    if ablations:
+        ranks = [v.get("pair_rank") for v in ablations.values()
+                 if v.get("pair_rank") is not None]
+        abl_max = max(ranks) if ranks else None
+    grid_shape = None
+    if sens and sens.get("grid"):
+        af_vals = sorted({g.get("af_max") for g in sens["grid"]})
+        mv_vals = sorted({g.get("min_votes") for g in sens["grid"]})
+        grid_shape = f"{len(af_vals)}x{len(mv_vals)}"
 
     # Prefer the run's recorded config hash - hashing the CURRENT on-disk
     # file would silently claim the wrong provenance if the config was
@@ -329,19 +396,36 @@ def main(argv=None) -> int:
     run_cfg_sha = (prov.get("config_sha256") or prov.get("config_file_sha256")
                    or config_hash())
 
+    # cross-artifact provenance: a stale EDA/sensitivity file from run A
+    # next to run B's result.json must not blend into one report - check
+    # every artifact that records its input VCF against the run's own.
+    prov_vcf = prov.get("vcf")
+    stale = []
+    if prov_vcf:
+        norm = lambda p: str(p).replace("\\", "/").lower()  # noqa: E731
+        for label, art in (("eda", eda), ("sensitivity", sens)):
+            if isinstance(art, dict) and art.get("vcf") \
+                    and norm(art["vcf"]) != norm(prov_vcf):
+                stale.append(f"{label}: {art['vcf']}")
+    if stale:
+        print(f"WARNING: cross-artifact VCF mismatch vs {prov_vcf}: "
+              f"{stale} - report may mix runs", file=sys.stderr)
+
     mapping = {
         "TEAM_NAME": args.team,
         "MODEL_N": args.model_n,
         "GENERATED_AT": datetime.now(timezone.utc).strftime(
             "%Y-%m-%d %H:%M UTC"),
         "DATA_STATUS": args.data_status,
-        "CONFIG_SHA": run_cfg_sha[:12],
+        "CONFIG_SHA": (run_cfg_sha[:12] if run_cfg_sha
+                       and all(c in "0123456789abcdef"
+                               for c in run_cfg_sha[:12].lower())
+                       else str(run_cfg_sha)),
         "SUBMISSION_SUMMARY": submission_summary(result, truth),
         "FUNNEL_TABLE": funnel_table(result),
         "EDA_SECTION": eda_section(eda),
         "SPIKE_RESULT": spike_line,
-        "CONTROL_RESULT": "no hypothesis emitted (0 above emit floor) - "
-                          "expected behaviour verified",
+        "CONTROL_RESULT": control_line,
         "REAL_SPIKE_SECTION": real_spike_section(
             _j(Path(args.real_spike_dir) / "result.json") if args.real_spike_dir else None,
             _j(args.real_spike_build), _j(args.real_spike_truth)),
@@ -353,16 +437,19 @@ def main(argv=None) -> int:
         "DATA_SOURCES": ("gnomAD v4.1 AFs, ClinVar, CADD, AlphaMissense, "
                          "REVEL/dbNSFP 5.3.1, SpliceAI (precomputed), LOEUF, "
                          "phyloP, HPO (hp.obo + phenotype.hpoa + "
-                         "genes_to_phenotype), Ensembl VEP 116 annotation, "
+                         "genes_to_phenotype), Ensembl REST VEP "
+                         "(cache-backed annotations, env/real_spike), "
                          "ACMG SF v3.3. GIAB HG002 as public stand-in genome."),
         "RUNTIME_SECTION": runtime_section(runlog, prov),
-        "GENAI_LINE": ("Anthropic API / Cognition Devin CLI (SWE-2 Max), "
-                       "commercial terms, no training on customer content - "
-                       "see docs/llm_log.md for the per-session ledger."),
+        "GENAI_LINE": ("Cognition Devin CLI (SWE-2 Max); provider terms and "
+                       "per-session usage are ledgered in docs/llm_log.md."),
         "PROVENANCE_SECTION": (
-            "- VCF: `" + str(prov.get("vcf")) + "` (sha-tracked)\n"
-            "- Config: `config/pipeline.yaml` sha256 `" + run_cfg_sha[:12]
-            + "` (frozen pre-analysis; hash recorded at run time)\n"
+            "- VCF: `" + str(prov.get("vcf")) + "`"
+            + (f" (sha256 `{prov['vcf_sha256'][:12]}`)"
+               if prov.get("vcf_sha256") else "") + "\n"
+            "- Config: parsed-config sha256 `" + str(run_cfg_sha)[:12]
+            + "` (frozen pre-analysis; hash recorded at run time - the "
+            "canonical dict hash, not the file-byte hash)\n"
             "- Scoring oracle: vendored `hackathon-app/evaluation.py` - "
             "local score = official score by construction\n"
             "- Leak firewall: no leaked-Space coordinates/genes/values in "
@@ -377,12 +464,14 @@ def main(argv=None) -> int:
             "per-gene inheritance aggregation enumerating compound-het, "
             "hom-alt, dominant and X-linked genotype hypotheses -> HPO "
             "Resnik/BMA phenotype scoring -> rank-mapped epcr. The funnel "
-            "was validated blind on a synthetic compound-het spike-in "
-            "(recovered at rank 1, in-trans via PGT/PID), stayed silent on a "
-            "negative control carrying a TTN-class decoy pair, and held rank "
-            "<=5 under every leave-one-source-out ablation and a "
-            "3x3 threshold grid. PGT/PID read-backed phasing plus planned "
-            "re-alignment provide independent in-trans evidence; an ACMG SF "
+            f"was validated blind on a synthetic compound-het spike-in "
+            f"(recovered at rank {top_rank}, in-trans via PGT/PID), stayed "
+            "silent on a negative control carrying a TTN-class decoy pair, "
+            f"and held rank <={abl_max} under every leave-one-source-out "
+            f"ablation and a {grid_shape or 'NxN'} threshold grid. "
+            "PGT/PID phase-set phasing supplies the trans call; read-level "
+            "confirmation (SAM/WhatsHap/DeepVariant on the patient FASTQs) "
+            "is planned, not yet run; an ACMG SF "
             "v3.3 scan handles secondary findings; the submission writer "
             "satisfies the scorer's byte-level contract (UTF-8 no BOM, "
             "chr-prefix, <=10 rows, strictly decreasing epcr), verified "

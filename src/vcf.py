@@ -29,9 +29,12 @@ def _open_maybe_gz(path: str | Path) -> io.TextIOBase:
     p = Path(path)
     with open(p, "rb") as probe:
         magic = probe.read(2)
+    # errors='replace': one stray non-UTF8 byte must not kill a GB-scale
+    # parse - it becomes U+FFFD inside a field, not a crash
     if magic == b"\x1f\x8b":
-        return io.TextIOWrapper(gzip.open(p, "rb"), encoding="utf-8")
-    return open(p, encoding="utf-8")
+        return io.TextIOWrapper(gzip.open(p, "rb"), encoding="utf-8",
+                                errors="replace")
+    return open(p, encoding="utf-8", errors="replace")
 
 
 @dataclass
@@ -215,11 +218,16 @@ class VcfReader:
             if line.startswith("##"):
                 self.meta.append(line)
                 self._parse_meta(line)
-            elif line.startswith("#"):
+            elif line.startswith("#CHROM"):
                 cols = line.lstrip("#").split("\t")
                 self.samples = cols[9:] if len(cols) > 9 else []
                 self._header_done = True
                 return
+            elif line.startswith("#"):
+                # A stray single-# comment before #CHROM is NOT the column
+                # header - treating it as one would silently zero the
+                # sample list (every genotype reads as no_call).
+                continue
             elif line.strip():
                 # No #CHROM line before the first record (header-less VCF):
                 # push the line back so records() still sees it instead of
@@ -353,4 +361,4 @@ def from_submission_chrom(chrom: str) -> str:
     c = chrom.strip()
     if c.lower().startswith("chr"):
         c = c[3:]
-    return "M" if c == "MT" else c
+    return "M" if c.upper() in ("MT",) else c

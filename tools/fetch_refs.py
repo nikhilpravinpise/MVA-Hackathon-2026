@@ -118,13 +118,24 @@ def main(argv=None) -> int:
     manifest_path = corpus / "manifest.json"
     manifest = {}
     if manifest_path.exists():
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            # a corrupt manifest must not brick the fetcher - back it up
+            # and start clean rather than losing provenance silently
+            bak = manifest_path.with_suffix(".json.corrupt")
+            manifest_path.replace(bak)
+            print(f"WARNING: corrupt manifest backed up to {bak.name}",
+                  file=sys.stderr)
 
     for name in names:
-        manifest[name] = fetch_one(name, corpus)
-
-    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n",
-                             encoding="utf-8")
+        try:
+            manifest[name] = fetch_one(name, corpus)
+        finally:
+            # write after EVERY file - a mid-loop failure must not lose the
+            # provenance entries already fetched
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n",
+                                     encoding="utf-8")
 
     print("\nfetch_refs summary")
     print(f"  manifest: {manifest_path}")

@@ -156,6 +156,18 @@ def main(argv=None) -> int:
     if not Path(args.vcf).exists():
         print(f"ERROR: VCF not found: {args.vcf}", file=sys.stderr)
         return 2
+    if Path(args.vcf).is_dir():
+        print(f"ERROR: --vcf is a directory: {args.vcf}", file=sys.stderr)
+        return 2
+
+    if args.sample:
+        from src.vcf import VcfReader
+        known = VcfReader(args.vcf).samples
+        if known and args.sample not in known:
+            print(f"ERROR: --sample '{args.sample}' not in VCF samples "
+                  f"{known} - a typo here silently produces an all-no_call "
+                  "report", file=sys.stderr)
+            return 2
 
     report = integrity_report(args.vcf, sample=args.sample)
 

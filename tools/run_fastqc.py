@@ -402,7 +402,16 @@ def main(argv=None) -> int:
         try:
             s = parse_fastp_json(j)
         except Exception:
-            continue  # not a fastp report - skip, do not fail the scan
+            # a file that LOOKS like a fastp report but is corrupt is a
+            # failed input, not a skippable non-fastp json (audit M3: a
+            # truncated download would otherwise green-light as no_inputs)
+            head = j.read_text(errors="replace")[:2048]
+            if "summary" in head or "before_filtering" in head \
+                    or "after_filtering" in head:
+                print(f"ERROR: {j.name} looks like a fastp report but is "
+                      "unreadable/corrupt - failing the gate", file=sys.stderr)
+                return 2
+            continue  # unrelated json - skip, do not fail the scan
         if s.get("total_reads"):
             fastp_stats.append(s)
 

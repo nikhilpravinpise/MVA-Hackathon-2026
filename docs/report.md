@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 11:39 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 12:17 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** VALIDATED ON SYNTHETIC STAND-IN - patient VCF not yet on disk; every number below is from the public-stand-in harness.
 
@@ -73,7 +73,7 @@ The funnel was validated *blind* before the proband call:
   low-depth call, common-AF damaging missense).
   **Result:** true pair recovered at **rank 1** (score 1.000, in-trans: trans)
 * **Negative control:** plausible-looking rare/damaging variation + an
-  unrelated HPO set -> **no hypothesis emitted (0 above emit floor) - expected behaviour verified** (a funnel that finds a causal
+  unrelated HPO set -> **0 hypotheses emitted (expected: funnel stays silent)** (a funnel that finds a causal
   pair everywhere finds nothing).
 * **Real external validation (public genome + real ClinVar pair):**
 
@@ -108,13 +108,15 @@ The funnel was validated *blind* before the proband call:
 
 Robust across grid: **True**
 
-## 4. Phasing and read-level in-trans evidence
+## 4. Phasing evidence (phase-set + read-level status)
 
 | Evidence | Mechanism | Result |
 |---|---|---|
-| PGT/PID read-backed phasing | pgt_pid_same_set | trans |
+| PGT/PID phase-set fields | pgt_pid_same_set | trans |
 
 Agreement: **trans**
+
+Read-level evidence: **not yet generated** - no BAM/SAM was supplied for this run (run_track1 `--sam`, or run_realign + WhatsHap on the patient FASTQs). The trans call above rests on VCF phase-set fields only; Gate 3's >=2-evidence criterion is currently met by the phasing report's agreement flag + the synthetic SAM battery in tests (test_phasing), not by patient read data.
 
 ## 5. Automated vs manual review
 
@@ -127,7 +129,7 @@ was added, removed, or re-ordered by hand.
 
 ## 6. Data sources
 
-gnomAD v4.1 AFs, ClinVar, CADD, AlphaMissense, REVEL/dbNSFP 5.3.1, SpliceAI (precomputed), LOEUF, phyloP, HPO (hp.obo + phenotype.hpoa + genes_to_phenotype), Ensembl VEP 116 annotation, ACMG SF v3.3. GIAB HG002 as public stand-in genome.
+gnomAD v4.1 AFs, ClinVar, CADD, AlphaMissense, REVEL/dbNSFP 5.3.1, SpliceAI (precomputed), LOEUF, phyloP, HPO (hp.obo + phenotype.hpoa + genes_to_phenotype), Ensembl REST VEP (cache-backed annotations, env/real_spike), ACMG SF v3.3. GIAB HG002 as public stand-in genome.
 
 No proprietary data was used.
 
@@ -156,26 +158,26 @@ Combined call: **Pathogenic** (16 pts - ACMG/AMP Richards2015 subset + Tavtigian
 
 | Job | Where | Time | Cost |
 |---|---|---|---|
-| Arm-B funnel (this run) | local | 0.008s | $0 |
-| Test battery (19-fixture oracle mutation battery + funnel + e2e) | local | not measured | $0 |
+| Arm-B funnel (this run) | local | 0.01s | $0 |
+| Test battery (19-fixture oracle mutation battery + funnel + e2e) | local | seconds-scale (see docs/runtime_log.md session rows) | $0 |
 
 Planned cloud jobs (alignment/DeepVariant/VEP at data landing) are budgeted < $50 total - see docs/runtime_log.md.
 
 ## 10. GenAI disclosure (required)
 
-Anthropic API / Cognition Devin CLI (SWE-2 Max), commercial terms, no training on customer content - see docs/llm_log.md for the per-session ledger.
+Cognition Devin CLI (SWE-2 Max); provider terms and per-session usage are ledgered in docs/llm_log.md.
 
 ## 11. Provenance, firewall, and compliance
 
-- VCF: `results\spike_case\spike_proband.vcf` (sha-tracked)
-- Config: `config/pipeline.yaml` sha256 `7d304b9ca95f` (frozen pre-analysis; hash recorded at run time)
+- VCF: `results\spike_case\spike_proband.vcf` (sha256 `67d0b6b52016`)
+- Config: parsed-config sha256 `7d304b9ca95f` (frozen pre-analysis; hash recorded at run time - the canonical dict hash, not the file-byte hash)
 - Scoring oracle: vendored `hackathon-app/evaluation.py` - local score = official score by construction
 - Leak firewall: no leaked-Space coordinates/genes/values in code, tests, configs, or this report
 - Compliance: patient data confined to `data/` (gitignored); retention manifests in data/RETENTION.md + results/RETENTION.md
 
 ## 12. Method abstract (<=500 words)
 
-We built an answer-blind, deterministic N-of-1 prioritization funnel: genotype QC -> gnomAD rarity tier (absent weighted stronger than rare) -> consequence/damage ensemble (LoF; damaging missense by multi-predictor vote; SpliceAI rescue) -> per-gene inheritance aggregation enumerating compound-het, hom-alt, dominant and X-linked genotype hypotheses -> HPO Resnik/BMA phenotype scoring -> rank-mapped epcr. The funnel was validated blind on a synthetic compound-het spike-in (recovered at rank 1, in-trans via PGT/PID), stayed silent on a negative control carrying a TTN-class decoy pair, and held rank <=5 under every leave-one-source-out ablation and a 3x3 threshold grid. PGT/PID read-backed phasing plus planned re-alignment provide independent in-trans evidence; an ACMG SF v3.3 scan handles secondary findings; the submission writer satisfies the scorer's byte-level contract (UTF-8 no BOM, chr-prefix, <=10 rows, strictly decreasing epcr), verified against a vendored copy of the official scorer on 19 adversarial fixtures including a mutation audit. Strengths: auditable stages, frozen config, honest negative controls, reproducible numbers. Limitations: epcr is a ranking artifact, not a calibrated probability; phenotype prior depends on the gene->disease annotation corpus; phase-set chaining beyond read-length needs PGT/PID or external phasing references; single-proband design cannot estimate caller error rates empirically.
+We built an answer-blind, deterministic N-of-1 prioritization funnel: genotype QC -> gnomAD rarity tier (absent weighted stronger than rare) -> consequence/damage ensemble (LoF; damaging missense by multi-predictor vote; SpliceAI rescue) -> per-gene inheritance aggregation enumerating compound-het, hom-alt, dominant and X-linked genotype hypotheses -> HPO Resnik/BMA phenotype scoring -> rank-mapped epcr. The funnel was validated blind on a synthetic compound-het spike-in (recovered at rank 1, in-trans via PGT/PID), stayed silent on a negative control carrying a TTN-class decoy pair, and held rank <=2 under every leave-one-source-out ablation and a 3x3 threshold grid. PGT/PID phase-set phasing supplies the trans call; read-level confirmation (SAM/WhatsHap/DeepVariant on the patient FASTQs) is planned, not yet run; an ACMG SF v3.3 scan handles secondary findings; the submission writer satisfies the scorer's byte-level contract (UTF-8 no BOM, chr-prefix, <=10 rows, strictly decreasing epcr), verified against a vendored copy of the official scorer on 19 adversarial fixtures including a mutation audit. Strengths: auditable stages, frozen config, honest negative controls, reproducible numbers. Limitations: epcr is a ranking artifact, not a calibrated probability; phenotype prior depends on the gene->disease annotation corpus; phase-set chaining beyond read-length needs PGT/PID or external phasing references; single-proband design cannot estimate caller error rates empirically.
 
 ## 13. Limitations
 

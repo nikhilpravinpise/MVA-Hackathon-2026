@@ -441,3 +441,60 @@ class TestValidateSubmissionEncoding:
         data = self._bytes_with_notes(b"caf\xe9 note")  # raw cp1252 'e-acute'
         with pytest.raises(UnicodeDecodeError):
             submit.validate_submission_bytes(data, GT)
+
+
+class TestStrayHashComment:
+    """Falsification: a stray '#'-comment line before #CHROM must NOT be
+    treated as the column header - that silently zeroes the sample list so
+    every genotype reads as no_call."""
+
+    def test_comment_before_chrom_keeps_samples(self, tmp_path):
+        raw = ("##fileformat=VCFv4.2\n"
+               "##contig=<ID=7,length=2000>\n"
+               "##INFO=<ID=CSQ,Number=.,Type=String,Description=\"f: Allele|Consequence|IMPACT|SYMBOL|Gene\">\n"
+               "# a stray comment from a tool\n"
+               "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tPROBAND01\n"
+               "7\t100\t.\tA\tT\t60.0\tPASS\tCSQ=T|missense_variant|MODERATE|GENEX|G1\tGT:AD:DP:GQ\t0/1:20,20:40:99\n")
+        f = tmp_path / "c.vcf"
+        f.write_text(raw)
+        r = VcfReader(f)
+        assert r.samples == ["PROBAND01"], \
+            "stray # comment swallowed as header -> samples lost"
+        recs = list(r.records(sample="PROBAND01"))
+        assert recs[0].samples["PROBAND01"].called
+
+
+class TestExomiserYaml:
+    """Falsification (audit H5/H7): the generated analysis.yml must match
+    the exomiser-cli 14.x preset-genome-analysis.yml schema - wrong key
+    names or an empty steps chain produce an unrunnable or degenerate
+    (no inheritanceFilter -> no comp-het) analysis. And an empty HPO list
+    must fail loudly."""
+
+    def test_schema_keys_and_chain(self, tmp_path):
+        from tools import run_exomiser as rex
+        y = rex.build_yaml(tmp_path / "x.vcf", ["HP:0001250"], "PROBAND01",
+                           "PASS_ONLY", "GRCH38", str(tmp_path / "out" / "P"))
+        import yaml
+        d = yaml.safe_load(y)
+        assert set(d) == {"sample", "analysis", "outputOptions"}
+        assert set(d["sample"]) == {"vcf", "ped", "assembly", "proband",
+                                    "hpoIds"}
+        assert d["sample"]["assembly"] == "hg38"  # NOT 'GRCH38'
+        assert d["sample"]["hpoIds"] == ["HP:0001250"]
+        assert "AUTOSOMAL_RECESSIVE_COMP_HET" in \
+            d["analysis"]["inheritanceModes"]
+        assert "GNOMAD_E" in d["analysis"]["frequencySources"]
+        steps = [list(s)[0] for s in d["analysis"]["steps"]]
+        assert "inheritanceFilter" in steps  # empty steps => no MOI analysis
+        assert d["outputOptions"]["outputFileName"]
+
+    def test_empty_merged_hpo_fails(self, tmp_path, monkeypatch):
+        import json
+        from tools import run_exomiser as rex
+        empty = tmp_path / "hpo.json"
+        empty.write_text(json.dumps({"hpo_terms": []}))
+        with pytest.raises(SystemExit) as ei:
+            rex.main(["--vcf", "x.vcf", "--hpo-terms", str(empty),
+                      "--dry-run"])
+        assert ei.value.code != 0

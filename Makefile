@@ -37,6 +37,7 @@ report:
 	  --sf results/t1_spike/sf_findings.json \
 	  --acmg results/t1_spike/acmg_report.json \
 	  --eda results/t1_spike/eda_report.json \
+	  --control-dir results/t1_control/funnel \
 	  --real-spike-dir results/real_spike_run \
 	  --real-spike-build env/real_spike/BUILD_REPORT.json \
 	  --real-spike-truth env/real_spike/truth.json \

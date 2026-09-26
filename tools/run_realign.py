@@ -75,6 +75,11 @@ WORK="{work}"
 SAMPLE="{sample}"
 REGION="{region}"    # bare-contig form e.g. 1:1000000-1100000
 
+mkdir -p "$WORK"
+# docker -v needs ABSOLUTE host paths - resolve $WORK and the ref dir now
+WORK_ABS="$(cd "$WORK" && pwd)"
+REF_DIR="$(cd "$(dirname "$REF")" && pwd)"
+
 # --- 1. one-time index (~30-60 min, ~3 GB ref) ---
 {bwa} index "$REF"
 
@@ -100,9 +105,9 @@ REGION="{region}"    # bare-contig form e.g. 1:1000000-1100000
 {wh} phase -o $WORK/phased.vcf --reference="$REF" "{args.vcf}" $WORK/region.bam
 
 # --- 7. DeepVariant --regions: independent recall + GT concordance ---
-docker run --rm -v "$WORK":/work -v "$(dirname "$REF")":/refdir \\
+docker run --rm -v "$WORK_ABS":/work -v "$REF_DIR":/refdir \\
     {dv} /opt/deepvariant/bin/run_deepvariant \\
-        --model_type WGS --ref /refdir/$(basename "$REF") \\
+        --model_type WGS --ref /refdir/"$(basename "$REF")" \\
         --reads /work/{sample}.dedup.bam \\
         --output_vcf /work/dv_region.vcf.gz \\
         --output_gvcf /work/dv_region.g.vcf.gz \\
@@ -140,6 +145,19 @@ def main(argv=None) -> int:
         print("WARNING: --region looks chr-prefixed; the reference BAM uses "
               "bare contigs - 'chr15:...' returns empty (deep dive sec.2)",
               file=sys.stderr)
+    if args.threads < 1:
+        print("ERROR: --threads must be >= 1", file=sys.stderr)
+        return 2
+    lanes = [ln for ln in args.lanes.split(",") if ln.strip()]
+    if not lanes:
+        print("ERROR: --lanes has no entries", file=sys.stderr)
+        return 2
+    args.lanes = ",".join(lanes)
+    for slot in ("{lane}", "{read}"):
+        if slot not in args.fastq_template:
+            print(f"ERROR: --fastq-template must contain a {slot} slot - "
+                  "all lanes/reads would map to one filename", file=sys.stderr)
+            return 2
 
     script = build_script(args)
     print(script)

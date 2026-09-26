@@ -12,6 +12,12 @@ ever enters an LLM prompt** (deletion doctrine: prompts/logs containing
 pasted variant blocks are DELETE-class artifacts). Every session that uses a
 generative tool gets one row.
 
+Coverage note: this ledger begins 2026-09-26 (the audit/verification
+sessions). Earlier repo artifacts dated 2026-09-15/17/18 (deep-dive rounds,
+plan status dates) pre-date the ledger - they were produced under the same
+no-patient-data rule but are not itemized here; if a session is added for
+that work it will cite the same rule.
+
 | Date | Provider / product | Plan / tier | Model | Data-handling terms | What data was exposed |
 |---|---|---|---|---|---|
 | 2026-09-26 | Cognition Devin CLI | Commercial product | SWE-2 Max | Verify no-training clause before any patient-data prompts | NONE - no patient data on disk this session; all fixtures synthetic; public reference corpora (HPO) download + repo code/docs only |

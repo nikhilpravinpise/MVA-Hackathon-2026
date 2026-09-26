@@ -26,6 +26,9 @@ sys.path.insert(0, str(REPO))
 def commands(bam: Path, ref: Path, out: Path, threads: int) -> list[str]:
     out_s = str(out)
     return [
+        "mkdir -p " + out_s,
+        # Manta needs a BAM index; emit it rather than assuming one exists
+        "samtools index " + str(bam) + " 2>/dev/null || true",
         # Manta - germline SV/del/dup/ins/inv calling, docker
         "mkdir -p " + out_s + "/manta",
         "docker run --rm -v $(pwd):/work "
@@ -65,7 +68,19 @@ def main(argv=None) -> int:
                     help="write a runnable shell script alongside printing")
     args = ap.parse_args(argv)
 
-    bam, ref, out = Path(args.bam), Path(args.ref), Path(args.out)
+    if args.threads < 1:
+        print("ERROR: --threads must be >= 1", file=sys.stderr)
+        return 2
+    # POSIX-normalize but keep RELATIVE - the emitted docker commands mount
+    # $(pwd):/work, so absolute host paths would resolve outside the mount
+    bam = Path(str(args.bam).replace("\\", "/"))
+    ref = Path(str(args.ref).replace("\\", "/"))
+    out = Path(str(args.out).replace("\\", "/"))
+    if bam.is_absolute() or ref.is_absolute() or out.is_absolute():
+        print("ERROR: --bam/--ref/--out must be relative paths under the "
+              "mount root (the emitted script mounts $(pwd):/work - run it "
+              "from the directory containing these paths)", file=sys.stderr)
+        return 2
     cmds = commands(bam, ref, out, args.threads)
     print("# CNV/SV screen - review commands before executing")
     for c in cmds:

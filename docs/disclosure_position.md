@@ -17,7 +17,8 @@ knowing the proband is a real, identifiable child?
    SF list exists precisely because these findings are actionable and the
    professional consensus is to report them when looked for. Suppressing a
    real finding to look tidy is not rigor. Each secondary row carries a
-   `notes` rationale (gene, condition, MOI, ClinVar basis) so a reviewer sees
+   `notes` rationale (gene, condition, ClinVar basis; the MOI rule is
+   recorded in sf_findings.json's `moi` field) so a reviewer sees
    *why* it is listed without us making clinical claims.
 
 2. **Describe, don't diagnose.** Rows and report text state the variant's
