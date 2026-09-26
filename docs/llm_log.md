@@ -32,3 +32,4 @@ that work it will cite the same rule.
   and cited here.
 - **Prohibited:** pasting proband VCF/BAM content, genotypes, or variant
   blocks into any prompt; consumer tiers whose terms cannot be verified.
+| 2026-09-26 | Cognition Devin CLI | Commercial product | SWE-2 Max | Verify no-training clause before any patient-data prompts | NONE - audit round 3: scorer-parity subprocess, exomiser YAML schema, run_track1/vcf.c edge fixes, report-literal derivation; repo code/docs + public corpora only, zero patient-derived content |

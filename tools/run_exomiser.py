@@ -180,6 +180,10 @@ def main(argv=None) -> int:
         raise SystemExit(f"invalid HPO ids {bad} - an unquoted value would "
                          "break the generated YAML (or score nonsense)")
 
+    if not Path(args.vcf).exists():
+        print(f"WARNING: --vcf {args.vcf} does not exist yet - the YAML "
+              "points at a path that must exist before the jar runs",
+              file=sys.stderr)
     out = Path(args.out)
     out_name = str(out.parent / (args.proband + "-" + args.mode))
     yaml_text = build_yaml(Path(args.vcf).resolve(), hpo, args.proband,

@@ -316,9 +316,22 @@ def _aggregate_fastqs(paths: list[Path]) -> dict:
 
     r1_reads = sum(s["n_reads"] for s, p in zip(per, paths)
                    if _R1_RE.search(p.name))
-    r2_present = any(_R2_RE.search(p.name) for p in paths)
+    r1_files = [p.name for p in paths if _R1_RE.search(p.name)]
+    r2_files = [p.name for p in paths if _R2_RE.search(p.name)]
+    r2_present = bool(r2_files)
+    pairing_note = None
     if r1_reads and r2_present:
         read_pairs = r1_reads
+        # files outside the r1/r2 alternation are silently excluded from
+        # the pair count - e.g. single-end lanes named x_1.fq/x_2.fq/x_3.fq
+        # would be mistaken for mates. Name the convention so the operator
+        # can catch a false low-pair FAIL.
+        unmatched = [p.name for p in paths
+                     if not _R1_RE.search(p.name) and not _R2_RE.search(p.name)]
+        if unmatched:
+            pairing_note = (f"paired-end inferred from {r1_files}+{r2_files}; "
+                            f"{len(unmatched)} file(s) match neither pattern "
+                            f"and are excluded from read_pairs: {unmatched}")
     elif not r2_present:
         read_pairs = n_reads  # single-end: one read == one fragment
     else:
@@ -329,6 +342,7 @@ def _aggregate_fastqs(paths: list[Path]) -> dict:
         "n_reads": n_reads or None,
         "n_truncated": n_trunc or None,
         "read_pairs": read_pairs,
+        "pairing_note": pairing_note,
         "total_bases": bases or None,
         "mean_read_len": (bases / n_reads) if n_reads else None,
         "q30_rate": wavg("q30_fraction"),
