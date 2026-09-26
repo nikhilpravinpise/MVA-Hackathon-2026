@@ -553,3 +553,51 @@ class TestCsqAlleleUnmatched:
         f.write_text(raw)
         st = compute_stats(f, sample="S1")
         assert st["n_csq_allele_unmatched"] == 1
+
+
+class TestConfigValidation:
+    """Falsification (audit F21): a config missing required sections must
+    fail loudly - silent fallback to in-code defaults would diverge from
+    the frozen config."""
+
+    def test_missing_section_raises(self, tmp_path):
+        import yaml as _y
+        from src.config import load_config
+        p = tmp_path / "cfg.yaml"
+        p.write_text(_y.safe_dump({"rarity": {"af_max": 1e-4}}))
+        with pytest.raises(ValueError, match="missing required"):
+            load_config(p)
+
+    def test_non_mapping_raises(self, tmp_path):
+        from src.config import load_config
+        p = tmp_path / "cfg.yaml"
+        p.write_text("- a\n- list\n")
+        with pytest.raises(ValueError, match="not a YAML mapping"):
+            load_config(p)
+
+
+class TestMalformedFields:
+    """Falsification: degenerate REF/ALT/QUAL fields must not silently
+    parse - they poison SNV/indel classification and CSQ matching."""
+
+    def _one(self, tmp_path, line):
+        hdr = ("##fileformat=VCFv4.2\n"
+               "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\n")
+        f = tmp_path / "x.vcf"
+        f.write_text(hdr + line + "\n")
+        return f
+
+    def test_empty_ref_alt_rejected(self, tmp_path):
+        from src.vcf import VcfReader
+        for line in ("7\t100\t.\tA\t\t60\tPASS\t.\tGT\t0/1",
+                     "7\t100\t.\t\tT\t60\tPASS\t.\tGT\t0/1",
+                     "7\t100\t.\tA\tT,\t60\tPASS\t.\tGT\t0/1"):
+            with pytest.raises(ValueError, match="empty"):
+                list(VcfReader(self._one(tmp_path, line)).records())
+
+    def test_nonfinite_qual_normalized(self, tmp_path):
+        from src.vcf import VcfReader
+        for q in ("NaN", "inf", "-inf"):
+            recs = list(VcfReader(self._one(
+                tmp_path, f"7\t100\t.\tA\tT\t{q}\tPASS\t.\tGT\t0/1")).records())
+            assert recs[0].qual is None, f"QUAL={q} should normalize to None"

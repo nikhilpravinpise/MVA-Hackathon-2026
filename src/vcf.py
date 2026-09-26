@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import gzip
 import io
+import math
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -300,13 +301,25 @@ class VcfReader:
                     inf[k] = v
                 else:
                     inf[kv] = True
+        alt_list = alts.split(",")
+        # REF/ALT are mandatory non-empty per spec - an empty field parses
+        # float/int fine and then poisons SNV/indel + CSQ matching silently
+        if not ref:
+            raise ValueError("empty REF field")
+        if any(a == "" for a in alt_list):
+            raise ValueError("empty ALT field")
+        qual_v = None if qual in (".", "") else float(qual)
+        # non-finite QUAL (NaN/inf literals float-parse) is malformed data,
+        # not a real score - normalize to missing rather than propagating
+        if qual_v is not None and not math.isfinite(qual_v):
+            qual_v = None
         return VcfRecord(
             chrom=chrom,
             pos=int(pos),
             vid=vid,
             ref=ref,
-            alts=alts.split(","),
-            qual=None if qual in (".", "") else float(qual),
+            alts=alt_list,
+            qual=qual_v,
             filters=[] if filt in ("PASS", ".", "") else filt.split(";"),
             info=inf,
             samples=samples,
