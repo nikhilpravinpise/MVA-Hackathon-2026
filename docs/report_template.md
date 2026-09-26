@@ -17,8 +17,9 @@ diagnosis - an Exomiser-class design implemented as a transparent,
 deterministic, auditable ranking pipeline rather than a trained black box.
 Two independent arms were specified a priori:
 
-* **Arm A (standard):** Exomiser genome mode on the annotated VCF + HPO term
-  set (configuration + runner in `tools/run_exomiser.py`).
+* **Arm A (standard):** Exomiser 14.0.0 genome mode (hg38, `2406` bundles,
+  PASS_ONLY preset chain) on the same VCF + HPO set - runner
+  `tools/run_exomiser.py`, concordance via `tools/compare_arms.py`.
 * **Arm B (custom funnel, this report):** six deterministic stages:
 
 ```
