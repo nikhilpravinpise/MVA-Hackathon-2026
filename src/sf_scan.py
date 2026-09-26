@@ -248,7 +248,8 @@ def _csv_note(gene: str, cond: dict, grp: tuple, basis: str,
         tag = "biallelic P/LP"
     else:
         f = grp[0]
-        tag = "hom P/LP" if f.is_hom_alt else "het P/LP"
+        tag = ("hemi P/LP" if f.is_hemi else
+               "hom P/LP" if f.is_hom_alt else "het P/LP")
     if "sex_unknown" in caveats:
         tag += " (sex?)"
     raw = f"ACMG SF v3.3: {gene} {tag}, {cond.get('disease', '')}"
