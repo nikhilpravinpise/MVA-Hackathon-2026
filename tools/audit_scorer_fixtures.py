@@ -140,6 +140,19 @@ tests = [
      "proband_id,pos_1,chrom_1,alt_1,ref_1,pos_2,chrom_2,alt_2,ref_2,epcr,finding_type,notes"),
     ("CRLF endings", ["PROBAND01,chr9,90000001,A,G,chr9,90000002,C,T,0.95,primary,\r"], ("SCORE", 100.0, 1.0, 1, None), None),
     ("blank trailing line", [prow(V1, V2), ""], ("SCORE", 100.0, 1.0, 1, None), None),
+    # exception-type edges the battery previously left unpinned (audit F4):
+    ("short data row (missing epcr field)",
+     ["PROBAND01,chr9,90000001,A,G,chr9,90000002,C,T"], "EXC:TypeError", None),
+    # ghost-variant trap: chrom_2/pos_2 set but ref_2/alt_2 empty builds a
+    # variant of (chrom,pos,"","") - a real 2-variant row that can never
+    # match, diluting F-max to 0.5 and dropping to partial-match rank.
+    # Our writer's _validate_row half-fill check rejects this shape.
+    ("ghost v2 (empty ref_2/alt_2)",
+     ["PROBAND01,chr9,90000001,A,G,chr9,90000002,,,0.95,primary,x"],
+     ("SCORE", 50.0, 0.5, None, 1), None),
+    ("empty proband_id on first row",
+     [",chr9,90000001,A,G,chr9,90000002,C,T,0.95,primary,x"],
+     ("APP_REJECT", "Unknown proband_id ''. Only PROBAND01 is accepted."), None),
 ]
 
 # Byte-level fixtures - written raw, not through the text harness

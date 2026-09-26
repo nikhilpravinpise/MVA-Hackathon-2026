@@ -17,7 +17,7 @@ not submit.
 ## CSV byte contract (all enforced by tests)
 
 - [ ] `pytest -m gate` green (includes oracle parity + adversarial battery)
-- [ ] `python tools/audit_scorer_fixtures.py` -> "ALL 57 FIXTURES VERIFIED"
+- [ ] `python tools/audit_scorer_fixtures.py` -> "ALL 60 FIXTURES VERIFIED"
 - [ ] local oracle on the exact upload bytes: `rank_points=100.0`,
       `f_max=1.000`, `full_match_rank=1` - run:
       `python -c "import sys; sys.path.insert(0,'.'); sys.path.insert(0,'scorer'); from src.submit import validate_submission_bytes; import pathlib; ..."` (or use tests/test_e2e_gate.py which does this)

@@ -205,8 +205,10 @@ def _validate_row(r: dict) -> None:
     int(str(r.get("pos_1", "")).strip())  # oracle does int(pos_1)
     c2, p2 = str(r.get("chrom_2", "")).strip(), str(r.get("pos_2", "")).strip()
     if bool(c2) != bool(p2):
-        # half-filled second variant silently degrades the row to a single
-        # variant in the oracle's parser - catch it here instead
+        # half-filled second variant either degrades the row to a single
+        # variant in the oracle's parser (empty chrom_2) or, for a
+        # whitespace-only chrom_2, becomes a ghost unmatched variant that
+        # adds an FP at every F-max threshold - catch both here
         raise ValueError(
             f"second variant half-filled (chrom_2={c2!r}, pos_2={p2!r})")
     if c2:
@@ -276,10 +278,23 @@ def validate_submission_bytes(data: bytes, ground_truth):
     PROBAND01 (e.g. ``conftest.GT`` or the spike-in truth). Returns the
     oracle's ``ScoreResult``; raises whatever the oracle/app path raises.
 
+    Encoding fidelity: ``load_submission`` opens the file without an
+    ``encoding`` arg, so in-process it decodes under the HOST locale
+    (cp1252 on Windows) while the Linux server decodes UTF-8. Pure-ASCII
+    bytes decode identically under both so the in-process path is exact;
+    non-ASCII input is scored in a ``python -X utf8`` subprocess matching
+    the server's locale, so a hand-edited CSV can't false-pass locally.
+
     Falsification: if ``submission_bytes`` output ever fails this check
     against the expected GT, the writer/oracle contract is broken - do not
     upload.
     """
+    if data.isascii():
+        return _validate_in_process(data, ground_truth)
+    return _validate_utf8_subprocess(data, ground_truth)
+
+
+def _validate_in_process(data: bytes, ground_truth):
     oracle = _load_oracle()
     with tempfile.NamedTemporaryFile("wb", suffix=".csv", delete=False) as f:
         f.write(data)
@@ -293,5 +308,70 @@ def validate_submission_bytes(data: bytes, ground_truth):
             raise ValueError(
                 f"Unknown proband_id '{pid}'. Only PROBAND01 is accepted.")
         return oracle.score_proband(pid, subs[pid], ground_truth)
+    finally:
+        Path(path).unlink(missing_ok=True)
+
+
+def _validate_utf8_subprocess(data: bytes, ground_truth):
+    """Score non-ASCII bytes under the server's UTF-8 locale.
+
+    Spawns ``python -X utf8`` (same pattern as tools/audit_scorer_fixtures.py)
+    so host-locale decoding can't diverge from what the app sees.
+    """
+    import json as _json
+    import subprocess
+    code = (
+        "import sys,json;sys.path.insert(0,sys.argv[1]);"
+        "import evaluation as ev;"
+        "subs=ev.load_submission(sys.argv[2]);"
+        "pid=next(iter(subs)) if subs else 'EMPTY';"
+        "print('REJ:'+pid) if pid!='PROBAND01' else None;"
+        "gt=frozenset(tuple(v) for v in json.loads(sys.argv[3]));"
+        "r=ev.score_proband(pid,subs[pid],gt) if pid=='PROBAND01' else None;"
+        "print('SCORE:'+json.dumps({'proband_id':r.proband_id,"
+        "'rank_points':r.rank_points,'f_max':r.f_max,"
+        "'full_match_rank':r.full_match_rank,'partial_match_rank':r.partial_match_rank,"
+        "'f_max_threshold':r.f_max_threshold,'n_predictions_at_f_max':r.n_predictions_at_f_max})) if r else None"
+    )
+    with tempfile.NamedTemporaryFile("wb", suffix=".csv", delete=False) as f:
+        f.write(data)
+        path = f.name
+    try:
+        gt_json = _json.dumps([list(v) for v in sorted(
+            ground_truth, key=lambda v: (v[0], v[1]))])
+        out = subprocess.run(
+            [sys.executable, "-X", "utf8", "-c", code,
+             str(REPO / "scorer"), path, gt_json],
+            capture_output=True, text=True, timeout=60)
+        line = (out.stdout.strip().splitlines() or [""])[-1]
+        if out.returncode != 0 or line.startswith("Traceback"):
+            err = (out.stderr.strip().splitlines() or ["?"])[-1]
+            # preserve the oracle's exception TYPE (the app surfaces them
+            # verbatim) rather than collapsing everything to ValueError
+            name, _, msg = err.partition(":")
+            exc_map = {
+                "KeyError": KeyError, "ValueError": ValueError,
+                "TypeError": TypeError, "AttributeError": AttributeError,
+                "UnicodeDecodeError": UnicodeDecodeError,
+                "IndexError": IndexError,
+            }
+            cls = exc_map.get(name.strip())
+            if cls is UnicodeDecodeError:
+                # UnicodeDecodeError's ctor takes 5 args, not a message -
+                # reconstruct it so callers see the real type
+                raise UnicodeDecodeError(
+                    "utf-8", data, 0, len(data), msg.strip())
+            if cls is not None:
+                raise cls(msg.strip().strip("'\""))
+            raise ValueError(
+                "oracle raised under UTF-8 server semantics: " + err)
+        if line.startswith("REJ:"):
+            raise ValueError(
+                f"Unknown proband_id '{line[4:]}'. Only PROBAND01 is accepted.")
+        if line.startswith("SCORE:"):
+            oracle = _load_oracle()
+            return oracle.ScoreResult(**_json.loads(line[6:]))
+        raise ValueError("unexpected oracle output: "
+                         + (out.stdout + out.stderr)[:200])
     finally:
         Path(path).unlink(missing_ok=True)

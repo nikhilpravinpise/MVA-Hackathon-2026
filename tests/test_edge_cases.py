@@ -18,6 +18,7 @@ from src.config import load_config
 from src.genes import enumerate_hypotheses
 from src.phasing import determine_phase, _alt_haplotypes
 from src.pipeline import run_pipeline
+from src import submit
 from src.triage import extract_facts
 from src.vcf import VcfReader
 
@@ -411,3 +412,32 @@ class TestHaploidHemizygous:
         f = _facts(vcf)
         fact = next(x for x in f if x.gene == "XGENE")
         assert not fact.is_het and not fact.is_hom_alt
+
+
+class TestValidateSubmissionEncoding:
+    """Falsification: validate_submission_bytes must score exactly like the
+    app - which decodes under the Linux server's UTF-8 locale. A cp1252-only
+    byte (e.g. raw 0xE9) must raise (the server raises UnicodeDecodeError);
+    valid UTF-8 non-ASCII bytes must score, not false-fail locally."""
+
+    def _bytes_with_notes(self, notes_bytes: bytes) -> bytes:
+        # variant pair matches tests/conftest.GT (chr1:1234567 A>G + chr1:7654321 C>T)
+        line = (b"PROBAND01,chr1,1234567,A,G,chr1,7654321,C,T,0.95,primary,"
+                + notes_bytes + b"\n")
+        return b"proband_id,chrom_1,pos_1,ref_1,alt_1,chrom_2,pos_2,ref_2,alt_2,epcr,finding_type,notes\n" + line
+
+    def test_valid_utf8_scores(self):
+        import sys
+        sys.path.insert(0, "tests")
+        from conftest import GT
+        data = self._bytes_with_notes("café note".encode("utf-8"))
+        res = submit.validate_submission_bytes(data, GT)
+        assert res.rank_points == 100.0
+
+    def test_cp1252_lone_byte_raises(self):
+        import sys
+        sys.path.insert(0, "tests")
+        from conftest import GT
+        data = self._bytes_with_notes(b"caf\xe9 note")  # raw cp1252 'e-acute'
+        with pytest.raises(UnicodeDecodeError):
+            submit.validate_submission_bytes(data, GT)

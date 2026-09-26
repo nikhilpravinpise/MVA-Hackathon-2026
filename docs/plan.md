@@ -514,7 +514,7 @@ Community check-in every ~3 days: discussions, rules changes, organizer announce
 
 - Scoring semantics, row cap, epcr range, chrom case sensitivity, sort order → `hackathon-app/evaluation.py`;
   **every expected score in §6 re-verified by executing the vendored scorer on fixture CSVs**
-  (57 fixtures incl. byte-level cases, all green 2026-09-18), including both Remek-signature
+  (60 fixtures incl. byte-level cases, all green 2026-09-18), including both Remek-signature
   reproductions and the multi-proband footgun
 - Submission requirements (GitHub/report/CSV), `model{N}_` naming, PROBAND01 check → `tabs/submit_track1.py`
 - Track 2 latest-only rule, video requirement → `tabs/submit_track2.py`, `tabs/faq.py`
