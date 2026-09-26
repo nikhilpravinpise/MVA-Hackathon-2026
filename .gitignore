@@ -26,3 +26,8 @@ env/*
 nul
 Thumbs.db
 .DS_Store
+
+# coverage artifacts
+.coverage
+coverage.xml
+htmlcov/
