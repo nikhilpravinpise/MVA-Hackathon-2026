@@ -35,7 +35,11 @@ report:
 	  --ablations results/t1_spike/ablations.json \
 	  --phasing results/t1_spike/phasing_report.json \
 	  --sf results/t1_spike/sf_findings.json \
+	  --acmg results/t1_spike/acmg_report.json \
 	  --eda results/t1_spike/eda_report.json \
+	  --real-spike-dir results/real_spike_run \
+	  --real-spike-build env/real_spike/BUILD_REPORT.json \
+	  --real-spike-truth env/real_spike/truth.json \
 	  --out docs/report.md
 
 ## scorer-fixture audit battery (57 fixtures vs vendored oracle)

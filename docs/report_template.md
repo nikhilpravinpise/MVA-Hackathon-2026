@@ -61,7 +61,8 @@ The funnel was validated *blind* before the proband call:
   unrelated HPO set -> **{{CONTROL_RESULT}}** (a funnel that finds a causal
   pair everywhere finds nothing).
 * **Real external validation (public genome + real ClinVar pair):**
-  {{REAL_SPIKE_SECTION}}
+
+{{REAL_SPIKE_SECTION}}
 
 ### 3a. Leave-one-source-out ablations
 

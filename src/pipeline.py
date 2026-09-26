@@ -32,8 +32,10 @@ class FunnelCounts:
 
     def check_monotonic(self) -> list[str]:
         """Return a list of violations (empty = clean). Stage outputs must be
-        non-increasing and the funnel must never grow rows."""
-        order = ["records", "alt_gene_facts", "qc_pass", "rare", "candidates"]
+        non-increasing among fact-level filters: one VCF record legitimately
+        yields SEVERAL (alt x gene) facts, so 'records' is excluded - the
+        funnel may fan out at extraction but must never grow after it."""
+        order = ["alt_gene_facts", "qc_pass", "rare", "candidates"]
         prev = None
         bad = []
         for s in order:

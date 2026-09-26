@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `<TBD - see docs/team.md>` · **Model:** `model1` · **Generated:** 2026-09-26 09:32 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `<TBD - see docs/team.md>` · **Model:** `model1` · **Generated:** 2026-09-26 09:47 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** VALIDATED ON SYNTHETIC STAND-IN - patient VCF not yet on disk; every number below is from the public-stand-in harness.
 
@@ -76,7 +76,11 @@ The funnel was validated *blind* before the proband call:
   unrelated HPO set -> **no hypothesis emitted (0 above emit floor) - expected behaviour verified** (a funnel that finds a causal
   pair everywhere finds nothing).
 * **Real external validation (public genome + real ClinVar pair):**
-  _Pending dataset access - artifact not yet produced._
+
+- 270 real HG002 background variants in window 12:102800000-103000000
+- spiked pair = real ClinVar variants chr12:102839204 G>A (ClinVar 551287, Likely_pathogenic), chr12:102839216 C>A (ClinVar 932274, Likely_pathogenic)
+- annotation: 277 alleles via live Ensembl REST VEP
+- Funnel: 272 records -> 2 rare -> 2 candidates -> **pair recovered at rank 1** (in_trans: trans, epcr 0.95)
 
 ### 3a. Leave-one-source-out ablations
 
@@ -109,6 +113,7 @@ Robust across grid: **True**
 | Evidence | Mechanism | Result |
 |---|---|---|
 | PGT/PID read-backed phasing | pgt_pid_same_set | trans |
+| read-level SAM evidence | read_level | unknown |
 
 Agreement: **trans**
 
@@ -150,7 +155,12 @@ Combined call: **Pathogenic** (15 pts - ACMG/AMP Richards2015 subset + Tavtigian
 
 ## 9. Runtime and cost
 
-_Pending dataset access - artifact not yet produced._
+| Job | Where | Time | Cost |
+|---|---|---|---|
+| Arm-B funnel (this run) | local | 0.007s | $0 |
+| Test battery (57-fixture oracle + funnel + e2e) | local | seconds | $0 |
+
+Planned cloud jobs (alignment/DeepVariant/VEP at data landing) are budgeted < $50 total - see docs/runtime_log.md.
 
 ## 10. GenAI disclosure (required)
 

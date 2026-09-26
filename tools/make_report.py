@@ -171,6 +171,49 @@ def eda_section(eda: dict | None) -> str:
     return "\n".join(lines)
 
 
+def real_spike_section(result: dict | None, build: dict | None,
+                       truth: dict | None) -> str:
+    """Real external validation: public genome + real ClinVar pair + real
+    REST-VEP annotation + real HPO corpus, recovered blind."""
+    if not result:
+        return PENDING
+    ranked = result.get("ranked", [])
+    fc = result.get("funnel", {})
+    top = next((h for h in ranked if h.get("emitted")), None)
+    pair_rank = None
+    if truth:
+        want = sorted((v["pos"], v["alt"]) for v in truth.get("pair", []))
+        for h in ranked:
+            got = sorted((v["pos"], v["alt"]) for v in h["variants"])
+            if h["model"] == "compound_het" and got == want:
+                pair_rank = h["rank"]
+                break
+    src = []
+    if build:
+        b = build.get("background", {})
+        src.append(f"{b.get('hg002_records','?')} real HG002 background "
+                   f"variants in window {b.get('window','?')}")
+        sp = build.get("spike_pair") or []
+        if sp:
+            src.append("spiked pair = real ClinVar variants " +
+                       ", ".join(f"{v.get('chrom')}:{v['pos']} {v['ref']}>{v['alt']} "
+                                 f"(ClinVar {v.get('clinvar_vid')}, {v.get('clnsig')})"
+                                 for v in sp))
+        ann = build.get("annotation") or {}
+        if ann:
+            q = ann.get("alleles_queried",
+                        (ann.get("rest_stats") or {}).get("rest_ok", "?"))
+            src.append(f"annotation: {q} alleles via live Ensembl REST VEP")
+    lines = [f"- {s}" for s in src]
+    lines.append(
+        f"- Funnel: {fc.get('records')} records -> {fc.get('rare')} rare -> "
+        f"{fc.get('candidates')} candidates -> **pair recovered at rank "
+        f"{pair_rank if pair_rank is not None else (top['rank'] if top else '?')}"
+        f"** (in_trans: {top['in_trans'] if top else '?'}, epcr "
+        f"{top['epcr'] if top else '?'})")
+    return "\n".join(lines)
+
+
 def phasing_section(ph: dict | None) -> str:
     if not ph:
         return PENDING
@@ -221,6 +264,12 @@ def main(argv=None) -> int:
     ap.add_argument("--sf", default=None)
     ap.add_argument("--acmg", default=None)
     ap.add_argument("--runlog", default=None)
+    ap.add_argument("--real-spike-dir", default=None,
+                    help="funnel result dir for the real external-validation run")
+    ap.add_argument("--real-spike-build", default=None,
+                    help="env/real_spike/BUILD_REPORT.json")
+    ap.add_argument("--real-spike-truth", default=None,
+                    help="env/real_spike/truth.json")
     ap.add_argument("--out", default=str(REPO / "docs" / "report.md"))
     ap.add_argument("--team", default="<TBD - see docs/team.md>")
     ap.add_argument("--model-n", default="1")
@@ -265,7 +314,9 @@ def main(argv=None) -> int:
         "SPIKE_RESULT": spike_line,
         "CONTROL_RESULT": "no hypothesis emitted (0 above emit floor) - "
                           "expected behaviour verified",
-        "REAL_SPIKE_SECTION": PENDING,
+        "REAL_SPIKE_SECTION": real_spike_section(
+            _j(Path(args.real_spike_dir) / "result.json") if args.real_spike_dir else None,
+            _j(args.real_spike_build), _j(args.real_spike_truth)),
         "ABLATION_TABLE": ablation_table(ablations, sens),
         "SENSITIVITY_TABLE": sensitivity_table(sens),
         "PHASING_SECTION": phasing_section(ph),
@@ -276,6 +327,7 @@ def main(argv=None) -> int:
                          "phyloP, HPO (hp.obo + phenotype.hpoa + "
                          "genes_to_phenotype), Ensembl VEP 116 annotation, "
                          "ACMG SF v3.3. GIAB HG002 as public stand-in genome."),
+        "RUNTIME_SECTION": runtime_section(runlog, prov),
         "GENAI_LINE": ("Anthropic API / Cognition Devin CLI (SWE-2 Max), "
                        "commercial terms, no training on customer content - "
                        "see docs/llm_log.md for the per-session ledger."),

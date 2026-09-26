@@ -81,7 +81,11 @@ def _load_manifest() -> dict:
 
 
 def _save_manifest(m: dict) -> None:
-    MANIFEST.write_text(json.dumps(m, indent=2) + "\n", encoding="utf-8")
+    """Write manifest.json as read-modify-write: merge whatever is on disk
+    first so two concurrent fetch processes do not clobber each other."""
+    disk = _load_manifest()
+    disk.update(m)
+    MANIFEST.write_text(json.dumps(disk, indent=2) + "\n", encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------

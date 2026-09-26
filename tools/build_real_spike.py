@@ -290,9 +290,10 @@ def parse_hg002(path: Path, window: tuple[int, int]) -> list[dict]:
         sval = c[9].split(":") if len(c) > 9 else []
         raw = {fmt[i]: sval[i] if i < len(sval) else "."
                for i in range(len(fmt))}
-        recs.append({"chrom": c[0].lstrip("chr"), "pos": pos, "id": c[2],
-                     "ref": c[3], "alts": c[4].split(","),
-                     "qual": c[5], "filters": c[6], "gt": raw.get("GT", "0/1")})
+        recs.append({"chrom": c[0].removeprefix("chr"), "pos": pos,
+                     "id": c[2], "ref": c[3], "alts": c[4].split(","),
+                     "qual": c[5], "filters": c[6],
+                     "gt": raw.get("GT", "0/1")})
     return recs
 
 
@@ -303,12 +304,6 @@ def _synth_format(gt: str, n_alt: int, key: str, seed: int,
     dp = rng.randint(30, 42)
     gq = 99 if spike else rng.randint(60, 99)
     alleles = gt.replace("|", "/").split("/")
-    depth = [0] * (n_alt + 1)
-    for a in alleles:
-        try:
-            depth[int(a)] += 1
-        except ValueError:
-            pass
     # distribute dp across carried alleles with mild jitter
     parts = [rng.uniform(0.85, 1.15) for _ in alleles]
     tot = sum(parts) or 1.0
@@ -604,7 +599,6 @@ def anns_from_vep(item: dict, vcf_alt: str, vep_allele: str = "",
     per_gene: dict[str, dict] = {}
     for tc in tcs:
         gene = tc.get("gene_symbol") or tc.get("gene_id") or ""
-        cons = "&".join(tc.get("consequence_terms") or [])
         cur = per_gene.get(gene)
         def rank(t: dict) -> tuple:
             return (so_severity("&".join(t.get("consequence_terms") or [])),
