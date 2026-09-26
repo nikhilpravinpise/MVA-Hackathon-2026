@@ -1093,3 +1093,110 @@ class TestFetchBig:
         p.write_bytes(b"x" * 100)
         with pytest.raises(RuntimeError, match="corrupt"):
             fb._fetch_part("http://example/", p, 0, 49)
+
+    def test_variants_tsv_rejected(self, tmp_path):
+        """A variants.tsv also carries GENE_SYMBOL - gene ranks read off
+        variant-level order are plausible-but-wrong."""
+        from tools import compare_arms as ca
+        tsv = tmp_path / "v.tsv"
+        tsv.write_text("#RANK\tGENE_SYMBOL\tEXOMISER_VARIANT_SCORE\n"
+                       "1\tPAH\t0.9\n")
+        with pytest.raises(ValueError, match="variants.tsv"):
+            ca.arma_genes(tsv)
+
+    def test_empty_tsv_fails_cleanly(self, tmp_path):
+        from tools import compare_arms as ca
+        tsv = tmp_path / "e.tsv"
+        tsv.write_text("")
+        with pytest.raises(ValueError, match="empty"):
+            ca.arma_genes(tsv)
+
+
+class TestFindVcf:
+    """run_track1.find_vcf: the .chr.vcf[.gz] derived-copy exclusion must
+    hold across case/casing and the gzip path - a derived copy picked as
+    the case input silently runs the funnel on wrong contigs."""
+
+    def test_chr_vcf_gz_excluded(self, tmp_path):
+        from tools.run_track1 import find_vcf
+        (tmp_path / "case.vcf").write_text("x")
+        (tmp_path / "case.chr.vcf.gz").write_text("derived")
+        assert find_vcf(tmp_path).name == "case.vcf"
+
+    def test_uppercase_chr_vcf_excluded(self, tmp_path):
+        from tools.run_track1 import find_vcf
+        (tmp_path / "CASE.CHR.VCF").write_text("derived")
+        (tmp_path / "case.vcf").write_text("x")
+        assert find_vcf(tmp_path).name == "case.vcf"
+
+    def test_non_vcf_gzip_not_selected(self, tmp_path):
+        """A bare-.GZ catch-all would pick phenotype.hpoa.gz as a VCF."""
+        from tools.run_track1 import find_vcf
+        (tmp_path / "phenotype.hpoa.gz").write_text("ref")
+        (tmp_path / "case.vcf").write_text("x")
+        assert find_vcf(tmp_path).name == "case.vcf"
+
+
+class TestNormalizeContigs:
+    """normalize_contigs: ##contig ID attributes are position- and
+    case-insensitive - a header left unrewritten while rows get chr-
+    prefixed produces an inconsistent derived VCF."""
+
+    def _run(self, tmp_path, body):
+        from tools.normalize_contigs import normalize
+        src = tmp_path / "in.vcf"
+        src.write_text(body)
+        dst = tmp_path / "out.chr.vcf"
+        normalize(src, dst)
+        return dst.read_text()
+
+    def test_id_not_first(self, tmp_path):
+        out = self._run(tmp_path,
+                        "##contig=<length=100,ID=12>\n"
+                        "#CHROM\tPOS\n"
+                        "12\t100\n")
+        assert "ID=chr12" in out and "chr12\t100" in out
+
+    def test_lowercase_id(self, tmp_path):
+        out = self._run(tmp_path,
+                        "##contig=<id=14,length=300>\n"
+                        "14\t100\n")
+        assert "id=chr14" in out and "chr14\t100" in out
+
+    def test_quoted_id(self, tmp_path):
+        out = self._run(tmp_path,
+                        '##contig=<ID="15",length=400>\n'
+                        "15\t100\n")
+        assert 'ID="chr15"' in out and "chr15\t100" in out
+
+    def test_gzip_input_rejected(self, tmp_path):
+        import gzip
+        from tools.normalize_contigs import normalize
+        src = tmp_path / "in.vcf.gz"
+        src.write_bytes(gzip.compress(b"#CHROM\n"))
+        with pytest.raises(SystemExit, match="gzip"):
+            normalize(src, tmp_path / "o.chr.vcf")
+
+    def test_malformed_line_fails(self, tmp_path):
+        from tools.normalize_contigs import normalize
+        src = tmp_path / "in.vcf"
+        src.write_text("not-a-vcf-line\n")
+        with pytest.raises(SystemExit, match="no TAB"):
+            normalize(src, tmp_path / "o.chr.vcf")
+
+
+class TestFetchBigParts:
+    """fetch_big part-count derivation: every part must cover >=1 byte -
+    min(requested, total) alone is insufficient (total=10, n=8, span=2
+    still gives parts starting past EOF -> false 'corrupt part')."""
+
+    def test_parts_clamped_to_size(self):
+        from tools import fetch_big as fb
+        assert fb._n_parts(10, 8) == 5      # span 2 -> 5 parts
+        assert fb._n_parts(3, 8) == 3       # span 1 -> 3 parts
+        assert fb._n_parts(1_000_000, 8) == 8
+        # the invariant, checked directly: last part start < total
+        for total, req in ((10, 8), (7, 4), (1, 8), (100, 3)):
+            n = fb._n_parts(total, req)
+            span = (total + n - 1) // n
+            assert (n - 1) * span < total

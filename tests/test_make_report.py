@@ -147,3 +147,84 @@ def test_arm_concordance_missing_renders_fallback(tmp_path):
     conc_line = next(l for l in body.splitlines()
                      if "Arm A vs Arm B concordance" in l)
     assert "not yet run" in conc_line
+
+
+def test_arm_concordance_truth_absent_both_arms(tmp_path):
+    """Falsification: a supplied truth gene missed by BOTH arms is the
+    exact negative finding this metric exists for - the line must say so,
+    not read as if no truth comparison ran."""
+    from tools.make_report import main
+    conc = tmp_path / "conc.json"
+    conc.write_text(json.dumps({
+        "top_n": 20, "top20_overlap": [], "top20_overlap_n": 0,
+        "truth_gene": "PAH", "truth_rank_arm_a": None,
+        "truth_rank_arm_b": None}))
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--arm-concordance", str(conc), "--out", str(out)])
+    assert rc == 0
+    conc_line = next(l for l in out.read_text().splitlines()
+                     if "Arm A vs Arm B concordance" in l)
+    assert "PAH ABSENT from both arms' ranked lists" in conc_line
+
+
+def test_arm_a_control_high_score_flags_unexpected(tmp_path):
+    """Falsification: 'also silent' is a derived claim - a control genes.tsv
+    with a high score must render UNEXPECTED, not assert silence."""
+    from tools.make_report import main
+    ctrl = tmp_path / "ctrl"
+    ctrl.mkdir()
+    (ctrl / "result.json").write_text(json.dumps(
+        {"ranked": [], "emitted": [], "funnel": {"emitted": 0},
+         "monotonicity_violations": [], "provenance": {}}))
+    tsv = tmp_path / "genes.tsv"
+    tsv.write_text("#RANK\tGENE_SYMBOL\tEXOMISER_GENE_COMBINED_SCORE\n"
+                   "1\tBRCA1\t0.99\n")
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--control-dir", str(ctrl),
+               "--arm-a-control", str(tsv), "--out", str(out)])
+    assert rc == 0
+    body = out.read_text()
+    assert "max gene score 0.9900 - UNEXPECTED - investigate" in body
+    assert "also silent" not in body.split("0.9900")[0].split(
+        "Arm A (Exomiser)")[-1]
+
+
+def test_arm_a_control_missing_tsv_says_unverified(tmp_path):
+    """Falsification: a missing Arm-A TSV must say 'silence unverified' -
+    never silently drop the clause."""
+    from tools.make_report import main
+    ctrl = tmp_path / "ctrl"
+    ctrl.mkdir()
+    (ctrl / "result.json").write_text(json.dumps(
+        {"ranked": [], "emitted": [], "funnel": {"emitted": 0},
+         "monotonicity_violations": [], "provenance": {}}))
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--control-dir", str(ctrl),
+               "--arm-a-control", str(tmp_path / "nope.tsv"),
+               "--out", str(out)])
+    assert rc == 0
+    assert "silence unverified" in out.read_text()
+
+
+def test_arm_a_control_variants_tsv_rejected(tmp_path):
+    """Falsification: a variants.tsv shares the score column - passing it
+    would report a variant score as a 'gene' score."""
+    from tools.make_report import main
+    ctrl = tmp_path / "ctrl"
+    ctrl.mkdir()
+    (ctrl / "result.json").write_text(json.dumps(
+        {"ranked": [], "emitted": [], "funnel": {"emitted": 0},
+         "monotonicity_violations": [], "provenance": {}}))
+    tsv = tmp_path / "v.tsv"
+    tsv.write_text("#RANK\tCHROM\tPOS\tEXOMISER_VARIANT_SCORE\t"
+                   "EXOMISER_GENE_COMBINED_SCORE\n"
+                   "1\tchr1\t100\t0.9\t0.0003\n")
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--control-dir", str(ctrl),
+               "--arm-a-control", str(tsv), "--out", str(out)])
+    assert rc == 0
+    assert "unreadable" in out.read_text()

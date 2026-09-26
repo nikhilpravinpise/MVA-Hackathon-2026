@@ -25,15 +25,18 @@ from src.pipeline import ABLATION_SOURCES, run_pipeline  # noqa: E402
 
 
 def find_vcf(case_dir: Path) -> Path:
-    # '*.chr.vcf' is a derived contig-normalized copy made for Arm-A tools
-    # (Exomiser needs chr-prefixed contigs); it is never the case input -
-    # picking it alphabetically would silently run the funnel on the
-    # wrong coordinate convention.
-    vcfs = sorted(p for p in case_dir.glob("*.vcf")
-                  if not p.name.endswith(".chr.vcf"))
-    vcfs += sorted(case_dir.glob("*.vcf.gz"))
-    vcfs += sorted(p for p in case_dir.iterdir()
-                   if p.suffix.upper() in (".VCF", ".GZ") and p not in vcfs)
+    # '*.chr.vcf[.gz]' is a derived contig-normalized copy made for Arm-A
+    # tools (Exomiser needs chr-prefixed contigs); it is never the case
+    # input - picking it alphabetically would silently run the funnel on
+    # the wrong coordinate convention. Matching is case-insensitive
+    # (Windows glob is too) and the *.vcf.gz path applies the same
+    # exclusion.
+    def _is_case_vcf(p: Path) -> bool:
+        n = p.name.lower()
+        return (n.endswith(".vcf") or n.endswith(".vcf.gz")) \
+            and not (n.endswith(".chr.vcf") or n.endswith(".chr.vcf.gz"))
+
+    vcfs = sorted(p for p in case_dir.iterdir() if _is_case_vcf(p))
     if not vcfs:
         raise FileNotFoundError(f"no .vcf in {case_dir}")
     if len(vcfs) > 1:
@@ -105,6 +108,16 @@ def main(argv=None) -> int:
             if found:
                 break
         corpus[k] = found
+    # a case dir carrying SOME corpus files but not others silently mixes
+    # reference versions (case hp.obo + env phenotype.hpoa may come from
+    # different HPO releases) - surface the mix in the summary warnings.
+    _roots = {k: (v.parent if v else None) for k, v in corpus.items()}
+    _dirs = {str(v) for v in _roots.values() if v is not None}
+    if len(_dirs) > 1:
+        summary.setdefault("warnings", []).append(
+            "corpus files resolved from different directories "
+            f"({sorted(_dirs)}) - possible version mix; use one corpus "
+            "release for all three")
     # corpus absent -> empty ontology -> pheno 0 -> scores capped under the
     # emit floor -> a guaranteed no_call that LOOKS like a legit negative.
     # Surface it in the summary, not just in provenance (audit M4).
@@ -302,6 +315,8 @@ def main(argv=None) -> int:
             overlap = sorted(set(b[:20]) & set(a[:20]))
             tg = truth.get("gene") if truth else None
             armc = {"arm_a_file": args.arm_a_tsv,
+                    # same keys compare_arms.py writes - one JSON contract
+                    "arm_b_file": str(out / "funnel" / "result.json"),
                     "n_arm_a_genes": len(a), "n_arm_b_genes": len(b),
                     "top_n": 20, "top20_overlap": overlap,
                     "top20_overlap_n": len(overlap), "truth_gene": tg,

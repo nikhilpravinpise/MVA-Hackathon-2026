@@ -24,7 +24,12 @@ def _size(url: str) -> int:
     req = urllib.request.Request(url, headers={"Range": "bytes=0-0"})
     with urllib.request.urlopen(req, timeout=30) as r:
         cr = r.headers.get("Content-Range", "")
+    try:
         return int(cr.split("/")[-1])
+    except ValueError:
+        raise SystemExit(
+            f"no Content-Range from {url} - the server may not support "
+            "byte ranges; this downloader requires Range support")
 
 
 def _fetch_part(url: str, part: Path, start: int, end: int) -> None:
@@ -49,6 +54,15 @@ def _fetch_part(url: str, part: Path, start: int, end: int) -> None:
             f.write(b)
 
 
+def _n_parts(total: int, requested: int) -> int:
+    """Every part must cover >=1 byte: span is derived from the
+    requested count, then n is recomputed off that span - min(requested,
+    total) alone is NOT sufficient (total=10, n=8, span=2 still gives
+    parts starting past EOF)."""
+    span = max(1, (total + requested - 1) // max(1, requested))
+    return max(1, (total + span - 1) // span)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("url")
@@ -58,7 +72,11 @@ def main(argv=None) -> int:
 
     out = Path(args.out)
     total = _size(args.url)
-    n = max(1, args.parts)
+    if total == 0:
+        out.write_bytes(b"")
+        print(f"wrote {out} (0 bytes - empty remote file)")
+        return 0
+    n = _n_parts(total, args.parts)
     span = (total + n - 1) // n
     parts = []
     for i in range(n):

@@ -40,7 +40,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 
-DEFAULT_JAR = "exomiser-cli-14.1.0.jar"
+# the verified local distribution is 14.0.0; if a newer CLI is unpacked
+# alongside, prefer the glob so --jar isn't a stale-name copy-paste trap.
+DEFAULT_JAR = "exomiser-cli-14.0.0.jar"
 DEFAULT_DATA_VERSION = "2406"   # exomiser data bundle tag; update per release
 OUTPUT_FORMATS = ["HTML", "JSON", "TSV_GENE", "TSV_VARIANT"]
 

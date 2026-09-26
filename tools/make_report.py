@@ -409,23 +409,40 @@ def main(argv=None) -> int:
                             f"({'expected: funnel stays silent' if n_em == 0 else 'UNEXPECTED - investigate'})")
     # Arm-A silence on the same control strengthens the negative-control
     # claim: both engines staying at noise floor = cross-method
-    # specificity, not one funnel's quirk.
-    if args.arm_a_control and Path(args.arm_a_control).exists():
-        try:
-            import csv as _csv
-            with open(args.arm_a_control, newline="",
-                      encoding="utf-8") as _f:
-                _rd = _csv.DictReader(_f, delimiter="\t")
-                # the 14.x header row starts with '#RANK' - DictReader
-                # names the first field '#RANK' already
-                scores = [float(r["EXOMISER_GENE_COMBINED_SCORE"])
-                          for r in _rd
-                          if r.get("EXOMISER_GENE_COMBINED_SCORE")]
-            if scores:
-                control_line += (f"; Arm A (Exomiser) max gene score "
-                                 f"{max(scores):.4f} - also silent")
-        except (KeyError, ValueError) as e:
-            control_line += f"; Arm-A control unreadable ({e})"
+    # specificity, not one funnel's quirk. GATE-6: 'silent' is a derived
+    # claim - branch on an epsilon like control_dir does, never assert
+    # it unconditionally.
+    if args.arm_a_control:
+        _ac = Path(args.arm_a_control)
+        if not _ac.exists():
+            control_line += (f"; Arm-A control TSV missing "
+                             f"({_ac.name}) - silence unverified")
+        else:
+            try:
+                import csv as _csv
+                with open(_ac, newline="", encoding="utf-8") as _f:
+                    _rd = _csv.DictReader(_f, delimiter="\t")
+                    _hdr = _rd.fieldnames or []
+                    if any(h.startswith("EXOMISER_VARIANT")
+                           for h in _hdr):
+                        raise ValueError("looks like a variants.tsv - "
+                                         "pass the genes.tsv instead")
+                    scores = [float(r["EXOMISER_GENE_COMBINED_SCORE"])
+                              for r in _rd
+                              if r.get("EXOMISER_GENE_COMBINED_SCORE")]
+                if not scores:
+                    control_line += "; Arm-A control TSV empty"
+                else:
+                    _mx = max(scores)
+                    # Exomiser's conventional green-zone cutoff is 0.5;
+                    # below it a score is noise floor, above it the gene
+                    # would be visibly prioritized on a negative control.
+                    control_line += (
+                        f"; Arm A (Exomiser) max gene score {_mx:.4f} - "
+                        + ("also silent" if _mx < 0.5
+                           else "UNEXPECTED - investigate"))
+            except (KeyError, ValueError) as e:
+                control_line += f"; Arm-A control unreadable ({e})"
 
     # Arm A/B concordance (plan section 5 metric) - derived from the
     # compare_arms.json artifact, never hand-typed.
@@ -440,8 +457,17 @@ def main(argv=None) -> int:
         tb = armc.get("truth_rank_arm_b")
         tg = armc.get("truth_gene") or "truth gene"
         if ta is None and tb is None:
-            armc_line = (f"both arms run; top-{tn} overlap {ov_n} "
-                         f"({', '.join(ov) if ov else 'none'})")
+            if armc.get("truth_gene"):
+                # a truth gene was supplied but neither arm ranked it -
+                # that negative finding is exactly what this metric is
+                # for; surface it rather than reading as 'no check ran'.
+                armc_line = (f"both arms run; top-{tn} overlap {ov_n} "
+                             f"({', '.join(ov) if ov else 'none'}); "
+                             f"truth gene {tg} ABSENT from both arms' "
+                             "ranked lists")
+            else:
+                armc_line = (f"both arms run; top-{tn} overlap {ov_n} "
+                             f"({', '.join(ov) if ov else 'none'})")
         else:
             armc_line = (f"top-{tn} gene overlap {ov_n} "
                          f"({', '.join(ov) if ov else 'none'}); "

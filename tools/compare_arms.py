@@ -42,13 +42,22 @@ def arma_genes(tsv_path: Path) -> list[str]:
     """
     with open(tsv_path, newline="", encoding="utf-8") as f:
         rd = csv.reader(f, delimiter="\t")
-        header = next(rd)
+        try:
+            header = next(rd)
+        except StopIteration:
+            raise ValueError(f"{tsv_path}: empty file - no header row")
         try:
             gi = header.index("GENE_SYMBOL")
         except ValueError:
             raise ValueError(
                 f"{tsv_path}: no GENE_SYMBOL column (header {header!r}) - "
                 "Exomiser output schema changed")
+        if any(h.startswith("EXOMISER_VARIANT") for h in header):
+            # variants.tsv also carries GENE_SYMBOL - gene order derived
+            # from a variant-level file is plausible-but-wrong ranks
+            raise ValueError(
+                f"{tsv_path}: looks like a variants.tsv "
+                "(EXOMISER_VARIANT_* columns) - pass the genes.tsv")
         genes: list[str] = []
         for row in rd:
             if len(row) > gi and row[gi] and row[gi] not in genes:
