@@ -30,8 +30,13 @@ def _size(url: str) -> int:
 def _fetch_part(url: str, part: Path, start: int, end: int) -> None:
     have = part.stat().st_size if part.exists() else 0
     want = end - start + 1
-    if have >= want:
+    if have == want:
         return
+    if have > want:
+        raise RuntimeError(
+            f"{part} is {have} bytes but range is only {want} - corrupt "
+            "part file (parts are only ever appended to); delete it and "
+            "re-run")
     # resume inside the part: request from start+have
     req = urllib.request.Request(
         url, headers={"Range": f"bytes={start + have}-{end}"})
@@ -89,7 +94,9 @@ def main(argv=None) -> int:
                     dst.write(b)
             p.unlink()
     got = out.stat().st_size
-    assert got == total, f"size mismatch {got} != {total}"
+    if got != total:  # not an assert - must hold under `python -O`
+        raise RuntimeError(f"size mismatch {got} != {total} - "
+                           "concatenated file is corrupt")
     print(f"wrote {out} ({got / 1e9:.2f} GB)")
     return 0
 

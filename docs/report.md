@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 15:21 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 15:39 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** VALIDATED ON SYNTHETIC STAND-IN - patient VCF not yet on disk; every number below is from the public-stand-in harness.
 
@@ -17,8 +17,9 @@ diagnosis - an Exomiser-class design implemented as a transparent,
 deterministic, auditable ranking pipeline rather than a trained black box.
 Two independent arms were specified a priori:
 
-* **Arm A (standard):** Exomiser genome mode on the annotated VCF + HPO term
-  set (configuration + runner in `tools/run_exomiser.py`).
+* **Arm A (standard):** Exomiser 14.0.0 genome mode (hg38, `2406` bundles,
+  PASS_ONLY preset chain) on the same VCF + HPO set - runner
+  `tools/run_exomiser.py`, concordance via `tools/compare_arms.py`.
 * **Arm B (custom funnel, this report):** six deterministic stages:
 
 ```
