@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 13:04 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 13:13 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** VALIDATED ON SYNTHETIC STAND-IN - patient VCF not yet on disk; every number below is from the public-stand-in harness.
 
@@ -39,7 +39,7 @@ annotated VCF (VEP CSQ)
 ```
 
 Every threshold is frozen pre-analysis in `config/pipeline.yaml`
-(sha256 `0996eb732748`) - the answer-blind decision freeze. No variant
+(sha256 `827e2abe604b`) - the answer-blind decision freeze. No variant
 identity, gene name, or leaked-space value influenced any parameter; the
 pipeline output is the submission.
 
@@ -164,8 +164,8 @@ Withheld / caveated evidence:
 
 | Job | Where | Time | Cost |
 |---|---|---|---|
-| Arm-B funnel (this run) | local | 0.01s | $0 |
-| Test battery (19-fixture oracle mutation battery + funnel + e2e) | local | seconds-scale (see docs/runtime_log.md session rows) | $0 |
+| Arm-B funnel (this run) | local | 0.012s | $0 |
+| Test battery (19-fixture oracle mutation battery + 60-fixture CSV-contract battery + funnel + e2e) | local | seconds-scale (see docs/runtime_log.md session rows) | $0 |
 
 Planned cloud jobs (alignment/DeepVariant/VEP at data landing) are budgeted < $50 total - see docs/runtime_log.md.
 
@@ -176,14 +176,14 @@ Cognition Devin CLI (SWE-2 Max); provider terms and per-session usage are ledger
 ## 11. Provenance, firewall, and compliance
 
 - VCF: `results\spike_case\spike_proband.vcf` (sha256 `67d0b6b52016`)
-- Config: parsed-config sha256 `0996eb732748` (frozen pre-analysis; hash recorded at run time - the canonical dict hash, not the file-byte hash)
+- Config: parsed-config sha256 `827e2abe604b` (frozen pre-analysis; hash recorded at run time - the canonical dict hash, not the file-byte hash)
 - Scoring oracle: vendored `hackathon-app/evaluation.py` - local score = official score by construction
 - Leak firewall: no leaked-Space coordinates/genes/values in code, tests, configs, or this report
 - Compliance: patient data confined to `data/` (gitignored); retention manifests in data/RETENTION.md + results/RETENTION.md
 
 ## 12. Method abstract (<=500 words)
 
-We built an answer-blind, deterministic N-of-1 prioritization funnel: genotype QC -> gnomAD rarity tier (absent weighted stronger than rare) -> consequence/damage ensemble (LoF; damaging missense by multi-predictor vote; SpliceAI rescue) -> per-gene inheritance aggregation enumerating compound-het, hom-alt, dominant and X-linked genotype hypotheses -> HPO Resnik/BMA phenotype scoring -> rank-mapped epcr. The funnel was validated blind on a synthetic compound-het spike-in (recovered at rank 1, in-trans via PGT/PID), stayed silent on a negative control carrying a TTN-class decoy pair, and held rank <=2 under every leave-one-source-out ablation and a 3x3 threshold grid. PGT/PID phase-set phasing supplies the trans call; read-level confirmation (SAM/WhatsHap/DeepVariant on the patient FASTQs) is planned, not yet run; an ACMG SF v3.3 scan handles secondary findings; the submission writer satisfies the scorer's byte-level contract (UTF-8 no BOM, chr-prefix, <=10 rows, strictly decreasing epcr), verified against a vendored copy of the official scorer on 19 adversarial fixtures including a mutation audit. Strengths: auditable stages, frozen config, honest negative controls, reproducible numbers. Limitations: epcr is a ranking artifact, not a calibrated probability; phenotype prior depends on the gene->disease annotation corpus; phase-set chaining beyond read-length needs PGT/PID or external phasing references; single-proband design cannot estimate caller error rates empirically.
+We built an answer-blind, deterministic N-of-1 prioritization funnel: genotype QC -> gnomAD rarity tier (absent weighted stronger than rare) -> consequence/damage ensemble (LoF; damaging missense by multi-predictor vote; SpliceAI rescue) -> per-gene inheritance aggregation enumerating compound-het, hom-alt, dominant and X-linked genotype hypotheses -> HPO Resnik/BMA phenotype scoring -> rank-mapped epcr. The funnel was validated blind on a synthetic compound-het spike-in (recovered at rank 1, in-trans via PGT/PID), stayed silent on a negative control carrying a TTN-class decoy pair, and held rank <=2 under every leave-one-source-out ablation and a 3x3 threshold grid. PGT/PID phase-set phasing supplies the trans call; read-level confirmation (SAM/WhatsHap/DeepVariant on the patient FASTQs) is planned, not yet run; an ACMG SF v3.3 scan handles secondary findings; the submission writer satisfies the scorer's byte-level contract (UTF-8 no BOM, chr-prefix, <=10 rows, strictly decreasing epcr), verified against a vendored copy of the official scorer on 60 adversarial CSV fixtures + a 19-fixture oracle mutation audit. Strengths: auditable stages, frozen config, honest negative controls, reproducible numbers. Limitations: epcr is a ranking artifact, not a calibrated probability; phenotype prior depends on the gene->disease annotation corpus; phase-set chaining beyond read-length needs PGT/PID or external phasing references; single-proband design cannot estimate caller error rates empirically.
 
 ## 13. Limitations
 

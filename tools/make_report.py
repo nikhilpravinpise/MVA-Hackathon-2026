@@ -261,25 +261,35 @@ def phasing_section(ph: dict | None) -> str:
     return "\n".join(lines)
 
 
-def _adversarial_fixture_count() -> int | None:
-    """Count the mutation-battery fixtures directly from
-    tests/test_adversarial.py (MUTATIONS + NOOP_MUTATIONS) rather than a
-    hand-typed number - GATE 6 forbids hand-typed stats in the report."""
+def _adversarial_fixture_count() -> tuple[int | None, int | None]:
+    """(mutation-battery count, byte-fixture count) derived from the
+    sources rather than hand-typed - GATE 6 forbids hand-typed stats."""
+    mut = csv = None
     try:
         tests_dir = REPO / "tests"
         if str(tests_dir) not in sys.path:
             sys.path.insert(0, str(tests_dir))
         import test_adversarial as ta
-        return len(ta.MUTATIONS) + len(ta.NOOP_MUTATIONS)
+        mut = len(ta.MUTATIONS) + len(ta.NOOP_MUTATIONS)
     except Exception:
-        return None
+        pass
+    try:
+        tools_dir = REPO / "tools"
+        if str(tools_dir) not in sys.path:
+            sys.path.insert(0, str(tools_dir))
+        import audit_scorer_fixtures as af
+        csv = len(af.tests) + len(af.BYTE_TESTS)
+    except Exception:
+        pass
+    return mut, csv
 
 
 def runtime_section(runlog: dict | None, prov: dict) -> str:
     rt = prov.get("runtime_sec")
-    n_fix = _adversarial_fixture_count()
-    battery_label = (f"Test battery ({n_fix}-fixture oracle mutation "
-                     "battery + funnel + e2e)" if n_fix is not None
+    n_mut, n_csv = _adversarial_fixture_count()
+    battery_label = (f"Test battery ({n_mut}-fixture oracle mutation "
+                     f"battery + {n_csv}-fixture CSV-contract battery + "
+                     "funnel + e2e)" if n_mut is not None
                      else "Test battery (fixture count unavailable)")
     lines = [
         "| Job | Where | Time | Cost |", "|---|---|---|---|",
@@ -350,9 +360,11 @@ def main(argv=None) -> int:
     eda = _j(args.eda)
     runlog = _j(args.runlog)
     prov = result.get("provenance", {})
-    n_fix = _adversarial_fixture_count()
-    fixture_phrase = (f"{n_fix} adversarial fixtures" if n_fix is not None
-                      else "the adversarial fixture battery")
+    n_mut, n_csv = _adversarial_fixture_count()
+    fixture_phrase = (
+        f"{n_csv} adversarial CSV fixtures + a {n_mut}-fixture "
+        "oracle mutation audit" if n_csv is not None and n_mut is not None
+        else "the adversarial fixture batteries")
 
     emitted = [h for h in result["ranked"] if h.get("emitted")]
     if not truth:
@@ -485,7 +497,7 @@ def main(argv=None) -> int:
             "satisfies the scorer's byte-level contract (UTF-8 no BOM, "
             "chr-prefix, <=10 rows, strictly decreasing epcr), verified "
             "against a vendored copy of the official scorer on "
-            f"{fixture_phrase} including a mutation audit. Strengths: "
+            f"{fixture_phrase}. Strengths: "
             "auditable stages, frozen config, honest negative controls, "
             "reproducible numbers. Limitations: epcr is a ranking artifact, "
             "not a calibrated probability; phenotype prior depends on the "

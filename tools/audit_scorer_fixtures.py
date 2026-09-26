@@ -203,28 +203,39 @@ def run_bytes(content):
         os.unlink(path)
 
 
-fails = []
-for name, rows, exp, hdr in tests:
-    got = run(rows, header=hdr) if hdr else run(rows)
-    if isinstance(exp, str) and exp.startswith("EXC:"):
-        ok = got[0] == "EXC" and exp[4:] == got[1]
-    elif exp[0] == "APP_REJECT":
-        ok = got[0] == "APP_REJECT" and got[1] == exp[1]
-    else:
-        ok = (got[0] == "SCORE" and got[1] == exp[1] and abs(got[2] - exp[2]) < 0.001
-              and got[3] == exp[3] and got[4] == exp[4])
-    if not ok:
-        fails.append((name, exp, got))
-    print(("OK  " if ok else "FAIL"), f"{name:34s}", "exp:", exp, " got:", got)
+def main() -> int:
+    fails = []
+    for name, rows, exp, hdr in tests:
+        got = run(rows, header=hdr) if hdr else run(rows)
+        if isinstance(exp, str) and exp.startswith("EXC:"):
+            ok = got[0] == "EXC" and exp[4:] == got[1]
+        elif exp[0] == "APP_REJECT":
+            ok = got[0] == "APP_REJECT" and got[1] == exp[1]
+        else:
+            ok = (got[0] == "SCORE" and got[1] == exp[1]
+                  and abs(got[2] - exp[2]) < 0.001
+                  and got[3] == exp[3] and got[4] == exp[4])
+        if not ok:
+            fails.append((name, exp, got))
+        print(("OK  " if ok else "FAIL"), f"{name:34s}", "exp:", exp,
+              " got:", got)
 
-for name, content, exp in BYTE_TESTS:
-    got = run_bytes(content)
-    ok = isinstance(exp, str) and exp.startswith("EXC:") and got[0] == "EXC" and exp[4:] == got[1]
-    if not ok:
-        fails.append((name, exp, got))
-    print(("OK  " if ok else "FAIL"), f"{name:34s}", "exp:", exp, " got:", got)
+    for name, content, exp in BYTE_TESTS:
+        got = run_bytes(content)
+        ok = isinstance(exp, str) and exp.startswith("EXC:") \
+            and got[0] == "EXC" and exp[4:] == got[1]
+        if not ok:
+            fails.append((name, exp, got))
+        print(("OK  " if ok else "FAIL"), f"{name:34s}", "exp:", exp,
+              " got:", got)
 
-if fails:
-    print("\nFAILURES:", fails)
-    sys.exit(1)
-print(f"\nALL {len(tests) + len(BYTE_TESTS)} FIXTURES VERIFIED against vendored evaluation.py")
+    if fails:
+        print("\nFAILURES:", fails)
+        return 1
+    print(f"\nALL {len(tests) + len(BYTE_TESTS)} FIXTURES VERIFIED "
+          "against vendored evaluation.py")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
