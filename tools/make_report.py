@@ -346,6 +346,9 @@ def main(argv=None) -> int:
     ap.add_argument("--arm-concordance", default=None,
                     help="tools/compare_arms.py output JSON - Arm A/B "
                          "top-gene concordance (plan section 5 metric)")
+    ap.add_argument("--arm-a-control", default=None,
+                    help="Exomiser genes.tsv on the negative control - "
+                         "enriches CONTROL_RESULT with Arm-A silence")
     ap.add_argument("--out", default=str(REPO / "docs" / "report.md"))
     ap.add_argument("--team", default="<TBD - see docs/team.md>")
     ap.add_argument("--model-n", default="1")
@@ -404,6 +407,25 @@ def main(argv=None) -> int:
             n_em = len(cres.get("emitted", []))
             control_line = (f"{n_em} hypotheses emitted "
                             f"({'expected: funnel stays silent' if n_em == 0 else 'UNEXPECTED - investigate'})")
+    # Arm-A silence on the same control strengthens the negative-control
+    # claim: both engines staying at noise floor = cross-method
+    # specificity, not one funnel's quirk.
+    if args.arm_a_control and Path(args.arm_a_control).exists():
+        try:
+            import csv as _csv
+            with open(args.arm_a_control, newline="",
+                      encoding="utf-8") as _f:
+                _rd = _csv.DictReader(_f, delimiter="\t")
+                # the 14.x header row starts with '#RANK' - DictReader
+                # names the first field '#RANK' already
+                scores = [float(r["EXOMISER_GENE_COMBINED_SCORE"])
+                          for r in _rd
+                          if r.get("EXOMISER_GENE_COMBINED_SCORE")]
+            if scores:
+                control_line += (f"; Arm A (Exomiser) max gene score "
+                                 f"{max(scores):.4f} - also silent")
+        except (KeyError, ValueError) as e:
+            control_line += f"; Arm-A control unreadable ({e})"
 
     # Arm A/B concordance (plan section 5 metric) - derived from the
     # compare_arms.json artifact, never hand-typed.

@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 15:39 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 16:13 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** VALIDATED ON SYNTHETIC STAND-IN - patient VCF not yet on disk; every number below is from the public-stand-in harness.
 
@@ -67,7 +67,7 @@ The funnel was validated *blind* before the proband call:
   low-depth call, common-AF damaging missense).
   **Result:** NOT recovered - see ablation report
 * **Negative control:** plausible-looking rare/damaging variation + an
-  unrelated HPO set -> **control run not wired - see tests/test_negative_control.py** (a funnel that finds a causal
+  unrelated HPO set -> **0 hypotheses emitted (expected: funnel stays silent); Arm A (Exomiser) max gene score 0.0003 - also silent** (a funnel that finds a causal
   pair everywhere finds nothing).
 * **Arm A vs Arm B concordance:** top-20 gene overlap 1 (PAH); PAH ranked 1 by Arm B, 1 by Arm A (Exomiser genome mode)
 * **Real external validation (public genome + real ClinVar pair):**
