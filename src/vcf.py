@@ -207,6 +207,9 @@ class VcfReader:
         self.filter_defs: dict[str, str] = {}
         self.samples: list[str] = []
         self.csq_fields: list[str] = []
+        # samples carrying more colon-values than FORMAT declares - a
+        # caller-format bug surfaced by compute_stats
+        self.fmt_overflow = 0
         self._header_done = False
         self._pending: str | None = None
         self._line_no = 0  # physical file line counter (for error context)
@@ -290,6 +293,11 @@ class VcfReader:
                 if sample is not None and sname != sample:
                     continue
                 vals = cols[9 + i].split(":") if 9 + i < len(cols) else []
+                # a sample carrying MORE values than FORMAT declares is a
+                # caller bug; the extras would drop silently - count them
+                # so compute_stats can surface the format mismatch
+                if len(vals) > len(fmt_keys):
+                    self.fmt_overflow += 1
                 raw = {fmt_keys[j]: vals[j] if j < len(vals) else "."
                        for j in range(len(fmt_keys))}
                 samples[sname] = decode_genotype(raw)

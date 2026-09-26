@@ -226,6 +226,7 @@ def compute_stats(vcf_path, sample: str | None = None) -> dict:
         "n_phased_gt": n_phased,
         "n_csq_field_short": n_csq_short,
         "n_csq_allele_unmatched": n_csq_allele_unmatched,
+        "n_sample_field_overflow": reader.fmt_overflow,
     }
 
 

@@ -864,3 +864,21 @@ class TestConfigRanges:
     def test_valid_config_passes(self, tmp_path):
         cfg = load_config()
         assert load_config(self._write(tmp_path, cfg)) == cfg
+
+
+class TestFormatOverflow:
+    """A sample carrying more colon-values than FORMAT declares is a
+    caller bug - the extras drop silently unless surfaced."""
+
+    def test_sample_field_overflow_counted(self, tmp_path):
+        v = ("##fileformat=VCFv4.2\n"
+             "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"g\">\n"
+             "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"d\">\n"
+             "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"q\">\n"
+             "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\n"
+             "7\t100\t.\tA\tT\t60\tPASS\t.\tGT:DP:GQ\t0/1:30:99:X:Y\n"
+             "7\t200\t.\tC\tG\t60\tPASS\t.\tGT:DP:GQ\t0/1:30:99\n")
+        f = tmp_path / "x.vcf"
+        f.write_text(v)
+        from src.vcf_qc import compute_stats
+        assert compute_stats(f)["n_sample_field_overflow"] == 1
