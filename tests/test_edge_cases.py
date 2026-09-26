@@ -824,3 +824,43 @@ class TestSFHemizygous:
                 "truncating_only": False}
         findings = _apply_rule([vf], rule)
         assert not findings, "a haploid call is NOT a homozygous AR finding"
+
+
+class TestConfigRanges:
+    """Degenerate numeric knobs must fail at load time - af_max<=0 marks
+    every variant common, a zero weight re-normalizes all scores, and
+    neither crashes: the funnel just silently lies."""
+
+    def _write(self, tmp_path, cfg):
+        import yaml
+        p = tmp_path / "c.yaml"
+        p.write_text(yaml.safe_dump(cfg))
+        return p
+
+    def test_af_max_zero_rejected(self, tmp_path):
+        cfg = load_config()
+        cfg["rarity"]["af_max"] = 0
+        with pytest.raises(ValueError, match="af_max"):
+            load_config(self._write(tmp_path, cfg))
+
+    def test_emit_floor_over_one_rejected(self, tmp_path):
+        cfg = load_config()
+        cfg["scoring"]["emit_floor"] = 1.5
+        with pytest.raises(ValueError, match="emit_floor"):
+            load_config(self._write(tmp_path, cfg))
+
+    def test_negative_weight_rejected(self, tmp_path):
+        cfg = load_config()
+        cfg["scoring"]["w_phenotype"] = -0.1
+        with pytest.raises(ValueError, match="w_phenotype"):
+            load_config(self._write(tmp_path, cfg))
+
+    def test_max_rows_zero_rejected(self, tmp_path):
+        cfg = load_config()
+        cfg["submission"]["max_rows"] = 0
+        with pytest.raises(ValueError, match="max_rows"):
+            load_config(self._write(tmp_path, cfg))
+
+    def test_valid_config_passes(self, tmp_path):
+        cfg = load_config()
+        assert load_config(self._write(tmp_path, cfg)) == cfg

@@ -62,6 +62,11 @@ def main(argv=None) -> int:
 
     cfg = load_config(args.config)
     if args.af_max is not None:
+        if not (0.0 < args.af_max <= 1.0):
+            print(f"ERROR: --af-max {args.af_max} outside (0,1] - a "
+                  "degenerate threshold would silently change the funnel",
+                  file=sys.stderr)
+            return 2
         cfg["rarity"]["af_max"] = args.af_max
 
     result = run_pipeline(
