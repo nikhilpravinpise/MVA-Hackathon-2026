@@ -54,7 +54,7 @@ patient file.
 | Rank -> epcr (documented as ranking artifact) | DONE | `src/prioritize.py`; report section 1 documents non-calibration |
 | **Arm A Exomiser genome mode** | **DONE** | exomiser-cli-14.0.0 + `2406` bundles; `tools/run_exomiser.py` emits the verified shipped schema; run on real-spike + synthetic |
 | Both arms on the synthetic spike-in first | DONE | synthetic run: VWF-overlapping TTN-decoy locus paired correctly, scored 0.0003 (no false confidence) |
-| Arm A on real-spike + top-20 concordance | DONE | **PAH rank 1 in BOTH arms** - `results/arm_concordance.json` via `tools/compare_arms.py` |
+| Arm A on real-spike + top-20 concordance | DONE | **PAH rank 1 in BOTH arms** - `results/arm_concordance.json` via `tools/compare_arms.py` or `run_track1 --arm-a-tsv` |
 | Splice check (SpliceAI delta) on near-splice candidates | DONE | `triage._spliceai_delta` drives `splice_altering` tier incl. synonymous rescue |
 | CNV/SV arm feeding back | DONE (runner) / EXTERNAL (BAM) | `tools/run_cnv.py` emits cnvpytor/manta commands for the aligned BAM |
 
