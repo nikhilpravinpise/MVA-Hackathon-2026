@@ -498,3 +498,58 @@ class TestExomiserYaml:
             rex.main(["--vcf", "x.vcf", "--hpo-terms", str(empty),
                       "--dry-run"])
         assert ei.value.code != 0
+
+
+class TestReadsFlagSkips:
+    """Falsification: reads.py skip-counters for secondary/supp/dup/qcfail/
+    low-mapq - every flag combination must be excluded from evidence, not
+    silently counted."""
+
+    def _sam(self, flag, mapq=60):
+        return (f"r1\t{flag}\t7\t100\t{mapq}\t20M\t*\t0\t0\t"
+                "AAAAAAAAAAAAAAAAAAAA\t" + "I" * 20)
+
+    V1, V2 = ("7", 95, "A", "T"), ("7", 105, "G", "C")
+
+    def test_flag_matrix(self):
+        from src.reads import template_support
+        # secondary(256) | supplementary(2048) | duplicate(1024) | qcfail(512)
+        for flag, key in [(256, "skipped_secondary_supp"),
+                          (2048, "skipped_secondary_supp"),
+                          (1024, "skipped_duplicate"),
+                          (512, "skipped_qcfail")]:
+            r = template_support(iter([self._sam(flag)]),
+                                 [self.V1, self.V2])
+            assert r["stats"][key] == 1, \
+                f"flag {flag} did not land in {key}: {r['stats']}"
+
+    def test_low_mapq_skipped(self):
+        from src.reads import template_support
+        r = template_support(iter([self._sam(0, mapq=10)]),
+                             [self.V1, self.V2], min_mapq=30)
+        assert r["stats"]["skipped_low_mapq"] == 1
+
+    def test_unmapped_skipped(self):
+        from src.reads import template_support
+        r = template_support(iter([self._sam(4)]),  # unmapped
+                             [self.V1, self.V2])
+        assert r["stats"]["skipped_unmapped"] == 1
+
+
+class TestCsqAlleleUnmatched:
+    """Falsification: a CSQ block whose Allele field matches NO record ALT
+    (annotation/allele mismatch) silently loses the variant's gene - the
+    n_csq_allele_unmatched counter must surface it in QC."""
+
+    def test_mismatched_csq_allele_counted(self, tmp_path):
+        from src.vcf_qc import compute_stats
+        raw = ("##fileformat=VCFv4.2\n"
+               "##contig=<ID=7,length=2000>\n"
+               "##INFO=<ID=CSQ,Number=.,Type=String,Description=\"f Format: Allele|Consequence|IMPACT|SYMBOL|Gene\">\n"
+               "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\n"
+               # record ALT is T; CSQ claims allele G -> mismatch
+               "7\t100\t.\tA\tT\t60.0\tPASS\tCSQ=G|missense_variant|MODERATE|GENEX|G1\tGT:AD:DP:GQ\t0/1:20,20:40:99\n")
+        f = tmp_path / "m.vcf"
+        f.write_text(raw)
+        st = compute_stats(f, sample="S1")
+        assert st["n_csq_allele_unmatched"] == 1
