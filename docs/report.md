@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 12:17 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 13:04 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** VALIDATED ON SYNTHETIC STAND-IN - patient VCF not yet on disk; every number below is from the public-stand-in harness.
 
@@ -9,7 +9,7 @@
 ## 0. Submission summary
 
 - **Primary call:** `SPIKEA` (compound_het) - chr7:1000000 A>T + chr7:1004000 G>C
-- Score 1.000 (damage 1.00 / phenotype 1.00 / inheritance 1.0), epcr 0.95, phasing: **trans**
+- Score 0.955 (damage 0.90 / phenotype 1.00 / inheritance 1.0), epcr 0.95, phasing: **trans**
 - Emitted hypotheses: 3 of 13 ranked
 - External-validation check: recovered pair == MATCHES the spiked truth
 
@@ -39,7 +39,7 @@ annotated VCF (VEP CSQ)
 ```
 
 Every threshold is frozen pre-analysis in `config/pipeline.yaml`
-(sha256 `7d304b9ca95f`) - the answer-blind decision freeze. No variant
+(sha256 `0996eb732748`) - the answer-blind decision freeze. No variant
 identity, gene name, or leaked-space value influenced any parameter; the
 pipeline output is the submission.
 
@@ -71,7 +71,7 @@ The funnel was validated *blind* before the proband call:
   damaging missense, in trans via shared PGT/PID phase set) embedded among
   adversarial decoys (TTN-class noise pair, common hom-alt, filtered LoF,
   low-depth call, common-AF damaging missense).
-  **Result:** true pair recovered at **rank 1** (score 1.000, in-trans: trans)
+  **Result:** true pair recovered at **rank 1** (score 0.955, in-trans: trans)
 * **Negative control:** plausible-looking rare/damaging variation + an
   unrelated HPO set -> **0 hypotheses emitted (expected: funnel stays silent)** (a funnel that finds a causal
   pair everywhere finds nothing).
@@ -87,8 +87,8 @@ The funnel was validated *blind* before the proband call:
 | Dropped source | Pair rank | Emitted |
 |---|---|---|
 | clinvar | 1 | 3 |
-| damage_predictors | 1 | 2 |
-| gnomad | 2 | 4 |
+| damage_predictors | 2 | 2 |
+| gnomad | 1 | 3 |
 | hpo | 1 | 0 |
 | phasing | 1 | 3 |
 
@@ -147,12 +147,18 @@ ACMG SF v3.3 (84 genes) scan produced **no reportable findings** in this dataset
 
 | Variant | Criteria fired | Classification |
 |---|---|---|
-| 7:1000000:A>T | PVS1, PM2 | Pathogenic |
-| 7:1004000:G>C | PM2, PP3, PM3 | VUS |
+| 7:1000000:A>T | PM2 | VUS |
+| 7:1004000:G>C | PM2, PP3 | VUS |
 
 Pair-level: PP4
 
-Combined call: **Pathogenic** (16 pts - ACMG/AMP Richards2015 subset + Tavtigian2018 points)
+Combined call: **Likely pathogenic** (6 pts - ACMG/AMP Richards2015 subset + Tavtigian2018 points)
+
+Withheld / caveated evidence:
+- combined score aggregates evidence across both alleles - a hypothesis-level call for ranking, not a per-variant clinical classification
+- damage_tier='lof' but lof_mechanism not asserted by caller - PVS1 withheld (mechanism is gene biology, not annotation)
+- no established pathogenic partner allele - PM3 not applicable
+- partner allele is predicted-LoF only (not ClinVar-established) - PM3 withheld; predicted evidence does not certify a trans partner
 
 ## 9. Runtime and cost
 
@@ -170,7 +176,7 @@ Cognition Devin CLI (SWE-2 Max); provider terms and per-session usage are ledger
 ## 11. Provenance, firewall, and compliance
 
 - VCF: `results\spike_case\spike_proband.vcf` (sha256 `67d0b6b52016`)
-- Config: parsed-config sha256 `7d304b9ca95f` (frozen pre-analysis; hash recorded at run time - the canonical dict hash, not the file-byte hash)
+- Config: parsed-config sha256 `0996eb732748` (frozen pre-analysis; hash recorded at run time - the canonical dict hash, not the file-byte hash)
 - Scoring oracle: vendored `hackathon-app/evaluation.py` - local score = official score by construction
 - Leak firewall: no leaked-Space coordinates/genes/values in code, tests, configs, or this report
 - Compliance: patient data confined to `data/` (gitignored); retention manifests in data/RETENTION.md + results/RETENTION.md

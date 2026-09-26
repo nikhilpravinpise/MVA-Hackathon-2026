@@ -122,18 +122,24 @@ def test_frequency_axis_pm2_pm2p_bs1(tmp_path):
 
 def test_pm3_fires_in_trans_not_cis(tmp_path):
     """Falsification: PM3 must fire only for a recessive pair proven in
-    trans with a pathogenic partner; a cis (or unknown) phase yielding
-    PM3 would fake biallelic evidence - the phasing gate exists for this."""
-    facts = _facts(tmp_path, [_lof_var(pos=1_000_000),
+    trans with a ClinVar-established pathogenic partner; a cis (or
+    unknown) phase yielding PM3 would fake biallelic evidence - the
+    phasing gate exists for this."""
+    facts = _facts(tmp_path, [_lof_var(pos=1_000_000, clin="pathogenic"),
                               _ms_var(pos=1_004_000)])
     lof_vf, ms_vf = facts[0], facts[1]
 
     trans = acmg.evaluate_pair([lof_vf, ms_vf], mechanism="recessive",
                                in_trans="trans")
-    # the NOVEL missense allele earns PM3 in trans with the LoF partner
+    # the NOVEL missense allele earns PM3 in trans with the established
+    # pathogenic LoF partner; the established allele itself gets none
+    # (its partner is only predicted evidence)
     ms_res = next(r for r in trans["variants"] if "missense" in
                   r["consequence"])
+    lof_res = next(r for r in trans["variants"] if "missense" not in
+                   r["consequence"])
     assert "PM3" in _codes(ms_res)
+    assert "PM3" not in _codes(lof_res)
 
     cis = acmg.evaluate_pair([lof_vf, ms_vf], mechanism="recessive",
                              in_trans="cis")
@@ -165,7 +171,14 @@ def test_pm3_not_strong_when_partner_only_predicted_lof(tmp_path):
     ])
     res = acmg.evaluate_pair(facts, mechanism="recessive",
                              in_trans="trans")
-    assert all("PM3" in _codes(r) for r in res["variants"])
+    # only the predicted-LoF variant earns PM3 - its partner IS
+    # ClinVar-established. The established allele's partner is merely
+    # predicted evidence, so it earns no PM3 (predicted alleles cannot
+    # certify each other's PM3).
+    by_clin = sorted(res["variants"],
+                     key=lambda r: bool(r["clinsig_pathogenic"]))
+    assert "PM3" in _codes(by_clin[0])           # predicted-LoF allele
+    assert "PM3" not in _codes(by_clin[1])       # ClinVar-P allele
     assert not any("PM3_Strong" in _codes(r) for r in res["variants"])
 
 
@@ -214,12 +227,14 @@ def test_pair_accumulates_to_pathogenic(tmp_path):
     """Falsification: the spec'd accumulation PVS1+PM2+PP3+PM3 must reach
     the pathogenic band on the combined pair score (per the documented
     rule table)."""
-    facts = _facts(tmp_path, [_lof_var(pos=1_000_000),
+    facts = _facts(tmp_path, [_lof_var(pos=1_000_000, clin="pathogenic"),
                               _ms_var(pos=1_004_000, votes=True)])
     res = acmg.evaluate_pair(facts, mechanism="recessive",
-                             in_trans="trans", pheno_score=0.7)
+                             in_trans="trans", pheno_score=0.7,
+                             lof_mechanism=True)
     total = res["combined_points"]
-    # lof: PVS1(8)+PM2(2); missense: PM2(2)+PP3(1)+PM3(2); pair PP4(1) = 16
+    # lof: PVS1(8)+PM2(2); missense: PM2(2)+PP3(1)+PM3(2, trans with
+    # ClinVar-established partner); pair PP4(1) = 16
     assert total == 16, \
         "a silently-dropped criterion (e.g. PP3) would keep >=10 anyway"
     assert res["combined_classification"] == "Pathogenic"
@@ -237,7 +252,11 @@ def test_acmg_report_keys_and_determinism(tmp_path):
                     {"chrom": v.chrom, "pos": v.pos, "ref": v.ref,
                      "alt": v.alt, "consequence": v.consequence,
                      "tier": v.damage_tier, "popmax_af": v.popmax_af,
-                     "gt": v.gt} for v in facts]}
+                     "gt": v.gt,
+                     "gnomad_present": v.gnomad_present,
+                     "gnomad_annotated": v.gnomad_annotated,
+                     "clinsig_pathogenic": v.clinsig_pathogenic,
+                     "cadd": v.cadd, "revel": v.revel} for v in facts]}
     rep1 = acmg.acmg_report(hyp_dict, {"lof_mechanism": True})
     rep2 = acmg.acmg_report(hyp_dict, {"lof_mechanism": True})
     for key in ("framework", "gene", "model", "n_variants", "variants",

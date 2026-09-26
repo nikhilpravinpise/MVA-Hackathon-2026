@@ -96,6 +96,11 @@ scoring:
   # Chosen so a zero-phenotype biallelic hypothesis (0.45*d + 0.20*i, max
   # ~0.65) cannot masquerade as causal.
   emit_floor: 0.70
+  # Singleton hypotheses (dominant_het/x_linked carry ONE variant) can never
+  # full-match the 2-variant ground truth; a lone damaging het in a
+  # max-pheno gene could otherwise outrank a true pair and dilute F-max.
+  # Singletons emit only when evidence is exceptional.
+  singleton_emit_floor: 0.80
   inheritance_bonus:
     compound_het: 1.0
     hom_alt: 0.9

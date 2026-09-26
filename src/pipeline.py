@@ -72,19 +72,35 @@ def load_corpus(obo_path=None, hpoa_path=None, g2d_path=None):
 
 def make_pheno_scorer(proband_hpo: list[str], ont: OboOntology,
                       disease2hpo: dict, g2d: dict,
-                      drop_hpo: bool = False):
-    """Build the gene -> [0,1] phenotype score callable."""
-    if drop_hpo or not proband_hpo:
-        return lambda gene: 0.0
+                      drop_hpo: bool = False,
+                      cfg_ph: dict | None = None):
+    """Build the gene -> [0,1] phenotype score callable.
+
+    ``score.stats`` reports how many proband terms the ontology actually
+    recognized - a proband set that fully drops silently scores every
+    gene 0, which looks like a legitimate negative."""
+    ph_cfg = cfg_ph or {}
+    enabled = ph_cfg.get("enabled", True)  # consumed: phenotype.enabled
+    ic_floor = float(ph_cfg.get("ic_floor", 0.0))
+    qset = set(proband_hpo)
+    dropped = sorted(t for t in qset if not ont.valid(t))
+    stats = {"n_query_terms": len(qset),
+             "n_recognized": len(qset) - len(dropped),
+             "dropped_terms": dropped}
+    if drop_hpo or not proband_hpo or not enabled:
+        zero = lambda gene: 0.0
+        zero.stats = stats
+        return zero
     ic = InformationContent.from_annotations(
         [set(v) for v in disease2hpo.values() if v], ont)
-    qset = set(proband_hpo)
 
     def score(gene: str) -> float:
         terms = gene_hpo_terms(gene, g2d, disease2hpo)
         if not terms:
             return 0.0
-        return best_match_average(ont, ic, qset, terms)
+        return best_match_average(ont, ic, qset, terms,
+                                  ic_floor=ic_floor)
+    score.stats = stats
     return score
 
 
@@ -114,8 +130,10 @@ def _apply_ablation(facts: list[VariantFacts], drops: set[str],
         if "gnomad" in drops:
             rare, absent, rscore, popmax = True, False, 0.5, vf.popmax_af
         else:
-            # re-derive from the stored annotation-equivalent fields
-            absent = not vf.gnomad_present
+            # re-derive from the stored annotation-equivalent fields;
+            # 'absent' still requires gnomad_annotated (coverage unknown
+            # is not absence)
+            absent = vf.gnomad_annotated and not vf.gnomad_present
             af_max = rar_cfg.get("af_max", 1e-4)
             rare = absent or (vf.popmax_af is not None
                               and vf.popmax_af <= af_max)
@@ -162,8 +180,9 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     t0 = time.time()
     cfg = cfg or load_config(cfg_path)
     ont, disease2hpo, g2d = load_corpus(obo_path, hpoa_path, g2d_path)
-    pheno_of_gene = make_pheno_scorer(proband_hpo, ont, disease2hpo, g2d,
-                                    drop_hpo="hpo" in drops)
+    pheno_of_gene = make_pheno_scorer(
+        proband_hpo, ont, disease2hpo, g2d,
+        drop_hpo="hpo" in drops, cfg_ph=cfg.get("phenotype"))
 
     counts = FunnelCounts()
     facts: list[VariantFacts] = []
@@ -183,6 +202,21 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
             facts.extend(extract_facts(rec, sample, cfg))
     finally:
         reader.close()
+    # duplicate VCF records produce duplicate facts -> duplicate
+    # hypotheses -> wasted CSV rows; collapse exact (key, gene) dupes
+    seen_facts: set[tuple] = set()
+    deduped: list[VariantFacts] = []
+    for f in facts:
+        sig = (f.key, f.gene)
+        if sig in seen_facts:
+            continue
+        seen_facts.add(sig)
+        deduped.append(f)
+    if len(deduped) != len(facts):
+        counts.stage_counts["duplicate_facts_dropped"] = \
+            len(facts) - len(deduped)
+        facts = deduped
+
     counts.stage_counts["records"] = n_records
     counts.stage_counts["alt_gene_facts"] = len(facts)
     counts.stage_counts["qc_pass"] = sum(1 for f in facts if f.qc_pass)
@@ -195,7 +229,12 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     facts_abl = _apply_ablation(facts, set(drops), cfg)
     cand = [f for f in facts_abl if eligible(f, cfg,
             cfg.get("inheritance", {}).get("comphet_min_consequence", "other"))]
-    counts.stage_counts["candidates"] = len(cand)
+    # candidates that can actually enter a hypothesis: gene-assigned AND
+    # carrying the ALT (ref-ref or gene-less facts are honest funnel
+    # attrition, not hypothesis input)
+    counts.stage_counts["candidates"] = sum(
+        1 for f in cand
+        if f.gene and (f.is_het or f.is_hom_alt or f.is_hemi))
 
     hyps = enumerate_hypotheses(cand, cfg)
     attach_scores(hyps, pheno_of_gene, cfg)
@@ -208,14 +247,18 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
                 if h.evidence.pop("cis_confirmed_invalid_comphet", None):
                     # the cis penalty was applied during attach_scores -
                     # with phasing evidence removed the pair gets its
-                    # unphased-model credit back and its score recomputed
-                    h.inheritance_score = bonus.get(h.model, 0.0)
-                    sc = cfg.get("scoring", {})
-                    h.score = (sc.get("w_variant_damage", 0.45)
-                               * h.variant_damage
-                               + sc.get("w_phenotype", 0.35) * h.pheno_score
-                               + sc.get("w_inheritance", 0.20)
-                               * h.inheritance_score)
+                    # unphased-model credit back and its score recomputed.
+                    # A noise_gene zeroing is independent of phasing and
+                    # must NOT be restored by this block.
+                    if not h.evidence.get("noise_gene"):
+                        h.inheritance_score = bonus.get(h.model, 0.0)
+                        sc = cfg.get("scoring", {})
+                        h.score = (sc.get("w_variant_damage", 0.45)
+                                   * h.variant_damage
+                                   + sc.get("w_phenotype", 0.35)
+                                   * h.pheno_score
+                                   + sc.get("w_inheritance", 0.20)
+                                   * h.inheritance_score)
     ranked = rank_hypotheses(hyps, cfg)
     counts.stage_counts["hypotheses"] = len(ranked)
     counts.stage_counts["emitted"] = len(emitted(ranked))
@@ -231,6 +274,7 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
             # the dict hash but would otherwise be invisible in the artifact)
             "af_max": cfg.get("rarity", {}).get("af_max"),
             "vcf_sha256": _vcf_sha(vcf_path),
+            "pheno_terms": getattr(pheno_of_gene, "stats", None),
             "drops": sorted(drops),
             "runtime_sec": round(time.time() - t0, 3),
             "corpus": {"obo": str(obo_path), "hpoa": str(hpoa_path),
@@ -264,13 +308,20 @@ def _hyp_to_dict(h: Hypothesis) -> dict:
              "consequence": v.consequence, "tier": v.damage_tier,
              "damage_votes": v.damage_votes, "score": round(v.score, 4),
              "absent": v.absent, "gnomad_present": v.gnomad_present,
+             "gnomad_annotated": v.gnomad_annotated,
              "clinsig_pathogenic": v.clinsig_pathogenic,
+             "clin_sig": v.clin_sig,
              "popmax_af": v.popmax_af, "gt": v.gt, "pgt": v.pgt, "pid": v.pid,
              "cadd": v.cadd, "revel": v.revel,
              "alphamissense": v.alphamissense, "spliceai": v.spliceai,
              "hgvsc": v.hgvsc, "hgvsp": v.hgvsp}
             for v in h.variants],
         "phase_detail": h.phase_detail,
+        # evidence flags (truncated_het_pool / noise_gene / cis-invalidated)
+        # must reach the artifact - 'documented in config' is not the same
+        # as visible in results
+        "evidence": {k: v for k, v in h.evidence.items()
+                     if k != "emitted"},
     }
 
 

@@ -397,11 +397,30 @@ class TestHaploidHemizygous:
             + "\tGT\t1"])
 
     def test_haploid_x_enumerates_xlinked(self, tmp_path):
+        """Hemizygous: carried ALT visible to x_linked, NOT biallelic
+        hom_alt - a chrX/chrM/autosomal haploid call must never masquerade
+        as a diploid homozygote."""
         f = _facts(self._x_hemi_vcf(tmp_path, "X"))
         fact = next(x for x in f if x.gene == "XGENE")
-        assert not fact.is_het and fact.is_hom_alt
+        assert not fact.is_het and fact.is_hemi and not fact.is_hom_alt
         hyps = enumerate_hypotheses(f, CFG)
         assert any(h.model == "x_linked" for h in hyps)
+        assert not any(h.model == "hom_alt" for h in hyps)
+
+    def test_haploid_autosomal_not_hom_alt(self, tmp_path):
+        """M-4: a spurious haploid autosomal call must not enumerate as a
+        biallelic homozygote with the highest non-comphet bonus."""
+        ann = synth.Ann("T", "stop_gained", "HIGH", "AGENE", "G2",
+                        extra={"CLIN_SIG": "pathogenic"})
+        vcf = _write_raw(tmp_path, [
+            "7\t100\t.\tA\tT\t60.0\tPASS\tCSQ=" + ann.to_csq()
+            + "\tGT\t1"])
+        f = _facts(vcf)
+        fact = next(x for x in f if x.gene == "AGENE")
+        assert fact.is_hemi and not fact.is_hom_alt
+        hyps = enumerate_hypotheses(f, CFG)
+        assert not any(h.model == "hom_alt" for h in hyps)
+        assert not any(h.model == "x_linked" for h in hyps)
 
     def test_haploid_ref_not_alt(self, tmp_path):
         ann = synth.Ann("T", "stop_gained", "HIGH", "XGENE", "G1",
@@ -411,7 +430,7 @@ class TestHaploidHemizygous:
             + "\tGT\t0"])  # haploid ref
         f = _facts(vcf)
         fact = next(x for x in f if x.gene == "XGENE")
-        assert not fact.is_het and not fact.is_hom_alt
+        assert not fact.is_het and not fact.is_hom_alt and not fact.is_hemi
 
 
 class TestValidateSubmissionEncoding:
@@ -601,3 +620,175 @@ class TestMalformedFields:
             recs = list(VcfReader(self._one(
                 tmp_path, f"7\t100\t.\tA\tT\t{q}\tPASS\t.\tGT\t0/1")).records())
             assert recs[0].qual is None, f"QUAL={q} should normalize to None"
+
+
+class TestPairDamageMean:
+    """C-1 falsification: variant_damage = mean, not max - a pair's score
+    must be strictly increasing in the WEAKER allele, or every pair
+    containing the best allele ties and genomic position decides the
+    ranking instead of evidence."""
+
+    def _vf(self, pos, score, gene="GENEX"):
+        from src.triage import VariantFacts
+        return VariantFacts(chrom="7", pos=pos, ref="A", alt="T",
+                            gene=gene, gene_id="G1", transcript="T1",
+                            consequence="missense", impact="MODERATE",
+                            biotype="protein_coding",
+                            is_het=True, gt="0/1",
+                            rare=True, absent=True, qc_pass=True,
+                            score=score)
+
+    def test_stronger_partner_outranks_junk_partner(self):
+        from src.genes import attach_scores, enumerate_hypotheses
+        from src.prioritize import rank_hypotheses
+        strong = self._vf(200, 1.0)
+        true_p = self._vf(300, 0.72)
+        junk = self._vf(50, 0.18)   # earlier position wins a max() tie
+        hyps = [h for h in enumerate_hypotheses(
+            [strong, true_p, junk], CFG) if h.model == "compound_het"]
+        attach_scores(hyps, lambda g: 0.8, CFG)
+        ranked = rank_hypotheses(hyps, CFG)
+        top = ranked[0]
+        keys = {v.key for v in top.variants}
+        assert ("7", 200, "A", "T") in keys
+        assert ("7", 300, "A", "T") in keys, \
+            "true partner must outrank the junk partner despite junk's "\
+            "earlier position"
+
+    def test_singleton_emit_floor(self):
+        """C-2 falsification: a singleton hypothesis cannot full-match
+        the 2-variant GT - it emits only above the singleton floor."""
+        from src.genes import attach_scores, Hypothesis
+        from src.prioritize import rank_hypotheses
+        v = self._vf(100, 1.0)
+        h = Hypothesis(gene="GENEX", model="dominant_het", variants=(v,))
+        # score = 0.45*1.0 + 0.35*0.5 + 0.20*0.5 = 0.725 - above the pair
+        # floor (0.70) but below the singleton floor (0.80)
+        attach_scores([h], lambda g: 0.5, CFG)
+        ranked = rank_hypotheses([h], CFG)
+        assert not ranked[0].evidence["emitted"], \
+            "0.725-score singleton must not emit above the 0.80 floor"
+
+
+class TestAuditRound4Submit:
+    """S-bucket falsifications: corrupt rows must raise, not normalize
+    into uploadable-but-wrong artifacts."""
+
+    def test_secondary_inf_epcr_rejected(self):
+        """S1: inf epcr must not silently clamp to the secondary cap."""
+        with pytest.raises(ValueError, match="epcr"):
+            submit.build_rows([], sf_rows=[{
+                "variants": [{"chrom": "7", "pos": 1, "ref": "A",
+                              "alt": "G"}], "epcr": float("inf")}])
+
+    def test_secondary_over1_epcr_rejected(self):
+        with pytest.raises(ValueError, match="epcr"):
+            submit.build_rows([], sf_rows=[{
+                "variants": [{"chrom": "7", "pos": 1, "ref": "A",
+                              "alt": "G"}], "epcr": 2.0}])
+
+    def test_empty_chrom_rejected(self):
+        """S2: '' chrom normalizes to the ghost contig 'chr' - an FP at
+        every F-max threshold."""
+        with pytest.raises(ValueError, match="chrom"):
+            submit.build_rows([{"rank": 1, "emitted": True, "epcr": 0.9,
+                "variants": [{"chrom": "", "pos": 1, "ref": "A",
+                              "alt": "G"}]}])
+
+    def test_empty_rows_rejected(self):
+        """S4: a header-only CSV is a guaranteed server-side reject."""
+        with pytest.raises(ValueError, match="no data rows"):
+            submit.submission_bytes([])
+
+    def test_empty_alleles_rejected(self):
+        """S3: empty ref/alt parses into a guaranteed-FP variant."""
+        with pytest.raises(ValueError, match="ref_1|alt_1"):
+            submit.submission_bytes([{
+                "proband_id": "PROBAND01", "chrom_1": "chr7", "pos_1": 1,
+                "ref_1": "", "alt_1": "G", "chrom_2": "", "pos_2": "",
+                "ref_2": "", "alt_2": "", "epcr": 0.5,
+                "finding_type": "primary", "notes": "x"}])
+
+    def test_whitespace_second_variant_rejected(self):
+        """S5: chrom_2=' ' + pos_2=' ' is truthy-raw (oracle rejects
+        int(' ')) but empty-stripped - local accept, remote reject."""
+        with pytest.raises(ValueError, match="whitespace"):
+            submit.submission_bytes([{
+                "proband_id": "PROBAND01", "chrom_1": "chr7", "pos_1": 1,
+                "ref_1": "A", "alt_1": "G", "chrom_2": " ", "pos_2": " ",
+                "ref_2": "", "alt_2": "", "epcr": 0.5,
+                "finding_type": "primary", "notes": "x"}])
+
+    def test_nonintegral_pos_rejected(self):
+        """S6: int() must not silently truncate a fractional pos."""
+        with pytest.raises(ValueError, match="non-integral"):
+            submit.build_rows([{"rank": 1, "emitted": True, "epcr": 0.9,
+                "variants": [{"chrom": "7", "pos": 123.9, "ref": "A",
+                              "alt": "G"}]}])
+
+    def test_missing_epcr_primary_rejected(self):
+        with pytest.raises(ValueError, match="epcr"):
+            submit.build_rows([{"rank": 1, "emitted": True,
+                "variants": [{"chrom": "7", "pos": 1, "ref": "A",
+                              "alt": "G"}]}])
+
+
+class TestAuditRound4Acmg:
+    """A-bucket falsifications: criteria must not fire on fabricated
+    evidence."""
+
+    def test_bp4_withheld_on_clinvar_pathogenic_dict(self):
+        """A2: a dict with clinsig_pathogenic but no clin_sig must not
+        earn BP4 'no ClinVar assertion'."""
+        from src.acmg import evaluate_variant, _as_vf
+        r = evaluate_variant(_as_vf({
+            "tier": "other", "gnomad_present": True,
+            "popmax_af": 0.0002, "clinsig_pathogenic": True}), {})
+        assert "BP4" not in {c["code"] for c in r["criteria"]}
+
+    def test_popmax_dict_no_phantom_pm2(self):
+        """A3: a dict carrying popmax_af=0.5 is gnomAD-PRESENT, not
+        absent - PM2 'absent' must never fire on it."""
+        from src.acmg import evaluate_variant, _as_vf
+        r = evaluate_variant(_as_vf({"popmax_af": 0.5}), {})
+        codes = {c["code"] for c in r["criteria"]}
+        assert "PM2" not in codes
+        assert "BS1" in codes
+
+    def test_unannotated_gnomad_no_pm2(self):
+        """A5: coverage-unknown (no gnomAD fields) is not absence."""
+        from src.acmg import evaluate_variant, _as_vf
+        r = evaluate_variant(_as_vf({"tier": "other"}), {})
+        assert "PM2" not in {c["code"] for c in r["criteria"]}
+        assert any("gnomAD coverage unknown" in c
+                   for c in r["caveats"])
+
+    def test_no_pm3_with_self(self):
+        """A6: a variant cannot be 'in trans with itself'."""
+        from src.acmg import evaluate_pair, _as_vf
+        vf = _as_vf({"tier": "lof", "gnomad_present": False,
+                     "gnomad_annotated": True,
+                     "clinsig_pathogenic": True, "gene": "G"})
+        r = evaluate_pair([vf, vf], "recessive", "trans")
+        for vr in r["variants"]:
+            assert "PM3_Strong" not in {c["code"] for c in vr["criteria"]}
+            assert "PM3" not in {c["code"] for c in vr["criteria"]}
+
+    def test_pvs1_needs_explicit_mechanism(self):
+        """A1: PVS1 withheld unless caller asserts lof_mechanism."""
+        from src.acmg import evaluate_pair, _as_vf
+        vf = _as_vf({"tier": "lof", "consequence": "stop_gained",
+                     "gnomad_present": False, "gnomad_annotated": True})
+        r = evaluate_pair([vf], "recessive", "trans")
+        codes = {c["code"] for c in r["variants"][0]["criteria"]}
+        assert "PVS1" not in codes
+        assert any("PVS1 withheld" in c
+                   for c in r["variants"][0]["caveats"])
+
+    def test_pp3_only_on_damage_tiers(self):
+        """A7: PP3 must not stack onto a LoF/'other'-tier allele."""
+        from src.acmg import evaluate_variant, _as_vf
+        r = evaluate_variant(_as_vf({
+            "tier": "lof", "gnomad_present": True, "popmax_af": 0.001,
+            "cadd": 30, "revel": 0.9}), {})
+        assert "PP3" not in {c["code"] for c in r["criteria"]}

@@ -165,8 +165,8 @@ def evaluate_variant(vf: VariantFacts, ctx: dict | None = None) -> dict:
         if lof_mech:
             criteria.append(_crit(
                 "PVS1", "very_strong",
-                f"{vf.consequence} predicted LoF in a gene where LoF is "
-                f"an asserted disease mechanism"))
+                f"{vf.consequence} predicted LoF; caller asserts LoF is "
+                f"the disease mechanism for this gene"))
         else:
             caveats.append(
                 "damage_tier='lof' but lof_mechanism not asserted by "
@@ -175,8 +175,15 @@ def evaluate_variant(vf: VariantFacts, ctx: dict | None = None) -> dict:
 
     # --- frequency axis ------------------------------------------------
     if not vf.gnomad_present:
-        criteria.append(_crit(
-            "PM2", "moderate", "absent from gnomAD exomes+genomes"))
+        if vf.gnomad_annotated:
+            criteria.append(_crit(
+                "PM2", "moderate", "absent from gnomAD exomes+genomes"))
+        else:
+            # 'not present' is only evidence when gnomAD was actually
+            # queried - an unannotated VCF can't claim absence
+            caveats.append(
+                "gnomAD coverage unknown (no gnomAD AF fields in the "
+                "annotation) - PM2 withheld; 'absent' would be fabricated")
     elif vf.popmax_af is not None:
         if vf.popmax_af >= bs1_af:
             criteria.append(_crit(
@@ -190,12 +197,17 @@ def evaluate_variant(vf: VariantFacts, ctx: dict | None = None) -> dict:
 
     # --- computational evidence ---------------------------------------
     votes, hits = _pred_votes(vf)
-    if votes >= 2:
+    # PP3 is supporting computational evidence for missense/splice
+    # variants - on a LoF/'other'-tier allele it would double-count
+    # evidence already captured by stronger criteria (SVI discourages
+    # stacking PP3 where PVS1-class evidence applies)
+    if (votes >= 2
+            and vf.damage_tier in ("damaging_missense", "splice_altering")):
         criteria.append(_crit(
             "PP3", "supporting",
             f"{votes} computational damage votes ({', '.join(hits)})"))
     if (vf.damage_tier == "other" and votes <= 1
-            and not vf.clin_sig):
+            and not vf.clin_sig and not vf.clinsig_pathogenic):
         criteria.append(_crit(
             "BP4", "benign_supporting",
             "no damage signal: 'other' tier, <=1 predictor vote, no "
@@ -229,48 +241,67 @@ def evaluate_pair(h1_variants: list[VariantFacts] | tuple,
     * PP4 - pheno_score >= 0.6 (PP4_PHENO_MIN): the proband's HPO set is
       highly specific to the gene's disease. Pair-level, added once.
 
-    ``lof_mechanism`` defaults to (mechanism == 'recessive'): canonical
-    recessive disease is biallelic LoF; dominant/x-linked callers should
-    pass it explicitly. Returns per-variant evaluate_variant dicts plus
+    ``lof_mechanism`` defaults to False - mechanism is gene biology, not
+    model name; a compound_het hypothesis does not prove the gene works
+    by LoF, so PVS1 is withheld (with a caveat) unless the caller asserts
+    the flag. Returns per-variant evaluate_variant dicts plus
     pair_criteria, a merged points_breakdown, and the combined
     hypothesis-level classification.
     """
     variants = list(h1_variants)
     if lof_mechanism is None:
-        lof_mechanism = mechanism == "recessive"
+        # do NOT guess gene biology from the model name (a compound_het
+        # hypothesis is not proof the gene's mechanism is LoF) - withhold
+        # PVS1 + caveat unless the caller asserts lof_mechanism
+        lof_mechanism = False
     ctx = {"lof_mechanism": lof_mechanism}
     results = [evaluate_variant(vf, ctx) for vf in variants]
     caveats: list[str] = []
+    if not variants:
+        caveats.append("no variants supplied - degenerate hypothesis")
 
     # --- PM3: only meaningful biallelic, only provable in trans --------
-    # PM3_Strong requires BOTH alleles ClinVar-established P/LP - a
-    # predicted-LoF partner is not curated evidence and must not carry the
-    # heaviest recessive criterion after PVS1.
+    # PM3_Strong requires BOTH alleles ClinVar-established P/LP; plain
+    # PM3 requires the partner to be ClinVar-established too (per
+    # Richards/ClinGen the 'pathogenic variant in trans' must be
+    # already-established evidence - an in-silico LoF call does not
+    # certify a partner).
     both_clinically_established = (
         len(variants) >= 2
         and all(_clinically_established(v) for v in variants))
-    if mechanism == "recessive" and in_trans == "trans":
+    if mechanism == "recessive" and in_trans == "trans" \
+            and len(variants) >= 2:
         for i, res in enumerate(results):
-            partners = [v for j, v in enumerate(variants) if j != i]
-            if partners and all(_established_pathogenic(p)
-                                for p in partners):
-                if both_clinically_established:
-                    res["criteria"].append(_crit(
-                        "PM3_Strong", "strong",
-                        "both alleles established P/LP (ClinVar), observed "
-                        "in trans"))
-                elif all(_clinically_established(p) for p in partners):
-                    res["criteria"].append(_crit(
-                        "PM3", "moderate",
-                        "in trans with a ClinVar-established pathogenic "
-                        "allele"))
-                else:
-                    res["criteria"].append(_crit(
-                        "PM3", "moderate",
-                        "in trans with a predicted-LoF allele (not "
-                        "ClinVar-confirmed) - PM3 applied, PM3_Strong "
-                        "withheld pending clinical curation"))
-                _finish(res)
+            # exclude same-key duplicates: a variant cannot be 'in trans
+            # with itself' (dict-coerced inputs lack the genes.py guard)
+            partners = [v for j, v in enumerate(variants)
+                        if j != i and v.key != variants[i].key]
+            if not partners:
+                continue
+            if both_clinically_established:
+                res["criteria"].append(_crit(
+                    "PM3_Strong", "strong",
+                    "both alleles established P/LP (ClinVar), observed "
+                    "in trans"))
+            elif all(_clinically_established(p) for p in partners):
+                res["criteria"].append(_crit(
+                    "PM3", "moderate",
+                    "in trans with a ClinVar-established pathogenic "
+                    "allele"))
+            elif all(_established_pathogenic(p) for p in partners):
+                caveats.append(
+                    "partner allele is predicted-LoF only (not ClinVar-"
+                    "established) - PM3 withheld; predicted evidence does "
+                    "not certify a trans partner")
+            else:
+                caveats.append(
+                    "no established pathogenic partner allele - PM3 "
+                    "not applicable")
+            _finish(res)
+    elif mechanism == "recessive" and len(variants) < 2:
+        caveats.append(
+            "single-variant recessive hypothesis - PM3 (in-trans pair "
+            "evidence) not applicable")
     elif mechanism == "recessive" and in_trans != "trans":
         caveats.append(
             f"in_trans='{in_trans}': PM3 not applicable without proven "
@@ -278,7 +309,7 @@ def evaluate_pair(h1_variants: list[VariantFacts] | tuple,
 
     # --- pair-level phenotype evidence ---------------------------------
     pair_criteria: list[dict] = []
-    if pheno_score >= PP4_PHENO_MIN:
+    if variants and pheno_score >= PP4_PHENO_MIN:
         pair_criteria.append(_crit(
             "PP4", "supporting",
             f"phenotype score {pheno_score:.3f} >= {PP4_PHENO_MIN}: "
@@ -337,8 +368,23 @@ def _as_vf(v) -> VariantFacts:
         d = dict(v)
         if "tier" in d and "damage_tier" not in d:
             d["damage_tier"] = d.pop("tier")
-        if "gnomad_present" not in d and "absent" in d:
-            d["gnomad_present"] = not d["absent"]
+        if "gnomad_present" not in d:
+            if "absent" in d:
+                d["gnomad_present"] = not d["absent"]
+            elif d.get("popmax_af") is not None:
+                # a recorded popmax AF proves gnomAD was queried AND the
+                # allele was seen - derive rather than default to False
+                # (which would fabricate a PM2 'absent' claim on a dict
+                # carrying a real allele frequency)
+                d["gnomad_present"] = True
+        if "gnomad_annotated" not in d:
+            # 'annotated' = gnomAD fields existed in the annotation. A dict
+            # asserting gnomad_present/absent (either key) or carrying a
+            # real popmax_af makes that claim; a bare partial dict does
+            # not - coverage unknown, PM2 withheld.
+            d["gnomad_annotated"] = (
+                "gnomad_present" in d or "absent" in d
+                or d.get("popmax_af") is not None)
         keep = {f.name for f in dataclasses.fields(VariantFacts)}
         # required positional fields of VariantFacts get safe defaults so a
         # partial pipeline dict (tier/popmax/consequence only) still coerces

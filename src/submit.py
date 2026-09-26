@@ -61,9 +61,18 @@ _FINDING_TYPES = ("primary", "secondary")
 def _variant_tuple(v) -> tuple[str, int, str, str]:
     """Normalize one variant: ``{chrom,pos,ref,alt}`` dict or 4-tuple."""
     if isinstance(v, dict):
-        return (str(v["chrom"]), int(v["pos"]), str(v["ref"]), str(v["alt"]))
-    c, p, r, a = v
-    return (str(c), int(p), str(r), str(a))
+        c, p, r, a = v["chrom"], v["pos"], v["ref"], v["alt"]
+    else:
+        c, p, r, a = v
+    # an empty/whitespace chrom normalizes to the ghost contig 'chr' /
+    # 'chrNone' - a guaranteed non-matching FP at every F-max threshold
+    if not str(c).strip():
+        raise ValueError(f"variant has empty chrom: {v!r}")
+    pi = int(p)
+    if float(p) != pi:
+        raise ValueError(f"non-integral pos {p!r} - int() would silently "
+                         "shift the coordinate")
+    return (str(c).strip(), pi, str(r), str(a))
 
 
 def _clean_notes(value) -> str:
@@ -94,6 +103,13 @@ def _hypothesis_row(h: dict, proband_id: str, finding_type: str) -> dict:
         # The format has room for exactly two variants per row; a tri-allelic
         # hypothesis is truncated to its first two variants, deterministically.
         variants = variants[:2]
+    if h.get("epcr") is not None:
+        epcr = float(h["epcr"])
+    elif finding_type == "secondary":
+        epcr = 0.5  # pre-cap placeholder; the cap clamp decides the value
+    else:
+        raise ValueError("primary hypothesis missing epcr - an upstream "
+                         "ranking bug, not a value to invent")
     c1, p1, r1, a1 = variants[0]
     row = {
         "proband_id": proband_id,
@@ -105,7 +121,7 @@ def _hypothesis_row(h: dict, proband_id: str, finding_type: str) -> dict:
         "pos_2": "",
         "ref_2": "",
         "alt_2": "",
-        "epcr": float(h.get("epcr", 0.5)),
+        "epcr": epcr,
         "finding_type": finding_type,
         "notes": _clean_notes(
             h.get("notes") or f"{h.get('gene', '')} {h.get('model', '')}"),
@@ -156,7 +172,14 @@ def build_rows(ranked: list[dict], sf_rows: list[dict] | None = None,
     rows = [_hypothesis_row(h, proband_id, "primary") for h in emitted]
     for sf in (sf_rows or []):
         r = _hypothesis_row(sf, proband_id, "secondary")
-        if r["epcr"] > sec_cap:
+        e = r["epcr"]
+        # validate BEFORE the cap clamp: inf/>1/0/negative must not
+        # silently become 0.30 (nan: 0<x comparisons are False -> raises)
+        if not (0.0 < e <= 1.0):
+            raise ValueError(
+                f"secondary epcr {e!r} out of range (0,1] - an upstream "
+                "bug, not a value to clamp")
+        if e > sec_cap:
             r["epcr"] = sec_cap
         rows.append(r)
 
@@ -203,7 +226,20 @@ def _validate_row(r: dict) -> None:
     if not str(r.get("chrom_1", "")).strip():
         raise ValueError("row missing chrom_1")
     int(str(r.get("pos_1", "")).strip())  # oracle does int(pos_1)
-    c2, p2 = str(r.get("chrom_2", "")).strip(), str(r.get("pos_2", "")).strip()
+    # alleles are mandatory content: empty ref/alt parses into a variant
+    # that can only be an FP at every threshold
+    if not str(r.get("ref_1", "")).strip() \
+            or not str(r.get("alt_1", "")).strip():
+        raise ValueError("row has empty ref_1/alt_1")
+    c2_raw, p2_raw = str(r.get("chrom_2", "")), str(r.get("pos_2", ""))
+    c2, p2 = c2_raw.strip(), p2_raw.strip()
+    # whitespace-only fields: truthy raw but empty after strip - the
+    # oracle checks raw truthiness, so it would reject the whole file
+    # while we accept it; fail here instead
+    if (c2_raw and not c2) or (p2_raw and not p2):
+        raise ValueError(
+            f"second variant fields are whitespace-only "
+            f"(chrom_2={c2_raw!r}, pos_2={p2_raw!r})")
     if bool(c2) != bool(p2):
         # half-filled second variant either degrades the row to a single
         # variant in the oracle's parser (empty chrom_2) or, for a
@@ -232,6 +268,11 @@ def submission_bytes(rows: list[dict]) -> bytes:
     if len(rows) > 10:
         # explicit raise, not assert - this contract must hold under -O
         raise ValueError(f"submission exceeds the 10-row cap ({len(rows)})")
+    if not rows:
+        # a header-only file is a guaranteed server-side reject that an
+        # operator could upload by mistake - refuse to emit it
+        raise ValueError("no data rows - an empty submission can never "
+                         "score; refusing to emit a header-only CSV")
     for r in rows:
         _validate_row(r)
     buf = io.StringIO(newline="")
@@ -260,7 +301,15 @@ def _load_oracle():
     use inserts ``scorer/`` on ``sys.path`` (same pattern as conftest).
     """
     if "evaluation" in sys.modules:
-        return sys.modules["evaluation"]
+        m = sys.modules["evaluation"]
+        # under pytest, conftest may have bound the hackathon-app copy
+        # instead of scorer/ - identical bytes today, but a one-sided
+        # re-vendor would silently test a stale oracle
+        got = getattr(m, "__file__", "") or ""
+        if str(REPO / "scorer").replace("\\", "/").lower() in \
+                got.replace("\\", "/").lower():
+            return m
+        del sys.modules["evaluation"]
     scorer_dir = str(REPO / "scorer")
     if scorer_dir not in sys.path:
         sys.path.insert(0, scorer_dir)
@@ -342,9 +391,12 @@ def _validate_utf8_subprocess(data: bytes, ground_truth):
         out = subprocess.run(
             [sys.executable, "-X", "utf8", "-c", code,
              str(REPO / "scorer"), path, gt_json],
-            capture_output=True, text=True, timeout=60)
+            capture_output=True, timeout=60,
+            # child writes UTF-8 under -X utf8; decode it the same way -
+            # cp1252 would mojibake or crash on non-ASCII error text
+            encoding="utf-8", errors="replace")
         line = (out.stdout.strip().splitlines() or [""])[-1]
-        if out.returncode != 0 or line.startswith("Traceback"):
+        if out.returncode != 0:
             err = (out.stderr.strip().splitlines() or ["?"])[-1]
             # preserve the oracle's exception TYPE (the app surfaces them
             # verbatim) rather than collapsing everything to ValueError
@@ -366,8 +418,11 @@ def _validate_utf8_subprocess(data: bytes, ground_truth):
             raise ValueError(
                 "oracle raised under UTF-8 server semantics: " + err)
         if line.startswith("REJ:"):
+            pid = line[4:]
+            if pid == "EMPTY":
+                raise ValueError("No valid rows found in the CSV.")
             raise ValueError(
-                f"Unknown proband_id '{line[4:]}'. Only PROBAND01 is accepted.")
+                f"Unknown proband_id '{pid}'. Only PROBAND01 is accepted.")
         if line.startswith("SCORE:"):
             oracle = _load_oracle()
             return oracle.ScoreResult(**_json.loads(line[6:]))

@@ -43,50 +43,95 @@ def extract_hpo_from_docx(path: str | Path) -> list[str]:
         raise FileNotFoundError(p)
     terms: list[str] = []
     with zipfile.ZipFile(p) as z:
-        if "word/document.xml" not in z.namelist():
+        names = z.namelist()
+        if "word/document.xml" not in names:
             raise ValueError(f"{p}: not a docx (no word/document.xml)")
-        root = ET.fromstring(z.read("word/document.xml"))
-        for para in root.iter(_W_NS + "p"):
-            text = "".join(t.text or "" for t in para.iter(_W_NS + "t"))
-            terms.extend(HPO_RE.findall(text))
+        # document body first, then headers/footers/footnotes/comments -
+        # a term written in a table footer must not be missed
+        parts = (["word/document.xml"]
+                 + sorted(n for n in names if re.fullmatch(
+                     r"word/(header|footer|footnotes|endnotes|comments)"
+                     r"\d*\.xml", n)))
+        for part in parts:
+            try:
+                root = ET.fromstring(z.read(part))
+            except ET.ParseError:
+                continue
+            for para in root.iter(_W_NS + "p"):
+                text = "".join(t.text or "" for t in para.iter(_W_NS + "t"))
+                terms.extend(HPO_RE.findall(text))
     seen: set[str] = set()
     return [t for t in terms if not (t in seen or seen.add(t))]
 
 
 @dataclass
 class OboOntology:
-    """HPO-style OBO graph: parents/children/name maps over ``is_a`` edges."""
+    """HPO-style OBO graph: parents/children/name maps over ``is_a`` edges.
+
+    ``alt_id`` and ``replaced_by`` terms are remapped to their primary id:
+    a clinical docx written against an older HPO release must still match
+    the current ontology instead of silently dropping the term."""
 
     name: dict[str, str] = field(default_factory=dict)
     parents: dict[str, list[str]] = field(default_factory=dict)
     obsolete: set[str] = field(default_factory=set)
+    alt2primary: dict[str, str] = field(default_factory=dict)
     _ancestors: dict[str, set[str]] = field(default_factory=dict, repr=False)
-    _depth: dict[str, int] = field(default_factory=dict, repr=False)
 
     @classmethod
     def parse(cls, path: str | Path) -> "OboOntology":
         ont = cls()
-        cur_id: str | None = None
         in_term = False
-        for raw in Path(path).read_text(encoding="utf-8", errors="replace").splitlines():
+        # buffer per [Term] block: field order inside a term is not
+        # guaranteed (id: need not precede name:/is_a: in every release),
+        # so collect the whole block then emit it
+        buf: dict[str, list[str] | bool] = {}
+
+        def flush():
+            tid = (buf.get("id") or [None])[0]
+            if not tid:
+                return
+            for n in buf.get("name", []):
+                ont.name[tid] = n
+            for p in buf.get("is_a", []):
+                ont.parents.setdefault(tid, []).append(p)
+            if buf.get("is_obsolete"):
+                ont.obsolete.add(tid)
+            for a in buf.get("alt_id", []):
+                ont.alt2primary[a] = tid
+            for r in buf.get("replaced_by", []):
+                ont.alt2primary[tid] = r  # obsolete -> replacement id
+
+        for raw in Path(path).read_text(encoding="utf-8",
+                                        errors="replace").splitlines():
             line = raw.strip()
             if line == "[Term]":
-                in_term, cur_id = True, None
+                flush()
+                buf, in_term = {}, True
                 continue
             if line.startswith("["):
-                in_term = False
+                flush()
+                buf, in_term = {}, False
                 continue
             if not in_term or not line:
                 continue
-            if line.startswith("id: "):
-                cur_id = line[4:].strip()
-            elif line.startswith("name: ") and cur_id:
-                ont.name[cur_id] = line[6:].strip()
-            elif line.startswith("is_a: ") and cur_id:
-                parent = line[6:].split("!")[0].strip()
-                ont.parents.setdefault(cur_id, []).append(parent)
-            elif line.startswith("is_obsolete: true") and cur_id:
-                ont.obsolete.add(cur_id)
+            k, _, v = line.partition(": ")
+            v = v.strip()
+            if k == "id":
+                buf.setdefault("id", []).append(v)
+            elif k == "name":
+                buf.setdefault("name", []).append(v)
+            elif k == "is_a":
+                buf.setdefault("is_a", []).append(v.split("!")[0].strip())
+            elif k == "alt_id":
+                buf.setdefault("alt_id", []).append(v)
+            elif k == "replaced_by":
+                buf.setdefault("replaced_by", []).append(v.split()[0])
+            elif k == "consider":
+                buf.setdefault("replaced_by", []).append(v.split()[0])
+            elif line == "is_obsolete: true":
+                buf["is_obsolete"] = True
+        flush()
         return ont
 
     @classmethod
@@ -95,8 +140,13 @@ class OboOntology:
         """Build from a {child: [parents]} mapping (fixtures/tests)."""
         return cls(name=names or {}, parents=dict(edges))
 
+    def primary(self, term: str) -> str:
+        """Remap alt_ids / replaced_by ids to their primary term id."""
+        return self.alt2primary.get(term, term)
+
     def ancestors(self, term: str) -> set[str]:
         """All ancestors of ``term`` INCLUDING the term itself (memoized)."""
+        term = self.primary(term)
         if term in self._ancestors:
             return self._ancestors[term]
         anc: set[str] = set()
@@ -111,6 +161,10 @@ class OboOntology:
         return anc
 
     def valid(self, term: str) -> bool:
+        term = self.primary(term)
+        # an obsolete term with no replacement is not usable evidence
+        if term in self.obsolete:
+            return False
         return term in self.name or term in self.parents
 
 
@@ -164,17 +218,24 @@ def resnik(ont: OboOntology, ic: InformationContent, t1: str, t2: str) -> float:
 
 
 def best_match_average(ont: OboOntology, ic: InformationContent,
-                       set_a: set[str], set_b: set[str]) -> float:
+                       set_a: set[str], set_b: set[str],
+                       ic_floor: float = 0.0) -> float:
     """Symmetric best-match-average of Resnik, normalized to [0,1].
 
     score = mean over each term in A of max Resnik(t, B)  (and vice versa),
     divided by the mean self-similarity ceiling so a perfect match -> 1.0.
+
+    ``ic_floor`` drops terms whose own IC is below the floor - terms too
+    common to carry phenotyping signal (e.g. 'Seizures' at IC~0) do not
+    inflate the match average.
     """
     # sort before summing - set iteration order varies with PYTHONHASHSEED
     # and float addition is order-sensitive at the last ulp; pinning the
     # order keeps cross-process scores bit-identical
-    a = sorted(t for t in set_a if ont.valid(t))
-    b = sorted(t for t in set_b if ont.valid(t))
+    a = sorted(t for t in set_a
+               if ont.valid(t) and ic.ic(t) >= ic_floor)
+    b = sorted(t for t in set_b
+               if ont.valid(t) and ic.ic(t) >= ic_floor)
     if not a or not b:
         return 0.0
 
@@ -182,7 +243,13 @@ def best_match_average(ont: OboOntology, ic: InformationContent,
         return sum(max(resnik(ont, ic, t, u) for u in y) for t in x) / len(x)
 
     sim = 0.5 * (avg_best(a, b) + avg_best(b, a))
-    ceil = ic.max_ic()
+    # normalize by the query set's OWN self-similarity ceiling (mean IC of
+    # its terms) rather than the corpus-global max IC: a perfect match on
+    # common-phenotype terms should still approach 1.0 - otherwise genes
+    # for common-phenotype diseases can never reach the PP4 cutoff.
+    ceil_a = avg_best(a, a)
+    ceil_b = avg_best(b, b)
+    ceil = 0.5 * (ceil_a + ceil_b)
     return min(1.0, sim / ceil) if ceil > 0 else 0.0
 
 
@@ -201,6 +268,12 @@ def load_hpoa(path: str | Path) -> dict[str, set[str]]:
         cols = raw.split("\t")
         if len(cols) >= 4 and HPO_RE.fullmatch(cols[3] or ""):
             if cols[2].strip().upper() == "NOT":
+                continue
+            # hpoa 'aspect' column (idx 9): P=phenotype, I=inheritance,
+            # C=clinical course - only phenotype rows belong in the term
+            # set ('HP:0000007 Autosomal recessive inheritance' etc would
+            # otherwise pollute every AR disease's profile)
+            if len(cols) > 9 and cols[9].strip().upper() in ("I", "C"):
                 continue
             out.setdefault(cols[0], set()).add(cols[3])
         elif len(cols) >= 2 and HPO_RE.fullmatch(cols[1] or ""):
@@ -222,6 +295,11 @@ def gene_disease_map(path: str | Path) -> dict[str, list[str]]:
                 f"{path}: value for gene {g!r} is {type(v).__name__}, "
                 "not a list - list(v) on a string would produce a bogus "
                 "disease id per character")
+        bad = [d for d in v if not isinstance(d, str)]
+        if bad:
+            raise ValueError(
+                f"{path}: non-string disease ids for gene {g!r}: "
+                f"{bad!r} - they would silently match nothing downstream")
         out[g] = list(v)
     return out
 

@@ -78,7 +78,10 @@ def enumerate_hypotheses(facts: list[VariantFacts], cfg: dict,
     hyps: list[Hypothesis] = []
 
     for gene, vfs in sorted(_by_gene(cand).items()):
-        hets = [v for v in vfs if v.is_het]
+        # a hemizygous call carries one ALT allele - het-like for pair
+        # enumeration; it can partner a genuine het on the same haplotype
+        # question phasing decides
+        hets = [v for v in vfs if v.is_het or v.is_hemi]
         homs = [v for v in vfs if v.is_hom_alt]
         truncated = False
         if len(hets) > cap:
@@ -105,9 +108,9 @@ def enumerate_hypotheses(facts: list[VariantFacts], cfg: dict,
                                        variants=(h,)))
         if "x_linked" in models:
             for h in hets + homs:
-                # accept both 'X' and 'chrX' contig spellings - a
-                # chr-prefixed VCF must not silently lose the whole model
-                if h.chrom.upper().removeprefix("CHR") == "X":
+                # accept 'X', 'chrX' and the GRCh37-numeric '23' - the
+                # same set sf_scan._XL_CHROMS recognizes
+                if h.chrom.upper().removeprefix("CHR") in ("X", "23"):
                     hyps.append(Hypothesis(gene=gene, model="x_linked",
                                            variants=(h,)))
     return hyps
@@ -122,13 +125,22 @@ def attach_scores(hyps: list[Hypothesis],
     """
     sc = cfg.get("scoring", {})
     w_d = sc.get("w_variant_damage", 0.45)
-    w_p = sc.get("w_phenotype", 0.35)
+    # phenotype.weight_in_score is the authoritative knob; scoring
+    # .w_phenotype is the legacy alias (identical defaults - no
+    # divergence possible)
+    w_p = cfg.get("phenotype", {}).get(
+        "weight_in_score", sc.get("w_phenotype", 0.35))
     w_i = sc.get("w_inheritance", 0.20)
     bonus = sc.get("inheritance_bonus", {})
     noise_genes = set(cfg.get("negative_control", {}).get("noise_genes", ()))
 
     for h in hyps:
-        h.variant_damage = max(v.score for v in h.variants)
+        # mean, not max: max() would score every pair containing the best
+        # allele identically, so a junk partner could tie with (or outrank
+        # on position) the true pair. The trans partner's damage must
+        # matter - mean is strictly increasing in both alleles.
+        h.variant_damage = (sum(v.score for v in h.variants)
+                            / len(h.variants))
         h.pheno_score = pheno_of_gene(h.gene)
         if h.model == "compound_het" and h.in_trans == "cis":
             # Phasing proved the pair is on one haplotype - not a valid

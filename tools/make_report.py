@@ -161,6 +161,15 @@ def acmg_section(acmg: dict | None) -> str:
         lines.append(f"\nPair-level: {pc}")
     lines.append(f"\nCombined call: **{acmg.get('combined_classification', acmg.get('combined','?'))}** "
                  f"({acmg.get('combined_points','?')} pts - {acmg.get('framework','')})")
+    # surface withheld-criteria caveats: PVS1/PM3 'not awarded' is
+    # evidence in itself and must not be invisible in the report
+    caveats = sorted({c for v in acmg.get("variants", [])
+                      for c in v.get("caveats", [])}
+                     | set(acmg.get("caveats", [])))
+    if caveats:
+        lines.append("\nWithheld / caveated evidence:")
+        for c in caveats:
+            lines.append(f"- {c}")
     return "\n".join(lines)
 
 

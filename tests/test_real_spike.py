@@ -49,14 +49,21 @@ def _g2d_path(tmp_dir: Path) -> Path:
     if G2P.exists():
         out = tmp_dir / "gene2disease.derived.json"
         g2d: dict[str, set] = {}
-        for i, line in enumerate(
-                open(G2P, encoding="utf-8", errors="replace")):
+        header: list[str] | None = None
+        # reuse the production converter's column resolution so the
+        # test-only fallback can't diverge on 9-column releases
+        sys.path.insert(0, str(REPO / "tools"))
+        from genes_to_disease_json import _resolve_columns  # noqa: E402
+        for line in open(G2P, encoding="utf-8", errors="replace"):
             cols = line.rstrip("\n").split("\t")
-            if i == 0 and cols[0].lower() in ("ncbi_gene_id", "#"):
+            if cols[0].startswith("#") or cols[0].lower() == "ncbi_gene_id":
+                header = [c.lstrip("#").strip() for c in cols]
                 continue
-            if len(cols) >= 6 and cols[5].startswith(("OMIM:", "ORPHA:",
-                                                      "DECIPHER:")):
-                g2d.setdefault(cols[1], set()).add(cols[5])
+            m = _resolve_columns(header, len(cols))
+            if len(cols) > max(m.values()):
+                dis = cols[m["disease"]]
+                if dis.startswith(("OMIM:", "ORPHA:", "DECIPHER:")):
+                    g2d.setdefault(cols[m["symbol"]], set()).add(dis)
         out.write_text(json.dumps({g: sorted(v) for g, v in g2d.items()}))
         return out
     pytest.skip("no gene->disease source: need env/corpus/gene2disease.json "

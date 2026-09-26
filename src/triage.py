@@ -86,20 +86,23 @@ def _severity(consequence: str) -> int:
                default=len(_SO_SEVERITY))
 
 
-def _popmax_af(ann: dict[str, str]) -> tuple[float | None, bool]:
+def _popmax_af(ann: dict[str, str]) -> tuple[float | None, bool, bool]:
     """Max AF over all gnomAD subpopulation + pooled fields in one CSQ block.
 
-    Returns (af, present). ``present=False`` means the allele is absent from
-    gnomAD entirely - the stronger rarity state the config rewards.
-    """
+    Returns (af, present, annotated). ``present=False`` means no AF value
+    parsed; ``annotated`` distinguishes "gnomAD fields existed in the CSQ
+    format" (truly absent allele) from "the annotation never queried
+    gnomAD" (coverage unknown - must not earn absent-allele credit)."""
     vals = []
+    annotated = False
     for k, v in ann.items():
         for pfx in _GNOMAD_AF_PREFIXES:
             if k.startswith(pfx) and k.endswith("_AF"):
+                annotated = True  # field key present even if value is '.'
                 f = _f(v)
                 if f is not None:
                     vals.append(f)
-    return (max(vals), True) if vals else (None, False)
+    return (max(vals), True, annotated) if vals else (None, False, annotated)
 
 
 def _spliceai_delta(ann: dict[str, str]) -> float | None:
@@ -117,10 +120,17 @@ def _damage_votes(ann: dict[str, str], pred_cfg: dict) -> tuple[int, dict[str, b
         "revel": (_f(ann.get("REVEL")) or -1) >= pred_cfg.get("revel_min", 0.5),
         "alphamissense": (_f(ann.get("AlphaMissense_score")) or -1)
             >= pred_cfg.get("alphamissense_min", 0.564),
+        # SIFT/PolyPhen arrive as '&'-joined per-transcript calls
+        # ('deleterious(0)&tolerated(0.9)') - scan every token so a
+        # damaging call hidden behind a tolerated one still votes; and
+        # only PolyPhen's *damaging* class words count ('possibly_damaging'
+        # is the weak class, not a full vote)
         "sift": bool(pred_cfg.get("sift_deleterious", True))
-            and str(ann.get("SIFT") or "").lower().startswith("deleterious"),
+            and any(t.startswith("deleterious")
+                    for t in str(ann.get("SIFT") or "").lower().split("&")),
         "polyphen": bool(pred_cfg.get("polyphen_damaging", True))
-            and "damaging" in str(ann.get("PolyPhen") or "").lower(),
+            and any(t.startswith("probably_damaging")
+                    for t in str(ann.get("PolyPhen") or "").lower().split("&")),
     }
     return sum(votes.values()), votes
 
@@ -149,6 +159,9 @@ class VariantFacts:
 
     popmax_af: float | None = None
     gnomad_present: bool = False
+    # True only when the CSQ annotation actually carried gnomAD AF fields -
+    # 'absent' vs 'gnomAD never queried' are different evidence states
+    gnomad_annotated: bool = True
     clin_sig: str = ""
     cadd: float | None = None
     revel: float | None = None
@@ -162,6 +175,9 @@ class VariantFacts:
     gt: str = ""        # '0/1', '1/1', '0|1', ...
     is_het: bool = False
     is_hom_alt: bool = False
+    # hemizygous (haploid GT like '1' on chrX/chrM/male calls) - carried
+    # ALT but NOT a diploid homozygote; never enumerates as hom_alt
+    is_hemi: bool = False
     dp: int | None = None
     gq: float | None = None
     vaf: float | None = None
@@ -192,12 +208,14 @@ def _genotype_fields(gt_obj: SampleGenotype | None,
                      alt_index: int = 1) -> dict:
     if gt_obj is None:
         return {"gt": "", "is_het": False, "is_hom_alt": False,
+                "is_hemi": False,
                 "dp": None, "gq": None, "vaf": None, "pgt": None, "pid": None}
     raw_gt = gt_obj.raw.get("GT", "")
     return {
         "gt": raw_gt,
         "is_het": gt_obj.is_het,
         "is_hom_alt": gt_obj.is_hom_alt,
+        "is_hemi": False,  # caller overrides for haploid calls
         "dp": gt_obj.dp,
         "gq": gt_obj.gq,
         "vaf": gt_obj.vaf(alt_index),
@@ -225,15 +243,22 @@ def _qc(vf_is_het: bool, vf_is_hom: bool, rec_passed: bool,
     return (not fails, tuple(fails))
 
 
-def _rarity(ann: dict[str, str], rar_cfg: dict) -> tuple[bool, bool, float, float | None]:
-    """(rare, absent, rarity_score, popmax). Score: absent->1.0; else decays
-    toward 0 as popmax approaches the AF ceiling."""
-    popmax, present = _popmax_af(ann)
+def _rarity(ann: dict[str, str], rar_cfg: dict
+            ) -> tuple[bool, bool, bool, float, float | None]:
+    """(rare, absent, annotated, rarity_score, popmax). Score: absent->1.0;
+    else decays toward 0 as popmax approaches the AF ceiling.
+
+    ``absent`` requires ``annotated`` - a CSQ block with no gnomAD fields
+    at all is 'coverage unknown', not 'allele absent from gnomAD'; such a
+    variant earns no absent-allele rarity credit (conservative)."""
+    popmax, present, annotated = _popmax_af(ann)
     af_max = rar_cfg.get("af_max", 1e-4)
-    absent = not present
+    absent = annotated and not present
     rare = absent or (popmax is not None and popmax <= af_max)
     if absent:
-        score = 1.0
+        # absent_bonus: the rarity premium for never-observed alleles
+        # (default 0.5 -> score 1.0 = the historical ceiling)
+        score = min(1.0, 0.5 + float(rar_cfg.get("absent_bonus", 0.5)))
     elif popmax is not None and popmax > 0:
         # log-scale position of popmax between 1e-7 (score~1) and af_max (~0.5)
         denom = math.log10(af_max / 1e-7) if af_max > 0 else 0.0
@@ -246,7 +271,7 @@ def _rarity(ann: dict[str, str], rar_cfg: dict) -> tuple[bool, bool, float, floa
             score = 1.0 - 0.5 * max(0.0, frac)
     else:
         score = 0.8  # present with AF 0 exactly
-    return rare, absent, score, popmax
+    return rare, absent, annotated, score, popmax
 
 
 def _damage_tier(ann: dict[str, str], con_cfg: dict) -> tuple[str, int, dict]:
@@ -261,7 +286,10 @@ def _damage_tier(ann: dict[str, str], con_cfg: dict) -> tuple[str, int, dict]:
     elif cons & set(con_cfg.get("missense_terms", ())) and votes >= con_cfg.get("min_votes", 2):
         tier = "damaging_missense"
     elif (cons & set(con_cfg.get("splice_region_terms", ())) and sai_hit) or \
-            (sai_hit and not (cons & set(con_cfg.get("synonymous_terms", ())))):
+            sai_hit:
+        # high SpliceAI rescues ANY consequence class (deep-exonic cryptic
+        # splice on a 'synonymous' allele is biologically real) - the config
+        # documents this; excluding synonymous would silently lose it
         tier = "splice_altering"
     else:
         tier = "other"
@@ -282,13 +310,52 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
     for alt_i, alt in enumerate(rec.alts):
         anns = rec.csq_for_alt(alt) if rec._csq_fields else []
         # One representative annotation per gene: worst consequence.
+        # Per-field predictor evidence is taken as the MAX across that
+        # gene's transcript rows: a variant benign on the worst-severity
+        # transcript but damaging on another must not lose its predictor
+        # votes (audit H-4 - the severity pick and the evidence pick are
+        # different columns of different rows).
         per_gene: dict[str, dict[str, str]] = {}
+        gene_rows: dict[str, list[dict[str, str]]] = {}
         for a in anns:
             gene = a.get("SYMBOL") or a.get("Gene") or ""
+            gene_rows.setdefault(gene, []).append(a)
             cur = per_gene.get(gene)
             if cur is None or _severity(a.get("Consequence", "")) < _severity(
                     cur.get("Consequence", "")):
                 per_gene[gene] = a
+        # numeric evidence fields where max-across-transcripts is the
+        # conservative choice
+        _EVIDENCE_MAX = ("CADD_PHRED", "REVEL", "AlphaMissense_score",
+                         "SpliceAI_pred_DS_AG", "SpliceAI_pred_DS_AL",
+                         "SpliceAI_pred_DS_DG", "SpliceAI_pred_DS_DL",
+                         "phyloP", "LOEUF")
+        for gene, rows in gene_rows.items():
+            if len(rows) < 2:
+                continue
+            base = per_gene[gene]
+            for fld in _EVIDENCE_MAX:
+                best, bv = base.get(fld), _f(base.get(fld))
+                for a in rows:
+                    if a is base:
+                        continue
+                    av = _f(a.get(fld))
+                    if av is not None and (bv is None or av > bv):
+                        best, bv = a.get(fld), av
+                base[fld] = best if best is not None else ""
+            # categorical damage calls: take the most damaging seen on
+            # any transcript for the same reason
+            for cat, order in (
+                    ("SIFT", ("deleterious", "tolerated")),
+                    ("PolyPhen", ("probably_damaging", "possibly_damaging",
+                                  "benign"))):
+                def _rank(v: str) -> int:
+                    for i, w in enumerate(order):
+                        if str(v).lower().startswith(w):
+                            return i
+                    return len(order)
+                base[cat] = min((a.get(cat) or "" for a in rows),
+                                key=_rank)
         if not per_gene:
             per_gene[""] = {}
 
@@ -299,19 +366,29 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
             # restrict het/hom flags to THIS alt index in multi-allelic sites
             if gt_obj is not None and gt_obj.called:
                 if len(gt_obj.gt) == 1:
-                    # haploid call (male chrX convention '1'): hemizygous -
-                    # model as homozygous-equivalent or the allele is
-                    # invisible to every inheritance model
+                    # haploid call (male chrX / chrM convention '1'):
+                    # hemizygous - NOT a diploid homozygote. A chrM/chrY/
+                    # autosomal haploid ALT must not enumerate as hom_alt
+                    # (biallelic model) - it goes to x_linked on X or the
+                    # het-pool elsewhere (audit M-4).
                     g["is_het"] = False
-                    g["is_hom_alt"] = gt_obj.gt[0] == gt_idx
+                    g["is_hom_alt"] = False
+                    g["is_hemi"] = gt_obj.gt[0] == gt_idx
                 else:
                     g["is_het"] = (gt_idx in gt_obj.gt
                                    and len(set(gt_obj.gt)) >= 2)
                     g["is_hom_alt"] = all(x == gt_idx for x in gt_obj.gt)
-            rare, absent, rscore, popmax = _rarity(ann, rar_cfg)
+            rare, absent, annotated, rscore, popmax = _rarity(ann, rar_cfg)
             tier, votes, _vd = _damage_tier(ann, con_cfg)
-            qc_pass, qc_fails = _qc(g["is_het"], g["is_hom_alt"],
-                                    rec.passed, g, qc_cfg)
+            # filters_allowed is the consumed FILTER gate: a record passes
+            # when FILTER is clean (PASS/.) or every filter name is in the
+            # allowed list (e.g. 'q10' tolerated when configured)
+            allowed = set(qc_cfg.get("filters_allowed", ["PASS"]))
+            filt_ok = rec.passed or all(
+                f in allowed for f in rec.filters)
+            qc_pass, qc_fails = _qc(
+                g["is_het"], g["is_hom_alt"] or g["is_hemi"],
+                filt_ok, g, qc_cfg)
             cadd = _f(ann.get("CADD_PHRED"))
             revel = _f(ann.get("REVEL"))
             am = _f(ann.get("AlphaMissense_score"))
@@ -320,8 +397,12 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
             cp = _clinsig_pathogenic(clin)
 
             # Variant-level evidence score: tier base modulated by rarity
-            # (absent is stronger), plus a small ClinVar P/LP bonus.
-            rfac = 1.0 if absent else 0.9
+            # (absent is stronger when the knob says so), plus a small
+            # ClinVar P/LP bonus.
+            rfac = 0.9
+            if absent:
+                rfac = 1.0 if rar_cfg.get("absent_is_stronger", True) \
+                    else 0.95
             score = min(1.0, TIER_BASE[tier] * rfac + (0.05 if cp else 0.0))
 
             out.append(VariantFacts(
@@ -331,17 +412,38 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
                 consequence=ann.get("Consequence") or "",
                 impact=ann.get("IMPACT") or "", biotype=ann.get("BIOTYPE") or "",
                 hgvsc=ann.get("HGVSc") or "", hgvsp=ann.get("HGVSp") or "",
-                popmax_af=popmax, gnomad_present=(not absent), clin_sig=clin,
+                popmax_af=popmax, gnomad_present=(popmax is not None),
+                gnomad_annotated=annotated, clin_sig=clin,
                 cadd=cadd, revel=revel, alphamissense=am, spliceai=sai,
                 loeuf=_f(ann.get("LOEUF")), phylop=_f(ann.get("phyloP")),
                 sift=ann.get("SIFT") or "", polyphen=ann.get("PolyPhen") or "",
                 gt=g["gt"], is_het=g["is_het"], is_hom_alt=g["is_hom_alt"],
+                is_hemi=g["is_hemi"],
                 dp=g["dp"], gq=g["gq"], vaf=g["vaf"],
                 pgt=g["pgt"], pid=g["pid"],
                 qc_pass=qc_pass, qc_fails=qc_fails,
                 rare=rare, absent=absent, rarity_score=rscore,
                 damage_tier=tier, damage_votes=votes,
                 clinsig_pathogenic=cp, score=score, alt_index=gt_idx))
+    # SYMBOL fallback ('SYMBOL or Gene') can split one gene into two
+    # groups when one transcript row has a SYMBOL and a sibling has only
+    # the ENSG id - the id-named fact then forms an alien 'gene' (pheno
+    # 0, duplicate hypotheses). Drop the id-named fact when a
+    # symbol-named fact exists for the same variant (audit LOW).
+    by_key: dict[tuple, list[VariantFacts]] = {}
+    for f in out:
+        by_key.setdefault(f.key, []).append(f)
+    drop: set[int] = set()
+    for fs in by_key.values():
+        if len(fs) < 2:
+            continue
+        id_like = [f for f in fs if f.gene and f.gene == f.gene_id]
+        symbolic = {f.gene for f in fs
+                    if f.gene and f.gene != f.gene_id}
+        if symbolic and id_like:
+            drop.update(id(f) for f in id_like)
+    if drop:
+        out = [f for f in out if id(f) not in drop]
     return out
 
 
