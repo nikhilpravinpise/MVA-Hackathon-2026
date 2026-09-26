@@ -528,7 +528,9 @@ def tc_to_ann(tc: dict, vcf_alt: str, afs: dict, clin_sig: str,
     """One VEP transcript_consequence dict -> one synth.Ann (CSQ block)."""
     extra = dict(afs)
     if clin_sig:
-        extra["CLIN_SIG"] = clin_sig
+        # ClinVar VCF encodes multi-value CLNSIG with '|'; VEP CSQ uses
+        # '&' inside a field ('|' is the CSQ column separator)
+        extra["CLIN_SIG"] = clin_sig.replace("|", "&")
     if existing:
         extra["Existing_variation"] = existing
     if tc.get("cadd_phred") is not None:
@@ -648,7 +650,9 @@ def fallback_anns(vcf_alt: str, clinvar_rec: dict | None) -> list[Ann]:
                if "|" in m]
         cons = "&".join(mcs) if mcs else "intron_variant"
         return [Ann(allele=vcf_alt, consequence=cons, impact="MODERATE",
-                    symbol=GENE, extra={"CLIN_SIG": clinvar_rec["clnsig"]})]
+                    symbol=GENE,
+                    extra={"CLIN_SIG":
+                           clinvar_rec["clnsig"].replace("|", "&")})]
     return [Ann(allele=vcf_alt, consequence="intergenic_variant",
                 impact="MODIFIER")]
 

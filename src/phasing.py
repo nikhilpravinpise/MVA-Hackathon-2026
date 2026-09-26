@@ -77,9 +77,12 @@ def determine_phase(v1: VariantFacts, v2: VariantFacts) -> PhaseCall:
 
     if v1.pid and v2.pid and v1.pid == v2.pid and h1 is not None and h2 is not None:
         if not h1 or not h2:
-            # e.g. 1|1 homozygous alt - carries alt on both haps; not a het pair
+            # the queried alt index appears on NEITHER haplotype (e.g.
+            # pgt 0|0 with alt_index 1, or a 3-allele PGT) - the PGT
+            # tells us nothing about this pair
             return PhaseCall("unknown", "pgt_pid_same_set",
-                             "homozygous PGT cannot define a het pair")
+                             "alt absent from the phased GT cannot "
+                             "define a pair")
         relation = "trans" if h1.isdisjoint(h2) else "cis"
         return PhaseCall(
             relation, "pgt_pid_same_set",

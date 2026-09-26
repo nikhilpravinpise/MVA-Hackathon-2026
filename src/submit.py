@@ -249,6 +249,14 @@ def _validate_row(r: dict) -> None:
             f"second variant half-filled (chrom_2={c2!r}, pos_2={p2!r})")
     if c2:
         int(p2)
+        # empty alleles on a half-present variant 2: the oracle parses
+        # (chrom,pos,'','') into a ghost variant that can only be an FP
+        # at every F-max threshold - the same trap as empty ref_1/alt_1
+        if not str(r.get("ref_2", "")).strip() \
+                or not str(r.get("alt_2", "")).strip():
+            raise ValueError(
+                "second variant has coords but empty ref_2/alt_2 - a "
+                "guaranteed ghost-FP at every threshold")
     e = float(r.get("epcr"))
     if not (0.0 < e <= 1.0):
         raise ValueError(f"epcr {e} out of range (0,1]")

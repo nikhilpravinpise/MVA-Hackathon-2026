@@ -374,6 +374,14 @@ def to_submission_chrom(chrom: str) -> str:
         return "chrM"
     if c.upper() in ("X", "Y"):
         return "chr" + c.upper()
+    # UCSC-numeric contig names (1-22, 23=X, 24=Y, 25=M) - the same
+    # convention genes.py/sf_scan._XL_CHROMS accept as X-linked
+    if c == "23":
+        return "chrX"
+    if c == "24":
+        return "chrY"
+    if c == "25":
+        return "chrM"
     return "chr" + c
 
 

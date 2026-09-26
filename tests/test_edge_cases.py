@@ -931,3 +931,105 @@ class TestTranscriptEvidenceMax:
         vf = f[0]
         assert vf.sift.startswith("deleterious")
         assert vf.damage_votes >= 1
+
+
+class TestCsqSeparators:
+    """'|' or ',' inside an Ann.extra value would inject phantom
+    columns/rows into the positional CSQ encoding."""
+
+    def test_pipe_in_value_rejected(self):
+        a = synth.Ann("T", "missense_variant", "MODERATE", "G", "GID",
+                      extra={"SIFT": "deleterious|bad(0.01)"})
+        with pytest.raises(ValueError, match="block separator"):
+            a.to_csq()
+
+    def test_comma_in_value_rejected(self):
+        a = synth.Ann("T", "missense_variant", "MODERATE", "G", "GID",
+                      extra={"CLIN_SIG": "pathogenic,low_penetrance"})
+        with pytest.raises(ValueError, match="block separator"):
+            a.to_csq()
+
+    def test_ampersand_still_legal(self):
+        """'&' is VEP's intra-field list separator - must survive."""
+        a = synth.Ann("T", "missense_variant", "MODERATE", "G", "GID",
+                      extra={"SIFT": "deleterious(0.01)&tolerated(0.2)"})
+        assert "deleterious" in a.to_csq()
+
+
+class TestAblationParity:
+    """R5-F1 falsification: an ablation must change ONLY the named
+    evidence source - the consequence-tier semantics must be identical
+    to baseline under EVERY drop."""
+
+    def _syn_splice_fact(self, tmp_path):
+        vcf = _write_raw(tmp_path, [
+            "7\t100\t.\tA\tT\t60.0\tPASS\tCSQ=" +
+            synth.Ann("T", "synonymous_variant", "LOW", "SPLICG", "G1",
+                      extra={"SpliceAI_pred_DS_AG": 0.9}).to_csq()
+            + "\tGT:AD:DP:GQ\t0/1:20,20:40:99"])
+        return _facts(vcf)[0]
+
+    def test_splice_rescue_survives_every_ablation(self, tmp_path):
+        from src.pipeline import _apply_ablation, ABLATION_SOURCES
+        f = self._syn_splice_fact(tmp_path)
+        assert f.damage_tier == "splice_altering"
+        for d in ABLATION_SOURCES:
+            g = _apply_ablation([f], {d}, CFG)[0]
+            assert g.damage_tier == "splice_altering", d
+
+    def test_gnomad_ablation_monotonic(self, tmp_path):
+        """R5-F2: with rarity neutralized, rare count tracks the ablated
+        run - no spurious candidates>rare violation."""
+        from src import synth as _synth
+        from src.pipeline import run_pipeline
+        sp = _synth.spike_in_case(tmp_path)
+        res = run_pipeline(sp["vcf"], sp["truth"]["hpo_terms"],
+                           obo_path=sp["obo"], hpoa_path=sp["hpoa"],
+                           g2d_path=sp["gene2disease"],
+                           drops=frozenset({"gnomad"}))
+        assert res["monotonicity_violations"] == []
+        assert res["funnel"]["rare"] == res["funnel"]["qc_pass"]
+
+
+class TestGeneIdSplit:
+    """R5-F3: a symbolic fact must not delete a DIFFERENT symbol-less
+    gene at the same variant."""
+
+    def test_unrelated_symbolless_gene_survives(self, tmp_path):
+        a1 = synth.Ann("T", "stop_gained", "HIGH", "GENEA", "ENSGA")
+        a2 = synth.Ann("T", "frameshift_variant", "HIGH", "", "ENSGB")
+        f = self._anns(tmp_path, [a1, a2])
+        assert sorted(x.gene for x in f) == ["ENSGB", "GENEA"]
+
+    def test_same_geneid_split_still_collapses(self, tmp_path):
+        """The original intent: SYMBOL row + bare-ENSG row for the SAME
+        gene_id still merge into one fact."""
+        a1 = synth.Ann("T", "stop_gained", "HIGH", "GENEA", "ENSGA")
+        a2 = synth.Ann("T", "frameshift_variant", "HIGH", "", "ENSGA")
+        f = self._anns(tmp_path, [a1, a2])
+        assert [x.gene for x in f] == ["GENEA"]
+
+    def _anns(self, tmp_path, anns):
+        csq = ",".join(a.to_csq() for a in anns)
+        vcf = _write_raw(tmp_path, [
+            "7\t100\t.\tA\tT\t60.0\tPASS\tCSQ=" + csq
+            + "\tGT:AD:DP:GQ\t0/1:20,20:40:99"])
+        return _facts(vcf)
+
+
+class TestAfTranscriptMerge:
+    """R5-F4: an AF carried only on a second transcript row must merge
+    up - the allele's frequency is allele-level, not transcript-level."""
+
+    def test_sibling_af_prevents_fabricated_absence(self, tmp_path):
+        a1 = synth.Ann("T", "stop_gained", "HIGH", "GA", "G1")
+        a2 = synth.Ann("T", "synonymous_variant", "LOW", "GA", "G1",
+                       extra={"gnomADe_AF": 0.5})
+        csq = ",".join(a.to_csq() for a in (a1, a2))
+        vcf = _write_raw(tmp_path, [
+            "7\t100\t.\tA\tT\t60.0\tPASS\tCSQ=" + csq
+            + "\tGT:AD:DP:GQ\t0/1:20,20:40:99"])
+        vf = _facts(vcf)[0]
+        assert vf.popmax_af == 0.5
+        assert vf.absent is False
+        assert vf.rare is False

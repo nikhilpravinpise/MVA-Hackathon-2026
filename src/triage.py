@@ -274,26 +274,36 @@ def _rarity(ann: dict[str, str], rar_cfg: dict
     return rare, absent, annotated, score, popmax
 
 
+def tier_from_fields(cons: set[str], votes: int, sai_hit: bool,
+                     con_cfg: dict) -> str:
+    """Consequence tokens + predictor votes + SpliceAI flag -> damage tier.
+
+    The single source of truth for tier assignment - ``_damage_tier`` (from
+    a raw annotation dict) and ``pipeline._apply_ablation`` (from stored
+    fact fields) both call this, so an ablation run can never diverge from
+    the baseline tier semantics.
+    """
+    if cons & set(con_cfg.get("lof_terms", ())):
+        return "lof"
+    if cons & set(con_cfg.get("missense_terms", ())) \
+            and votes >= con_cfg.get("min_votes", 2):
+        return "damaging_missense"
+    if (cons & set(con_cfg.get("splice_region_terms", ())) and sai_hit) \
+            or sai_hit:
+        # high SpliceAI rescues ANY consequence class (deep-exonic cryptic
+        # splice on a 'synonymous' allele is biologically real) - the config
+        # documents this; excluding synonymous would silently lose it
+        return "splice_altering"
+    return "other"
+
+
 def _damage_tier(ann: dict[str, str], con_cfg: dict) -> tuple[str, int, dict]:
     cons = set((ann.get("Consequence") or "").split("&"))
     pred = con_cfg.get("predictors", {})
     votes, vote_detail = _damage_votes(ann, pred)
     sai = _spliceai_delta(ann)
     sai_hit = sai is not None and sai >= pred.get("spliceai_delta_min", 0.5)
-
-    if cons & set(con_cfg.get("lof_terms", ())):
-        tier = "lof"
-    elif cons & set(con_cfg.get("missense_terms", ())) and votes >= con_cfg.get("min_votes", 2):
-        tier = "damaging_missense"
-    elif (cons & set(con_cfg.get("splice_region_terms", ())) and sai_hit) or \
-            sai_hit:
-        # high SpliceAI rescues ANY consequence class (deep-exonic cryptic
-        # splice on a 'synonymous' allele is biologically real) - the config
-        # documents this; excluding synonymous would silently lose it
-        tier = "splice_altering"
-    else:
-        tier = "other"
-    return tier, votes, vote_detail
+    return tier_from_fields(cons, votes, sai_hit, con_cfg), votes, vote_detail
 
 
 def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
@@ -325,16 +335,22 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
                     cur.get("Consequence", "")):
                 per_gene[gene] = a
         # numeric evidence fields where max-across-transcripts is the
-        # conservative choice
-        _EVIDENCE_MAX = ("CADD_PHRED", "REVEL", "AlphaMissense_score",
+        # conservative choice. gnomAD AFs belong here too: the AF is an
+        # ALLELE-level value, not transcript-level, so a blank on the
+        # worst-severity row while a sibling carries '0.5' would
+        # fabricate 'absent' (PM2 vs BS1 - a 6-point ACMG swing). MAX is
+        # the safe direction: a documented common allele stays common.
+        _EVIDENCE_MAX = {"CADD_PHRED", "REVEL", "AlphaMissense_score",
                          "SpliceAI_pred_DS_AG", "SpliceAI_pred_DS_AL",
                          "SpliceAI_pred_DS_DG", "SpliceAI_pred_DS_DL",
-                         "phyloP", "LOEUF")
+                         "phyloP", "LOEUF"}
+        _AF_FIELDS = {k for rows in gene_rows.values() for a in rows
+                      for k in a if "_AF" in k}
         for gene, rows in gene_rows.items():
             if len(rows) < 2:
                 continue
             base = per_gene[gene]
-            for fld in _EVIDENCE_MAX:
+            for fld in _EVIDENCE_MAX | _AF_FIELDS:
                 best, bv = base.get(fld), _f(base.get(fld))
                 for a in rows:
                     if a is base:
@@ -428,8 +444,10 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
     # SYMBOL fallback ('SYMBOL or Gene') can split one gene into two
     # groups when one transcript row has a SYMBOL and a sibling has only
     # the ENSG id - the id-named fact then forms an alien 'gene' (pheno
-    # 0, duplicate hypotheses). Drop the id-named fact when a
-    # symbol-named fact exists for the same variant (audit LOW).
+    # 0, duplicate hypotheses). Drop the id-named fact only when a
+    # symbolic fact carries the SAME gene_id - a variant annotating gene
+    # A (symbolic) plus an unrelated symbol-less gene B must keep B
+    # (audit R5: gene B is a real gene, not a split duplicate).
     by_key: dict[tuple, list[VariantFacts]] = {}
     for f in out:
         by_key.setdefault(f.key, []).append(f)
@@ -438,10 +456,10 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
         if len(fs) < 2:
             continue
         id_like = [f for f in fs if f.gene and f.gene == f.gene_id]
-        symbolic = {f.gene for f in fs
-                    if f.gene and f.gene != f.gene_id}
-        if symbolic and id_like:
-            drop.update(id(f) for f in id_like)
+        sym_ids = {f.gene_id for f in fs if f.gene and f.gene != f.gene_id}
+        for f in id_like:
+            if f.gene_id in sym_ids:
+                drop.add(id(f))
     if drop:
         out = [f for f in out if id(f) not in drop]
     return out

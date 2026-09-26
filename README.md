@@ -44,7 +44,7 @@ green on synthetic + public stand-ins:
 - real external validation: real ClinVar pair on HG002 background,
   REST-VEP annotated (cache-backed) -> **rank 1**
 - submission bytes -> vendored oracle: **100.0 / 1.000**, rank 1
-- determinism: identical artifacts on rerun
+- determinism: identical artifacts on rerun (except `runtime_sec` wall-clock provenance)
 
 ## Scoring contract (verified, not assumed)
 

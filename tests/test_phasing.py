@@ -111,7 +111,7 @@ class TestPgtPidPhase:
         c = phasing.determine_phase(_vf("0|0", "PS1", pos=1000), het)
         assert c.relation == "unknown"
         assert c.mechanism == "pgt_pid_same_set"
-        assert "homozygous" in c.detail
+        assert "alt absent" in c.detail
 
         c2 = phasing.determine_phase(_vf("1|1", "PS1", pos=1000), het)
         assert c2.relation == "cis"  # {0,1} not disjoint from {1}

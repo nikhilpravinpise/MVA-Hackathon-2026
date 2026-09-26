@@ -92,6 +92,15 @@ class Ann:
         for k, v in self.extra.items():
             if v is not None:
                 vals[k] = str(v)
+        # '|' inside a value would inject a phantom column into the
+        # positional encoding and silently shift every later field;
+        # ',' would split one block into two. '&' is VEP's intra-field
+        # list separator and is legal.
+        for name, v in vals.items():
+            if "|" in v or "," in v:
+                raise ValueError(
+                    f"CSQ field {name} contains a block separator "
+                    f"({v!r}) - would corrupt the positional encoding")
         return "|".join(vals[k] for k in CSQ_FIELDS)
 
 

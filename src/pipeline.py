@@ -137,26 +137,25 @@ def _apply_ablation(facts: list[VariantFacts], drops: set[str],
             af_max = rar_cfg.get("af_max", 1e-4)
             rare = absent or (vf.popmax_af is not None
                               and vf.popmax_af <= af_max)
-            rscore = 1.0 if absent else vf.rarity_score
+            # same formula as triage._rarity's absent branch
+            rscore = (min(1.0, 0.5 + float(rar_cfg.get("absent_bonus", 0.5)))
+                      if absent else vf.rarity_score)
             popmax = vf.popmax_af
         cons = set((vf.consequence or "").split("&"))
         votes = 0 if "damage_predictors" in drops else vf.damage_votes
         pred = con_cfg.get("predictors", {})
         sai = vf.spliceai or 0.0
         sai_hit = sai >= pred.get("spliceai_delta_min", 0.5)
-        if cons & set(con_cfg.get("lof_terms", ())):
-            tier = "lof"
-        elif cons & set(con_cfg.get("missense_terms", ())) and \
-                votes >= con_cfg.get("min_votes", 2):
-            tier = "damaging_missense"
-        elif (cons & set(con_cfg.get("splice_region_terms", ())) and sai_hit) \
-                or (sai_hit and not (cons & set(con_cfg.get("synonymous_terms", ())))):
-            tier = "splice_altering"
-        else:
-            tier = "other"
-        from .triage import TIER_BASE
+        # tier assignment goes through triage.tier_from_fields - the ONE
+        # implementation - so an ablation can't drift from baseline
+        # semantics (the splice rescue is unconditional there too)
+        from .triage import TIER_BASE, tier_from_fields
+        tier = tier_from_fields(cons, votes, sai_hit, con_cfg)
         cp = False if "clinvar" in drops else vf.clinsig_pathogenic
-        rfac = 1.0 if absent else 0.9
+        # same rfac rule as extract_facts' score block
+        rfac = 0.9
+        if absent:
+            rfac = 1.0 if rar_cfg.get("absent_is_stronger", True) else 0.95
         score = min(1.0, TIER_BASE[tier] * rfac + (0.05 if cp else 0.0))
         out.append(VariantFacts(**{**asdict(vf),
                                    "rare": rare, "absent": absent,
@@ -220,13 +219,17 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     counts.stage_counts["records"] = n_records
     counts.stage_counts["alt_gene_facts"] = len(facts)
     counts.stage_counts["qc_pass"] = sum(1 for f in facts if f.qc_pass)
+
+    facts_abl = _apply_ablation(facts, set(drops), cfg)
     # 'rare' counts rarity among QC-passing facts only - rarity over the
     # unconditioned pool makes 'rare > qc_pass' a false monotonicity
     # violation (a filtered-but-absent variant is rare yet not qc_pass).
-    counts.stage_counts["rare"] = sum(1 for f in facts
+    # It must count facts_abl, not facts: under --drop gnomad the ablation
+    # sets rare=True on every QC-pass fact ('rarity neutralized'), and
+    # comparing candidates-from-abl against a baseline 'rare' count is a
+    # spurious candidates>rare violation on top of a wrong stage number.
+    counts.stage_counts["rare"] = sum(1 for f in facts_abl
                                       if f.qc_pass and f.rare)
-
-    facts_abl = _apply_ablation(facts, set(drops), cfg)
     cand = [f for f in facts_abl if eligible(f, cfg,
             cfg.get("inheritance", {}).get("comphet_min_consequence", "other"))]
     # candidates that can actually enter a hypothesis: gene-assigned AND

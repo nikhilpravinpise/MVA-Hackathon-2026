@@ -12,7 +12,9 @@
     --af-max 1e-3                # sensitivity-grid override (config unchanged)
 
 All outputs land under --out (result.json, funnel_counts.json,
-hypotheses.tsv). Deterministic: identical inputs give byte-identical outputs.
+hypotheses.tsv). Deterministic: identical inputs give identical ranked /
+funnel / emitted content (the runtime_sec provenance field is the only
+allowed difference).
 """
 from __future__ import annotations
 
