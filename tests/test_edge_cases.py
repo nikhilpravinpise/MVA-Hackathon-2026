@@ -882,3 +882,52 @@ class TestFormatOverflow:
         f.write_text(v)
         from src.vcf_qc import compute_stats
         assert compute_stats(f)["n_sample_field_overflow"] == 1
+
+
+class TestTranscriptEvidenceMax:
+    """H-4 falsification: a variant benign on its WORST-severity
+    transcript but damaging on another must keep the damaging predictor
+    evidence - the severity pick and the evidence pick are different
+    columns of different transcript rows."""
+
+    def _multi_ann_facts(self, tmp_path, anns, gt="0/1", ad="20,20"):
+        csq = ",".join(a.to_csq() for a in anns)
+        vcf = _write_raw(tmp_path, [
+            "7\t100\t.\tA\tT\t60.0\tPASS\tCSQ=" + csq
+            + "\tGT:AD:DP:GQ\t" + gt + ":" + ad + ":40:99"])
+        return _facts(vcf)
+
+    def test_predictor_max_across_transcripts(self, tmp_path):
+        a_benign_tx = synth.Ann(
+            "T", "frameshift_variant", "HIGH", "GENE", "GID",
+            feature="T1", biotype="protein_coding",
+            extra={"CADD_PHRED": 5, "REVEL": 0.1})
+        a_damage_tx = synth.Ann(
+            "T", "synonymous_variant", "LOW", "GENE", "GID",
+            feature="T2", biotype="protein_coding",
+            extra={"CADD_PHRED": 30, "REVEL": 0.9,
+                   "SpliceAI_pred_DS_AG": 0.95})
+        f = self._multi_ann_facts(
+            tmp_path, [a_benign_tx, a_damage_tx])
+        assert len(f) == 1
+        vf = f[0]
+        # consequence comes from the worst (frameshift) transcript...
+        assert "frameshift" in vf.consequence
+        # ...but predictor evidence is the MAX across that gene's rows
+        assert vf.cadd == 30.0
+        assert vf.revel == 0.9
+        assert vf.spliceai == 0.95
+
+    def test_categorical_damage_call_max(self, tmp_path):
+        """SIFT 'deleterious' on a second transcript beats 'tolerated'
+        on the worst-severity one."""
+        a1 = synth.Ann("T", "missense_variant", "MODERATE", "GENE", "GID",
+                       feature="T1", biotype="protein_coding",
+                       extra={"SIFT": "tolerated(0.4)"})
+        a2 = synth.Ann("T", "intron_variant", "MODIFIER", "GENE", "GID",
+                       feature="T2", biotype="protein_coding",
+                       extra={"SIFT": "deleterious(0.01)"})
+        f = self._multi_ann_facts(tmp_path, [a1, a2])
+        vf = f[0]
+        assert vf.sift.startswith("deleterious")
+        assert vf.damage_votes >= 1
