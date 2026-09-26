@@ -15,6 +15,7 @@ generative tool gets one row.
 | Date | Provider / product | Plan / tier | Model | Data-handling terms | What data was exposed |
 |---|---|---|---|---|---|
 | 2026-09-26 | Cognition Devin CLI | Commercial product | SWE-2 Max | Verify no-training clause before any patient-data prompts | NONE - no patient data on disk this session; all fixtures synthetic; public reference corpora (HPO) download + repo code/docs only |
+| 2026-09-26 | Cognition Devin CLI | Commercial product | SWE-2 Max | Verify no-training clause before any patient-data prompts | NONE - audit/verification loop session: code review, edge-case tests, doc fixes; repo code/docs + public corpora only, zero patient-derived content |
 
 ## Guidance per tier (plan.md 2.3)
 

@@ -56,6 +56,7 @@ Determinism: findings are sorted by (gene, min variant pos, note).
 """
 from __future__ import annotations
 
+import dataclasses
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -175,14 +176,22 @@ def _apply_rule(qfacts: list[VariantFacts], rule: dict,
 
     if kind == "any":
         for f in qfacts:
+            if not (f.is_het or f.is_hom_alt):
+                # A ref-ref / uncalled genotype must never produce a
+                # finding: the proband does not carry the allele at all.
+                continue
             zyg = "homozygous" if f.is_hom_alt else "heterozygous"
             note = f"{rule['moi']}: single {zyg} P/LP reportable ({raw})"
             out.append(((f,), note, ()))
     elif kind == "biallelic":
         for f in homs:
             out.append(((f,), f"AR: homozygous P/LP reportable ({raw})", ()))
-        if len(hets) >= 2:
-            grp = tuple(sorted(hets, key=lambda v: (v.pos, v.alt)))
+        # dedup by variant key: two identical-key facts (e.g. duplicated
+        # records) must not form a "pair" with themselves
+        uniq_hets = {f.key: f for f in hets}
+        if len(uniq_hets) >= 2:
+            grp = tuple(sorted(uniq_hets.values(),
+                               key=lambda v: (v.pos, v.alt)))
             out.append((grp,
                         f"AR: >=2 het P/LP variants - carrier pair "
                         f"reportable ({raw})", ("ar_carrier_pair",)))
@@ -190,8 +199,10 @@ def _apply_rule(qfacts: list[VariantFacts], rule: dict,
         for f in homs:
             out.append(((f,), f"XL: homo/hemizygous P/LP reportable ({raw})",
                         ("sex_unknown",)))
-        if len(hets) >= 2:
-            grp = tuple(sorted(hets, key=lambda v: (v.pos, v.alt)))
+        uniq_hets = {f.key: f for f in hets}
+        if len(uniq_hets) >= 2:
+            grp = tuple(sorted(uniq_hets.values(),
+                               key=lambda v: (v.pos, v.alt)))
             out.append((grp, f"XL: >=2 het P/LP variants reportable ({raw})",
                         ("sex_unknown",)))
         elif len(hets) == 1:
@@ -262,6 +273,7 @@ def scan_facts(facts: list[VariantFacts], sf_list: dict, cfg: dict | None = None
             by_gene.setdefault(vf.gene, []).append(vf)
 
     findings: list[SFFinding] = []
+    seen_variant_sets: dict[tuple, SFFinding] = {}
     for gene in sorted(by_gene):
         vfs = by_gene[gene]
         clinvar = [f for f in vfs if f.clinsig_pathogenic]
@@ -284,12 +296,31 @@ def scan_facts(facts: list[VariantFacts], sf_list: dict, cfg: dict | None = None
                 if has_pred:
                     caveats += ("predicted_not_clinvar",)
                     rep_full += " [predicted LoF, not ClinVar]"
-                findings.append(SFFinding(
+                # Multi-condition genes (RET/FLNC/SCN5A/MYH7/...): the same
+                # variant-set must occupy ONE submission slot, not one slot
+                # per condition - merge conditions into the finding.
+                vset = tuple(sorted(f.key for f in grp))
+                prev = seen_variant_sets.get((gene, vset))
+                if prev is not None:
+                    merged = prev.disease + " | " + cond.get("disease", "")
+                    new_note = _csv_note(
+                        gene, {**cond, "disease": merged}, prev.variants,
+                        prev.basis, prev.caveats)
+                    # frozen dataclass - swap the merged copy into the list
+                    idx = findings.index(prev)
+                    repl = dataclasses.replace(
+                        prev, disease=merged, note=new_note)
+                    findings[idx] = repl
+                    seen_variant_sets[(gene, vset)] = repl
+                    continue
+                finding = SFFinding(
                     gene=gene, disease=cond.get("disease", ""),
                     moi=rule["moi"], category=cond.get("category", ""),
                     variants=tuple(grp), basis=basis,
                     reportability=rep_full, caveats=caveats,
-                    note=_csv_note(gene, cond, grp, basis, caveats)))
+                    note=_csv_note(gene, cond, grp, basis, caveats))
+                seen_variant_sets[(gene, vset)] = finding
+                findings.append(finding)
 
     findings.sort(key=lambda f: (f.gene, min(v.pos for v in f.variants),
                                  f.note))

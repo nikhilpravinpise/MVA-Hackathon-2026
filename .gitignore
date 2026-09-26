@@ -11,10 +11,11 @@ results/*
 !results/RETENTION.md
 local_dev/
 
-# Downloaded public reference corpora (re-fetchable via tools/fetch_refs.py)
-env/corpus/
-env/public_vcfs/
-env/real_spike/
+# Everything under env/ is either re-fetchable public data or derived
+# patient-adjacent products (reference FASTA, realigned BAMs, caches) -
+# none of it belongs in git. Keep the manifest tracked.
+env/*
+!env/RETENTION.md
 
 # Secrets
 .env

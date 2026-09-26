@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import pytest
 
+pytestmark = pytest.mark.gate
+
 from conftest import REPO  # noqa: F401  (sys.path setup side-effect)
 from src import synth
 from src.config import load_config
@@ -204,6 +206,19 @@ class TestRanking:
         assert ranked[0].epcr == CFG["scoring"]["epcr_top"]
         assert all(0 < e <= 1 for e in epcrs)
         assert all(epcrs[i] > epcrs[i + 1] for i in range(len(epcrs) - 1))
+
+    def test_wrong_sample_name_raises(self, tmp_path):
+        """Falsification: a typo'd --sample produces a silent zero-genotype
+        run (no calls -> no-call output) instead of a loud error - on the
+        real proband that is a silent-wrong-answer failure."""
+        from src.pipeline import run_pipeline
+        vcf = synth.write_vcf(tmp_path / "t.vcf",
+                              [synth.SVar("7", 1, "A", "T")])
+        with pytest.raises(ValueError, match="not in VCF"):
+            run_pipeline(vcf, ["HP:0001250"], sample="TYPO")
+        # ...and the correct sample still runs fine
+        res = run_pipeline(vcf, ["HP:0001250"], sample="PROBAND01")
+        assert res["funnel"]["records"] == 1
 
     def test_deterministic_order(self, tmp_path):
         """Falsification: reruns produce different hypothesis orderings -

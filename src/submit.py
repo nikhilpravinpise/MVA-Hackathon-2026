@@ -203,8 +203,14 @@ def _validate_row(r: dict) -> None:
     if not str(r.get("chrom_1", "")).strip():
         raise ValueError("row missing chrom_1")
     int(str(r.get("pos_1", "")).strip())  # oracle does int(pos_1)
-    if str(r.get("chrom_2", "")).strip() and str(r.get("pos_2", "")).strip():
-        int(str(r.get("pos_2")).strip())
+    c2, p2 = str(r.get("chrom_2", "")).strip(), str(r.get("pos_2", "")).strip()
+    if bool(c2) != bool(p2):
+        # half-filled second variant silently degrades the row to a single
+        # variant in the oracle's parser - catch it here instead
+        raise ValueError(
+            f"second variant half-filled (chrom_2={c2!r}, pos_2={p2!r})")
+    if c2:
+        int(p2)
     e = float(r.get("epcr"))
     if not (0.0 < e <= 1.0):
         raise ValueError(f"epcr {e} out of range (0,1]")
@@ -221,7 +227,9 @@ def submission_bytes(rows: list[dict]) -> bytes:
     any other non-ASCII field raises ``UnicodeEncodeError`` rather than
     shipping a file the server-side UTF-8 parser would reject.
     """
-    assert len(rows) <= 10, "submission exceeds the 10-row cap"
+    if len(rows) > 10:
+        # explicit raise, not assert - this contract must hold under -O
+        raise ValueError(f"submission exceeds the 10-row cap ({len(rows)})")
     for r in rows:
         _validate_row(r)
     buf = io.StringIO(newline="")

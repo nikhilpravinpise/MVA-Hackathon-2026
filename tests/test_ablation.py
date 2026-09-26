@@ -38,6 +38,7 @@ def test_ablation_source(spike, drop):
     assert rank <= 5, f"--drop {drop}: pair fell to rank {rank}"
 
 
+@pytest.mark.gate
 def test_gnomad_ablation_actually_changes_pool(spike):
     """Falsification: --drop gnomad leaves the candidate pool identical -
     the ablation flag is a no-op (rare-and-common variants must flood in)."""
@@ -48,9 +49,11 @@ def test_gnomad_ablation_actually_changes_pool(spike):
                        obo_path=spike["obo"], hpoa_path=spike["hpoa"],
                        g2d_path=spike["gene2disease"],
                        drops=frozenset({"gnomad"}))
-    assert abl["funnel"]["candidates"] >= base["funnel"]["candidates"]
+    assert abl["funnel"]["candidates"] > base["funnel"]["candidates"], \
+        "drop gnomad admitted no new candidates - the flag is a no-op"
 
 
+@pytest.mark.gate
 def test_hpo_ablation_zeroes_pheno(spike):
     """Falsification: pheno scores nonzero after --drop hpo - ablation not
     applied to the phenotype layer."""

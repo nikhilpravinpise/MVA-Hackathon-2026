@@ -25,9 +25,9 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "hackathon-app"))
 import evaluation as ev  # noqa: E402
 
-GT = frozenset([("chr15", 40209701, "T", "G"), ("chr15", 40220612, "T", "G")])
-V1 = ("chr15", 40209701, "T", "G")
-V2 = ("chr15", 40220612, "T", "G")
+GT = frozenset([("chr9", 90000001, "A", "G"), ("chr9", 90000002, "C", "T")])
+V1 = ("chr9", 90000001, "A", "G")
+V2 = ("chr9", 90000002, "C", "T")
 HEADER = "proband_id,chrom_1,pos_1,ref_1,alt_1,chrom_2,pos_2,ref_2,alt_2,epcr,finding_type,notes"
 
 
@@ -74,29 +74,29 @@ J = [("chr1", 1000000 + i, "A", "C") for i in range(1, 12)]
 # (name, rows, expected-tuple | "EXC:Type" | ("APP_REJECT", msg), header_override)
 tests = [
     ("perfect pair", [prow(V1, V2, "0.95")], ("SCORE", 100.0, 1.0, 1, None), None),
-    ("chr-prefix wrong", [prow(("CHR15", 40209701, "T", "G"), ("CHR15", 40220612, "T", "G"))], ("SCORE", 0.0, 0.0, None, None), None),
-    ("no prefix", [prow(("15", 40209701, "T", "G"), ("15", 40220612, "T", "G"))], ("SCORE", 0.0, 0.0, None, None), None),
-    ("pos off-by-one single", [vrow(("chr15", 40209702, "T", "G"))], ("SCORE", 0.0, 0.0, None, None), None),
-    ("pos off-by-one paired", [prow(("chr15", 40209702, "T", "G"), V2)], ("SCORE", 50.0, 0.5, None, 1), None),
-    ("ref/alt swap single", [vrow(("chr15", 40209701, "G", "T"))], ("SCORE", 0.0, 0.0, None, None), None),
+    ("chr-prefix wrong", [prow(("CHR9", 90000001, "A", "G"), ("CHR9", 90000002, "C", "T"))], ("SCORE", 0.0, 0.0, None, None), None),
+    ("no prefix", [prow(("9", 90000001, "A", "G"), ("9", 90000002, "C", "T"))], ("SCORE", 0.0, 0.0, None, None), None),
+    ("pos off-by-one single", [vrow(("chr9", 90000011, "A", "G"))], ("SCORE", 0.0, 0.0, None, None), None),
+    ("pos off-by-one paired", [prow(("chr9", 90000011, "A", "G"), V2)], ("SCORE", 50.0, 0.5, None, 1), None),
+    ("ref/alt swap single", [vrow(("chr9", 90000001, "G", "A"))], ("SCORE", 0.0, 0.0, None, None), None),
     ("one true variant", [prow(V1, J[0])], ("SCORE", 50.0, 0.5, None, 1), None),
     ("pair split rows", [vrow(V1, "0.95"), vrow(V2, "0.94")], ("SCORE", 50.0, 1.0, None, 1), None),
     ("Remek A", [vrow(J[0]), vrow(J[1]), vrow(J[2]), prow(V1, V2, "0.90")], ("SCORE", 25.0, 0.571, 4, None), None),
     ("Remek B", [vrow(J[0], "0.96"), vrow(V1, "0.95"), prow(V2, J[1], "0.90"), vrow(J[2], "0.90")], ("SCORE", 25.0, 0.571, None, 2), None),
     ("split-pair ordering", [vrow(V1, "0.95"), vrow(V2, "0.94"), vrow(J[0], "0.30"), vrow(J[1], "0.20")], ("SCORE", 50.0, 1.0, None, 1), None),
     ("degenerate pair", [prow(V1, V1)], ("SCORE", 50.0, 0.667, None, 1), None),
-    ("whitespace chrom", [prow((" chr15 ", 40209701, " T ", " G "), (" chr15 ", 40220612, "T", "G"))], ("SCORE", 100.0, 1.0, 1, None), None),
+    ("whitespace chrom", [prow((" chr9 ", 90000001, " A ", " G "), (" chr9 ", 90000002, " C ", " T "))], ("SCORE", 100.0, 1.0, 1, None), None),
     ("missing chrom_1", [row("PROBAND01", "", "", "", "", epcr="0.95")], "EXC:ValueError", None),
-    ("non-integer pos", [row("PROBAND01", "chr15", "abc", "T", "G")], "EXC:ValueError", None),
+    ("non-integer pos", [row("PROBAND01", "chr9", "abc", "A", "G")], "EXC:ValueError", None),
     ("epcr nan", [vrow(V1, "nan")], "EXC:ValueError", None),
     ("epcr inf", [vrow(V1, "inf")], "EXC:ValueError", None),
     ("epcr=1.0", [prow(V1, V2, "1.0")], ("SCORE", 100.0, 1.0, 1, None), None),
     ("renamed header", [prow(V1, V2)], "EXC:KeyError", "proband_id,chrom1,pos_1,ref_1,alt_1,chrom_2,pos_2,ref_2,alt_2,epcr"),
-    ("minimal header true", ["PROBAND01,chr15,40209701,T,G,0.95"], ("SCORE", 50.0, 0.667, None, 1),
+    ("minimal header true", ["PROBAND01,chr9,90000001,A,G,0.95"], ("SCORE", 50.0, 0.667, None, 1),
      "proband_id,chrom_1,pos_1,ref_1,alt_1,epcr"),
     ("minimal header junk", ["PROBAND01,chr1,1000001,A,C,0.95"], ("SCORE", 0.0, 0.0, None, None),
      "proband_id,chrom_1,pos_1,ref_1,alt_1,epcr"),
-    ("epcr col absent", ["PROBAND01,chr15,40209701,T,G"], "EXC:KeyError",
+    ("epcr col absent", ["PROBAND01,chr9,90000001,A,G"], "EXC:KeyError",
      "proband_id,chrom_1,pos_1,ref_1,alt_1"),
     ("header-only", [], ("APP_REJECT", "No valid rows found in the CSV."), None),
     ("FAKE01 first", [vrow(J[0], pid="FAKE01"), prow(V1, V2)],
@@ -112,7 +112,7 @@ tests = [
     ("11 rows", [vrow(j, f"{0.9 - i * 0.01:.2f}") for i, j in enumerate(J[:11])], "EXC:ValueError", None),
     ("finding_type=X", [vrow(V1, ft="bogus")], "EXC:ValueError", None),
     ("SECONDARY upper", [vrow(V1, ft="SECONDARY")], ("SCORE", 50.0, 0.667, None, 1), None),
-    ("blank chrom_2", [row("PROBAND01", "chr15", "40209701", "T", "G", "", "", "", "")], ("SCORE", 50.0, 0.667, None, 1), None),
+    ("blank chrom_2", [row("PROBAND01", "chr9", "90000001", "A", "G", "", "", "", "")], ("SCORE", 50.0, 0.667, None, 1), None),
     ("unsorted input", [vrow(J[0], "0.99"), prow(V1, V2, "0.50")], ("SCORE", 50.0, 0.8, 2, None), None),
     ("proband!=PROBAND01", [vrow(V1, pid="FAKE01")],
      ("APP_REJECT", "Unknown proband_id 'FAKE01'. Only PROBAND01 is accepted."), None),
@@ -122,23 +122,23 @@ tests = [
     ("proband ws-padded", [vrow(V1, pid=" PROBAND01 ")], ("SCORE", 50.0, 0.667, None, 1), None),
     ("FAKE01 after, 11 FAKE rows", [prow(V1, V2)] + [vrow(j, "0.30", pid="FAKE01") for j in J[:11]], "EXC:ValueError", None),
     ("finding_type empty", [vrow(V1, ft="")], ("SCORE", 50.0, 0.667, None, 1), None),
-    ("ref_1/alt_1 empty", [row("PROBAND01", "chr15", "40209701", "", "")], ("SCORE", 0.0, 0.0, None, None), None),
-    ("pos ws-padded", [row("PROBAND01", "chr15", " 40209701 ", "T", "G")], ("SCORE", 50.0, 0.667, None, 1), None),
+    ("ref_1/alt_1 empty", [row("PROBAND01", "chr9", "90000001", "", "")], ("SCORE", 0.0, 0.0, None, None), None),
+    ("pos ws-padded", [row("PROBAND01", "chr9", " 90000001 ", "A", "G")], ("SCORE", 50.0, 0.667, None, 1), None),
     # file-level / byte-level edge cases (verified against evaluation.py parse path)
     ("finding_type padded", [vrow(V1, ft=" SECONDARY ")], ("SCORE", 50.0, 0.667, None, 1), None),
-    ("chrom_1 ws-only", [row("PROBAND01", " ", "40209701", "T", "G")], ("SCORE", 0.0, 0.0, None, None), None),
-    ("pos=-1", [row("PROBAND01", "chr15", "-1", "T", "G")], ("SCORE", 0.0, 0.0, None, None), None),
-    ("chrom_2 set pos_2 blank", [row("PROBAND01", "chr15", "40209701", "T", "G", "chr15", "", "T", "G")],
+    ("chrom_1 ws-only", [row("PROBAND01", " ", "90000001", "A", "G")], ("SCORE", 0.0, 0.0, None, None), None),
+    ("pos=-1", [row("PROBAND01", "chr9", "-1", "A", "G")], ("SCORE", 0.0, 0.0, None, None), None),
+    ("chrom_2 set pos_2 blank", [row("PROBAND01", "chr9", "90000001", "A", "G", "chr9", "", "C", "T")],
      ("SCORE", 50.0, 0.667, None, 1), None),
     ("proband01 lowercase", [vrow(V1, pid="proband01")],
      ("APP_REJECT", "Unknown proband_id 'proband01'. Only PROBAND01 is accepted."), None),
     ("trailing comma-only line", [prow(V1, V2), ",,,,,,,,,,,"], "EXC:ValueError", None),
     ("extra column", [prow(V1, V2) + ",foo"], ("SCORE", 100.0, 1.0, 1, None),
      "proband_id,chrom_1,pos_1,ref_1,alt_1,chrom_2,pos_2,ref_2,alt_2,epcr,finding_type,notes,extra_col"),
-    ("shuffled columns", ["PROBAND01,40209701,chr15,G,T,40220612,chr15,G,T,0.95,primary,"],
+    ("shuffled columns", ["PROBAND01,90000001,chr9,G,A,90000002,chr9,T,C,0.95,primary,"],
      ("SCORE", 100.0, 1.0, 1, None),
      "proband_id,pos_1,chrom_1,alt_1,ref_1,pos_2,chrom_2,alt_2,ref_2,epcr,finding_type,notes"),
-    ("CRLF endings", ["PROBAND01,chr15,40209701,T,G,chr15,40220612,T,G,0.95,primary,\r"], ("SCORE", 100.0, 1.0, 1, None), None),
+    ("CRLF endings", ["PROBAND01,chr9,90000001,A,G,chr9,90000002,C,T,0.95,primary,\r"], ("SCORE", 100.0, 1.0, 1, None), None),
     ("blank trailing line", [prow(V1, V2), ""], ("SCORE", 100.0, 1.0, 1, None), None),
 ]
 
@@ -161,7 +161,7 @@ def run_bytes(content):
     code = (
         "import sys; sys.path.insert(0, sys.argv[1]);"
         "import evaluation as ev;"
-        "GT=frozenset([('chr15',40209701,'T','G'),('chr15',40220612,'T','G')]);"
+        "GT=frozenset([('chr9',90000001,'A','G'),('chr9',90000002,'C','T')]);"
         "subs=ev.load_submission(sys.argv[2]);"
         "pid=next(iter(subs)) if subs else 'EMPTY';"
         "print('REJ:'+pid) if pid!='PROBAND01' else None;"

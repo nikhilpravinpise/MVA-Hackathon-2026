@@ -419,3 +419,36 @@ class TestRunPhasingCli:
                                "--out", str(tmp_path / "out")])
         assert rc == 2
         assert "samtools view -O SAM" in capsys.readouterr().err
+
+
+    def test_missing_site_rc2(self, tmp_path, capsys):
+        """Falsification: a --site absent from the VCF must exit 2 with
+        'not in VCF', not silently produce a report."""
+        vcf = self._write_vcf(tmp_path)
+        rc = run_phasing.main(["--vcf", str(vcf),
+                               "--site1", "7:1000", "--site2", "7:9999",
+                               "--out", str(tmp_path / "out")])
+        assert rc == 2
+        assert "not in VCF" in capsys.readouterr().err
+
+    def test_same_site_rc2(self, tmp_path, capsys):
+        """Falsification: --site1 == --site2 must exit 2, not 'phase' a
+        variant against itself."""
+        vcf = self._write_vcf(tmp_path)
+        rc = run_phasing.main(["--vcf", str(vcf),
+                               "--site1", "7:1000", "--site2", "7:1000",
+                               "--out", str(tmp_path / "out")])
+        assert rc == 2
+        assert "same position" in capsys.readouterr().err
+
+    def test_min_support_zero_rejected(self, tmp_path):
+        """Falsification: --min-support 0 lets an empty SAM 'prove' trans
+        (0 >= 0 for both trans classes) - must raise, not call."""
+        sites, templates = synth_sam.trans_case()
+        sam = synth_sam.write_sam(tmp_path / "locus.sam", templates)
+        vcf = self._write_vcf(tmp_path)
+        rc = run_phasing.main(["--vcf", str(vcf),
+                               "--site1", "7:1000", "--site2", "7:1120",
+                               "--sam", str(sam), "--min-support", "0",
+                               "--out", str(tmp_path / "out")])
+        assert rc != 0

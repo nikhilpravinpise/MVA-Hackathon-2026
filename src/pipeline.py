@@ -14,7 +14,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-from .config import config_dict_hash, load_config
+from .config import config_dict_hash, config_hash, load_config
 from .genes import Hypothesis, attach_scores, enumerate_hypotheses
 from .pheno import (InformationContent, OboOntology, best_match_average,
                     gene_disease_map, gene_hpo_terms, load_hpoa)
@@ -156,6 +156,12 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     reader = VcfReader(vcf_path)
     if sample is None:
         sample = reader.samples[0] if reader.samples else ""
+    elif reader.samples and sample not in reader.samples:
+        reader.close()
+        raise ValueError(
+            f"sample {sample!r} not in VCF (samples: {reader.samples}) - "
+            "a misspelled sample name would produce a silent zero-genotype "
+            "run, not a real result")
     try:
         n_records = 0
         for rec in reader.records(sample=sample):
@@ -166,7 +172,11 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     counts.stage_counts["records"] = n_records
     counts.stage_counts["alt_gene_facts"] = len(facts)
     counts.stage_counts["qc_pass"] = sum(1 for f in facts if f.qc_pass)
-    counts.stage_counts["rare"] = sum(1 for f in facts if f.rare)
+    # 'rare' counts rarity among QC-passing facts only - rarity over the
+    # unconditioned pool makes 'rare > qc_pass' a false monotonicity
+    # violation (a filtered-but-absent variant is rare yet not qc_pass).
+    counts.stage_counts["rare"] = sum(1 for f in facts
+                                      if f.qc_pass and f.rare)
 
     facts_abl = _apply_ablation(facts, set(drops), cfg)
     cand = [f for f in facts_abl if eligible(f, cfg,
@@ -176,10 +186,22 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     hyps = enumerate_hypotheses(cand, cfg)
     attach_scores(hyps, pheno_of_gene, cfg)
     if "phasing" in drops:
+        bonus = cfg.get("scoring", {}).get("inheritance_bonus", {})
         for h in hyps:
             if h.model == "compound_het":
                 h.in_trans = "unknown"
                 h.phase_detail = "ablated: phasing evidence removed"
+                if h.evidence.pop("cis_confirmed_invalid_comphet", None):
+                    # the cis penalty was applied during attach_scores -
+                    # with phasing evidence removed the pair gets its
+                    # unphased-model credit back and its score recomputed
+                    h.inheritance_score = bonus.get(h.model, 0.0)
+                    sc = cfg.get("scoring", {})
+                    h.score = (sc.get("w_variant_damage", 0.45)
+                               * h.variant_damage
+                               + sc.get("w_phenotype", 0.35) * h.pheno_score
+                               + sc.get("w_inheritance", 0.20)
+                               * h.inheritance_score)
     ranked = rank_hypotheses(hyps, cfg)
     counts.stage_counts["hypotheses"] = len(ranked)
     counts.stage_counts["emitted"] = len(emitted(ranked))
@@ -188,6 +210,8 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     result = {
         "provenance": {
             "vcf": str(vcf_path), "sample": sample,
+            "config_file_sha256": config_hash() if cfg_path is None
+                                   else "n/a (dict-supplied)",
             "config_sha256": config_dict_hash(cfg),
             "drops": sorted(drops),
             "runtime_sec": round(time.time() - t0, 3),
@@ -221,8 +245,11 @@ def _hyp_to_dict(h: Hypothesis) -> dict:
             {"chrom": v.chrom, "pos": v.pos, "ref": v.ref, "alt": v.alt,
              "consequence": v.consequence, "tier": v.damage_tier,
              "damage_votes": v.damage_votes, "score": round(v.score, 4),
-             "absent": v.absent, "clinsig_pathogenic": v.clinsig_pathogenic,
+             "absent": v.absent, "gnomad_present": v.gnomad_present,
+             "clinsig_pathogenic": v.clinsig_pathogenic,
              "popmax_af": v.popmax_af, "gt": v.gt, "pgt": v.pgt, "pid": v.pid,
+             "cadd": v.cadd, "revel": v.revel,
+             "alphamissense": v.alphamissense, "spliceai": v.spliceai,
              "hgvsc": v.hgvsc, "hgvsp": v.hgvsp}
             for v in h.variants],
         "phase_detail": h.phase_detail,

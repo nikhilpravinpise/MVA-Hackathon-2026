@@ -84,8 +84,13 @@ class Ann:
             if v:
                 vals[csq_name] = str(v)
         vals["Feature_type"] = "Transcript"
+        unknown = [k for k in self.extra if k not in vals]
+        if unknown:
+            raise ValueError(
+                f"Ann.extra keys not in CSQ_FIELDS: {unknown} - a typo'd "
+                "field name would silently emit empty annotation")
         for k, v in self.extra.items():
-            if k in vals and v is not None:
+            if v is not None:
                 vals[k] = str(v)
         return "|".join(vals[k] for k in CSQ_FIELDS)
 

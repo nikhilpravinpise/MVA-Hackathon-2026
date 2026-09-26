@@ -105,6 +105,8 @@ def main(argv=None) -> int:
     summary["steps"]["ablations"] = abl_out
 
     # -- step 4: secondary findings ------------------------------------------
+    facts = []  # shared with step 5 (phasing pair lookup)
+    sf_rows = []
     try:
         from src.sf_scan import findings_to_rows, load_sf_list, scan_facts
         from src.triage import extract_facts
@@ -112,7 +114,10 @@ def main(argv=None) -> int:
         sf_list = load_sf_list(REPO / "config" / "acmg_sf_v33.json")
         reader = VcfReader(vcf)
         sample = args.sample or (reader.samples[0] if reader.samples else "")
-        facts = []
+        if args.sample and reader.samples and sample not in reader.samples:
+            reader.close()
+            raise ValueError(
+                f"sample {sample!r} not in VCF (samples: {reader.samples})")
         for rec in reader.records(sample=sample):
             facts.extend(extract_facts(rec, sample, cfg))
         reader.close()
@@ -126,7 +131,6 @@ def main(argv=None) -> int:
         (out / "sf_findings.json").write_text(json.dumps(sf_dump, indent=1))
         summary["steps"]["sf"] = f"{len(findings)} findings"
     except Exception as e:
-        sf_rows = []
         summary["steps"]["sf"] = f"skipped: {e}"
 
     # -- step 5: phasing report on top pair -----------------------------------
@@ -136,9 +140,14 @@ def main(argv=None) -> int:
                     and h["model"] == "compound_het"), None)
         ph = {"evidence": [], "agreement": "n/a"}
         if top:
-            # rebuild VariantFacts for the pair from facts list
-            pair_keys = {(v["chrom"], v["pos"]) for v in top["variants"]}
-            pair = [f for f in facts if (f.chrom, f.pos) in pair_keys]
+            # rebuild the two VariantFacts by FULL variant key - matching on
+            # (chrom,pos) alone can pick two facts of the SAME variant when
+            # a site annotates into multiple genes or is multi-allelic,
+            # which would falsely report 'cis' for a genuinely trans pair.
+            pair_keys = [(v["chrom"], v["pos"], v["ref"], v["alt"])
+                         for v in top["variants"]]
+            pair = [f for k in pair_keys[:2]
+                    for f in facts if f.key == k]
             if len(pair) >= 2:
                 call = determine_phase(pair[0], pair[1])
                 ph["evidence"].append(
@@ -186,10 +195,15 @@ def main(argv=None) -> int:
         from src.submit import (build_rows, submission_bytes,
                                 validate_submission_bytes)
         rows = build_rows(res["ranked"], sf_rows=sf_rows, cfg=cfg)
-        data = submission_bytes(rows)
-        (out / "submission.csv").write_bytes(data)
-        summary["steps"]["csv_rows"] = len(rows)
-        if truth:
+        if not rows:
+            # A no-call run must not emit a header-only CSV - the oracle
+            # rejects it and an operator could upload it by mistake.
+            summary["steps"]["csv"] = "no_call: no emitted rows - CSV not written"
+        else:
+            data = submission_bytes(rows)
+            (out / "submission.csv").write_bytes(data)
+            summary["steps"]["csv_rows"] = len(rows)
+        if truth and rows:
             gt = frozenset(
                 (v["chrom"] if v["chrom"].startswith("chr") else "chr" + v["chrom"],
                  v["pos"], v["ref"], v["alt"]) for v in truth["pair"])

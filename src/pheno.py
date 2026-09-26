@@ -168,8 +168,11 @@ def best_match_average(ont: OboOntology, ic: InformationContent,
     score = mean over each term in A of max Resnik(t, B)  (and vice versa),
     divided by the mean self-similarity ceiling so a perfect match -> 1.0.
     """
-    a = [t for t in set_a if ont.valid(t)]
-    b = [t for t in set_b if ont.valid(t)]
+    # sort before summing - set iteration order varies with PYTHONHASHSEED
+    # and float addition is order-sensitive at the last ulp; pinning the
+    # order keeps cross-process scores bit-identical
+    a = sorted(t for t in set_a if ont.valid(t))
+    b = sorted(t for t in set_b if ont.valid(t))
     if not a or not b:
         return 0.0
 
@@ -208,7 +211,17 @@ def gene_disease_map(path: str | Path) -> dict[str, list[str]]:
     import json
 
     raw = json.loads(Path(path).read_text(encoding="utf-8"))
-    return {g: list(v) for g, v in raw.items()}
+    if not isinstance(raw, dict):
+        raise ValueError(f"{path}: gene->disease map must be a JSON object")
+    out: dict[str, list[str]] = {}
+    for g, v in raw.items():
+        if not isinstance(v, (list, tuple)):
+            raise ValueError(
+                f"{path}: value for gene {g!r} is {type(v).__name__}, "
+                "not a list - list(v) on a string would produce a bogus "
+                "disease id per character")
+        out[g] = list(v)
+    return out
 
 
 def gene_hpo_terms(gene: str, gene2disease: dict[str, list[str]],

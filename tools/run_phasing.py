@@ -65,7 +65,7 @@ def _parse_site(spec: str) -> tuple[str, int]:
     chrom_s, sep, pos_s = spec.rpartition(":")
     if not sep or not pos_s.isdigit():
         raise argparse.ArgumentTypeError(
-            f"site '{spec}' must look like chrom:pos (e.g. 15:40209701)")
+            f"site '{spec}' must look like chrom:pos (e.g. 15:40000001)")
     return (from_submission_chrom(chrom_s), int(pos_s))
 
 
@@ -223,6 +223,11 @@ def main(argv=None) -> int:
 
     read_phase = None
     if args.sam:
+        if args.min_support < 1:
+            print("ERROR: --min-support must be >= 1 - at 0 every count "
+                  "qualifies and an empty SAM 'proves' trans",
+                  file=sys.stderr)
+            return 2
         v1 = (rec1.chrom, rec1.pos, rec1.ref, rec1.alts[0])
         v2 = (rec2.chrom, rec2.pos, rec2.ref, rec2.alts[0])
         with open(args.sam, encoding="utf-8") as fh:

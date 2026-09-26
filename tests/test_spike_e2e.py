@@ -63,9 +63,11 @@ def test_decoys_suppressed(spike):
         g2d_path=spike["gene2disease"])
     emitted_genes = {h["gene"] for h in res["ranked"] if h["emitted"]}
     assert "TTN" not in emitted_genes
+    assert res["funnel"]["emitted"] > 0, "no hypotheses emitted - assertion is vacuous"
     assert all(h["gene"] == "SPIKEA" for h in res["ranked"] if h["emitted"])
 
 
+@pytest.mark.gate
 def test_spike_deterministic_bytes(spike, tmp_path):
     """Falsification: two identical runs write different result.json bytes -
     hidden nondeterminism would make the submission irreproducible."""

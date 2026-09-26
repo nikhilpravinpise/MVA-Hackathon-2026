@@ -323,13 +323,19 @@ def main(argv=None) -> int:
         f"{emitted[0]['in_trans']})" if emitted else
         "NOT recovered - see ablation report")
 
+    # Prefer the run's recorded config hash - hashing the CURRENT on-disk
+    # file would silently claim the wrong provenance if the config was
+    # edited after the run.
+    run_cfg_sha = (prov.get("config_sha256") or prov.get("config_file_sha256")
+                   or config_hash())
+
     mapping = {
         "TEAM_NAME": args.team,
         "MODEL_N": args.model_n,
         "GENERATED_AT": datetime.now(timezone.utc).strftime(
             "%Y-%m-%d %H:%M UTC"),
         "DATA_STATUS": args.data_status,
-        "CONFIG_SHA": config_hash()[:12],
+        "CONFIG_SHA": run_cfg_sha[:12],
         "SUBMISSION_SUMMARY": submission_summary(result, truth),
         "FUNNEL_TABLE": funnel_table(result),
         "EDA_SECTION": eda_section(eda),
@@ -355,8 +361,8 @@ def main(argv=None) -> int:
                        "see docs/llm_log.md for the per-session ledger."),
         "PROVENANCE_SECTION": (
             "- VCF: `" + str(prov.get("vcf")) + "` (sha-tracked)\n"
-            "- Config: `config/pipeline.yaml` sha256 `" + config_hash()[:12]
-            + "` (frozen pre-analysis)\n"
+            "- Config: `config/pipeline.yaml` sha256 `" + run_cfg_sha[:12]
+            + "` (frozen pre-analysis; hash recorded at run time)\n"
             "- Scoring oracle: vendored `hackathon-app/evaluation.py` - "
             "local score = official score by construction\n"
             "- Leak firewall: no leaked-Space coordinates/genes/values in "

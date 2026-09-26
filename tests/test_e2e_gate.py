@@ -112,3 +112,53 @@ def test_mutation_audit_on_built_csv(spike_run, tmp_path):
         got = mutated_score(mtext)
         assert got == expected, \
             f"{name}: expected documented no-op, got {got}"
+
+
+@pytest.mark.gate
+def test_run_track1_driver_steps_not_skipped(tmp_path):
+    """Falsification: the master driver must complete every step - a
+    'skipped: ...' string in run_summary means a real failure was
+    swallowed. Catches integration breaks between the funnel, SF scan,
+    phasing, ACMG, and the CSV writer."""
+    import json
+
+    from tools import run_track1
+
+    case = synth.spike_in_case(tmp_path / "case")
+    out = tmp_path / "run"
+    rc = run_track1.main(["--case", str(case["dir"]), "--out", str(out)])
+    assert rc == 0
+
+    summary = json.loads((out / "run_summary.json").read_text())
+    steps = summary["steps"]
+    # every step must report a real outcome, not a swallowed exception
+    for name in ("eda", "funnel", "ablations", "sf", "phasing", "acmg",
+                 "csv_rows"):
+        assert name in steps, f"step missing: {name}"
+        assert not str(steps[name]).startswith("skipped"), \
+            f"step {name} skipped: {steps[name]}"
+    # artifact outputs exist
+    for f in ("funnel/result.json", "ablations.json", "sf_findings.json",
+              "phasing_report.json", "acmg_report.json", "submission.csv",
+              "eda_report.json"):
+        assert (out / f).exists(), f"missing artifact {f}"
+    # the known-answer oracle ran inside the driver: 100/1.000
+    assert steps["oracle"]["rank_points"] == 100.0
+    assert steps["oracle"]["f_max"] == pytest.approx(1.0)
+
+
+@pytest.mark.gate
+def test_run_track1_no_call_writes_no_csv(tmp_path):
+    """Falsification: a control case (no causal pair) must NOT produce a
+    header-only submission.csv - the file must simply not exist."""
+    import json
+
+    from tools import run_track1
+
+    case = synth.control_case(tmp_path / "case")
+    out = tmp_path / "run"
+    rc = run_track1.main(["--case", str(case["dir"]), "--out", str(out)])
+    assert rc == 0
+    summary = json.loads((out / "run_summary.json").read_text())
+    assert "no_call" in str(summary["steps"]["csv"])
+    assert not (out / "submission.csv").exists()

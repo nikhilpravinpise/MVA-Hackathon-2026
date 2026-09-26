@@ -188,7 +188,8 @@ class VariantFacts:
         return f"{self.chrom}:{self.pos}:{self.ref}>{self.alt}"
 
 
-def _genotype_fields(gt_obj: SampleGenotype | None) -> dict:
+def _genotype_fields(gt_obj: SampleGenotype | None,
+                     alt_index: int = 1) -> dict:
     if gt_obj is None:
         return {"gt": "", "is_het": False, "is_hom_alt": False,
                 "dp": None, "gq": None, "vaf": None, "pgt": None, "pid": None}
@@ -199,7 +200,7 @@ def _genotype_fields(gt_obj: SampleGenotype | None) -> dict:
         "is_hom_alt": gt_obj.is_hom_alt,
         "dp": gt_obj.dp,
         "gq": gt_obj.gq,
-        "vaf": gt_obj.vaf,
+        "vaf": gt_obj.vaf(alt_index),
         "pgt": gt_obj.pgt,
         "pid": gt_obj.pid,
     }
@@ -235,8 +236,14 @@ def _rarity(ann: dict[str, str], rar_cfg: dict) -> tuple[bool, bool, float, floa
         score = 1.0
     elif popmax is not None and popmax > 0:
         # log-scale position of popmax between 1e-7 (score~1) and af_max (~0.5)
-        frac = min(1.0, math.log10(popmax / 1e-7) / math.log10(af_max / 1e-7))
-        score = 1.0 - 0.5 * max(0.0, frac)
+        denom = math.log10(af_max / 1e-7) if af_max > 0 else 0.0
+        if denom <= 0:
+            # degenerate ceiling (af_max <= 1e-7): every present variant at
+            # or under it is effectively at the ceiling floor
+            score = 1.0 if popmax <= af_max else 0.5
+        else:
+            frac = min(1.0, math.log10(popmax / 1e-7) / denom)
+            score = 1.0 - 0.5 * max(0.0, frac)
     else:
         score = 0.8  # present with AF 0 exactly
     return rare, absent, score, popmax
@@ -288,7 +295,7 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
         gt_obj = rec.samples.get(sample)
         for gene, ann in sorted(per_gene.items()):
             gt_idx = alt_i + 1
-            g = _genotype_fields(gt_obj)
+            g = _genotype_fields(gt_obj, gt_idx)
             # restrict het/hom flags to THIS alt index in multi-allelic sites
             if gt_obj is not None and gt_obj.called:
                 g["is_het"] = gt_idx in gt_obj.gt and len(set(gt_obj.gt)) >= 2

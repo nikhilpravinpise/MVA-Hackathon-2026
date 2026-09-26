@@ -119,6 +119,7 @@ def compute_stats(vcf_path, sample: str | None = None) -> dict:
     qual_counts: dict[float, int] = {}
     n_qual_missing = 0
     qsum = 0.0
+    n_csq_short = 0  # records whose CSQ block(s) have fewer fields than declared
 
     try:
         for rec in reader.records(sample=sample):
@@ -158,6 +159,13 @@ def compute_stats(vcf_path, sample: str | None = None) -> dict:
             else:
                 qual_counts[rec.qual] = qual_counts.get(rec.qual, 0) + 1
                 qsum += rec.qual
+
+            csq = rec.info.get("CSQ")
+            if isinstance(csq, str) and reader.csq_fields:
+                n_declared = len(reader.csq_fields)
+                if any(len(blk.split("|")) < n_declared
+                       for blk in csq.split(",")):
+                    n_csq_short += 1
 
             sg = rec.samples.get(sample) if sample else None
             if sg is None or not sg.called:
@@ -209,6 +217,7 @@ def compute_stats(vcf_path, sample: str | None = None) -> dict:
         },
         "genotypes": geno,
         "n_phased_gt": n_phased,
+        "n_csq_field_short": n_csq_short,
     }
 
 

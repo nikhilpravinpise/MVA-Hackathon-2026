@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `<TBD - see docs/team.md>` · **Model:** `model1` · **Generated:** 2026-09-26 09:47 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 11:35 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** VALIDATED ON SYNTHETIC STAND-IN - patient VCF not yet on disk; every number below is from the public-stand-in harness.
 
@@ -39,7 +39,7 @@ annotated VCF (VEP CSQ)
 ```
 
 Every threshold is frozen pre-analysis in `config/pipeline.yaml`
-(sha256 `024a5c26be80`) - the answer-blind decision freeze. No variant
+(sha256 `7d304b9ca95f`) - the answer-blind decision freeze. No variant
 identity, gene name, or leaked-space value influenced any parameter; the
 pipeline output is the submission.
 
@@ -50,7 +50,7 @@ pipeline output is the submission.
 | VCF records | 14 |
 | allele x gene evidence records | 14 |
 | passing genotype QC + filters | 12 |
-| rare tier (pop-max AF <= af_max or absent) | 11 |
+| rare tier (pop-max AF <= af_max or absent) | 9 |
 | eligible candidate variants | 9 |
 | genotype hypotheses enumerated | 13 |
 | emitted (score >= emit_floor) | 3 |
@@ -88,7 +88,7 @@ The funnel was validated *blind* before the proband call:
 |---|---|---|
 | clinvar | 1 | 3 |
 | damage_predictors | 1 | 2 |
-| gnomad | 2 | 5 |
+| gnomad | 2 | 4 |
 | hpo | 1 | 0 |
 | phasing | 1 | 3 |
 
@@ -113,7 +113,6 @@ Robust across grid: **True**
 | Evidence | Mechanism | Result |
 |---|---|---|
 | PGT/PID read-backed phasing | pgt_pid_same_set | trans |
-| read-level SAM evidence | read_level | unknown |
 
 Agreement: **trans**
 
@@ -147,17 +146,17 @@ ACMG SF v3.3 (84 genes) scan produced **no reportable findings** in this dataset
 | Variant | Criteria fired | Classification |
 |---|---|---|
 | 7:1000000:A>T | PVS1, PM2 | Pathogenic |
-| 7:1004000:G>C | PM2, PM3 | VUS |
+| 7:1004000:G>C | PM2, PP3, PM3 | VUS |
 
 Pair-level: PP4
 
-Combined call: **Pathogenic** (15 pts - ACMG/AMP Richards2015 subset + Tavtigian2018 points)
+Combined call: **Pathogenic** (16 pts - ACMG/AMP Richards2015 subset + Tavtigian2018 points)
 
 ## 9. Runtime and cost
 
 | Job | Where | Time | Cost |
 |---|---|---|---|
-| Arm-B funnel (this run) | local | 0.007s | $0 |
+| Arm-B funnel (this run) | local | 0.008s | $0 |
 | Test battery (19-fixture oracle mutation battery + funnel + e2e) | local | not measured | $0 |
 
 Planned cloud jobs (alignment/DeepVariant/VEP at data landing) are budgeted < $50 total - see docs/runtime_log.md.
@@ -169,7 +168,7 @@ Anthropic API / Cognition Devin CLI (SWE-2 Max), commercial terms, no training o
 ## 11. Provenance, firewall, and compliance
 
 - VCF: `results\spike_case\spike_proband.vcf` (sha-tracked)
-- Config: `config/pipeline.yaml` sha256 `024a5c26be80` (frozen pre-analysis)
+- Config: `config/pipeline.yaml` sha256 `7d304b9ca95f` (frozen pre-analysis; hash recorded at run time)
 - Scoring oracle: vendored `hackathon-app/evaluation.py` - local score = official score by construction
 - Leak firewall: no leaked-Space coordinates/genes/values in code, tests, configs, or this report
 - Compliance: patient data confined to `data/` (gitignored); retention manifests in data/RETENTION.md + results/RETENTION.md

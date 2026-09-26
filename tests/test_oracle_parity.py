@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import pytest
 
-from conftest import (GT, HEADER, JUNK, V1, V2, prow, score_csv_text,
+pytestmark = pytest.mark.gate
+
+from conftest import (GT, HEADER, JUNK, REPO, V1, V2, prow, score_csv_text,
                       score_rows, vrow)
 
 
@@ -41,6 +43,28 @@ def test_score_result_fields_complete():
         assert hasattr(r, f)
     assert r.proband_id == "PROBAND01"
     assert r.f_max_threshold == 0.95
+
+
+def test_gt_wiring_guard():
+    """Falsification (plan.md sec.6 'GT-wiring guard'): identical bytes must
+    score differently under a different GT - otherwise fixtures are testing
+    a hardcoded answer key, not scorer mechanics."""
+    r_true = score_rows([prow(V1, V2)])
+    assert r_true.rank_points == 100.0
+    alt_gt = frozenset({V1, JUNK[0]})
+    r_alt = score_rows([prow(V1, V2)], gt=alt_gt)
+    assert r_alt.rank_points == 50.0 and r_alt.f_max == pytest.approx(0.5)
+
+
+def test_scorer_copies_byte_identical():
+    """Falsification: scorer/evaluation.py and hackathon-app/evaluation.py
+    diverge - in-process tests exercise one copy while byte-subprocess
+    tests exercise the other; a silent fork means the validated oracle is
+    not the shipped oracle."""
+    import hashlib
+    a = (REPO / "scorer" / "evaluation.py").read_bytes()
+    b = (REPO / "hackathon-app" / "evaluation.py").read_bytes()
+    assert hashlib.sha256(a).hexdigest() == hashlib.sha256(b).hexdigest()
 
 
 @pytest.mark.gate

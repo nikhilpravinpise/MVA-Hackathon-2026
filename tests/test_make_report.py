@@ -13,6 +13,9 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
 from tools.make_report import runtime_section, submission_summary
+import pytest
+
+pytestmark = pytest.mark.gate
 
 
 def _hyp(chrom, pos=1000, ref="A", alt="T", gene="GENEX", model="dominant_het"):
@@ -37,9 +40,9 @@ def test_submission_summary_normalizes_bare_contig():
     """Falsification: a bare contig ('15', the challenge VCF convention)
     must still be normalized to 'chr15' in the report, matching
     to_submission_chrom used everywhere else in the writer."""
-    result = {"ranked": [_hyp("15", pos=40209701)]}
+    result = {"ranked": [_hyp("15", pos=40000001)]}
     summary = submission_summary(result, truth=None)
-    assert "chr15:40209701" in summary
+    assert "chr15:40000001" in summary
 
 
 def test_runtime_section_fixture_count_matches_test_module():

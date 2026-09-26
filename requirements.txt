@@ -1,0 +1,10 @@
+# Runtime deps for the Track-1 funnel (src/, tools/).
+# Install into a fresh venv: python -m pip install -r requirements.txt
+PyYAML>=6.0.1,<7.0          # config/pipeline.yaml loading (src/config.py)
+
+# Test suite
+pytest>=8.0,<10.0           # tests/ + gate battery
+
+# Optional fetch helpers (tools/fetch_refs.py, tools/build_real_spike.py)
+# huggingface_hub>=0.24     # gated dataset download when access lands
+# hf_transfer>=0.1.8        # fast transfer backend for the ~85 GB FASTQs

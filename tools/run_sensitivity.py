@@ -44,7 +44,17 @@ def main(argv=None) -> int:
 
     hpo_raw = json.loads(Path(args.hpo_terms).read_text())
     hpo = hpo_raw["hpo_terms"] if isinstance(hpo_raw, dict) else list(hpo_raw)
-    truth = json.loads(Path(args.truth).read_text())
+    truth_file = Path(args.truth)
+    if not truth_file.exists():
+        print(f"ERROR: truth file {args.truth} not found - the sensitivity "
+              "grid needs a known-answer case (a negative-control case has "
+              "no planted pair to rank)", file=sys.stderr)
+        return 2
+    truth = json.loads(truth_file.read_text())
+    if not truth.get("pair"):
+        print(f"ERROR: {args.truth} has no 'pair' - nothing to rank-track "
+              "across the grid", file=sys.stderr)
+        return 2
     cfg = load_config()
 
     grid = []

@@ -337,6 +337,8 @@ def _as_vf(v) -> VariantFacts:
         d = dict(v)
         if "tier" in d and "damage_tier" not in d:
             d["damage_tier"] = d.pop("tier")
+        if "gnomad_present" not in d and "absent" in d:
+            d["gnomad_present"] = not d["absent"]
         keep = {f.name for f in dataclasses.fields(VariantFacts)}
         # required positional fields of VariantFacts get safe defaults so a
         # partial pipeline dict (tier/popmax/consequence only) still coerces

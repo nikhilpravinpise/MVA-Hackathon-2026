@@ -120,6 +120,7 @@ def _top_table(res: dict, n: int = 10) -> str:
     return "\n".join(lines)
 
 
+@pytest.mark.gate
 @pytest.mark.slow
 def test_real_spike_pair_recovered_top5(real_case):
     """Falsification: a REAL ClinVar P/LP PAH compound-het pair spiked into
@@ -155,6 +156,7 @@ def test_real_spike_pair_recovered_top5(real_case):
           f"trans={pair['in_trans']} funnel={res['funnel']}")
 
 
+@pytest.mark.gate
 @pytest.mark.slow
 def test_real_spike_ablation_drop_hpo(real_case):
     """Falsification: with phenotype evidence dropped, the true pair falls

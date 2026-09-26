@@ -13,11 +13,30 @@ REPO = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = REPO / "config" / "pipeline.yaml"
 
 
+REQUIRED_SECTIONS = ("rarity", "consequence", "genotype_qc", "inheritance",
+                     "scoring", "submission")
+
+
 def load_config(path: str | Path | None = None) -> dict:
-    """Load the frozen funnel configuration."""
+    """Load the frozen funnel configuration.
+
+    Raises ``ValueError`` on a missing top-level section: consumers read
+    ``cfg.get(...)`` with in-code defaults, so a lost section would silently
+    fall back to duplicated defaults and diverge from the frozen config
+    without any error. Loud is better.
+    """
     p = Path(path) if path else DEFAULT_CONFIG
     with open(p, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        cfg = yaml.safe_load(f)
+    if not isinstance(cfg, dict):
+        raise ValueError(f"config {p} is not a YAML mapping")
+    missing = [s for s in REQUIRED_SECTIONS if s not in cfg]
+    if missing:
+        raise ValueError(
+            f"config {p} missing required section(s): {missing} - a "
+            "missing section would silently fall back to in-code defaults "
+            "and diverge from the frozen config")
+    return cfg
 
 
 def config_hash(path: str | Path | None = None) -> str:

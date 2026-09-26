@@ -8,6 +8,9 @@ from __future__ import annotations
 from src.config import load_config
 from src.genes import Hypothesis, attach_scores
 from src.triage import VariantFacts
+import pytest
+
+pytestmark = pytest.mark.gate
 
 
 def _vf(gene="GENEX", pos=1000, alt="T", score=1.0):

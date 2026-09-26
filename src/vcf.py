@@ -75,26 +75,40 @@ class SampleGenotype:
             return None
 
     @property
-    def ad(self) -> list[int] | None:
+    def ad(self) -> list[int | None] | None:
+        """Allelic depths per allele ordinal, preserving '.' positions
+        (dropping them would shift every later allele's index)."""
         v = self.raw.get("AD")
         if not v:
             return None
-        try:
-            return [int(x) for x in v.split(",") if x not in (".", "")]
-        except ValueError:
-            return None
+        out: list[int | None] = []
+        for x in v.split(","):
+            if x in (".", ""):
+                out.append(None)
+            else:
+                try:
+                    out.append(int(x))
+                except ValueError:
+                    out.append(None)
+        return out
 
-    @property
-    def vaf(self) -> float | None:
-        """Allele fraction of the (first) alt allele from AD, else FORMAT AF."""
+    def vaf(self, alt_index: int = 1) -> float | None:
+        """Allele fraction of ALT ordinal ``alt_index`` (1-based) from AD,
+        else FORMAT AF (Number=A, per-alt indexing)."""
         ad = self.ad
-        if ad and len(ad) >= 2 and sum(ad) > 0:
-            return ad[1] / sum(ad)
+        if ad and alt_index < len(ad):
+            num = ad[alt_index]
+            total = sum(x for x in ad if x is not None)
+            if num is not None and total > 0:
+                return num / total
         v = self.raw.get("AF")
-        try:
-            return float(v) if v not in (None, ".", "") else None
-        except ValueError:
-            return None
+        if v not in (None, ".", ""):
+            parts = v.split(",")
+            try:
+                return float(parts[alt_index - 1])
+            except (ValueError, IndexError):
+                return None
+        return None
 
     @property
     def pgt(self) -> str | None:
@@ -191,10 +205,12 @@ class VcfReader:
         self.csq_fields: list[str] = []
         self._header_done = False
         self._pending: str | None = None
+        self._line_no = 0  # physical file line counter (for error context)
         self._read_header()
 
     def _read_header(self) -> None:
         for line in self._fh:
+            self._line_no += 1
             line = line.rstrip("\n")
             if line.startswith("##"):
                 self.meta.append(line)
@@ -202,6 +218,13 @@ class VcfReader:
             elif line.startswith("#"):
                 cols = line.lstrip("#").split("\t")
                 self.samples = cols[9:] if len(cols) > 9 else []
+                self._header_done = True
+                return
+            elif line.strip():
+                # No #CHROM line before the first record (header-less VCF):
+                # push the line back so records() still sees it instead of
+                # silently swallowing it as a phantom header line.
+                self._pending = line
                 self._header_done = True
                 return
         self._header_done = True
@@ -228,10 +251,25 @@ class VcfReader:
 
     def records(self, sample: str | None = None) -> Iterator[VcfRecord]:
         fh = self._fh
+        if self._pending is not None:
+            pending, self._pending = self._pending, None
+            try:
+                yield self._parse_record(pending, sample)
+            except Exception as e:
+                raise ValueError(
+                    f"malformed VCF record at {self.path}:{self._line_no}: "
+                    f"{e} (line: {pending[:120]!r})") from e
         for line in fh:
-            if not line or line.startswith("#"):
+            self._line_no += 1
+            # skip blank/whitespace-only and any stray comment lines
+            if not line.strip() or line.startswith("#"):
                 continue
-            yield self._parse_record(line.rstrip("\n"), sample)
+            try:
+                yield self._parse_record(line.rstrip("\n"), sample)
+            except Exception as e:
+                raise ValueError(
+                    f"malformed VCF record at {self.path}:{self._line_no}: "
+                    f"{e} (line: {line.strip()[:120]!r})") from e
 
     def _parse_record(self, line: str, sample: str | None) -> VcfRecord:
         cols = line.split("\t")
@@ -298,9 +336,15 @@ def to_submission_chrom(chrom: str) -> str:
     """
     c = chrom.strip()
     if c.lower().startswith("chr"):
-        return "chr" + c[3:]
-    if c in ("M", "MT", "m", "mt"):
+        tail = c[3:]
+        if tail.upper() in ("M", "MT"):
+            return "chrM"
+        return "chr" + tail.upper() if tail.lower() in ("x", "y") \
+            else "chr" + tail
+    if c.upper() in ("M", "MT"):
         return "chrM"
+    if c.upper() in ("X", "Y"):
+        return "chr" + c.upper()
     return "chr" + c
 
 

@@ -217,7 +217,7 @@ def template_support(sam_iter: Iterable[str], sites,
     meta = {(c, p): (r, a) for c, p, r, a in site_list}
     stats = {"records": 0, "skipped_malformed": 0, "skipped_unmapped": 0,
              "skipped_secondary_supp": 0, "skipped_low_mapq": 0,
-             "skipped_duplicate": 0}
+             "skipped_duplicate": 0, "skipped_qcfail": 0}
 
     # qname -> {site_key: [(base, mapq), ...]}
     votes: dict[str, dict[tuple, list[tuple[str, int]]]] = {}
@@ -235,6 +235,9 @@ def template_support(sam_iter: Iterable[str], sites,
             continue
         if rec["is_duplicate"]:
             stats["skipped_duplicate"] += 1
+            continue
+        if rec["is_qcfail"]:
+            stats["skipped_qcfail"] += 1
             continue
         if rec["mapq"] < min_mapq:
             stats["skipped_low_mapq"] += 1
@@ -314,6 +317,10 @@ def phase_from_reads(sam_iter: Iterable[str], v1, v2,
     * anything else - including zero spanning templates when the sites
       exceed the insert span - is 'unknown' with the counts reported.
     """
+    if min_support < 1:
+        raise ValueError(
+            f"min_support must be >= 1 (got {min_support}) - at 0 every "
+            "count qualifies and an empty SAM 'proves' trans")
     v1, v2 = tuple(v1), tuple(v2)
     sup = template_support(sam_iter, [v1, v2], min_mapq=min_mapq)
     k1, k2 = (v1[0], v1[1]), (v2[0], v2[1])

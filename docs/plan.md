@@ -444,7 +444,7 @@ fragile = reported honestly.
 | F-max dilution | pair listed first, then 5 junk ALL @0.95 | 100 pts but F<1.0 | epcr-structure rule; pair must be first among the tied rows (file-order tie-break, `evaluation.py:107`) - listed last it would sit at rank 6 → only 10 pts |
 | junk below top epcr | pair@0.95 + 9 junk@0.3 | 100 / 1.000 | our real CSV shape |
 | epcr=0, 1.0001, -x | — | ValueError | range check (0,1] |
-| 10 rows exactly | pair+8 filler within cap | parses (boundary) | cap is strictly >10 |
+| 10 rows exactly | pair+9 filler within cap | parses (boundary) | cap is strictly >10 |
 | 11 rows | — | ValueError | row cap |
 | `finding_type=X` | invalid | ValueError | enum check |
 | `SECONDARY` uppercase | finding_type='SECONDARY' | accepted (lowercased) | normalization; empty/missing `finding_type` silently defaults to `primary` |

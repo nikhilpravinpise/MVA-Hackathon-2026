@@ -11,6 +11,8 @@ import json
 
 import pytest
 
+pytestmark = pytest.mark.gate
+
 from src.config import load_config
 from src.synth import SVar, Ann, write_vcf, _af_ann
 from src.triage import extract_facts
@@ -218,7 +220,8 @@ def test_pair_accumulates_to_pathogenic(tmp_path):
                              in_trans="trans", pheno_score=0.7)
     total = res["combined_points"]
     # lof: PVS1(8)+PM2(2); missense: PM2(2)+PP3(1)+PM3(2); pair PP4(1) = 16
-    assert total >= 10
+    assert total == 16, \
+        "a silently-dropped criterion (e.g. PP3) would keep >=10 anyway"
     assert res["combined_classification"] == "Pathogenic"
 
 

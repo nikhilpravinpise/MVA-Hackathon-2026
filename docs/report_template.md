@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `{{TEAM_NAME}}` · **Model:** `model{{MODEL_N}}` · **Generated:** {{GENERATED_AT}} by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `{{TEAM_NAME}}` | **Model:** `model{{MODEL_N}}` | **Generated:** {{GENERATED_AT}} by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** {{DATA_STATUS}}
 

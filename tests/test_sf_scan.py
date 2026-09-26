@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import pytest
 
+pytestmark = pytest.mark.gate
+
 from src.config import load_config
 from src.synth import SVar, Ann, write_vcf, _af_ann
 from src.triage import extract_facts
