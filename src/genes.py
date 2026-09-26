@@ -37,7 +37,7 @@ class Hypothesis:
     gene: str
     model: str                       # compound_het|hom_alt|dominant_het|x_linked
     variants: tuple[VariantFacts, ...]  # 1 or 2
-    variant_damage: float = 0.0      # max variant score in the hypothesis
+    variant_damage: float = 0.0      # mean variant score in the hypothesis
     pheno_score: float = 0.0
     inheritance_score: float = 0.0
     in_trans: str = "unknown"        # 'trans'|'cis'|'unknown'

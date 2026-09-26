@@ -317,6 +317,15 @@ def _hyp_to_dict(h: Hypothesis) -> dict:
              "hgvsc": v.hgvsc, "hgvsp": v.hgvsp}
             for v in h.variants],
         "phase_detail": h.phase_detail,
+        # CSV notes carry the one-line justification a human reviewer
+        # needs at a glance: model, proven phase, consequence classes
+        "notes": (
+            f"{h.gene} {h.model}"
+            + {"trans": " trans", "cis": " cis"}.get(h.in_trans, "")
+            + (" " + "+".join(dict.fromkeys(
+                (v.consequence or "?").split("&")[0]
+                for v in h.variants)))
+        ).strip(),
         # evidence flags (truncated_het_pool / noise_gene / cis-invalidated)
         # must reach the artifact - 'documented in config' is not the same
         # as visible in results
