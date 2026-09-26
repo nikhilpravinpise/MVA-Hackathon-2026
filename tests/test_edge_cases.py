@@ -1080,3 +1080,16 @@ class TestCompareArms:
         tsv.write_text("GENE\tSCORE\nPAH\t0.9\n")
         with pytest.raises(ValueError, match="GENE_SYMBOL"):
             ca.arma_genes(tsv)
+
+
+class TestFetchBig:
+    """fetch_big.py resume/corruption guards: an oversized part file is
+    corrupt (parts are only appended to) and must fail loudly, not
+    silently concatenate."""
+
+    def test_oversized_part_rejected(self, tmp_path):
+        from tools import fetch_big as fb
+        p = tmp_path / "x.zip.part00"
+        p.write_bytes(b"x" * 100)
+        with pytest.raises(RuntimeError, match="corrupt"):
+            fb._fetch_part("http://example/", p, 0, 49)
