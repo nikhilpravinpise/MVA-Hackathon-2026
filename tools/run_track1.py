@@ -169,8 +169,7 @@ def main(argv=None) -> int:
         from src.acmg import acmg_report
         top = next((h for h in res["ranked"] if h["emitted"]), None)
         if top:
-            ctx = {"mechanism": "recessive",
-                   "in_trans": top["in_trans"],
+            ctx = {"in_trans": top["in_trans"],
                    "pheno_score": top["pheno_score"],
                    "gene_known_for_disease": top["pheno_score"] > 0}
             rep = acmg_report(top, ctx)

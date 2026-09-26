@@ -45,6 +45,17 @@ _CALLER_RE = re.compile(
     r"bcftools|mutect|octopus",
     re.IGNORECASE)
 
+#: gnomAD population-frequency field-name prefixes src.triage's rarity gate
+#: actually reads (gnomADe*_AF / gnomADg*_AF). A CSQ block that carries
+#: none of these silently makes every variant score as "absent from
+#: gnomAD" - the strongest rarity signal - with no error raised.
+_GNOMAD_AF_PREFIXES = ("gnomADe", "gnomADg")
+
+
+def _gnomad_af_fields(csq_fields) -> list[str]:
+    return [f for f in csq_fields
+            if f.startswith(_GNOMAD_AF_PREFIXES) and f.endswith("_AF")]
+
 
 def _zero_contig() -> dict:
     return {"n_records": 0, "n_pass": 0, "n_filtered": 0, "het": 0,
@@ -266,6 +277,7 @@ def header_forensics(vcf_path) -> dict:
                 "present": "CSQ" in reader.info_defs,
                 "n_fields": len(reader.csq_fields),
                 "fields": list(reader.csq_fields),
+                "gnomad_af_fields": _gnomad_af_fields(reader.csq_fields),
             },
             "source": [m for m in meta if m.startswith("##source")],
             "caller_lines": [m for m in meta if _CALLER_RE.search(m)],

@@ -22,12 +22,13 @@ from pathlib import Path
 import pytest
 
 from src import synth
-from src.pheno import HPO_RE, extract_hpo_from_docx
+from src.pheno import extract_hpo_from_docx
 from src.synth import SVar
 from src.vcf_qc import (compute_stats, header_forensics, integrity_report,
                         sex_check)
 from tools import extract_hpo as hpo_cli
 from tools import run_eda as run_eda_cli
+from tools import run_fastqc as run_fastqc_cli
 from tools.run_fastqc import (compare_to_expectations, parse_fastp_json,
                               parse_fastq_stats)
 
@@ -108,6 +109,16 @@ def _assert_vcf_gate(vcf_path, n_bounds, titv_bounds, expected_filters=None):
     #    that src/phasing.py and Gate 3 depend on).
     assert head["format_fields"]["PGT"], "PGT missing from FORMAT defs"
     assert head["format_fields"]["PID"], "PID missing from FORMAT defs"
+
+    # 2b) When CSQ is present, at least one gnomAD AF field name must match
+    #     what src.triage's rarity gate actually reads (gnomADe*_AF /
+    #     gnomADg*_AF) - a differently-named AF plugin field would silently
+    #     score every variant as absent-from-gnomAD with no error raised.
+    if head["csq"]["present"] and head["csq"]["n_fields"] > 0:
+        assert head["csq"]["gnomad_af_fields"], (
+            "CSQ present but no gnomADe*_AF/gnomADg*_AF field name found "
+            f"among {head['csq']['fields']} - src/triage.py's gnomAD "
+            "absence bonus would silently misfire on every variant")
 
     # 3) Variant count: >0 and inside the stated bounds.
     assert stats["n_records"] > 0
@@ -208,17 +219,21 @@ def test_sex_check_explicit_counts():
 def test_docx_hpo_extraction(tmp_path):
     """Falsification: HPO-regex drift or docx/XML mishandling drops or
     mangles HP codes; the CLI's guards must fire on a term-free docx and on
-    a missing file, not silently emit an empty hpo_terms.json."""
+    a missing file, not silently emit an empty hpo_terms.json. Also covers
+    an 8-digit typo code: an unanchored regex would truncate it to a
+    plausible-looking but WRONG 7-digit code instead of excluding it."""
     codes = ["HP:0001234", "HP:0002350", "HP:0011001"]
     docx = synth.write_docx(tmp_path / "pheno.docx", [
         "Clinical summary: proband shows growth delay HP:0001234 .",
         "Additional findings: HP:0002350 and recurrent HP:0011001 noted.",
         "This paragraph carries no codes.",
         "HP:0001234 again (duplicate must dedupe in document order).",
+        "Typo code HP:00099999 must not be truncated into a fake match.",
     ])
     terms = extract_hpo_from_docx(docx)
     assert terms == codes
-    assert all(HPO_RE.fullmatch(t) for t in terms)
+    # the truncated-prefix contamination the unanchored regex would produce
+    assert "HP:0009999" not in terms
 
     # End-to-end through the CLI entry point.
     out = tmp_path / "hpo_terms.json"
@@ -315,6 +330,26 @@ def test_parse_fastq_stats_fallback(tmp_path):
     assert cmp["checks"]["duplication_rate"]["status"] == "missing"
     assert cmp["checks"]["q30_rate"]["status"] == "fail"   # .5 vs .935
     assert cmp["checks"]["gc_content"]["status"] == "pass"  # .467 within tol
+
+
+def test_run_fastqc_cli_exit_code_reflects_all_pass(tmp_path):
+    """Falsification: GATE 1 requires read counts within 20% of expectation
+    to be a red/green criterion. main() unconditionally returning 0 would
+    let a real contamination/read-count anomaly stay invisible to
+    ``make gate``/CI, discoverable only by a human opening the summary."""
+    fq_dir = tmp_path / "fastq"
+    fq_dir.mkdir()
+    (fq_dir / "fastp.json").write_text(json.dumps(_fastp_fixture(gc=0.60)))
+    out_bad = tmp_path / "out_bad"
+    assert run_fastqc_cli.main(["--fastq-dir", str(fq_dir),
+                               "--out", str(out_bad)]) != 0
+
+    fq_dir_good = tmp_path / "fastq_good"
+    fq_dir_good.mkdir()
+    (fq_dir_good / "fastp.json").write_text(json.dumps(_fastp_fixture()))
+    out_good = tmp_path / "out_good"
+    assert run_fastqc_cli.main(["--fastq-dir", str(fq_dir_good),
+                               "--out", str(out_good)]) == 0
 
 
 def test_run_eda_cli(tmp_path):

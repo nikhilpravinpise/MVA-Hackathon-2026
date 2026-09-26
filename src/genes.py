@@ -15,9 +15,12 @@ Noise control: genes with > ``max_hets_per_gene`` eligible hets have their
 het pool truncated to the top-scoring ones before pair enumeration
 (O(n^2) blow-up guard - documented in config, not silent).
 
-in_trans is resolved via :mod:`src.phasing` PGT/PID; it is recorded as
-evidence on the hypothesis but never mutates the score (it is validation,
-not ranking input - plan.md 2.1 answer-blind doctrine).
+in_trans is resolved via :mod:`src.phasing` PGT/PID and recorded as
+evidence on the hypothesis. It does not feed the answer-blind ranking
+inputs (damage/phenotype), but a ``compound_het`` hypothesis PROVEN cis is
+not a valid recessive call at all (basic Mendelian genetics, not
+answer-peeking) - such pairs lose their compound_het inheritance bonus so
+they cannot rank as if trans had been confirmed.
 """
 from __future__ import annotations
 
@@ -120,11 +123,24 @@ def attach_scores(hyps: list[Hypothesis],
     w_p = sc.get("w_phenotype", 0.35)
     w_i = sc.get("w_inheritance", 0.20)
     bonus = sc.get("inheritance_bonus", {})
+    noise_genes = set(cfg.get("negative_control", {}).get("noise_genes", ()))
 
     for h in hyps:
         h.variant_damage = max(v.score for v in h.variants)
         h.pheno_score = pheno_of_gene(h.gene)
-        h.inheritance_score = bonus.get(h.model, 0.0)
+        if h.model == "compound_het" and h.in_trans == "cis":
+            # Phasing proved the pair is on one haplotype - not a valid
+            # biallelic hit, so it earns no recessive-model credit.
+            h.inheritance_score = 0.0
+            h.evidence["cis_confirmed_invalid_comphet"] = True
+        else:
+            h.inheritance_score = bonus.get(h.model, 0.0)
+        if h.gene in noise_genes:
+            # Documented negative-control gene list (config
+            # negative_control.noise_genes): genes famous for spurious
+            # rare-LoF hits get no recessive-model credit either.
+            h.inheritance_score = 0.0
+            h.evidence["noise_gene"] = True
         h.score = (w_d * h.variant_damage + w_p * h.pheno_score
                    + w_i * h.inheritance_score)
         h.evidence["weights"] = {"damage": w_d, "pheno": w_p, "inh": w_i}

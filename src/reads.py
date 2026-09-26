@@ -37,8 +37,10 @@ Design notes
   merges per-site allele calls; on mate disagreement the higher-MAPQ mate
   wins and the conflict is counted - a silently averaged molecule is not
   evidence.
-* Secondary/supplementary/unmapped records are skipped (counted in
-  ``stats``): they would double-count haplotypes or add none.
+* Secondary/supplementary/unmapped/PCR-duplicate records are skipped
+  (counted in ``stats``): duplicates are re-sequenced copies of the same
+  molecule, not independent templates, and would let ``min_support`` be
+  cleared by clones rather than distinct evidence.
 * Site allele calls are single-base: SNV sites classify cleanly as
   'ref'/'alt'/'other'. Indel alleles degrade to 'other'/'ref' at the
   anchor base - acceptable because candidate compound-het loci are
@@ -214,7 +216,8 @@ def template_support(sam_iter: Iterable[str], sites,
     site_list = [tuple(s) for s in sites]
     meta = {(c, p): (r, a) for c, p, r, a in site_list}
     stats = {"records": 0, "skipped_malformed": 0, "skipped_unmapped": 0,
-             "skipped_secondary_supp": 0, "skipped_low_mapq": 0}
+             "skipped_secondary_supp": 0, "skipped_low_mapq": 0,
+             "skipped_duplicate": 0}
 
     # qname -> {site_key: [(base, mapq), ...]}
     votes: dict[str, dict[tuple, list[tuple[str, int]]]] = {}
@@ -229,6 +232,9 @@ def template_support(sam_iter: Iterable[str], sites,
             continue
         if rec["is_secondary"] or rec["is_supplementary"]:
             stats["skipped_secondary_supp"] += 1
+            continue
+        if rec["is_duplicate"]:
+            stats["skipped_duplicate"] += 1
             continue
         if rec["mapq"] < min_mapq:
             stats["skipped_low_mapq"] += 1
@@ -295,11 +301,14 @@ def phase_from_reads(sam_iter: Iterable[str], v1, v2,
          "mechanism": "read_level",
          "counts": {...}, "min_support": n, "detail": str}
 
-    Verdict rules (conservative, evidence-first):
+    Verdict rules (conservative, evidence-first, symmetric under the
+    two-haplotype model - a decisive call forbids BOTH opposing classes,
+    not just the same-class one):
 
     * ``trans`` iff (alt@v1 + ref@v2) AND (ref@v1 + alt@v2) templates each
-      reach ``min_support`` AND alt@both templates == 0 (the count is
-      always reported - a single alt@both molecule breaks the claim).
+      reach ``min_support`` AND alt@both AND ref@both templates == 0 (a
+      single alt@both or ref@both molecule implies a third haplotype -
+      contamination, mosaicism, or a miscall - and breaks the claim).
     * ``cis`` iff alt@both AND ref@both templates each reach
       ``min_support`` AND no trans-class template exists.
     * anything else - including zero spanning templates when the sites
@@ -334,7 +343,8 @@ def phase_from_reads(sam_iter: Iterable[str], v1, v2,
 
     if (counts["alt1_ref2"] >= min_support
             and counts["ref1_alt2"] >= min_support
-            and counts["alt_alt"] == 0):
+            and counts["alt_alt"] == 0
+            and counts["ref_ref"] == 0):
         relation = "trans"
     elif (counts["alt_alt"] >= min_support
             and counts["ref_ref"] >= min_support

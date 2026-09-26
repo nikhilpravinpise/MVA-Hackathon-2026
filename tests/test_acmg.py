@@ -140,15 +140,31 @@ def test_pm3_fires_in_trans_not_cis(tmp_path):
 
 
 def test_pm3_strong_when_both_pathogenic(tmp_path):
-    """Falsification: two established-P/LP alleles in trans must upgrade
-    PM3 to PM3_Strong (+4); a flat PM3 would under-score the pair."""
+    """Falsification: two ClinVar-established P/LP alleles in trans must
+    upgrade PM3 to PM3_Strong (+4); a flat PM3 would under-score the pair."""
     facts = _facts(tmp_path, [
-        _lof_var(pos=1_000_000),
+        _lof_var(pos=1_000_000, clin="pathogenic"),
         _lof_var(pos=1_004_000, clin="pathogenic"),
     ])
     res = acmg.evaluate_pair(facts, mechanism="recessive",
                              in_trans="trans")
     assert all("PM3_Strong" in _codes(r) for r in res["variants"])
+
+
+def test_pm3_not_strong_when_partner_only_predicted_lof(tmp_path):
+    """Falsification: PM3_Strong (+4, heaviest after PVS1) must require
+    BOTH partners to be ClinVar-established P/LP - a partner that is only
+    predicted-LoF (no ClinVar assertion) must cap the pair at plain PM3
+    (+2), never silently upgrade to PM3_Strong on in-silico evidence
+    alone."""
+    facts = _facts(tmp_path, [
+        _lof_var(pos=1_000_000),                       # predicted LoF only
+        _lof_var(pos=1_004_000, clin="pathogenic"),    # ClinVar P/LP
+    ])
+    res = acmg.evaluate_pair(facts, mechanism="recessive",
+                             in_trans="trans")
+    assert all("PM3" in _codes(r) for r in res["variants"])
+    assert not any("PM3_Strong" in _codes(r) for r in res["variants"])
 
 
 def test_pp4_phenotype_threshold(tmp_path):

@@ -25,6 +25,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
 from src.config import config_hash  # noqa: E402
+from src.vcf import to_submission_chrom  # noqa: E402
 
 TEMPLATE = REPO / "docs" / "report_template.md"
 
@@ -66,8 +67,8 @@ def submission_summary(result: dict, truth: dict | None) -> str:
                 "answer is a **no-call** (see negative-control doctrine).")
     top = em[0]
     vs = " + ".join(
-        f"chr{v['chrom'].lstrip('chrCHR') if not v['chrom'].startswith('chr') else v['chrom']}:{v['pos']} "
-        f"{v['ref']}>{v['alt']}" for v in top["variants"])
+        f"{to_submission_chrom(v['chrom'])}:{v['pos']} {v['ref']}>{v['alt']}"
+        for v in top["variants"])
     lines = [
         f"- **Primary call:** `{top['gene']}` ({top['model']}) - {vs}",
         f"- Score {top['score']:.3f} (damage {top['variant_damage']:.2f} / "
@@ -226,12 +227,30 @@ def phasing_section(ph: dict | None) -> str:
     return "\n".join(lines)
 
 
+def _adversarial_fixture_count() -> int | None:
+    """Count the mutation-battery fixtures directly from
+    tests/test_adversarial.py (MUTATIONS + NOOP_MUTATIONS) rather than a
+    hand-typed number - GATE 6 forbids hand-typed stats in the report."""
+    try:
+        tests_dir = REPO / "tests"
+        if str(tests_dir) not in sys.path:
+            sys.path.insert(0, str(tests_dir))
+        import test_adversarial as ta
+        return len(ta.MUTATIONS) + len(ta.NOOP_MUTATIONS)
+    except Exception:
+        return None
+
+
 def runtime_section(runlog: dict | None, prov: dict) -> str:
     rt = prov.get("runtime_sec")
+    n_fix = _adversarial_fixture_count()
+    battery_label = (f"Test battery ({n_fix}-fixture oracle mutation "
+                     "battery + funnel + e2e)" if n_fix is not None
+                     else "Test battery (fixture count unavailable)")
     lines = [
         "| Job | Where | Time | Cost |", "|---|---|---|---|",
         f"| Arm-B funnel (this run) | local | {rt}s | $0 |",
-        "| Test battery (57-fixture oracle + funnel + e2e) | local | seconds | $0 |",
+        f"| {battery_label} | local | not measured | $0 |",
     ]
     if runlog:
         for r in runlog.get("entries", []):
@@ -293,6 +312,9 @@ def main(argv=None) -> int:
     eda = _j(args.eda)
     runlog = _j(args.runlog)
     prov = result.get("provenance", {})
+    n_fix = _adversarial_fixture_count()
+    fixture_phrase = (f"{n_fix} adversarial fixtures" if n_fix is not None
+                      else "the adversarial fixture battery")
 
     emitted = [h for h in result["ranked"] if h.get("emitted")]
     spike_line = (
@@ -358,8 +380,8 @@ def main(argv=None) -> int:
             "v3.3 scan handles secondary findings; the submission writer "
             "satisfies the scorer's byte-level contract (UTF-8 no BOM, "
             "chr-prefix, <=10 rows, strictly decreasing epcr), verified "
-            "against a vendored copy of the official scorer on 57+ "
-            "adversarial fixtures including a mutation audit. Strengths: "
+            "against a vendored copy of the official scorer on "
+            f"{fixture_phrase} including a mutation audit. Strengths: "
             "auditable stages, frozen config, honest negative controls, "
             "reproducible numbers. Limitations: epcr is a ranking artifact, "
             "not a calibrated probability; phenotype prior depends on the "

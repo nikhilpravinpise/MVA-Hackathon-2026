@@ -167,6 +167,7 @@ class VariantFacts:
     vaf: float | None = None
     pgt: str | None = None
     pid: str | None = None
+    alt_index: int = 1  # 1-based ALT ordinal this fact represents (multiallelic sites)
 
     qc_pass: bool = True
     qc_fails: tuple = ()
@@ -325,7 +326,7 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
                 qc_pass=qc_pass, qc_fails=qc_fails,
                 rare=rare, absent=absent, rarity_score=rscore,
                 damage_tier=tier, damage_votes=votes,
-                clinsig_pathogenic=cp, score=score))
+                clinsig_pathogenic=cp, score=score, alt_index=gt_idx))
     return out
 
 

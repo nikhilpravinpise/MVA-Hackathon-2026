@@ -297,25 +297,27 @@ def scan_facts(facts: list[VariantFacts], sf_list: dict, cfg: dict | None = None
 
 
 def findings_to_rows(findings: list[SFFinding]) -> list[dict]:
-    """Flatten findings to submission-row dicts for the CSV writer.
+    """Convert findings to hypothesis-shaped dicts for :func:`src.submit.build_rows`.
 
-    One dict per finding-variant: ``{'chrom','pos','ref','alt',
-    'finding_type':'secondary','note'}`` with chrom normalized to the
-    scorer's 'chr'-prefixed convention. A >=2-variant finding (AR carrier
-    pair / XL het pair) yields >=2 dicts sharing gene+note; the writer may
-    pack the two into a single CSV row's chrom_1/chrom_2 slots or emit
-    them as separate secondary rows. epcr is assigned downstream
-    (secondary_epcr_cap keeps them below every primary row).
+    One dict per finding: ``{'gene', 'model', 'notes',
+    'variants': [{'chrom','pos','ref','alt'}, ...]}`` - the same shape
+    ``build_rows``/``_hypothesis_row`` expects for a pipeline ``ranked``
+    entry, with chrom normalized to the scorer's 'chr'-prefixed convention.
+    A >=2-variant finding (AR carrier pair / XL het pair) keeps both
+    variants in one row, filling ``chrom_2``/``pos_2``/etc. epcr is left
+    unset here; ``build_rows`` assigns and clamps it to
+    ``secondary_epcr_cap`` for ``finding_type='secondary'`` rows.
     """
     rows: list[dict] = []
     for f in findings:
-        for v in f.variants:
-            rows.append({
-                "chrom": to_submission_chrom(v.chrom),
-                "pos": v.pos,
-                "ref": v.ref,
-                "alt": v.alt,
-                "finding_type": f.suggested_finding_type,
-                "note": f.note,
-            })
+        rows.append({
+            "gene": f.gene,
+            "model": "secondary",
+            "notes": f.note,
+            "variants": [
+                {"chrom": to_submission_chrom(v.chrom), "pos": v.pos,
+                 "ref": v.ref, "alt": v.alt}
+                for v in f.variants
+            ],
+        })
     return rows

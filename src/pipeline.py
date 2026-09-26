@@ -14,7 +14,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-from .config import config_hash, load_config
+from .config import config_dict_hash, load_config
 from .genes import Hypothesis, attach_scores, enumerate_hypotheses
 from .pheno import (InformationContent, OboOntology, best_match_average,
                     gene_disease_map, gene_hpo_terms, load_hpoa)
@@ -188,7 +188,7 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     result = {
         "provenance": {
             "vcf": str(vcf_path), "sample": sample,
-            "config_sha256": config_hash(cfg_path),
+            "config_sha256": config_dict_hash(cfg),
             "drops": sorted(drops),
             "runtime_sec": round(time.time() - t0, 3),
             "corpus": {"obo": str(obo_path), "hpoa": str(hpoa_path),

@@ -24,8 +24,11 @@ Criteria implemented (deliberately narrow, defensible):
   ClinVar assertion at all.
 * PM3 (+2) / PM3_Strong (+4) - pair level only (evaluate_pair): recessive
   mechanism + in_trans == 'trans' + the OTHER allele established
-  pathogenic (clinsig_pathogenic or damage_tier 'lof'). PM3_Strong when
-  BOTH alleles are established P/LP. Awarded to the variant under
+  pathogenic (clinsig_pathogenic or damage_tier 'lof'). PM3_Strong fires
+  only when BOTH alleles are ClinVar-established P/LP; a predicted-LoF
+  partner (no ClinVar assertion) still earns the variant PM3 (moderate),
+  never PM3_Strong - the heaviest recessive criterion after PVS1 must not
+  rest on computational prediction alone. Awarded to the variant under
   evaluation whose partner is pathogenic (Richards usage: a novel allele
   earns PM3 in trans with a known-pathogenic one).
 * PP4 (+1, supporting) - pair level: pheno_score >= PP4_PHENO_MIN (0.6,
@@ -114,10 +117,19 @@ def _pred_votes(vf: VariantFacts) -> tuple[int, list[str]]:
 
 
 def _established_pathogenic(vf: VariantFacts) -> bool:
-    """'Established' pathogenic for PM3 partner checks: ClinVar P/LP or a
-    predicted-LoF allele (a LoF allele in a recessive gene is treated as
-    the canonical pathogenic partner per Richards/ClinGen PM3 usage)."""
+    """Partner qualifies AT ALL for PM3 (moderate): ClinVar P/LP, or a
+    predicted-LoF allele (a LoF allele in a recessive gene is a plausible
+    pathogenic partner per Richards/ClinGen PM3 usage) - but see
+    :func:`_clinically_established` for the stricter bar PM3_Strong needs."""
     return vf.clinsig_pathogenic or vf.damage_tier == "lof"
+
+
+def _clinically_established(vf: VariantFacts) -> bool:
+    """'Established' pathogenic in the clinical-curation sense Richards2015
+    PM3_Strong requires: a ClinVar P/LP assertion, NOT a bare in-silico LoF
+    call. PM3_Strong (+4, the heaviest criterion after PVS1) must not be
+    awarded on computational prediction alone."""
+    return vf.clinsig_pathogenic
 
 
 def _finish(res: dict) -> dict:
@@ -209,10 +221,11 @@ def evaluate_pair(h1_variants: list[VariantFacts] | tuple,
 
     * PM3/PM3_Strong - recessive mechanism AND in_trans=='trans' AND the
       partner allele is established pathogenic. Awarded per variant whose
-      partner qualifies; PM3_Strong (+4) replaces PM3 when BOTH alleles
-      are established P/LP. cis or unknown phase -> never fires (the
-      whole point of the phasing gate; falsification: a cis pair must not
-      show PM3).
+      partner qualifies; PM3_Strong (+4) replaces PM3 only when BOTH
+      alleles are ClinVar-established P/LP - a predicted-LoF-only partner
+      keeps the variant at PM3 (moderate). cis or unknown phase -> never
+      fires (the whole point of the phasing gate; falsification: a cis
+      pair must not show PM3).
     * PP4 - pheno_score >= 0.6 (PP4_PHENO_MIN): the proband's HPO set is
       highly specific to the gene's disease. Pair-level, added once.
 
@@ -230,22 +243,33 @@ def evaluate_pair(h1_variants: list[VariantFacts] | tuple,
     caveats: list[str] = []
 
     # --- PM3: only meaningful biallelic, only provable in trans --------
-    both_established = (len(variants) >= 2
-                        and all(_established_pathogenic(v) for v in variants))
+    # PM3_Strong requires BOTH alleles ClinVar-established P/LP - a
+    # predicted-LoF partner is not curated evidence and must not carry the
+    # heaviest recessive criterion after PVS1.
+    both_clinically_established = (
+        len(variants) >= 2
+        and all(_clinically_established(v) for v in variants))
     if mechanism == "recessive" and in_trans == "trans":
         for i, res in enumerate(results):
             partners = [v for j, v in enumerate(variants) if j != i]
             if partners and all(_established_pathogenic(p)
                                 for p in partners):
-                if both_established:
+                if both_clinically_established:
                     res["criteria"].append(_crit(
                         "PM3_Strong", "strong",
-                        "both alleles established P/LP, observed in "
-                        "trans"))
+                        "both alleles established P/LP (ClinVar), observed "
+                        "in trans"))
+                elif all(_clinically_established(p) for p in partners):
+                    res["criteria"].append(_crit(
+                        "PM3", "moderate",
+                        "in trans with a ClinVar-established pathogenic "
+                        "allele"))
                 else:
                     res["criteria"].append(_crit(
                         "PM3", "moderate",
-                        "in trans with an established pathogenic allele"))
+                        "in trans with a predicted-LoF allele (not "
+                        "ClinVar-confirmed) - PM3 applied, PM3_Strong "
+                        "withheld pending clinical curation"))
                 _finish(res)
     elif mechanism == "recessive" and in_trans != "trans":
         caveats.append(

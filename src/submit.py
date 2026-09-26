@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import csv
 import io
+import math
 import re
 import sys
 import tempfile
@@ -161,8 +162,10 @@ def build_rows(ranked: list[dict], sf_rows: list[dict] | None = None,
     prev = None
     for r in rows:
         e = float(r["epcr"])
-        if not (0.0 < e <= 1.0):
-            e = min(max(e, EPSILON), 1.0)
+        if not math.isfinite(e) or not (0.0 < e <= 1.0):
+            raise ValueError(
+                f"epcr {e!r} out of range (0,1] for row {r!r} - an "
+                "upstream ranking bug, not a value to silently clamp")
         if prev is not None and e >= prev:
             e = prev - EPSILON
             if e <= 0.0:

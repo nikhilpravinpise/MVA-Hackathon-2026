@@ -422,8 +422,10 @@ def main(argv=None) -> int:
     (out_dir / "fastqc_summary.md").write_text(
         _render_summary(report), encoding="utf-8", newline="")
 
+    all_pass = True
     if stats is not None:
         comp = report["comparison"]
+        all_pass = comp["all_pass"]
         print(f"mode={report['mode']} all_pass={comp['all_pass']} "
               f"measured={comp['n_measured']}")
         for m, c in comp["checks"].items():
@@ -433,7 +435,7 @@ def main(argv=None) -> int:
         print(report["note"])
     print(f"wrote {out_dir / 'fastqc_report.json'} and "
           f"{out_dir / 'fastqc_summary.md'}")
-    return 0
+    return 0 if all_pass else 1
 
 
 if __name__ == "__main__":

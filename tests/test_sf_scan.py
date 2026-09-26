@@ -7,14 +7,13 @@ config/acmg_sf_v33.json, never from any leaked source.
 """
 from __future__ import annotations
 
-import conftest
 import pytest
 
 from src.config import load_config
 from src.synth import SVar, Ann, write_vcf, _af_ann
 from src.triage import extract_facts
 from src.vcf import VcfReader
-from src import sf_scan
+from src import sf_scan, submit
 
 
 def _facts(tmp_path, variants):
@@ -230,9 +229,13 @@ def test_notes_ascii_and_length(tmp_path, sf_list):
 
 def test_gate_funnel_to_secondary_rows(tmp_path, sf_list):
     """Falsification (GATE 4): end-to-end - synthetic VCF -> extract_facts
-    -> scan_facts -> findings_to_rows must yield writer-consumable
-    secondary rows ('chr'-prefixed coords, finding_type='secondary') that
-    the vendored scorer parses without error."""
+    -> scan_facts -> findings_to_rows -> submit.build_rows must yield a
+    real, byte-exact submission with finding_type='secondary' rows that
+    the vendored scorer parses without error. Exercises the REAL
+    findings_to_rows -> build_rows integration path (not a hand-built
+    stand-in) - the exact seam a hypothesis/flat-dict shape mismatch used
+    to break, silently dropping the whole submission.csv whenever any
+    secondary finding existed."""
     facts = _facts(tmp_path, [
         _plp("7", 20_000_000, "BRCA2"),
         _plp("12", 52_000_000, "ATP7B"),
@@ -240,26 +243,31 @@ def test_gate_funnel_to_secondary_rows(tmp_path, sf_list):
         _plp("7", 30_000_000, "NOTSF"),          # must not appear
     ])
     findings = sf_scan.scan_facts(facts, sf_list, load_config())
-    rows = sf_scan.findings_to_rows(findings)
+    sf_rows = sf_scan.findings_to_rows(findings)
 
-    assert rows, "no secondary rows produced"
-    for r in rows:
-        assert set(r) == {"chrom", "pos", "ref", "alt", "finding_type",
-                          "note"}
-        assert r["chrom"].startswith("chr")
-        assert r["finding_type"] == "secondary"
-        assert r["note"].isascii() and len(r["note"]) < 80
-    # 1 BRCA2 variant + 2 ATP7B pair variants = 3 rows
-    assert len(rows) == 3
-    assert {r["pos"] for r in rows} == {20_000_000, 52_000_000, 52_050_000}
+    assert sf_rows, "no secondary findings produced"
+    for r in sf_rows:
+        assert set(r) == {"gene", "model", "notes", "variants"}
+        assert r["model"] == "secondary"
+        assert r["notes"].isascii() and len(r["notes"]) < 80
+        for v in r["variants"]:
+            assert v["chrom"].startswith("chr")
+    # 1 BRCA2 finding (1 variant) + 1 ATP7B finding (2-variant carrier pair)
+    assert len(sf_rows) == 2
+    all_pos = {v["pos"] for r in sf_rows for v in r["variants"]}
+    assert all_pos == {20_000_000, 52_000_000, 52_050_000}
 
-    # Emulate the writer: secondary rows at capped epcr, scored by the
-    # vendored oracle - must parse cleanly (finding_type validated).
-    csv_rows = [conftest.row(c1=r["chrom"], p1=str(r["pos"]), r1=r["ref"],
-                             a1=r["alt"], epcr="0.2", ft="secondary",
-                             notes=r["note"]) for r in rows]
-    res = conftest.score_rows(csv_rows)
-    assert res is not None  # parse + score succeeded; rows contract-valid
+    # The real integration path: submit.build_rows/submission_bytes must
+    # accept these rows directly - no adapter, no crash - and mark them
+    # finding_type='secondary' at or below the secondary epcr cap.
+    cfg = load_config()
+    csv_rows = submit.build_rows([], sf_rows=sf_rows, cfg=cfg)
+    assert csv_rows, "build_rows dropped every secondary row"
+    assert all(r["finding_type"] == "secondary" for r in csv_rows)
+    cap = cfg["submission"]["secondary_epcr_cap"]
+    assert all(float(r["epcr"]) <= cap for r in csv_rows)
+    data = submit.submission_bytes(csv_rows)   # must parse/validate cleanly
+    assert data.startswith(b"proband_id,")
 
 
 def test_sf_list_loader_shape(sf_list):

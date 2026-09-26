@@ -64,16 +64,16 @@ def determine_phase(v1: VariantFacts, v2: VariantFacts) -> PhaseCall:
     """Resolve cis/trans between two variants from PGT/PID.
 
     Only same-chromosome, same-phase-set pairs are decidable without extra
-    data. ``alt_index`` for each site is taken as 1 (biallelic); for
-    multi-allelic records the caller should pass per-alt facts - PGT allele
-    indices refer to the site's ALT ordering, and compound-het candidates are
-    essentially always biallelic in practice.
+    data. Each site's ``alt_index`` (1-based ALT ordinal, see
+    :class:`src.triage.VariantFacts`) is read from the fact itself, so a
+    multi-allelic site's second/third ALT resolves against the matching
+    PGT allele index rather than assuming index 1 for every site.
     """
     if v1.chrom != v2.chrom:
         return PhaseCall("unknown", "unphased", "different contigs")
 
-    h1 = _alt_haplotypes(v1.pgt)
-    h2 = _alt_haplotypes(v2.pgt)
+    h1 = _alt_haplotypes(v1.pgt, v1.alt_index)
+    h2 = _alt_haplotypes(v2.pgt, v2.alt_index)
 
     if v1.pid and v2.pid and v1.pid == v2.pid and h1 is not None and h2 is not None:
         if not h1 or not h2:
@@ -93,18 +93,3 @@ def determine_phase(v1: VariantFacts, v2: VariantFacts) -> PhaseCall:
 
     return PhaseCall("unknown", "unphased",
                      "missing PGT/PID - unphased genotypes")
-
-
-def chain_phase_sets(facts: list[VariantFacts]) -> dict[str, list[VariantFacts]]:
-    """Group eligible hets by (chrom, pid) - the phase blocks a pair can be
-    resolved within. Sites with pid=None form singleton pseudo-blocks keyed
-    by position so callers can still find 'unphased' neighbours."""
-    blocks: dict[str, list[VariantFacts]] = {}
-    for vf in facts:
-        if not vf.is_het:
-            continue
-        key = f"{vf.chrom}:{vf.pid}" if vf.pid else f"{vf.chrom}:__unphased__:{vf.pos}"
-        blocks.setdefault(key, []).append(vf)
-    for v in blocks.values():
-        v.sort(key=lambda f: f.pos)
-    return blocks

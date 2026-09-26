@@ -40,14 +40,16 @@ run_phasing = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(run_phasing)
 
 
-def _vf(pgt=None, pid=None, pos=1000, ref="A", alt="T", chrom="7"):
+def _vf(pgt=None, pid=None, pos=1000, ref="A", alt="T", chrom="7",
+        alt_index=1):
     """Minimal het VariantFacts for determine_phase (only chrom/pos/ref/
-    alt/pgt/pid/vid are read)."""
+    alt/pgt/pid/alt_index/vid are read)."""
     return VariantFacts(
         chrom=chrom, pos=pos, ref=ref, alt=alt, gene="GENE",
         gene_id="ENSG0X", transcript="ENST0X",
         consequence="missense_variant", impact="MODERATE",
-        biotype="protein_coding", is_het=True, pgt=pgt, pid=pid)
+        biotype="protein_coding", is_het=True, pgt=pgt, pid=pid,
+        alt_index=alt_index)
 
 
 class TestPgtPidPhase:
@@ -123,6 +125,18 @@ class TestPgtPidPhase:
             _vf("0|1", "PS1", pos=2000, ref="G", alt="C", chrom="12"))
         assert c.relation == "unknown"
         assert c.mechanism == "unphased"
+
+    def test_multiallelic_second_alt_uses_its_own_index(self):
+        """Falsification: a multi-allelic site's second ALT must resolve
+        against its OWN alt_index, not a hardcoded 1 - a REF=A ALT=T,C
+        site with GT=1/2, PGT=1|2 puts T (alt_index=1) on hap0 and C
+        (alt_index=2) on hap1: genuinely trans. Hardcoding alt_index=1 for
+        the C fact would check hap0 for value 1 (found -> {0}), making it
+        look like it shares T's haplotype -> a false 'cis' call."""
+        t_fact = _vf("1|2", "PS1", pos=1000, ref="A", alt="T", alt_index=1)
+        c_fact = _vf("1|2", "PS1", pos=1000, ref="A", alt="C", alt_index=2)
+        c = phasing.determine_phase(t_fact, c_fact)
+        assert c.relation == "trans"
 
 
 class TestSamParsing:
@@ -346,6 +360,52 @@ class TestRunPhasingCli:
         assert rep["read_phase"]["counts"]["alt_alt"] == 0
         assert rep["agreement"] == "concordant"
         assert rep["consensus_relation"] == "trans"
+
+    def test_cli_with_whatshap_concordant(self, tmp_path):
+        """Falsification: a third, algorithmically independent evidence
+        line (WhatsHap-style phased VCF) that agrees with PGT/PID must be
+        surfaced and folded into 'concordant' - fails if the CLI ignores
+        --whatshap-vcf or drops the evidence line from the report."""
+        vcf = self._write_vcf(tmp_path)
+        whatshap_vcf = synth.write_vcf(
+            tmp_path / "whatshap.vcf",
+            [synth.SVar("7", 1000, "A", "T", gt="0/1", pgt="1|0",
+                        pid="WHPS1"),
+             synth.SVar("7", 1120, "G", "C", gt="0/1", pgt="0|1",
+                        pid="WHPS1")],
+            contigs={"7": 1_000_000})
+        out = tmp_path / "out"
+        rc = run_phasing.main(["--vcf", str(vcf),
+                               "--site1", "7:1000", "--site2", "7:1120",
+                               "--whatshap-vcf", str(whatshap_vcf),
+                               "--out", str(out)])
+        assert rc == 0
+        rep = json.loads((out / "phasing_report.json").read_text())
+        assert rep["vcf_phase"]["relation"] == "trans"
+        assert rep["whatshap_phase"]["relation"] == "trans"
+        assert rep["agreement"] == "concordant"
+        assert rep["consensus_relation"] == "trans"
+
+    def test_cli_mito_mt_spelling_found(self, tmp_path):
+        """Falsification: a VCF spelling the mito contig 'MT' must still
+        be found when the operator passes --site chrM:pos (the scorer's
+        chr-prefixed convention collapses both spellings to 'chrM') -
+        fails if the lookup only tries the literal 'M' contig and drops
+        mito sites with a spurious 'not in VCF' error."""
+        vcf = synth.write_vcf(
+            tmp_path / "mito.vcf",
+            [synth.SVar("MT", 500, "A", "T", gt="0/1", pgt="1|0",
+                        pid="PSM"),
+             synth.SVar("MT", 600, "G", "C", gt="0/1", pgt="0|1",
+                        pid="PSM")],
+            contigs={"MT": 16_569})
+        out = tmp_path / "out"
+        rc = run_phasing.main(["--vcf", str(vcf),
+                               "--site1", "chrM:500", "--site2", "chrM:600",
+                               "--out", str(out)])
+        assert rc == 0
+        rep = json.loads((out / "phasing_report.json").read_text())
+        assert rep["vcf_phase"]["relation"] == "trans"
 
     def test_cli_bam_requires_sam_export(self, tmp_path, capsys):
         """Falsification: --bam must never be silently accepted - the
