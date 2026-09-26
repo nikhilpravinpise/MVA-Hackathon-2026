@@ -213,6 +213,9 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
             "config_file_sha256": config_hash() if cfg_path is None
                                    else "n/a (dict-supplied)",
             "config_sha256": config_dict_hash(cfg),
+            # the effective rarity ceiling (a CLI --af-max override lands in
+            # the dict hash but would otherwise be invisible in the artifact)
+            "af_max": cfg.get("rarity", {}).get("af_max"),
             "drops": sorted(drops),
             "runtime_sec": round(time.time() - t0, 3),
             "corpus": {"obo": str(obo_path), "hpoa": str(hpoa_path),
