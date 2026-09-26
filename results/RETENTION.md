@@ -41,3 +41,4 @@ DELETE within 30 days of close (patient genotype-scale derived data):
 | results/eda_spike/ | EDA/QC report on the synthetic VCF | KEEP | Aggregate stats only |
 | results/arm_concordance.json | Arm A(Exomiser)/B(funnel) top-20 overlap + truth rank, real-spike | KEEP | Plan section-5 cross-method metric: PAH rank 1 both arms |
 | results/arm_concordance_spike.json | Same metric on the synthetic case | KEEP | Arm A absent for fake gene - no false confidence expected |
+| results/arm_concordance_control.json | Same metric on the negative control | KEEP | Both arms silent - Arm A max score 0.0003, Arm B 0 emitted |
