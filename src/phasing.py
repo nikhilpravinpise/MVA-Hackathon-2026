@@ -39,7 +39,7 @@ from .triage import VariantFacts
 class PhaseCall:
     """cis/trans verdict for a pair of variants."""
     relation: str           # 'trans' | 'cis' | 'unknown'
-    mechanism: str          # 'pgt_pid_same_set' | 'pgt_pid_chain' | 'unphased'
+    mechanism: str          # 'pgt_pid_same_set' | 'unphased'
     detail: str = ""
 
 

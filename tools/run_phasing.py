@@ -5,7 +5,8 @@ Combines up to three phasing evidence lines from plan.md Phase 3 / GATE 3:
 1. PGT/PID read-backed phasing already in the VCF (src/phasing.determine_phase
    on the sites' VariantFacts),
 2. read-level evidence from a SAM slice (src/reads.phase_from_reads):
-   in-trans = no molecule carries both alt alleles, and
+   in-trans = no molecule carries both alt alleles and no molecule carries
+   both ref alleles, and
 3. (optional, ``--whatshap-vcf``) an externally-run WhatsHap-phased VCF -
    an algorithmically independent haplotype assembly, satisfying GATE 3's
    ">=2 independent phasing evidences" even when lines 1-2 both ultimately

@@ -9,9 +9,9 @@ both sites observes one haplotype.
 
     IN TRANS - haplotype A carries alt@v1 + ref@v2, haplotype B carries
                ref@v1 + alt@v2. NO molecule in the sample carries both
-               alt alleles, so observing many spanning templates of the
-               two trans classes and ZERO alt@both carriers is positive
-               in-trans evidence.
+               alt alleles or both ref alleles, so observing many spanning
+               templates of the two trans classes and ZERO alt@both/ref@both
+               carriers is positive in-trans evidence.
     IN CIS   - one haplotype carries alt@v1 + alt@v2, the other carries
                ref@v1 + ref@v2. Only alt@both and ref@both templates
                exist.

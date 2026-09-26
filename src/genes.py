@@ -138,7 +138,9 @@ def attach_scores(hyps: list[Hypothesis],
         if h.gene in noise_genes:
             # Documented negative-control gene list (config
             # negative_control.noise_genes): genes famous for spurious
-            # rare-LoF hits get no recessive-model credit either.
+            # rare-LoF hits get no inheritance-model credit at all,
+            # regardless of which model (compound_het/hom_alt/dominant/
+            # x_linked) the hypothesis is built from.
             h.inheritance_score = 0.0
             h.evidence["noise_gene"] = True
         h.score = (w_d * h.variant_damage + w_p * h.pheno_score

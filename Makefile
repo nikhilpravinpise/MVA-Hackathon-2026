@@ -2,7 +2,7 @@
 # Python lives in .venv; override with PY=python3 if needed.
 PY := .venv/Scripts/python.exe
 
-.PHONY: test gate refs spike control report track1 citations audit clean
+.PHONY: test gate refs spike control report track1 citations audit all
 
 ## full test suite (skips slow / missing-corpus tests gracefully)
 test:
@@ -50,6 +50,10 @@ audit:
 citations:
 	$(PY) tools/check_citations.py
 
-## everything: cases -> track1 -> sensitivity -> report -> tests
+## everything this target chain builds: cases -> track1 -> report -> tests.
+## Sensitivity grid (results/sensitivity.json) and the real-spike external
+## validation (env/real_spike/) are not produced by any target here - run
+## tools/run_sensitivity.py / tools/build_real_spike.py first, or those
+## report sections stay "Pending dataset access".
 all: spike control track1 report test
 	@echo "done: see docs/report.md and results/t1_spike/run_summary.json"

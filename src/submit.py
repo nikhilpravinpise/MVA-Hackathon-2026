@@ -135,7 +135,10 @@ def build_rows(ranked: list[dict], sf_rows: list[dict] | None = None,
     * Total rows capped at ``submission.max_rows`` (10) - overflow drops
       rows from the bottom, i.e. secondary findings first.
     * epcr is then forced strictly decreasing top-to-bottom (ties are
-      nudged down by :data:`EPSILON`, clamped > 0) and into ``(0, 1]``.
+      nudged down by :data:`EPSILON`, clamped > 0); any row whose epcr is
+      non-finite or outside ``(0, 1]`` raises ``ValueError`` instead of
+      being silently clamped - that range violation is an upstream ranking
+      bug, not a value to paper over.
 
     Falsification: if emitted ordering, the secondary cap, the 10-row cap,
     or strictly-decreasing epcr are violated, ``test_build_rows_ordering``
