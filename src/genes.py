@@ -105,7 +105,9 @@ def enumerate_hypotheses(facts: list[VariantFacts], cfg: dict,
                                        variants=(h,)))
         if "x_linked" in models:
             for h in hets + homs:
-                if h.chrom.upper() == "X":
+                # accept both 'X' and 'chrX' contig spellings - a
+                # chr-prefixed VCF must not silently lose the whole model
+                if h.chrom.upper().removeprefix("CHR") == "X":
                     hyps.append(Hypothesis(gene=gene, model="x_linked",
                                            variants=(h,)))
     return hyps

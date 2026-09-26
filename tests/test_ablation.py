@@ -69,3 +69,47 @@ def test_hpo_ablation_zeroes_pheno(spike):
     spk = [h["score"] for h in res["ranked"]
            if h["gene"] in truth_genes and h["model"] == "compound_het"]
     assert spk and max(spk) >= max(ttn_scores or [0])
+
+
+@pytest.mark.gate
+def test_phasing_drop_restores_unphased_score(tmp_path):
+    """Falsification: --drop phasing on a CIS pair must produce the score
+    a truly-unphased run gives (the inheritance bonus restored), not the
+    cis-penalized score - before the fix the ablated run kept the
+    zeroed inheritance_score, overstating phasing's contribution."""
+    from src.config import load_config
+
+    ann1 = synth.Ann("T", "stop_gained", "HIGH", "CISG", "G1",
+                     extra={"CLIN_SIG": "pathogenic"})
+    ann2 = synth.Ann("C", "stop_gained", "HIGH", "CISG", "G1",
+                     extra={"CLIN_SIG": "pathogenic"})
+    cis_vcf = synth.write_vcf(tmp_path / "cis.vcf", [
+        synth.SVar("7", 1000, "A", "T", gt="0/1", pgt="1|0", pid="PS1",
+                   ad=(20, 20), dp=40, gq=99, anns=[ann1]),
+        synth.SVar("7", 2000, "G", "C", gt="0/1", pgt="1|0", pid="PS1",
+                   ad=(20, 20), dp=40, gq=99, anns=[ann2])])
+    unphased_vcf = synth.write_vcf(tmp_path / "unph.vcf", [
+        synth.SVar("7", 1000, "A", "T", gt="0/1",
+                   ad=(20, 20), dp=40, gq=99, anns=[ann1]),
+        synth.SVar("7", 2000, "G", "C", gt="0/1",
+                   ad=(20, 20), dp=40, gq=99, anns=[ann2])])
+    cfg = load_config()
+
+    base = run_pipeline(str(cis_vcf), [], cfg=cfg)
+    cis = next(h for h in base["ranked"]
+               if h["gene"] == "CISG" and h["model"] == "compound_het")
+    assert cis["in_trans"] == "cis" and cis["inheritance_score"] == 0.0
+
+    abl = run_pipeline(str(cis_vcf), [], cfg=cfg,
+                       drops=frozenset({"phasing"}))
+    ab = next(h for h in abl["ranked"]
+              if h["gene"] == "CISG" and h["model"] == "compound_het")
+
+    unp = run_pipeline(str(unphased_vcf), [], cfg=cfg)
+    un = next(h for h in unp["ranked"]
+              if h["gene"] == "CISG" and h["model"] == "compound_het")
+
+    assert ab["in_trans"] == "unknown"
+    assert ab["score"] == un["score"], \
+        "ablated cis pair must score exactly like a truly-unphased pair"
+    assert ab["inheritance_score"] == un["inheritance_score"]

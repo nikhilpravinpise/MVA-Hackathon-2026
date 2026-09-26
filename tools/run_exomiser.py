@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -101,13 +102,22 @@ def main(argv=None) -> int:
     hpo_path = Path(args.hpo_terms)
     hpo = list(args.hpo)
     if hpo_path.exists():
-        hpo = list(dict.fromkeys(load_hpo(hpo_path) + hpo))
+        try:
+            hpo = list(dict.fromkeys(load_hpo(hpo_path) + hpo))
+        except (json.JSONDecodeError, KeyError, TypeError) as e:
+            raise SystemExit(
+                f"{hpo_path}: cannot parse HPO JSON ({e}) - refusing to "
+                "emit an analysis YAML from a corrupt term list")
     elif not hpo:
         raise SystemExit(f"no HPO terms: {hpo_path} missing and no --hpo given "
                          "(variant-only run is not the Arm-A contract)")
     else:
         print(f"note: {hpo_path} not found; using --hpo terms only",
               file=sys.stderr)
+    bad = [t for t in hpo if not re.fullmatch(r"HP:\d{7}", t)]
+    if bad:
+        raise SystemExit(f"invalid HPO ids {bad} - an unquoted value would "
+                         "break the generated YAML (or score nonsense)")
 
     out = Path(args.out)
     prefix = str(out.parent / args.proband).replace("\\", "/")
@@ -121,7 +131,8 @@ def main(argv=None) -> int:
     print("Run command:")
     print(f"  {cmd}")
     print("\nPrereqs: exomiser data dir "
-          f"{args.data_dir}/{DEFAULT_DATA_VERSION}_hg38 must exist "
+          f"{args.data_dir}/{DEFAULT_DATA_VERSION}_"
+          f"{args.assembly.lower()} must exist "
           "(~50-100 GB download; see module docstring).")
     if args.dry_run:
         return 0

@@ -298,8 +298,16 @@ def extract_facts(rec: VcfRecord, sample: str, cfg: dict) -> list[VariantFacts]:
             g = _genotype_fields(gt_obj, gt_idx)
             # restrict het/hom flags to THIS alt index in multi-allelic sites
             if gt_obj is not None and gt_obj.called:
-                g["is_het"] = gt_idx in gt_obj.gt and len(set(gt_obj.gt)) >= 2
-                g["is_hom_alt"] = all(x == gt_idx for x in gt_obj.gt)
+                if len(gt_obj.gt) == 1:
+                    # haploid call (male chrX convention '1'): hemizygous -
+                    # model as homozygous-equivalent or the allele is
+                    # invisible to every inheritance model
+                    g["is_het"] = False
+                    g["is_hom_alt"] = gt_obj.gt[0] == gt_idx
+                else:
+                    g["is_het"] = (gt_idx in gt_obj.gt
+                                   and len(set(gt_obj.gt)) >= 2)
+                    g["is_hom_alt"] = all(x == gt_idx for x in gt_obj.gt)
             rare, absent, rscore, popmax = _rarity(ann, rar_cfg)
             tier, votes, _vd = _damage_tier(ann, con_cfg)
             qc_pass, qc_fails = _qc(g["is_het"], g["is_hom_alt"],

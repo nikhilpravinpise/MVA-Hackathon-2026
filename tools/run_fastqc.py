@@ -51,8 +51,8 @@ EXPECTED_RUN = {
 _GENOME_SIZE = 3.1e9
 
 _FASTQ_RE = re.compile(r"\.(fastq|fq)(\.gz)?$", re.IGNORECASE)
-_R1_RE = re.compile(r"(_R1(_|\.)|_1\.f(ast)?q)", re.IGNORECASE)
-_R2_RE = re.compile(r"(_R2(_|\.)|_2\.f(ast)?q)", re.IGNORECASE)
+_R1_RE = re.compile(r"([_.]r1[_.]|_1\.f(ast)?q)", re.IGNORECASE)
+_R2_RE = re.compile(r"([_.]r2[_.]|_2\.f(ast)?q)", re.IGNORECASE)
 
 
 # ---------------------------------------------------------------------------
@@ -124,9 +124,12 @@ def parse_fastq_stats(path) -> dict:
     sequence and quality strings to wrap across lines, so the parser reads
     sequence lines up to the '+' marker then quality lines until the quality
     length matches the sequence. It cannot measure duplication - that stays
-    ``missing`` for :func:`compare_to_expectations`.
+    ``missing`` for :func:`compare_to_expectations`. A quality block shorter
+    than its sequence (a truncated last record) is counted in
+    ``n_truncated``, not as a complete read.
     """
     n_reads = 0
+    n_truncated = 0
     total_bases = 0
     gc = acgt = 0
     q30 = qchars = 0
@@ -156,6 +159,11 @@ def parse_fastq_stats(path) -> dict:
                 for ch in qs:
                     if ch >= "?":  # phred+33 >= 30
                         q30 += 1
+            if qlen < len(seq):
+                # truncated tail record - count it separately rather than
+                # as a complete read (a cut file must not look healthy)
+                n_truncated += 1
+                break
             n_reads += 1
             total_bases += len(seq)
             for b in seq:
@@ -168,6 +176,7 @@ def parse_fastq_stats(path) -> dict:
         "source": "fastq_stream",
         "path": str(path),
         "n_reads": n_reads,
+        "n_truncated": n_truncated,
         "total_bases": total_bases,
         "mean_read_len": (total_bases / n_reads) if n_reads else None,
         "gc_fraction": (gc / acgt) if acgt else None,
@@ -296,6 +305,7 @@ def _aggregate_fastqs(paths: list[Path]) -> dict:
     """Stream every FASTQ and pool; rates weighted by per-file bases."""
     per = [parse_fastq_stats(p) for p in paths]
     n_reads = sum(s["n_reads"] for s in per)
+    n_trunc = sum(s.get("n_truncated") or 0 for s in per)
     bases = sum(s["total_bases"] for s in per)
 
     def wavg(key):
@@ -317,6 +327,7 @@ def _aggregate_fastqs(paths: list[Path]) -> dict:
         "n_files": len(paths),
         "files": [str(p) for p in paths],
         "n_reads": n_reads or None,
+        "n_truncated": n_trunc or None,
         "read_pairs": read_pairs,
         "total_bases": bases or None,
         "mean_read_len": (bases / n_reads) if n_reads else None,
@@ -401,7 +412,11 @@ def main(argv=None) -> int:
         stats = _aggregate_fastp(fastp_stats)
         report["mode"] = "fastp_json"
     elif fastqs:
-        stats = _aggregate_fastqs(fastqs)
+        try:
+            stats = _aggregate_fastqs(fastqs)
+        except ValueError as e:
+            print(f"ERROR: {e}", file=sys.stderr)
+            return 2
         report["mode"] = "fastq_stream"
     else:
         stats = None
@@ -426,6 +441,12 @@ def main(argv=None) -> int:
     if stats is not None:
         comp = report["comparison"]
         all_pass = comp["all_pass"]
+        if stats.get("n_truncated"):
+            # a truncated FASTQ (cut download) is not a healthy run
+            all_pass = False
+            comp["notes"].append(
+                f"{stats['n_truncated']} truncated record(s) - file cut "
+                "short; re-download")
         print(f"mode={report['mode']} all_pass={comp['all_pass']} "
               f"measured={comp['n_measured']}")
         for m, c in comp["checks"].items():

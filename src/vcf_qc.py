@@ -120,6 +120,7 @@ def compute_stats(vcf_path, sample: str | None = None) -> dict:
     n_qual_missing = 0
     qsum = 0.0
     n_csq_short = 0  # records whose CSQ block(s) have fewer fields than declared
+    n_csq_allele_unmatched = 0  # CSQ blocks whose Allele matches no record ALT
 
     try:
         for rec in reader.records(sample=sample):
@@ -166,6 +167,12 @@ def compute_stats(vcf_path, sample: str | None = None) -> dict:
                 if any(len(blk.split("|")) < n_declared
                        for blk in csq.split(",")):
                     n_csq_short += 1
+                for blk in csq.split(","):
+                    # A CSQ Allele matching no record ALT vanishes entirely
+                    # in triage (csq_for_alt) - a systemic annotation-format
+                    # break would silently lose every gene assignment
+                    if blk.split("|")[0] not in rec.alts:
+                        n_csq_allele_unmatched += 1
 
             sg = rec.samples.get(sample) if sample else None
             if sg is None or not sg.called:
@@ -218,6 +225,7 @@ def compute_stats(vcf_path, sample: str | None = None) -> dict:
         "genotypes": geno,
         "n_phased_gt": n_phased,
         "n_csq_field_short": n_csq_short,
+        "n_csq_allele_unmatched": n_csq_allele_unmatched,
     }
 
 

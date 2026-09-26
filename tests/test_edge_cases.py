@@ -358,3 +358,56 @@ class TestInfoAfTrap:
         assert f[0].absent is True       # INFO AF must not count as gnomAD
         assert f[0].rare is True
         assert f[0].rarity_score == pytest.approx(1.0)
+
+
+class TestXLinkedContigSpelling:
+    """Falsification: x_linked enumeration must accept both 'X' and 'chrX'
+    contig spellings - a chr-prefixed patient VCF silently loses the whole
+    X-linked model otherwise."""
+
+    def _x_vcf(self, tmp_path, chrom):
+        ann = synth.Ann("T", "stop_gained", "HIGH", "XGENE", "G1",
+                        extra={"CLIN_SIG": "pathogenic"})
+        return _write_raw(tmp_path, [
+            f"{chrom}\t100\t.\tA\tT\t60.0\tPASS\tCSQ=" + ann.to_csq()
+            + "\tGT:AD:DP:GQ\t0/1:20,20:40:99"])
+
+    def test_bare_x_enumerates(self, tmp_path):
+        f = _facts(self._x_vcf(tmp_path, "X"))
+        hyps = enumerate_hypotheses(f, CFG)
+        assert any(h.model == "x_linked" for h in hyps)
+
+    def test_chrx_enumerates(self, tmp_path):
+        f = _facts(self._x_vcf(tmp_path, "chrX"))
+        hyps = enumerate_hypotheses(f, CFG)
+        assert any(h.model == "x_linked" for h in hyps)
+
+
+class TestHaploidHemizygous:
+    """Falsification: a haploid ALT call (male chrX '1') must be modeled as
+    hemizygous (hom-equivalent) - before the fix is_het=False and
+    is_hom_alt=False (len<2) made the allele invisible to every model."""
+
+    def _x_hemi_vcf(self, tmp_path, chrom):
+        ann = synth.Ann("T", "stop_gained", "HIGH", "XGENE", "G1",
+                        extra={"CLIN_SIG": "pathogenic"})
+        return _write_raw(tmp_path, [
+            f"{chrom}\t100\t.\tA\tT\t60.0\tPASS\tCSQ=" + ann.to_csq()
+            + "\tGT\t1"])
+
+    def test_haploid_x_enumerates_xlinked(self, tmp_path):
+        f = _facts(self._x_hemi_vcf(tmp_path, "X"))
+        fact = next(x for x in f if x.gene == "XGENE")
+        assert not fact.is_het and fact.is_hom_alt
+        hyps = enumerate_hypotheses(f, CFG)
+        assert any(h.model == "x_linked" for h in hyps)
+
+    def test_haploid_ref_not_alt(self, tmp_path):
+        ann = synth.Ann("T", "stop_gained", "HIGH", "XGENE", "G1",
+                        extra={"CLIN_SIG": "pathogenic"})
+        vcf = _write_raw(tmp_path, [
+            "X\t100\t.\tA\tT\t60.0\tPASS\tCSQ=" + ann.to_csq()
+            + "\tGT\t0"])  # haploid ref
+        f = _facts(vcf)
+        fact = next(x for x in f if x.gene == "XGENE")
+        assert not fact.is_het and not fact.is_hom_alt
