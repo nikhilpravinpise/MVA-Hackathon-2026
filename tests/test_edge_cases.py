@@ -1169,6 +1169,16 @@ class TestNormalizeContigs:
                         "15\t100\n")
         assert 'ID="chr15"' in out and "chr15\t100" in out
 
+    def test_id_inside_quoted_value_not_rewritten(self, tmp_path):
+        """An 'ID=' inside a quoted attribute value (description text) is
+        NOT the contig identifier - rewriting it would leave the real ID
+        unchanged while corrupting the description."""
+        out = self._run(tmp_path,
+                        '##contig=<description="alt for ,ID=9 region",ID=12>\n'
+                        "12\t100\n")
+        assert "ID=chr12>" in out and ",ID=9 region" in out \
+            and "chr9" not in out
+
     def test_gzip_input_rejected(self, tmp_path):
         import gzip
         from tools.normalize_contigs import normalize

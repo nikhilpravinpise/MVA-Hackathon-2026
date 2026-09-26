@@ -27,10 +27,19 @@ from src.vcf import to_submission_chrom  # noqa: E402
 
 # Structured-header ID attribute: position-independent, quote-tolerant
 # ('ID=' need not be the first attribute, values may be quoted, keys are
-# case-insensitive in VCF spec). A ##contig line whose ID cannot be
-# extracted while data rows still get rewritten would leave the file
-# header/data-inconsistent - warn loudly instead.
+# case-insensitive in VCF spec). A candidate is a real attribute iff an
+# even number of '"' precedes it - an 'ID=' inside a quoted value (e.g.
+# a description field) must not be rewritten. A ##contig line whose ID
+# cannot be extracted while data rows still get rewritten would leave
+# the file header/data-inconsistent - warn loudly instead.
 _CONTIG_ID = re.compile(r'\bID=("?)([^,">]+)\1', re.IGNORECASE)
+
+
+def _contig_id_span(line: str) -> tuple[int, int] | None:
+    for m in _CONTIG_ID.finditer(line):
+        if line[:m.start()].count('"') % 2 == 0:
+            return m.start(2), m.end(2)
+    return None
 
 
 def normalize(src: Path, dst: Path) -> int:
@@ -44,11 +53,11 @@ def normalize(src: Path, dst: Path) -> int:
             open(dst, "w", encoding="utf-8", newline="\n") as fo:
         for line in fi:
             if line.startswith("##contig=<"):
-                m = _CONTIG_ID.search(line)
-                if m:
-                    fo.write(line[:m.start(2)]
-                             + to_submission_chrom(m.group(2))
-                             + line[m.end(2):])
+                span = _contig_id_span(line)
+                if span:
+                    fo.write(line[:span[0]]
+                             + to_submission_chrom(line[span[0]:span[1]])
+                             + line[span[1]:])
                 else:
                     print(f"WARNING: unparseable ##contig line passed "
                           f"through unchanged: {line.rstrip()!r}",
