@@ -25,7 +25,13 @@ from src.pipeline import ABLATION_SOURCES, run_pipeline  # noqa: E402
 
 
 def find_vcf(case_dir: Path) -> Path:
-    vcfs = sorted(case_dir.glob("*.vcf")) + sorted(case_dir.glob("*.vcf.gz"))
+    # '*.chr.vcf' is a derived contig-normalized copy made for Arm-A tools
+    # (Exomiser needs chr-prefixed contigs); it is never the case input -
+    # picking it alphabetically would silently run the funnel on the
+    # wrong coordinate convention.
+    vcfs = sorted(p for p in case_dir.glob("*.vcf")
+                  if not p.name.endswith(".chr.vcf"))
+    vcfs += sorted(case_dir.glob("*.vcf.gz"))
     vcfs += sorted(p for p in case_dir.iterdir()
                    if p.suffix.upper() in (".VCF", ".GZ") and p not in vcfs)
     if not vcfs:
@@ -79,10 +85,26 @@ def main(argv=None) -> int:
             print(f"ERROR: {truth_f} must be an object with a 2-variant "
                   "'pair' array", file=sys.stderr)
             return 2
-    corpus = {k: (case / v).resolve() if (case / v).exists() else None
-              for k, v in (("obo_path", "hp.obo"),
-                           ("hpoa_path", "phenotype.hpoa"),
-                           ("g2d_path", "genes_to_disease.json"))}
+    # Corpus lookup: per-case copy first, then the repo-level env/corpus
+    # fallback - reference data is shared, a case bundle needn't carry
+    # its own copies.
+    corpus = {}
+    for k, names in (("obo_path", ("hp.obo",)),
+                     ("hpoa_path", ("phenotype.hpoa",)),
+                     # case bundles name it genes_to_disease.json; the
+                     # repo corpus ships gene2disease.json - try both
+                     ("g2d_path", ("genes_to_disease.json",
+                                   "gene2disease.json"))):
+        found = None
+        for root in (case, REPO / "env" / "corpus"):
+            for v in names:
+                p = root / v
+                if p.exists():
+                    found = p.resolve()
+                    break
+            if found:
+                break
+        corpus[k] = found
     # corpus absent -> empty ontology -> pheno 0 -> scores capped under the
     # emit floor -> a guaranteed no_call that LOOKS like a legit negative.
     # Surface it in the summary, not just in provenance (audit M4).
