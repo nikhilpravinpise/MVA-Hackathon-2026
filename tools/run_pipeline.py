@@ -46,8 +46,19 @@ def main(argv=None) -> int:
                     help="sensitivity override for rarity.af_max")
     args = ap.parse_args(argv)
 
-    hpo_raw = json.loads(Path(args.hpo_terms).read_text())
-    hpo = hpo_raw["hpo_terms"] if isinstance(hpo_raw, dict) else list(hpo_raw)
+    try:
+        hpo_raw = json.loads(
+            Path(args.hpo_terms).read_text(encoding="utf-8-sig"))
+        hpo = hpo_raw["hpo_terms"] if isinstance(hpo_raw, dict) \
+            else list(hpo_raw)
+    except (OSError, json.JSONDecodeError, KeyError, TypeError) as e:
+        print(f"ERROR: cannot read --hpo-terms {args.hpo_terms} "
+              f"({type(e).__name__}: {e})", file=sys.stderr)
+        return 2
+    if not hpo or not all(isinstance(t, str) for t in hpo):
+        print("ERROR: --hpo-terms parsed to an empty/non-string term list",
+              file=sys.stderr)
+        return 2
 
     cfg = load_config(args.config)
     if args.af_max is not None:
