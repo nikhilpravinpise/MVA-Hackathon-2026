@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 13:13 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `<TBD - see docs/team.md>` | **Model:** `model1` | **Generated:** 2026-09-26 14:00 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** VALIDATED ON SYNTHETIC STAND-IN - patient VCF not yet on disk; every number below is from the public-stand-in harness.
 
@@ -164,7 +164,7 @@ Withheld / caveated evidence:
 
 | Job | Where | Time | Cost |
 |---|---|---|---|
-| Arm-B funnel (this run) | local | 0.012s | $0 |
+| Arm-B funnel (this run) | local | 0.026s | $0 |
 | Test battery (19-fixture oracle mutation battery + 60-fixture CSV-contract battery + funnel + e2e) | local | seconds-scale (see docs/runtime_log.md session rows) | $0 |
 
 Planned cloud jobs (alignment/DeepVariant/VEP at data landing) are budgeted < $50 total - see docs/runtime_log.md.

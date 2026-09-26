@@ -206,9 +206,15 @@ def real_spike_section(result: dict | None, build: dict | None,
     top = next((h for h in ranked if h.get("emitted")), None)
     pair_rank = None
     if truth:
-        want = sorted((v["pos"], v["alt"]) for v in truth.get("pair", []))
+        # full variant key - (pos,alt) alone can conflate two alleles at
+        # one site or across contigs; truth carries scorer-convention
+        # 'chrN' chroms, ranked carries bare VCF chroms
+        want = sorted((from_submission_chrom(str(v["chrom"])),
+                       v["pos"], v["ref"], v["alt"])
+                      for v in truth.get("pair", []))
         for h in ranked:
-            got = sorted((v["pos"], v["alt"]) for v in h["variants"])
+            got = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                         for v in h["variants"])
             if h["model"] == "compound_het" and got == want:
                 pair_rank = h["rank"]
                 break
