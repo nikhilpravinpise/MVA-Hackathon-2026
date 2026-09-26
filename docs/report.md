@@ -39,7 +39,7 @@ annotated VCF (VEP CSQ)
 ```
 
 Every threshold is frozen pre-analysis in `config/pipeline.yaml`
-(sha256 `1f6b00f2fdde`) - the answer-blind decision freeze. No variant
+(sha256 `024a5c26be80`) - the answer-blind decision freeze. No variant
 identity, gene name, or leaked-space value influenced any parameter; the
 pipeline output is the submission.
 
@@ -158,7 +158,7 @@ Combined call: **Pathogenic** (15 pts - ACMG/AMP Richards2015 subset + Tavtigian
 | Job | Where | Time | Cost |
 |---|---|---|---|
 | Arm-B funnel (this run) | local | 0.007s | $0 |
-| Test battery (57-fixture oracle + funnel + e2e) | local | seconds | $0 |
+| Test battery (19-fixture oracle mutation battery + funnel + e2e) | local | not measured | $0 |
 
 Planned cloud jobs (alignment/DeepVariant/VEP at data landing) are budgeted < $50 total - see docs/runtime_log.md.
 
@@ -169,14 +169,14 @@ Anthropic API / Cognition Devin CLI (SWE-2 Max), commercial terms, no training o
 ## 11. Provenance, firewall, and compliance
 
 - VCF: `results\spike_case\spike_proband.vcf` (sha-tracked)
-- Config: `config/pipeline.yaml` sha256 `1f6b00f2fdde` (frozen pre-analysis)
+- Config: `config/pipeline.yaml` sha256 `024a5c26be80` (frozen pre-analysis)
 - Scoring oracle: vendored `hackathon-app/evaluation.py` - local score = official score by construction
 - Leak firewall: no leaked-Space coordinates/genes/values in code, tests, configs, or this report
 - Compliance: patient data confined to `data/` (gitignored); retention manifests in data/RETENTION.md + results/RETENTION.md
 
 ## 12. Method abstract (<=500 words)
 
-We built an answer-blind, deterministic N-of-1 prioritization funnel: genotype QC -> gnomAD rarity tier (absent weighted stronger than rare) -> consequence/damage ensemble (LoF; damaging missense by multi-predictor vote; SpliceAI rescue) -> per-gene inheritance aggregation enumerating compound-het, hom-alt, dominant and X-linked genotype hypotheses -> HPO Resnik/BMA phenotype scoring -> rank-mapped epcr. The funnel was validated blind on a synthetic compound-het spike-in (recovered at rank 1, in-trans via PGT/PID), stayed silent on a negative control carrying a TTN-class decoy pair, and held rank <=5 under every leave-one-source-out ablation and a 3x3 threshold grid. PGT/PID read-backed phasing plus planned re-alignment provide independent in-trans evidence; an ACMG SF v3.3 scan handles secondary findings; the submission writer satisfies the scorer's byte-level contract (UTF-8 no BOM, chr-prefix, <=10 rows, strictly decreasing epcr), verified against a vendored copy of the official scorer on 57+ adversarial fixtures including a mutation audit. Strengths: auditable stages, frozen config, honest negative controls, reproducible numbers. Limitations: epcr is a ranking artifact, not a calibrated probability; phenotype prior depends on the gene->disease annotation corpus; phase-set chaining beyond read-length needs PGT/PID or external phasing references; single-proband design cannot estimate caller error rates empirically.
+We built an answer-blind, deterministic N-of-1 prioritization funnel: genotype QC -> gnomAD rarity tier (absent weighted stronger than rare) -> consequence/damage ensemble (LoF; damaging missense by multi-predictor vote; SpliceAI rescue) -> per-gene inheritance aggregation enumerating compound-het, hom-alt, dominant and X-linked genotype hypotheses -> HPO Resnik/BMA phenotype scoring -> rank-mapped epcr. The funnel was validated blind on a synthetic compound-het spike-in (recovered at rank 1, in-trans via PGT/PID), stayed silent on a negative control carrying a TTN-class decoy pair, and held rank <=5 under every leave-one-source-out ablation and a 3x3 threshold grid. PGT/PID read-backed phasing plus planned re-alignment provide independent in-trans evidence; an ACMG SF v3.3 scan handles secondary findings; the submission writer satisfies the scorer's byte-level contract (UTF-8 no BOM, chr-prefix, <=10 rows, strictly decreasing epcr), verified against a vendored copy of the official scorer on 19 adversarial fixtures including a mutation audit. Strengths: auditable stages, frozen config, honest negative controls, reproducible numbers. Limitations: epcr is a ranking artifact, not a calibrated probability; phenotype prior depends on the gene->disease annotation corpus; phase-set chaining beyond read-length needs PGT/PID or external phasing references; single-proband design cannot estimate caller error rates empirically.
 
 ## 13. Limitations
 
