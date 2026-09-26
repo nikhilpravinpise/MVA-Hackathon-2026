@@ -37,6 +37,7 @@ DELETE within 30 days of close (patient genotype-scale derived data):
 | results/t1_spike/ | Full Track-1 driver output on synthetic case | KEEP | funnel/ + ablations + sf + phasing + acmg + submission.csv + run_summary |
 | results/t1_control/ | Full Track-1 driver output on control case | KEEP | Must show 0 emitted + no submission.csv (Gate 2) |
 | results/real_spike_run/ | Funnel output on the real-stand-in case | KEEP | HG002 background + ClinVar PAH spike (public data) |
+| results/t1_real_full/ | Full Track-1 driver output on real-spike | KEEP | Complete artifact set: funnel+ablations+sf+phasing+acmg+csv+oracle 100/1.0+arm_concordance |
 | results/sensitivity.json | 3x3 threshold-grid sensitivity artifact | KEEP | Rank-1 robustness evidence |
 | results/eda_spike/ | EDA/QC report on the synthetic VCF | KEEP | Aggregate stats only |
 | results/eda_real_spike/ | EDA/QC report on the real-spike VCF | KEEP | Real-data audit: 272 rec, Ti/Tv 1.90 |
