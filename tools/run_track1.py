@@ -44,6 +44,9 @@ def main(argv=None) -> int:
     ap.add_argument("--sam", default=None,
                     help="locus SAM export (samtools view -O SAM) for "
                          "read-level phase evidence on the top pair")
+    ap.add_argument("--arm-a-tsv", default=None,
+                    help="Exomiser genes.tsv from the Arm-A run - emits "
+                         "arm_concordance.json (plan section-5 metric)")
     ap.add_argument("--skip-eda", action="store_true")
     args = ap.parse_args(argv)
 
@@ -267,6 +270,28 @@ def main(argv=None) -> int:
                 "full_match_rank": score.full_match_rank}
     except Exception as e:
         summary["steps"]["csv"] = f"skipped: {e}"
+
+    # -- step 7: Arm A vs Arm B concordance (Exomiser TSV given) --------------
+    if args.arm_a_tsv:
+        try:
+            from tools.compare_arms import armb_genes, arma_genes
+            b = armb_genes(out / "funnel" / "result.json")
+            a = arma_genes(Path(args.arm_a_tsv))
+            overlap = sorted(set(b[:20]) & set(a[:20]))
+            tg = truth.get("gene") if truth else None
+            armc = {"arm_a_file": args.arm_a_tsv,
+                    "n_arm_a_genes": len(a), "n_arm_b_genes": len(b),
+                    "top_n": 20, "top20_overlap": overlap,
+                    "top20_overlap_n": len(overlap), "truth_gene": tg,
+                    "truth_rank_arm_b": (b.index(tg) + 1)
+                        if tg in b else None,
+                    "truth_rank_arm_a": (a.index(tg) + 1)
+                        if tg in a else None}
+            (out / "arm_concordance.json").write_text(
+                json.dumps(armc, indent=1))
+            summary["steps"]["arm_concordance"] = armc["top20_overlap_n"]
+        except Exception as e:
+            summary["steps"]["arm_concordance"] = f"skipped: {e}"
 
     summary["runtime_sec"] = round(time.time() - t0, 2)
     (out / "run_summary.json").write_text(json.dumps(summary, indent=1))
