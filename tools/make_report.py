@@ -343,6 +343,9 @@ def main(argv=None) -> int:
                     help="env/real_spike/BUILD_REPORT.json")
     ap.add_argument("--real-spike-truth", default=None,
                     help="env/real_spike/truth.json")
+    ap.add_argument("--arm-concordance", default=None,
+                    help="tools/compare_arms.py output JSON - Arm A/B "
+                         "top-gene concordance (plan section 5 metric)")
     ap.add_argument("--out", default=str(REPO / "docs" / "report.md"))
     ap.add_argument("--team", default="<TBD - see docs/team.md>")
     ap.add_argument("--model-n", default="1")
@@ -402,6 +405,28 @@ def main(argv=None) -> int:
             control_line = (f"{n_em} hypotheses emitted "
                             f"({'expected: funnel stays silent' if n_em == 0 else 'UNEXPECTED - investigate'})")
 
+    # Arm A/B concordance (plan section 5 metric) - derived from the
+    # compare_arms.json artifact, never hand-typed.
+    armc_line = ("not yet run - Arm A requires the exomiser data bundle "
+                 "(env/exomiser_data); see tools/run_exomiser.py")
+    armc = _j(args.arm_concordance)
+    if armc:
+        tn = armc.get("top_n", 20)
+        ov_n = armc.get(f"top{tn}_overlap_n")
+        ov = armc.get(f"top{tn}_overlap") or []
+        ta = armc.get("truth_rank_arm_a")
+        tb = armc.get("truth_rank_arm_b")
+        tg = armc.get("truth_gene") or "truth gene"
+        if ta is None and tb is None:
+            armc_line = (f"both arms run; top-{tn} overlap {ov_n} "
+                         f"({', '.join(ov) if ov else 'none'})")
+        else:
+            armc_line = (f"top-{tn} gene overlap {ov_n} "
+                         f"({', '.join(ov) if ov else 'none'}); "
+                         f"{tg} ranked {tb if tb else 'absent'} by Arm B, "
+                         f"{ta if ta else 'absent'} by Arm A "
+                         "(Exomiser genome mode)")
+
     # Derived abstract numbers (no hand-typed stats): recovery rank from the
     # run artifact, ablation ceiling from ablations.json, grid shape from
     # sensitivity.json.
@@ -453,6 +478,7 @@ def main(argv=None) -> int:
         "EDA_SECTION": eda_section(eda),
         "SPIKE_RESULT": spike_line,
         "CONTROL_RESULT": control_line,
+        "ARM_CONCORDANCE": armc_line,
         "REAL_SPIKE_SECTION": real_spike_section(
             _j(Path(args.real_spike_dir) / "result.json") if args.real_spike_dir else None,
             _j(args.real_spike_build), _j(args.real_spike_truth)),

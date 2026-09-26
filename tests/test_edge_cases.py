@@ -491,22 +491,32 @@ class TestExomiserYaml:
     must fail loudly."""
 
     def test_schema_keys_and_chain(self, tmp_path):
+        """Pins the VERIFIED schema (examples/test-analysis-genome.yml in
+        the shipped 14.0.0 distribution): a single `analysis:` section,
+        inheritanceModes as a {mode: maxMAF} map, subpop enum names."""
         from tools import run_exomiser as rex
         y = rex.build_yaml(tmp_path / "x.vcf", ["HP:0001250"], "PROBAND01",
                            "PASS_ONLY", "GRCH38", str(tmp_path / "out" / "P"))
         import yaml
         d = yaml.safe_load(y)
-        assert set(d) == {"sample", "analysis", "outputOptions"}
-        assert set(d["sample"]) == {"vcf", "ped", "assembly", "proband",
-                                    "hpoIds"}
-        assert d["sample"]["assembly"] == "hg38"  # NOT 'GRCH38'
-        assert d["sample"]["hpoIds"] == ["HP:0001250"]
-        assert "AUTOSOMAL_RECESSIVE_COMP_HET" in \
-            d["analysis"]["inheritanceModes"]
-        assert "GNOMAD_E" in d["analysis"]["frequencySources"]
-        steps = [list(s)[0] for s in d["analysis"]["steps"]]
-        assert "inheritanceFilter" in steps  # empty steps => no MOI analysis
-        assert d["outputOptions"]["outputFileName"]
+        assert set(d) == {"analysis"}
+        a = d["analysis"]
+        assert a["genomeAssembly"] == "hg38"  # NOT 'GRCH38'
+        assert a["hpoIds"] == ["HP:0001250"]
+        # inheritanceModes is a MAP of mode -> max MAF %, not a name list;
+        # AR needs BOTH the HOM_ALT and COMP_HET modes to run recessive
+        modes = a["inheritanceModes"]
+        assert modes["AUTOSOMAL_RECESSIVE_HOM_ALT"] == 0.1
+        assert modes["AUTOSOMAL_RECESSIVE_COMP_HET"] == 2.0
+        # verified enum names: subpopulations spelled GNOMAD_{E,G}_<POP>
+        assert "GNOMAD_E_AFR" in a["frequencySources"]
+        assert "GNOMAD_G_NFE" in a["frequencySources"]
+        assert "GNOMAD_E" not in a["frequencySources"]  # bare name invalid
+        steps = [list(s)[0] for s in a["steps"]]
+        assert "inheritanceFilter" in steps  # empty steps => no MOI run
+        # preset order: hiPhive FIRST (gene filter) then the variant chain
+        assert steps[0] == "hiPhivePrioritiser"
+        assert steps.index("priorityScoreFilter") == 1
 
     def test_empty_merged_hpo_fails(self, tmp_path, monkeypatch):
         import json
@@ -1033,3 +1043,40 @@ class TestAfTranscriptMerge:
         assert vf.popmax_af == 0.5
         assert vf.absent is False
         assert vf.rare is False
+
+
+class TestCompareArms:
+    """compare_arms.py: dedupe by first appearance, truth rank per arm,
+    header-aware TSV parse (fails loudly on schema drift)."""
+
+    def test_overlap_and_truth_ranks(self, tmp_path):
+        import json
+        from tools import compare_arms as ca
+        res = {"ranked": [{"gene": "PAH", "rank": 1},
+                          {"gene": "FOO", "rank": 2},
+                          {"gene": "PAH", "rank": 3},
+                          {"gene": "BAR", "rank": 4}]}
+        (tmp_path / "result.json").write_text(json.dumps(res))
+        tsv = tmp_path / "g.tsv"
+        tsv.write_text("GENE_SYMBOL\tEXOMISER_GENE_SCORE\n"
+                       "BAZ\t0.9\nPAH\t0.8\nFOO\t0.1\n")
+        (tmp_path / "t.json").write_text(json.dumps({"gene": "PAH"}))
+        b = ca.armb_genes(tmp_path / "result.json")
+        a = ca.arma_genes(tsv)
+        assert b == ["PAH", "FOO", "BAR"]   # first-appearance dedupe
+        assert a == ["BAZ", "PAH", "FOO"]   # file order kept
+        assert ca.main(["--armb", str(tmp_path / "result.json"),
+                        "--arma", str(tsv),
+                        "--truth", str(tmp_path / "t.json"),
+                        "--out", str(tmp_path / "o.json")]) == 0
+        out = json.loads((tmp_path / "o.json").read_text())
+        assert out["truth_rank_arm_a"] == 2
+        assert out["truth_rank_arm_b"] == 1
+        assert "PAH" in out["top20_overlap"]
+
+    def test_schema_drift_fails_loudly(self, tmp_path):
+        from tools import compare_arms as ca
+        tsv = tmp_path / "g.tsv"
+        tsv.write_text("GENE\tSCORE\nPAH\t0.9\n")
+        with pytest.raises(ValueError, match="GENE_SYMBOL"):
+            ca.arma_genes(tsv)

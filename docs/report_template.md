@@ -60,6 +60,7 @@ The funnel was validated *blind* before the proband call:
 * **Negative control:** plausible-looking rare/damaging variation + an
   unrelated HPO set -> **{{CONTROL_RESULT}}** (a funnel that finds a causal
   pair everywhere finds nothing).
+* **Arm A vs Arm B concordance:** {{ARM_CONCORDANCE}}
 * **Real external validation (public genome + real ClinVar pair):**
 
 {{REAL_SPIKE_SECTION}}
