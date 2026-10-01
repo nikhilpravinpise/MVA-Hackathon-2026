@@ -33,4 +33,8 @@ finding; genome-scale genotype tables = prohibited derived data.
 
 | Path | Description | keep_delete | Notes |
 |---|---|---|---|
-| _(empty - directory created 2026-09-26, awaiting gated data)_ | | | |
+| `data/WGS_EX2312012_HGWCNDSX7.vcf.gz` | patient WGS VCF (gated HF dataset `SageBio/mva-hackathon-2026-data`, fetched 2026-10-01) | DELETE | genotype-scale raw data |
+| `data/WGS_EX2312012_HGWCNDSX7.vcf.gz.tbi` | tabix index for the VCF | DELETE | index of patient genotypes |
+| `data/Challenge_Clinical_Phenotype_1.docx` | clinical phenotype narrative (gated) | DELETE | patient document |
+| `data/hpo_terms.json` | 8 HPO terms extracted from the docx via `tools/extract_hpo.py` | KEEP | extracted term list (reportable) |
+| `data/WGS_EX2312012_HGWCNDSX7_S16_L00{1-4}_R{1,2}_001.fastq.gz` | 8 patient FASTQs (4 lanes x R1/R2, ~80 GB, download in progress 2026-10-01) | DELETE | raw reads |

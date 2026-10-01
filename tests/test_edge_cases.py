@@ -1094,6 +1094,68 @@ class TestFetchBig:
         with pytest.raises(RuntimeError, match="corrupt"):
             fb._fetch_part("http://example/", p, 0, 49)
 
+    def test_early_close_resumes_part(self, tmp_path, monkeypatch):
+        """A ranged response that ends early is NOT completion: the part
+        must re-open the range from where it stopped. Observed live on
+        the Ensembl VEP cache fetch (parts concatenated at ~600MB of
+        27.6GB -> corrupt archive + resume state deleted)."""
+        from tools import fetch_big as fb
+        body = bytes(range(100))
+        calls = []
+
+        class Resp:
+            def __init__(self, data):
+                self._d = data
+                self.status = 206
+
+            def read(self, n=-1):
+                d, self._d = self._d, b""
+                return d
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+        def fake_urlopen(req, timeout=0):
+            a, b = req.headers["Range"].split("=")[1].split("-")
+            a, b = int(a), int(b)
+            calls.append(a)
+            return Resp(body[a:b + 1][:30])  # always closes after 30 bytes
+
+        monkeypatch.setattr(fb.urllib.request, "urlopen", fake_urlopen)
+        monkeypatch.setattr(fb.time, "sleep", lambda s: None)
+        p = tmp_path / "x.part00"
+        fb._fetch_part("http://x/", p, 0, 99)
+        assert p.read_bytes() == body
+        assert calls[:3] == [0, 30, 60]      # resumed from byte 30, then 60
+
+    def test_non_206_range_response_rejected(self, tmp_path, monkeypatch):
+        """A server answering 200 (full body) to a Range request would
+        corrupt the part by appending - reject, don't append."""
+        from tools import fetch_big as fb
+
+        class Resp:
+            status = 200
+
+            def read(self, n=-1):
+                return b""
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+        monkeypatch.setattr(fb.urllib.request, "urlopen",
+                            lambda req, timeout=0: Resp())
+        monkeypatch.setattr(fb.time, "sleep", lambda s: None)
+        p = tmp_path / "x.part00"
+        with pytest.raises(RuntimeError, match="200"):
+            fb._fetch_part("http://x/", p, 0, 99)
+        assert not p.exists()  # rejected before the append handle opened
+
     def test_variants_tsv_rejected(self, tmp_path):
         """A variants.tsv also carries GENE_SYMBOL - gene ranks read off
         variant-level order are plausible-but-wrong."""

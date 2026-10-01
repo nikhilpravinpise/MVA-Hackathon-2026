@@ -11,13 +11,16 @@ complete; the part dir is removed afterwards.
 from __future__ import annotations
 
 import argparse
+import http.client
 import sys
 import time
+import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 CHUNK = 1 << 22  # 4 MB reads
+MAX_RESUMES = 200  # reconnects allowed per part before giving up
 
 
 def _size(url: str) -> int:
@@ -33,25 +36,46 @@ def _size(url: str) -> int:
 
 
 def _fetch_part(url: str, part: Path, start: int, end: int) -> None:
-    have = part.stat().st_size if part.exists() else 0
     want = end - start + 1
-    if have == want:
-        return
-    if have > want:
-        raise RuntimeError(
-            f"{part} is {have} bytes but range is only {want} - corrupt "
-            "part file (parts are only ever appended to); delete it and "
-            "re-run")
-    # resume inside the part: request from start+have
-    req = urllib.request.Request(
-        url, headers={"Range": f"bytes={start + have}-{end}"})
-    with urllib.request.urlopen(req, timeout=120) as r, \
-            open(part, "ab") as f:
-        while True:
-            b = r.read(CHUNK)
-            if not b:
-                break
-            f.write(b)
+    resumes = 0
+    # A part is complete ONLY when its bytes equal the range width. A
+    # server may honour Range yet close the stream early (throttled CDNs
+    # do this routinely): the read loop ending is NOT completion. Re-open
+    # the range from where we stopped until have == want.
+    while True:
+        have = part.stat().st_size if part.exists() else 0
+        if have == want:
+            return
+        if have > want:
+            raise RuntimeError(
+                f"{part} is {have} bytes but range is only {want} - corrupt "
+                "part file (parts are only ever appended to); delete it and "
+                "re-run")
+        # resume inside the part: request from start+have
+        req = urllib.request.Request(
+            url, headers={"Range": f"bytes={start + have}-{end}"})
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                if getattr(r, "status", None) != 206:
+                    raise RuntimeError(
+                        f"{part}: server answered {getattr(r, 'status', '?')} "
+                        "to a Range request - appending a full body would "
+                        "corrupt the part; delete it and re-run")
+                with open(part, "ab") as f:
+                    while True:
+                        b = r.read(CHUNK)
+                        if not b:
+                            break
+                        f.write(b)
+        except (urllib.error.URLError, TimeoutError, ConnectionError,
+                http.client.IncompleteRead):
+            pass  # dropped connection - resume from `have` below
+        resumes += 1
+        if resumes > MAX_RESUMES:
+            raise RuntimeError(
+                f"{part}: still incomplete after {MAX_RESUMES} resumes "
+                f"({have}/{want} bytes) - server too hostile")
+        time.sleep(min(resumes, 30))
 
 
 def _n_parts(total: int, requested: int) -> int:
@@ -110,11 +134,13 @@ def main(argv=None) -> int:
                     if not b:
                         break
                     dst.write(b)
-            p.unlink()
     got = out.stat().st_size
     if got != total:  # not an assert - must hold under `python -O`
         raise RuntimeError(f"size mismatch {got} != {total} - "
-                           "concatenated file is corrupt")
+                           "concatenated file is corrupt; parts kept for "
+                           "inspection/resume")
+    for p, _, _ in parts:
+        p.unlink()
     print(f"wrote {out} ({got / 1e9:.2f} GB)")
     return 0
 
