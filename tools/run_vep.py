@@ -113,6 +113,29 @@ HEADER_RENAMES = {
 }
 
 
+def _custom_annots(ann: Path) -> tuple[list[str], list[str]]:
+    """--custom args for AF/ClinVar sources built for cache-free mode.
+    Contract names are produced directly: the slice files carry renamed
+    INFO fields so '<short>_<field>' lands as 'gnomADe_NFE_AF' etc."""
+    args, missing = [], []
+    specs = [
+        ("gnomade_genic.vcf.gz", "gnomADe",
+         "AF,AFR_AF,AMI_AF,AMR_AF,ASJ_AF,EAS_AF,FIN_AF,MID_AF,NFE_AF,"
+         "OTH_AF,SAS_AF", "gnomADe_* (exome AFs)"),
+        ("gnomadg_genic.vcf.gz", "gnomADg",
+         "AF,AFR_AF,AMI_AF,AMR_AF,ASJ_AF,EAS_AF,FIN_AF,MID_AF,NFE_AF,"
+         "OTH_AF,SAS_AF", "gnomADg_* (genome AFs)"),
+        ("clinvar_sig.vcf.gz", "CLIN", "SIG", "CLIN_SIG"),
+    ]
+    for fname, short, fields, label in specs:
+        if (ann / fname).exists() and (ann / (fname + ".tbi")).exists():
+            args += ["--custom",
+                     f"/ann/{fname},{short},vcf,exact,0,{fields}"]
+        else:
+            missing.append(label)
+    return args, missing
+
+
 def _ann_plugins(ann: Path) -> tuple[list[str], list[str]]:
     """Plugin/--custom args for every annotation file actually present.
     Returns (plugin_args, missing_notes) - missing files degrade to an
@@ -158,26 +181,56 @@ def _docker_path(p: Path) -> str:
 def build_command(args) -> list[str]:
     vcf = Path(args.vcf).resolve()
     out = Path(args.out).resolve()
-    cache = Path(args.cache_dir).resolve()
     ann = Path(args.ann_dir).resolve()
     plugin_args, missing = _ann_plugins(ann)
+    mounts = [f"{_docker_path(vcf.parent)}:/data",
+              f"{_docker_path(ann)}:/ann"]
+    if args.gtf:
+        # Cache-free mode: transcript model from GTF, sequence from FASTA;
+        # both must live in the same host dir (mounted at /refdir).
+        if not args.fasta:
+            print("ERROR: --gtf mode needs --fasta (bare-contig reference)",
+                  file=sys.stderr)
+            raise SystemExit(2)
+        refdir = Path(args.fasta).resolve().parent
+        gtfdir = Path(args.gtf).resolve().parent
+        if refdir != gtfdir:
+            print("ERROR: --gtf and --fasta must sit in one host dir "
+                  "(mounted as /refdir)", file=sys.stderr)
+            raise SystemExit(2)
+        mounts.append(f"{_docker_path(refdir)}:/refdir")
+        core = [
+            "--gtf", f"/refdir/{Path(args.gtf).resolve().name}",
+            "--fasta", f"/refdir/{Path(args.fasta).resolve().name}",
+            "--hgvs", "--protein", "--symbol", "--biotype",
+            "--numbers", "--canonical", "--total_length",
+            "--distance", "5000",
+        ]
+        custom_args, cmiss = _custom_annots(ann)
+        plugin_args += custom_args
+        missing += cmiss
+    else:
+        mounts.append(
+            f"{_docker_path(Path(args.cache_dir))}:/opt/vep/.vep")
+        core = [
+            "--offline", "--cache", "--dir_cache", "/opt/vep/.vep",
+            "--species", "homo_sapiens", "--assembly", args.assembly,
+            "--everything",
+        ]
     if missing:
         print("annotator(s) absent - degraded tier: " + "; ".join(missing),
               file=sys.stderr)
     return [
         "docker", "run", "--rm",
-        "-v", f"{_docker_path(cache)}:/opt/vep/.vep",
-        "-v", f"{_docker_path(vcf.parent)}:/data",
-        "-v", f"{_docker_path(ann)}:/ann",
+        *sum((["-v", m] for m in mounts), []),
         args.image,
-        "vep", "--offline", "--cache", "--dir_cache", "/opt/vep/.vep",
-        "--species", "homo_sapiens", "--assembly", args.assembly,
+        "vep",
         "-i", f"/data/{vcf.name}",
         "-o", f"/data/{out.name}",
         "--vcf", "--compress_output", "bgzip",
         "--fork", str(args.forks),
-        "--everything", "--no_stats",
-        *plugin_args,
+        "--no_stats",
+        *core, *plugin_args,
     ]
 
 
@@ -187,9 +240,11 @@ def check_prereqs(args) -> list[str]:
         problems.append("docker not on PATH")
     if not Path(args.vcf).exists():
         problems.append(f"input VCF missing: {args.vcf}")
-    cache = Path(args.cache_dir)
-    if not (cache / "homo_sapiens").is_dir():
-        problems.append(f"no unpacked VEP cache under {cache}/homo_sapiens/")
+    if not args.gtf:
+        cache = Path(args.cache_dir)
+        if not (cache / "homo_sapiens").is_dir():
+            problems.append(f"no unpacked VEP cache under "
+                            f"{cache}/homo_sapiens/")
     ann = Path(args.ann_dir)
     _, missing = _ann_plugins(ann)
     if len(missing) >= 5:
@@ -202,18 +257,30 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="VEP 116 annotation runner")
     ap.add_argument("--vcf", required=True, help="input (bgzipped) VCF")
     ap.add_argument("--out", required=True, help="output annotated VCF path")
-    ap.add_argument("--cache-dir", required=True,
-                    help="host dir holding the unpacked VEP cache")
+    ap.add_argument("--cache-dir", default=None,
+                    help="host dir holding the unpacked VEP cache "
+                         "(not needed in --gtf mode)")
     ap.add_argument("--ann-dir", default=None,
                     help="host dir with dbNSFP/CADD files (default: <cache-dir>/vep_ann)")
     ap.add_argument("--assembly", default="GRCh38")
+    ap.add_argument("--gtf", default=None,
+                    help="cache-free mode: transcript model from this GTF "
+                         "gz (bare contigs, same dir as --fasta)")
+    ap.add_argument("--fasta", default=None,
+                    help="bare-contig reference fasta for --gtf mode")
     ap.add_argument("--forks", type=int, default=16)
     ap.add_argument("--image", default=DEFAULT_IMAGE)
     ap.add_argument("--dry-run", action="store_true",
                     help="print the command only; do not run")
     args = ap.parse_args(argv)
+    if not args.gtf and not args.cache_dir:
+        print("ERROR: cache mode needs --cache-dir (or pass --gtf/--fasta "
+              "for cache-free mode)", file=sys.stderr)
+        return 2
     if args.ann_dir is None:
-        args.ann_dir = str(Path(args.cache_dir) / "vep_ann")
+        args.ann_dir = str((Path(args.cache_dir) if args.cache_dir
+                            else Path(args.vcf).resolve().parent)
+                           / "vep_ann")
     if args.forks < 1:
         print("ERROR: --forks must be >= 1", file=sys.stderr)
         return 2
