@@ -106,6 +106,7 @@ HEADER_RENAMES = {
     "am_pathogenicity": "AlphaMissense_score",
     "am_class": "AlphaMissense_class",
     "REVEL_REVEL": "REVEL",
+    "REVELSRC_REVEL": "REVEL",
     "REVEL_score": "REVEL",
     "AlphaMissense_pred": "AlphaMissense_class",
     "gnomAD_LOEUF": "LOEUF",
@@ -159,8 +160,11 @@ def _ann_plugins(ann: Path) -> tuple[list[str], list[str]]:
         missing.append("SpliceAI")
     if (ann / REVEL_VCF).exists() \
             and (ann / (REVEL_VCF + ".tbi")).exists():
+        # short name REVELSRC avoids the REVEL/REVEL_REVEL column-name
+        # collision: VEP emits <short> (matched variant id) plus
+        # <short>_<field>; REVELSRC_REVEL renames to contract 'REVEL'.
         args += ["--custom",
-                 f"/ann/{REVEL_VCF},REVEL,vcf,exact,0,REVEL"]
+                 f"/ann/{REVEL_VCF},REVELSRC,vcf,exact,0,REVEL"]
     else:
         missing.append("REVEL")
     if (ann / DBNSFP_FILE).exists() \
@@ -234,6 +238,34 @@ def build_command(args) -> list[str]:
     ]
 
 
+def reconcile_csq_header(vcf_path: Path) -> None:
+    """Rewrite the CSQ 'Format:' token list in a bgzipped VCF header,
+    mapping VEP-emitted names to contract names via HEADER_RENAMES.
+    Positional rename only - data untouched. Writes in place via a
+    sibling temp file; on failure the original stays put."""
+    import gzip
+    tmp = vcf_path.with_suffix(".reconciled.vcf.gz")
+    changed = False
+    with gzip.open(vcf_path, "rt", errors="replace") as fi, \
+            gzip.open(tmp, "wt", newline="") as fo:
+        for line in fi:
+            if line.startswith("##INFO=<ID=CSQ") and "Format:" in line:
+                head, _, fmt_tail = line.partition("Format:")
+                fields = fmt_tail.rstrip('">\n').split("|")
+                new = [HEADER_RENAMES.get(f, f) for f in fields]
+                if new != fields:
+                    line = head + "Format:" + "|".join(new) + '">\n'
+                    changed = True
+            fo.write(line)
+    if changed:
+        tmp.replace(vcf_path)
+        print("CSQ header reconciled to contract field names")
+    else:
+        tmp.unlink()
+        print("WARNING: no CSQ Format header found to reconcile",
+              file=sys.stderr)
+
+
 def check_prereqs(args) -> list[str]:
     problems = []
     if shutil.which("docker") is None:
@@ -305,7 +337,10 @@ def main(argv=None) -> int:
         return 2
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     print("running...", flush=True)
-    return subprocess.run(cmd).returncode
+    rc = subprocess.run(cmd).returncode
+    if rc == 0:
+        reconcile_csq_header(Path(args.out))
+    return rc
 
 
 if __name__ == "__main__":
