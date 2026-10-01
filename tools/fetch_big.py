@@ -23,8 +23,9 @@ CHUNK = 1 << 22  # 4 MB reads
 MAX_RESUMES = 200  # reconnects allowed per part before giving up
 
 
-def _size(url: str) -> int:
-    req = urllib.request.Request(url, headers={"Range": "bytes=0-0"})
+def _size(url: str, extra: dict) -> int:
+    req = urllib.request.Request(url,
+                                 headers={"Range": "bytes=0-0", **extra})
     with urllib.request.urlopen(req, timeout=30) as r:
         cr = r.headers.get("Content-Range", "")
     try:
@@ -35,7 +36,9 @@ def _size(url: str) -> int:
             "byte ranges; this downloader requires Range support")
 
 
-def _fetch_part(url: str, part: Path, start: int, end: int) -> None:
+def _fetch_part(url: str, part: Path, start: int, end: int,
+                extra: dict | None = None) -> None:
+    extra = extra or {}
     want = end - start + 1
     resumes = 0
     # A part is complete ONLY when its bytes equal the range width. A
@@ -53,7 +56,7 @@ def _fetch_part(url: str, part: Path, start: int, end: int) -> None:
                 "re-run")
         # resume inside the part: request from start+have
         req = urllib.request.Request(
-            url, headers={"Range": f"bytes={start + have}-{end}"})
+            url, headers={"Range": f"bytes={start + have}-{end}", **extra})
         try:
             with urllib.request.urlopen(req, timeout=120) as r:
                 if getattr(r, "status", None) != 206:
@@ -92,10 +95,23 @@ def main(argv=None) -> int:
     ap.add_argument("url")
     ap.add_argument("out")
     ap.add_argument("--parts", type=int, default=8)
+    ap.add_argument("--header", action="append", default=[],
+                    help="'Name: value' header sent with every request "
+                         "(repeatable); e.g. --header 'Authorization: "
+                         "Bearer TOKEN' for gated hosts")
     args = ap.parse_args(argv)
 
+    extra = {}
+    for h in args.header:
+        name, _, val = h.partition(":")
+        if not name or not val.strip():
+            print(f"ERROR: --header '{h}' is not 'Name: value'",
+                  file=sys.stderr)
+            return 2
+        extra[name.strip()] = val.strip()
+
     out = Path(args.out)
-    total = _size(args.url)
+    total = _size(args.url, extra)
     if total == 0:
         out.write_bytes(b"")
         print(f"wrote {out} (0 bytes - empty remote file)")
@@ -110,7 +126,7 @@ def main(argv=None) -> int:
 
     t0 = time.time()
     with ThreadPoolExecutor(max_workers=n) as ex:
-        futs = [ex.submit(_fetch_part, args.url, p, s, e)
+        futs = [ex.submit(_fetch_part, args.url, p, s, e, extra)
                 for p, s, e in parts]
         while True:
             done = sum(f.done() for f in futs)

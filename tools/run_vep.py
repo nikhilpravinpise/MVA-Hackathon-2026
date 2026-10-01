@@ -16,16 +16,24 @@ Command template (what --dry-run prints; --forks/--image are parameterized):
           --plugin CADD,/ann/CADD_v1.7_GRCh38_SNV.tsv.gz,/ann/CADD_v1.7_GRCh38_InDels.tsv.gz \
           --plugin dbNSFP,'consequence=ALL',/ann/dbNSFP5.3.1_grch38.gz,<fields>
 
-REQUIRED ONE-TIME DOWNLOADS (~60-90 GB total, plan.md section 3)
+REQUIRED ONE-TIME DOWNLOADS (~110 GB total, plan.md section 3)
 ----------------------------------------------------------------
 * VEP 116 GRCh38 cache: homo_sapiens_vep_116_GRCh38.tar.gz
   (Ensembl FTP; unpacked under --cache-dir so that
   <cache-dir>/homo_sapiens/116_GRCh38/ exists). Includes gnomAD v4.1
   exome+genome AFs (--af_gnomade/--af_gnomadg are inside --everything) and
   the ClinVar snapshot behind --clin_sig.
-* dbNSFP 5.3.1 VEP-ready GRCh38 + .tbi  (https://www.dbnsfp.org/download)
-* CADD v1.7 GRCh38 whole-genome SNVs + InDels + .tbi
-  (https://cadd.gs.washington.edu/download - free registration)
+* CADD v1.7 GRCh38 whole-genome SNVs + gnomAD4 InDels + .tbi
+  (https://cadd.gs.washington.edu/download - direct HTTPS links,
+  non-commercial use covered)
+* AlphaMissense hg38 TSV + .tbi
+  (storage.googleapis.com/dm_alphamissense - public)
+* SpliceAI masked snv VCF + .tbi
+  (ftp.ensembl.org .../variation_plugins/ - public)
+* REVEL v1.3 CSV zip (zenodo.org/record/7072866 - public); convert with
+  tools/revel_to_vcf.py -> env/vep_ann/revel_grch38.vcf.gz(+tbi)
+* OPTIONAL: dbNSFP 5.x VEP-ready GRCh38 + .tbi (dbnsfp.org - academic
+  registration; adds REVEL/LOEUF/phyloP coverage in one file if obtained)
 * Optional: fresher ClinVar VCF via --custom (see below) if the cache's
   bundled snapshot is stale at run time.
 
@@ -38,32 +46,30 @@ The funnel (src/triage.py) reads CSQ fields by NAME from the output VCF's
                                   HGVSc/HGVSp/Existing_variation/CLIN_SIG/
                                   SIFT/PolyPhen + gnomADe_* & gnomADg_* AFs
                                   (gnomAD v4.1, 9 subpops each + pooled)
-    --plugin CADD,snv,indel    -> CADD_PHRED, CADD_RAW   (all variant classes,
-                                  incl. splice/indel - dbNSFP cannot cover
-                                  non-coding/indels)
-    --plugin dbNSFP,...,fields -> emits the REQUESTED column names verbatim:
-        REVEL_score          -> contract name REVEL        (rename)
-        AlphaMissense_score  -> AlphaMissense_score        (matches)
-        AlphaMissense_pred   -> AlphaMissense_class        (rename)
-        SpliceAI_pred_DS_AG/AL/DG/DL                       (match)
-        gnomAD_LOEUF         -> contract name LOEUF        (rename)
-        phyloP470way_mammal  -> contract name phyloP       (rename)
-
-`consequence=ALL` on the dbNSFP plugin is load-bearing: by default the plugin
-only annotates missense/stop-lost/stop-gained/start-lost SO terms, which would
-leave splice-region and deep-intronic candidates without SpliceAI scores.
+    --plugin CADD,snv,indel    -> CADD_PHRED, CADD_RAW   (all variant classes)
+    --plugin AlphaMissense     -> am_pathogenicity -> AlphaMissense_score
+                                  am_class -> AlphaMissense_class   (renames)
+    --plugin SpliceAI,snv=...  -> SpliceAI_pred_DS_AG/AL/DG/DL  (exact match)
+    --custom revel...,REVEL,.. -> REVEL_REVEL -> REVEL            (rename)
+    --plugin dbNSFP,...,fields (OPTIONAL - only if file present):
+        REVEL_score->REVEL  AlphaMissense_pred->AlphaMissense_class
+        gnomAD_LOEUF->LOEUF  phyloP470way_mammal->phyloP
+Absent plugins emit no columns - the funnel treats missing fields as
+'annotator absent', a documented degraded tier (LOEUF/phyloP only ship
+via dbNSFP; REVEL via custom file; pass-1 config notes this).
 
 POST-ANNOTATION NAME RECONCILE (required)
 -----------------------------------------
-dbNSFP emits raw column names; four differ from the contract. After VEP, edit
-the CSQ Format: header line in the output VCF (values unchanged - positional
-rename only):
+Plugin/custom emitted names differ from contract names; after VEP edit the
+CSQ Format: header line in place (values unchanged - positional rename):
 
-    REVEL_score->REVEL  AlphaMissense_pred->AlphaMissense_class
+    am_pathogenicity->AlphaMissense_score  am_class->AlphaMissense_class
+    REVEL_REVEL->REVEL
+    (if dbNSFP present:) REVEL_score->REVEL  AlphaMissense_pred->..._class
     gnomAD_LOEUF->LOEUF  phyloP470way_mammal->phyloP
 
-e.g. `zcat out.vcf.gz | head -200 | grep 'ID=CSQ'`, rewrite those four tokens
-in place, keep every other field name. A checksum of the before/after header
+e.g. `zcat out.vcf.gz | head -200 | grep 'ID=CSQ'`, rewrite those tokens in
+place, keep every other field name. A checksum of the before/after header
 line goes into docs/decisions.md when this runs for real.
 """
 from __future__ import annotations
@@ -89,14 +95,59 @@ DBNSFP_FIELDS = [
 CADD_FILES = ["CADD_v1.7_GRCh38_SNV.tsv.gz",
               "CADD_v1.7_GRCh38_InDels.tsv.gz"]
 DBNSFP_FILE = "dbNSFP5.3.1_grch38.gz"
+AM_FILE = "AlphaMissense_hg38.tsv.gz"
+SPLICEAI_SNV = "spliceai_scores.masked.snv.grch38.vcf.gz"
+REVEL_VCF = "revel_grch38.vcf.gz"
 
-# emitted-name -> contract-name header renames (see module docstring)
+# emitted-name -> contract-name header renames (see module docstring).
+# Names emitted by a plugin that is absent simply never appear in the CSQ
+# header - renaming a missing token is a no-op.
 HEADER_RENAMES = {
+    "am_pathogenicity": "AlphaMissense_score",
+    "am_class": "AlphaMissense_class",
+    "REVEL_REVEL": "REVEL",
     "REVEL_score": "REVEL",
     "AlphaMissense_pred": "AlphaMissense_class",
     "gnomAD_LOEUF": "LOEUF",
     "phyloP470way_mammal": "phyloP",
 }
+
+
+def _ann_plugins(ann: Path) -> tuple[list[str], list[str]]:
+    """Plugin/--custom args for every annotation file actually present.
+    Returns (plugin_args, missing_notes) - missing files degrade to an
+    'annotator absent' note instead of failing; the funnel emits with
+    whatever evidence layers exist."""
+    args, missing = [], []
+    cadd = [ann / f for f in CADD_FILES]
+    if all(p.exists() and p.with_name(p.name + ".tbi").exists()
+           for p in cadd):
+        args += ["--plugin", "CADD," + ",".join(f"/ann/{f}" for f in CADD_FILES)]
+    else:
+        missing.append("CADD (SNV+InDels+tbi)")
+    if (ann / AM_FILE).exists() and (ann / (AM_FILE + ".tbi")).exists():
+        args += ["--plugin", f"AlphaMissense,file=/ann/{AM_FILE}"]
+    else:
+        missing.append("AlphaMissense")
+    if (ann / SPLICEAI_SNV).exists() \
+            and (ann / (SPLICEAI_SNV + ".tbi")).exists():
+        args += ["--plugin", f"SpliceAI,snv=/ann/{SPLICEAI_SNV}"]
+    else:
+        missing.append("SpliceAI")
+    if (ann / REVEL_VCF).exists() \
+            and (ann / (REVEL_VCF + ".tbi")).exists():
+        args += ["--custom",
+                 f"/ann/{REVEL_VCF},REVEL,vcf,exact,0,REVEL"]
+    else:
+        missing.append("REVEL")
+    if (ann / DBNSFP_FILE).exists() \
+            and (ann / (DBNSFP_FILE + ".tbi")).exists():
+        args += ["--plugin",
+                 f"dbNSFP,consequence=ALL,/ann/{DBNSFP_FILE},"
+                 + ",".join(DBNSFP_FIELDS)]
+    else:
+        missing.append("dbNSFP (REVEL/LOEUF/phyloP fallback source)")
+    return args, missing
 
 
 def _docker_path(p: Path) -> str:
@@ -109,9 +160,10 @@ def build_command(args) -> list[str]:
     out = Path(args.out).resolve()
     cache = Path(args.cache_dir).resolve()
     ann = Path(args.ann_dir).resolve()
-    cadd = ",".join(f"/ann/{f}" for f in CADD_FILES)
-    dbnsfp = (f"dbNSFP,consequence=ALL,/ann/{DBNSFP_FILE},"
-              + ",".join(DBNSFP_FIELDS))
+    plugin_args, missing = _ann_plugins(ann)
+    if missing:
+        print("annotator(s) absent - degraded tier: " + "; ".join(missing),
+              file=sys.stderr)
     return [
         "docker", "run", "--rm",
         "-v", f"{_docker_path(cache)}:/opt/vep/.vep",
@@ -125,8 +177,7 @@ def build_command(args) -> list[str]:
         "--vcf", "--compress_output", "bgzip",
         "--fork", str(args.forks),
         "--everything", "--no_stats",
-        "--plugin", f"CADD,{cadd}",
-        "--plugin", dbnsfp,
+        *plugin_args,
     ]
 
 
@@ -140,11 +191,10 @@ def check_prereqs(args) -> list[str]:
     if not (cache / "homo_sapiens").is_dir():
         problems.append(f"no unpacked VEP cache under {cache}/homo_sapiens/")
     ann = Path(args.ann_dir)
-    for f in [*CADD_FILES, DBNSFP_FILE]:
-        if not (ann / f).exists():
-            problems.append(f"annotation file missing: {ann / f}")
-        if not (ann / (f + ".tbi")).exists():
-            problems.append(f"tabix index missing: {ann / (f + '.tbi')}")
+    _, missing = _ann_plugins(ann)
+    if len(missing) >= 5:
+        problems.append(f"no annotation sources present under {ann} - "
+                        "VEP would emit bare consequences only")
     return problems
 
 
@@ -174,7 +224,8 @@ def main(argv=None) -> int:
     print("\nRequired downloads (see module docstring):")
     print("  - VEP cache homo_sapiens_vep_116_GRCh38 unpacked under "
           f"{args.cache_dir}")
-    print(f"  - {args.ann_dir}: {DBNSFP_FILE} + {', '.join(CADD_FILES)} (+.tbi)")
+    print(f"  - {args.ann_dir}: CADD + AlphaMissense + SpliceAI + REVEL "
+          "(+ optional dbNSFP), each with .tbi")
     print("\nPost-step: rename CSQ header tokens "
           + ", ".join(f"{k}->{v}" for k, v in HEADER_RENAMES.items()))
     if args.dry_run:
