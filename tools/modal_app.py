@@ -905,7 +905,7 @@ cnv_image = (
         # every step logs ERROR and exits 0 having produced NOTHING - the
         # -call tables come out empty and the BUB1B verdict silently
         # rests on manta alone.
-        "cnvpytor -download",
+        "/opt/conda/bin/cnvpytor -download",
     )
 )
 
