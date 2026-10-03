@@ -901,6 +901,11 @@ cnv_image = (
         "micromamba create -y -n manta -c conda-forge -c bioconda "
         "manta && "
         "micromamba clean -afy",
+        # cnvpytor's per-genome GC/mappability resource pack. Without it
+        # every step logs ERROR and exits 0 having produced NOTHING - the
+        # -call tables come out empty and the BUB1B verdict silently
+        # rests on manta alone.
+        "cnvpytor -download",
     )
 )
 
@@ -965,11 +970,17 @@ def run_cnv(out_name: str = "track1_final") -> dict:
     else:
         print(f"skip manta ({manta_vcf} exists)", flush=True)
 
-    # cnvpytor: rd -> histogram -> partition -> call at 10k + 100k bins
+    # cnvpytor: rd -> histogram -> partition -> call at 10k + 100k bins.
+    # Guard on SIZE not existence: a resource-less cnvpytor exits 0 and
+    # leaves 0-byte TSVs behind (the `>` redirect), which a plain
+    # exists-check would treat as done forever.
     pytor = f"{out}/proband.pytor"
     t10, t100 = f"{out}/cnvpytor_calls.10k.tsv", \
         f"{out}/cnvpytor_calls.100k.tsv"
-    if not (os.path.exists(t10) and os.path.exists(t100)):
+    have_calls = all(
+        os.path.exists(t) and os.path.getsize(t) > 0
+        for t in (t10, t100))
+    if not have_calls:
         sh(f"cnvpytor -root {pytor} -rd {bam} && "
            f"cnvpytor -root {pytor} -his 10000 100000 && "
            f"cnvpytor -root {pytor} -partition 10000 100000 && "
@@ -991,6 +1002,7 @@ def run_cnv(out_name: str = "track1_final") -> dict:
         c2 = c[3:] if c.startswith("chr") else c
         return c2 == ch and s <= e0 and e >= s0
 
+    totals = {"manta": 0, "cnvpytor": 0}
     if os.path.exists(manta_vcf):
         with gzip.open(manta_vcf, "rt") as f:
             for line in f:
@@ -1001,11 +1013,12 @@ def run_cnv(out_name: str = "track1_final") -> dict:
                             if "=" in p)
                 end = int(info.get("END", c[1]))
                 svtype = info.get("SVTYPE", "")
-                if svtype in ("DEL", "DUP", "CNV") and \
-                        overlaps(c[0], int(c[1]), end):
-                    hits.append({"caller": "manta", "type": svtype,
-                                 "region": f"{c[0]}:{c[1]}-{end}",
-                                 "filter": c[6]})
+                if svtype in ("DEL", "DUP", "CNV"):
+                    totals["manta"] += 1
+                    if overlaps(c[0], int(c[1]), end):
+                        hits.append({"caller": "manta", "type": svtype,
+                                     "region": f"{c[0]}:{c[1]}-{end}",
+                                     "filter": c[6]})
     for tsv in (t10, t100):
         if not os.path.exists(tsv):
             continue
@@ -1025,6 +1038,7 @@ def run_cnv(out_name: str = "track1_final") -> dict:
                 except (ValueError, IndexError):
                     continue
                 if "deletion" in cnv_type or "duplication" in cnv_type:
+                    totals["cnvpytor"] += 1
                     if overlaps(rc, rs, re_):
                         hits.append({"caller": "cnvpytor",
                                      "type": cnv_type,
@@ -1036,6 +1050,11 @@ def run_cnv(out_name: str = "track1_final") -> dict:
         "calls": hits,
         "verdict": "none" if not hits else "review",
         "callers": ["manta", "cnvpytor"],
+        # genome-wide del/dup totals per caller - distinguishes "caller
+        # ran and found nothing at BUB1B" from "caller produced no calls
+        # at all" (a zero cnvpytor total means the run was degraded, e.g.
+        # the -download resource pack missing, and 'none' is weaker).
+        "total_del_dup_calls": totals,
     }
     _atomic_write(Path(f"{out}/summary.json"),
                   json.dumps(summary, indent=1))
