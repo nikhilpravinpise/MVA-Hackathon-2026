@@ -1,0 +1,51 @@
+# Modal volume `mva-data` inventory - run-2 state (pre-track1_final mutation)
+# Captured 2026-10-04 post-cleanup (64 realign/colltmp.*.bam fragments removed).
+# plan item 3.5 audit record: file list + sizes before the Phase-2 rerun lands.
+
+## case/
+case/patient.vcf.gz                                                    file   171.0 MiB
+case/genes_to_disease.json                                             file   307.9 KiB
+case/phenotype.hpoa                                                    file   34.2 MiB
+case/hp.obo                                                            file   10.4 MiB
+case/hpo_terms.json                                                    file   242 B
+
+## realign/
+realign/region_variants.vcf                                            file   206.7 KiB
+realign/phased.vcf                                                     file   206.4 KiB
+realign/region.sam                                                     file   24.0 MiB
+realign/flagstat.txt                                                   file   573 B
+realign/WGS_EX2312012.dedup.bam.bai                                    file   8.8 MiB
+realign/region.bam.bai                                                 file   39.8 KiB
+realign/region.bam                                                     file   3.1 MiB
+realign/WGS_EX2312012.dedup.bam                                        file   59.8 GiB
+realign/merged.bam                                                     file   56.5 GiB
+realign/lane_L004.bam                                                  file   15.2 GiB
+realign/lane_L003.bam                                                  file   15.0 GiB
+realign/lane_L002.bam                                                  file   15.3 GiB
+realign/lane_L001.bam                                                  file   15.3 GiB
+
+## track1_out/
+track1_out/funnel                                                      dir    43 B
+track1_out/ablations                                                   dir    65 B
+track1_out/bub1b_phasing.json                                          file   607 B
+track1_out/run_summary.json                                            file   793 B
+track1_out/ablations.json                                              file   362 B
+track1_out/arm_concordance.json                                        file   308 B
+track1_out/submission.csv                                              file   533 B
+track1_out/sf_findings.json                                            file   2 B
+track1_out/phasing_report.json                                         file   197 B
+track1_out/acmg_report.json                                            file   1.9 KiB
+track1_out/eda_report.json                                             file   245.0 KiB
+
+## track1_out/ablations/
+track1_out/ablations/gnomad.json                                       file   53 B
+track1_out/ablations/phasing.json                                      file   52 B
+track1_out/ablations/clinvar.json                                      file   52 B
+track1_out/ablations/damage_predictors.json                            file   54 B
+track1_out/ablations/hpo.json                                          file   54 B
+
+## track1_out/funnel/
+track1_out/funnel/result.json                                          file   2.2 GiB
+track1_out/funnel/hypotheses.tsv                                       file   149.5 MiB
+track1_out/funnel/funnel_counts.json                                   file   148 B
+

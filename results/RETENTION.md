@@ -60,15 +60,18 @@ DELETE within 30 days of close (patient genotype-scale derived data):
 | results/smoke_funnel/ | Early smoke funnel run | KEEP | Superseded |
 | results/run_real/ | Early funnel-only run, real-spike (HG002) | KEEP | Public data, superseded by t1_real_full/ |
 | results/eda_patient/ | Patient EDA/QC report | KEEP | Aggregate stats only - no genotype rows |
-| results/t1_patient/ | Early partial patient driver run | DELETE | Patient variant-scale outputs; superseded by track1_patient_modal/ |
+| results/t1_patient/ | Early partial patient driver run | DELETE | Patient variant-scale outputs; superseded by track1_patient_modal_run2/ |
 | results/track1_patient/ | Local patient funnel run | DELETE | result.json 2.3 GB + hypotheses.tsv 151 MB = patient genotype-scale dumps; funnel_counts/eda aggregates may be re-derived |
-| results/track1_patient_modal/funnel/result.json | Modal patient funnel full dump (2.2 GB, 1.48M hypotheses) | DELETE | Per-variant patient score sheet |
-| results/track1_patient_modal/funnel/hypotheses.tsv | STALE - from the superseded Oct-2 degraded-annotation modal run (BUB1B rank ~136) | DELETE | Do NOT cite; canonical ranking lives in result.json (BUB1B pair rank 8) |
-| results/track1_patient_modal/funnel/funnel_counts.json | STALE (emitted:3, same superseded run) | DELETE | Canonical counts: result.json funnel block (emitted:4) |
-| results/track1_patient_modal/realign/*.vcf | Patient region/phased VCFs | DELETE | Genotype-scale per retention doctrine |
-| results/track1_patient_modal/realign/flagstat.txt | Alignment summary stats | KEEP | Aggregate counts only |
-| results/track1_patient_modal/submission.csv | Track-1 submission artifact | KEEP | The deliverable itself |
-| results/track1_patient_modal/{ablations,acmg_report,arm_concordance,bub1b_phasing,eda_report,phasing_report,run_summary,sf_findings}.json | Modal run finding artifacts | KEEP | Aggregates/ranked findings, no genotype-scale rows |
+| results/track1_patient_modal_run2/ | Renamed run-2 pull (was `track1_patient_modal/` pre-2026-10-04) - PRE-MASK Modal run, preserved for audit vs the masked `track1_final/` rerun | mixed | Auditable baseline: unmasked artifacts prove the artifact_loci mask is direction-neutral (score-space bit-identical, rank changes only). Volume twin: `track1_out/` |
+| results/track1_patient_modal_run2/funnel/result.json | Modal patient funnel full dump (2.2 GB, 1.48M hypotheses) | DELETE | Per-variant patient score sheet |
+| results/track1_patient_modal_run2/funnel/hypotheses.tsv | STALE - from the superseded Oct-2 degraded-annotation modal run (BUB1B rank ~136) | DELETE | Do NOT cite; canonical ranking lives in result.json (BUB1B pair rank 8) |
+| results/track1_patient_modal_run2/funnel/funnel_counts.json | STALE (emitted:3, same superseded run) | DELETE | Canonical counts: result.json funnel block (emitted:4) |
+| results/track1_patient_modal_run2/realign/*.vcf | Patient region/phased VCFs | DELETE | Genotype-scale per retention doctrine |
+| results/track1_patient_modal_run2/realign/flagstat.txt | Alignment summary stats | KEEP | Aggregate counts only |
+| results/track1_patient_modal_run2/realign_local/ | Root-level stray pull moved in 2026-10-04 (region.bam/.bai, bub1b_region.vcf, phased_local.vcf) | DELETE | Patient genotype-scale; cited by docs/data_audit_2026-10-03.md section 2 - archived not deleted per plan 3.2 |
+| results/track1_patient_modal_run2/submission.csv | Run-2 submission artifact (superseded) | KEEP | Audit baseline; canonical CSV lands under `track1_patient_modal/` post-rerun |
+| results/track1_patient_modal_run2/{ablations,acmg_report,arm_concordance,bub1b_phasing,eda_report,phasing_report,run_summary,sf_findings}.json | Modal run-2 finding artifacts | KEEP | Aggregates/ranked findings, no genotype-scale rows |
+| results/track1_patient_modal/ | RESERVED - canonical masked-run pull lands here Phase 4 | mixed | Same keep/delete doctrine as the run2 dir once populated |
 | results/exomiser_patient/WGS_EX2312012-PASS_ONLY.{json,html,variants.tsv} | Exomiser per-variant patient score dumps (358 MB) | DELETE | Variant-level score sheets |
 | results/exomiser_patient/WGS_EX2312012-PASS_ONLY.genes.tsv | Exomiser gene ranking | KEEP | Gene-level findings only |
 | results/exomiser_patient/analysis.yml | Exomiser run config | KEEP | Methods record |
