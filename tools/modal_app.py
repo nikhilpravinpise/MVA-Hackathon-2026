@@ -871,12 +871,18 @@ cnv_image = (
     modal.Image.from_registry("mambaorg/micromamba:1.5-bookworm-slim",
                               add_python="3.12")
     .run_commands(
-        # NOTE: no standalone `samtools` here - co-solving it with
-        # cnvpytor's pysam/htslib pins is unresolvable on bioconda. The
-        # .bai is already on the volume and both callers read the BAM via
-        # their own bundled/pysam htslib, so the CLI isn't needed.
+        # NOTE: no standalone `samtools` - co-solving it with cnvpytor's
+        # pysam/htslib pins is unresolvable on bioconda. The .bai is
+        # already on the volume and both callers read the BAM via their
+        # own bundled/pysam htslib, so the CLI isn't needed.
+        # manta is a python-2.7-only bioconda package: it lives in its
+        # OWN conda env (never co-solvable with the py3.12 base), and its
+        # entry points run via /opt/conda/envs/manta/bin/*.
         "micromamba install -y -n base -c conda-forge -c bioconda "
-        "cnvpytor manta && micromamba clean -afy",
+        "cnvpytor && "
+        "micromamba create -y -n manta -c conda-forge -c bioconda "
+        "manta && "
+        "micromamba clean -afy",
     )
 )
 
@@ -908,12 +914,14 @@ def run_cnv(out_name: str = "track1_final") -> dict:
                        executable="/bin/bash")
 
     # manta: configure + run local workflow (candidateSV VCF lands in
-    # manta/results/variants/candidateSV.vcf.gz)
+    # manta/results/variants/candidateSV.vcf.gz). Manta lives in its own
+    # py2.7 conda env - entry points resolve under envs/manta/bin.
+    menv = "/opt/conda/envs/manta/bin"
     manta_vcf = f"{out}/manta/results/variants/candidateSV.vcf.gz"
     if not os.path.exists(manta_vcf):
-        sh(f"configManta.py --bam {bam} --referenceFasta {ref} "
+        sh(f"{menv}/configManta.py --bam {bam} --referenceFasta {ref} "
            f"--runDir {out}/manta && "
-           f"{out}/manta/runWorkflow.py -m local -j 32")
+           f"{menv}/python {out}/manta/runWorkflow.py -m local -j 32")
     else:
         print(f"skip manta ({manta_vcf} exists)", flush=True)
 
