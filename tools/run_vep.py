@@ -120,10 +120,10 @@ def _custom_annots(ann: Path) -> tuple[list[str], list[str]]:
     INFO fields so '<short>_<field>' lands as 'gnomADe_NFE_AF' etc."""
     args, missing = [], []
     specs = [
-        ("gnomade_genic.vcf.gz", "gnomADe",
+        ("gnomade_custom.vcf.gz", "gnomADe",
          "AF,AFR_AF,AMI_AF,AMR_AF,ASJ_AF,EAS_AF,FIN_AF,MID_AF,NFE_AF,"
          "OTH_AF,SAS_AF", "gnomADe_* (exome AFs)"),
-        ("gnomadg_genic.vcf.gz", "gnomADg",
+        ("gnomadg_custom.vcf.gz", "gnomADg",
          "AF,AFR_AF,AMI_AF,AMR_AF,ASJ_AF,EAS_AF,FIN_AF,MID_AF,NFE_AF,"
          "OTH_AF,SAS_AF", "gnomADg_* (genome AFs)"),
         ("clinvar_sig.vcf.gz", "CLIN", "SIG", "CLIN_SIG"),

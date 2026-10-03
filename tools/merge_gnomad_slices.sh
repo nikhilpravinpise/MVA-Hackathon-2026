@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 # Merge per-chromosome gnomAD slices into the two --custom annotation
-# files VEP expects: gnomade_genic.vcf.gz (gnomADe_* fields) and
-# gnomadg_genic.vcf.gz (gnomADg_*), via tools/gnomad_split.py rename.
+# files VEP expects: gnomade_custom.vcf.gz (gnomADe_* fields) and
+# gnomadg_custom.vcf.gz (gnomADg_*), via tools/gnomad_split.py rename.
+# (Same filenames run_vep.py's --custom specs and the Modal image expect;
+# the exomes-sites path tools/build_gnomad_exomes_custom.sh is the
+# equivalent for the 'e' side.)
 set -euo pipefail
 REPO="C:/Dev/MVA-Hackathon-2026"
 SL="env/vep_ann/gnomad_slices"
 IMG="ensemblorg/ensembl-vep:release_116.1"
 
 for side in e g; do
-  out="env/vep_ann/gnomad${side}_genic.vcf"
+  out="env/vep_ann/gnomad${side}_custom.vcf"
   echo "building $out"
   first=1
   for c in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y; do
@@ -28,9 +31,9 @@ done
 # just bgzip + index
 MSYS_NO_PATHCONV=1 docker run --rm \
   -v "$REPO/env/vep_ann:/ann" --entrypoint bash "$IMG" -c "
-  for s in gnomade_genic gnomadg_genic; do
+  for s in gnomade_custom gnomadg_custom; do
     bgzip -f /ann/\$s.vcf
     tabix -f -p vcf /ann/\$s.vcf.gz
   done
-  ls -l /ann/gnomad?_genic.vcf.gz*"
+  ls -l /ann/gnomad?_custom.vcf.gz*"
 echo "MERGED"

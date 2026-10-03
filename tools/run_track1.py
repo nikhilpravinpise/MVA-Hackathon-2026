@@ -57,6 +57,10 @@ def main(argv=None) -> int:
                     help="Exomiser genes.tsv from the Arm-A run - emits "
                          "arm_concordance.json (plan section-5 metric)")
     ap.add_argument("--skip-eda", action="store_true")
+    ap.add_argument("--skip-ablations", action="store_true",
+                    help="skip the per-source ablation loop; run those "
+                         "passes externally (e.g. fanned out on Modal) "
+                         "and merge their ablations.json afterwards")
     args = ap.parse_args(argv)
 
     case = Path(args.case)
@@ -145,36 +149,41 @@ def main(argv=None) -> int:
     summary["steps"]["funnel"] = res["funnel"]
 
     # -- step 3: ablations ----------------------------------------------------
-    abl_out = {}
-    from src.vcf import from_submission_chrom as _norm
-    for src in sorted(ABLATION_SOURCES):
-        r = run_pipeline(vcf, hpo, sample=args.sample, cfg=cfg,
-                         drops=frozenset({src}), **corpus)
-        rank = None
-        if truth:
-            want = sorted((_norm(str(v["chrom"])), v["pos"], v["ref"],
-                           v["alt"]) for v in truth["pair"])
-            for h in r["ranked"]:
-                got = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
-                             for v in h["variants"])
-                if h["model"] == "compound_het" and got == want:
-                    rank = h["rank"]
-                    break
-        else:
-            # no truth: report rank of the baseline top pair
-            base_top = next((h for h in res["ranked"] if h["emitted"]), None)
-            if base_top:
-                want = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
-                              for v in base_top["variants"])
+    if args.skip_ablations:
+        summary["steps"]["ablations"] = "external"
+    else:
+        from src.vcf import from_submission_chrom as _norm
+        abl_out = {}
+        for src in sorted(ABLATION_SOURCES):
+            r = run_pipeline(vcf, hpo, sample=args.sample, cfg=cfg,
+                             drops=frozenset({src}), **corpus)
+            rank = None
+            if truth:
+                want = sorted((_norm(str(v["chrom"])), v["pos"], v["ref"],
+                               v["alt"]) for v in truth["pair"])
                 for h in r["ranked"]:
                     got = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
                                  for v in h["variants"])
-                    if h["model"] == base_top["model"] and got == want:
+                    if h["model"] == "compound_het" and got == want:
                         rank = h["rank"]
                         break
-        abl_out[src] = {"pair_rank": rank, "emitted": r["funnel"]["emitted"]}
-    (out / "ablations.json").write_text(json.dumps(abl_out, indent=1))
-    summary["steps"]["ablations"] = abl_out
+            else:
+                # no truth: report rank of the baseline top pair
+                base_top = next((h for h in res["ranked"] if h["emitted"]),
+                                None)
+                if base_top:
+                    want = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                                  for v in base_top["variants"])
+                    for h in r["ranked"]:
+                        got = sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                                     for v in h["variants"])
+                        if h["model"] == base_top["model"] and got == want:
+                            rank = h["rank"]
+                            break
+            abl_out[src] = {"pair_rank": rank,
+                            "emitted": r["funnel"]["emitted"]}
+        (out / "ablations.json").write_text(json.dumps(abl_out, indent=1))
+        summary["steps"]["ablations"] = abl_out
 
     # -- step 4: secondary findings ------------------------------------------
     facts = []  # shared with step 5 (phasing pair lookup)

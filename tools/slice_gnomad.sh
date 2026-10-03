@@ -23,21 +23,36 @@ mkdir -p "$REPO/env/vep_ann/gnomad_slices"
 job() {
   local c=$1
   local out="gnomad_slices/joint_chr${c}.vcf.gz"
-  [ -s "$REPO/env/vep_ann/$out" ] && { echo "chr$c done"; return 0; }
+  [ -s "$REPO/env/vep_ann/$out" ] && [ -s "$REPO/env/vep_ann/$out.tbi" ] \
+    && { echo "chr$c done"; return 0; }
+  # write to .part and mv on success: a killed job must not leave a
+  # partial .vcf.gz (or a complete one missing its .tbi) that the -s
+  # resume guard would treat as done
   MSYS_NO_PATHCONV=1 docker run --rm \
     -v "$REPO/env/ref:/refdir:ro" -v "$REPO/env/vep_ann:/ann" "$IMG" \
     bash -c "bcftools view -R /refdir/beds/exon_chr${c}.bed -Ou \
         ${BASE}/gnomad.joint.v4.1.sites.chr${c}.vcf.bgz | \
       bcftools annotate --rename-chrs /refdir/chrmap.txt \
-        -x ${KEEP} -Oz -o /ann/${out} && \
-      tabix -f -p vcf /ann/${out}" \
-      >"env/vep_ann/gnomad_slices/chr${c}.log" 2>&1
+        -x ${KEEP} -Oz -o /ann/${out}.part && \
+      tabix -f -p vcf /ann/${out}.part && \
+      mv /ann/${out}.part /ann/${out} && \
+      mv /ann/${out}.part.tbi /ann/${out}.tbi" \
+      >"$REPO/env/vep_ann/gnomad_slices/chr${c}.log" 2>&1
   echo "chr$c -> $out"
 }
 
-for c in ${CHROMS:-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y}; do
+CHRS="${CHROMS:-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y}"
+for c in $CHRS; do
   job "$c" &
   while [ "$(jobs -r | wc -l)" -ge 8 ]; do wait -n; done
 done
 wait
+
+# background-job failures are invisible to set -e - verify loudly
+for c in $CHRS; do
+  [ -s "$REPO/env/vep_ann/gnomad_slices/joint_chr${c}.vcf.gz" ] \
+    && [ -s "$REPO/env/vep_ann/gnomad_slices/joint_chr${c}.vcf.gz.tbi" ] \
+    || { echo "chr$c slice failed - see \
+env/vep_ann/gnomad_slices/chr${c}.log"; exit 1; }
+done
 echo "ALL_SLICES_DONE"
