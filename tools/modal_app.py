@@ -83,6 +83,9 @@ BASE_TOP_PAIR = sorted([["6", 32584639, "C", "A"],
                         ["6", 32584809, "C", "T"]])  # HLA-DRB1 comp-het
 BUB1B_PAIR = sorted([["15", 40209701, "T", "G"],
                      ["15", 40220612, "T", "G"]])
+# Slice realign/region.bam was cut to (verify against realign tooling if
+# that ever changes) - the denominator for honest locus-depth stats.
+REGION_SLICE = "15:40100000-40250000"
 ABLATION_SRCS = ("clinvar", "damage_predictors", "gnomad", "hpo",
                  "phasing")
 
@@ -711,7 +714,7 @@ def run_mosdepth(out_name: str = "track1_final") -> dict:
     # fraction >= 10x/30x), parsed from mosdepth's own outputs.
     import json
 
-    def _summ(prefix: str) -> dict:
+    def _summ_wgs(prefix: str) -> dict:
         s = {}
         try:
             with open(prefix + ".mosdepth.summary.txt") as f:
@@ -723,6 +726,9 @@ def run_mosdepth(out_name: str = "track1_final") -> dict:
         except OSError:
             pass
         try:
+            # global.dist rows are (chrom, depth, frac of genome with
+            # coverage >= depth), sorted by DESCENDING depth - so the
+            # first row with d <= threshold is the tightest bound.
             cov10 = cov30 = None
             with open(prefix + ".mosdepth.global.dist.txt") as f:
                 for line in f:
@@ -730,16 +736,52 @@ def run_mosdepth(out_name: str = "track1_final") -> dict:
                     if len(c) < 3 or c[0] != "total":
                         continue
                     d, p = int(float(c[1])), float(c[2])
-                    if d <= 10:
+                    if cov10 is None and d <= 10:
                         cov10 = p
-                    if d <= 30:
+                    if cov30 is None and d <= 30:
                         cov30 = p
             s["frac_ge_10x"], s["frac_ge_30x"] = cov10, cov30
         except OSError:
             pass
         return s
 
-    summary = {name: _summ(f"{out}/{name}") for name in ("WGS", "region")}
+    def _summ_region(prefix: str) -> dict:
+        # region.bam spans only the BUB1B slice but carries the full
+        # reference header, so mosdepth's own summary denominates by
+        # whole-chromosome length (mean ~0.07 - artifact, not real).
+        # Compute locus stats directly from the 100 bp windows in
+        # regions.bed.gz over the slice the BAM was cut to.
+        import gzip
+        s = {"slice": REGION_SLICE}
+        chrom, se = REGION_SLICE.split(":")
+        lo, hi = (int(x) for x in se.split("-"))
+        n = 0
+        tot = 0.0
+        g10 = g30 = 0
+        try:
+            with gzip.open(prefix + ".regions.bed.gz", "rt") as f:
+                for line in f:
+                    c = line.rstrip("\n").split("\t")
+                    if len(c) < 4 or c[0] != chrom:
+                        continue
+                    st, en = int(c[1]), int(c[2])
+                    if en <= lo or st >= hi:
+                        continue
+                    n += 1
+                    d = float(c[3])
+                    tot += d
+                    g10 += d >= 10
+                    g30 += d >= 30
+            if n:
+                s["mean"] = round(tot / n, 2)
+                s["frac_ge_10x"] = round(g10 / n, 4)
+                s["frac_ge_30x"] = round(g30 / n, 4)
+        except OSError:
+            pass
+        return s
+
+    summary = {"WGS": _summ_wgs(f"{out}/WGS"),
+               "region": _summ_region(f"{out}/region")}
     _atomic_write(Path(f"{out}/mosdepth_summary.json"),
                   json.dumps(summary, indent=1))
     DATA.commit()
