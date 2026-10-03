@@ -71,7 +71,23 @@ DELETE within 30 days of close (patient genotype-scale derived data):
 | results/track1_patient_modal_run2/realign_local/ | Root-level stray pull moved in 2026-10-04 (region.bam/.bai, bub1b_region.vcf, phased_local.vcf) | DELETE | Patient genotype-scale; cited by docs/data_audit_2026-10-03.md section 2 - archived not deleted per plan 3.2 |
 | results/track1_patient_modal_run2/submission.csv | Run-2 submission artifact (superseded) | KEEP | Audit baseline; canonical CSV lands under `track1_patient_modal/` post-rerun |
 | results/track1_patient_modal_run2/{ablations,acmg_report,arm_concordance,bub1b_phasing,eda_report,phasing_report,run_summary,sf_findings}.json | Modal run-2 finding artifacts | KEEP | Aggregates/ranked findings, no genotype-scale rows |
-| results/track1_patient_modal/ | RESERVED - canonical masked-run pull lands here Phase 4 | mixed | Same keep/delete doctrine as the run2 dir once populated |
+| results/track1_patient_modal/track1_final/ | Canonical MASKED-run pull (2026-10-03, `mva-data:track1_final/`) | mixed | Acceptance-gated run: emitted=1, epcr=0.1324, 0 HLA-DRB1 |
+| results/track1_patient_modal/track1_final/submission.csv | FINAL Track-1 submission artifact | KEEP | The deliverable - 1 row, PROBAND01, chr15 BUB1B pair, epcr=0.1324, primary |
+| results/track1_patient_modal/track1_final/{run_summary,eda_report,acmg_report,arm_concordance,phasing_report,bub1b_phasing,sf_findings,offslice_eval}.json | Masked-run finding artifacts | KEEP | Aggregates/ranked findings, no genotype-scale rows |
+| results/track1_patient_modal/track1_final/ablations/*.json + ablations.json | Per-source ablation ranks + merged | KEEP | Aggregate ranks only |
+| results/track1_patient_modal/track1_final/funnel/funnel_counts.json | Masked funnel stage counts | KEEP | Aggregate (locus_masked 289725, emitted 1) |
+| results/track1_patient_modal/track1_final/funnel/result_head.json | Curated top-200 ranked excerpt (slim_result) | KEEP | KEEP-class "ranked variant list" = curated top-N, not the full dump |
+| results/track1_patient_modal/track1_final/funnel/{result.json,hypotheses.tsv} | Masked-run full hypothesis enumeration (~2.3 GB, 1.43M rows) | DELETE | Patient genotype-scale dump per doctrine above |
+| results/track1_patient_modal/track1_final/mosdepth/{mosdepth_summary.json,*.summary.txt,*.dist.txt} | Coverage aggregates | KEEP | WGS 42.08x / locus 45.26x summary + dist curves - aggregate stats only |
+| results/track1_patient_modal/track1_final/mosdepth/*.regions.bed.gz{,.csi} | Per-window coverage exports (~172 MB) | DELETE | Genome-scale patient-derived windows |
+| results/track1_patient_modal/track1_final/deepvariant/dv_findings.json | DV recall verdict (both sites 0/1 PASS GQ42/35) | KEEP | Aggregate finding |
+| results/track1_patient_modal/track1_final/deepvariant/dv_region.vcf | DV-called locus VCF | DELETE | Genotype-scale VCF |
+| results/track1_patient_modal/track1_final/fastq_qc/ | 4x fastp JSON+HTML + aggregate/ | KEEP | Aggregate QC metrics only |
+| results/track1_patient_modal/track1_final/cnv/summary.json | CNV verdict (0 BUB1B-overlapping; manta 74487 + cnvpytor 493 total) | KEEP | Aggregate finding |
+| results/track1_patient_modal/track1_final/cnv/{cnvpytor_calls.*.tsv,proband.pytor} | CNVpytor call tables + binary DB | DELETE | Genome-scale patient variant calls |
+| results/track1_patient_modal/track1_final/cnv/manta/ | Manta results + pyflow workspace | DELETE | Genotype-scale SV VCFs + intermediates |
+| results/track1_patient_modal/realign/{region.sam,phased.vcf,region_variants.vcf} | Read-level phasing evidence pull | DELETE | Patient genotypes/read alignments |
+| results/track1_patient_modal/realign/flagstat.txt | Alignment summary stats | KEEP | Aggregate counts only |
 | results/exomiser_patient/WGS_EX2312012-PASS_ONLY.{json,html,variants.tsv} | Exomiser per-variant patient score dumps (358 MB) | DELETE | Variant-level score sheets |
 | results/exomiser_patient/WGS_EX2312012-PASS_ONLY.genes.tsv | Exomiser gene ranking | KEEP | Gene-level findings only |
 | results/exomiser_patient/analysis.yml | Exomiser run config | KEEP | Methods record |

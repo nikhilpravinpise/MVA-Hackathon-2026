@@ -529,7 +529,8 @@ def run_main(out_name: str = "track1_out") -> dict:
 
 
 @app.function(image=repo_img, volumes={"/data": DATA},
-              cpu=4, memory=32768, timeout=6 * 3600)
+              cpu=4, memory=32768, timeout=6 * 3600,
+              nonpreemptible=True)
 def run_ablation(src: str, out_name: str = "track1_out") -> dict:
     """One dropped-source funnel pass; tracks where the baseline emitted
     pair and the BUB1B pair land without `src`'s annotation signal.
