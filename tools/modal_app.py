@@ -871,8 +871,12 @@ cnv_image = (
     modal.Image.from_registry("mambaorg/micromamba:1.5-bookworm-slim",
                               add_python="3.12")
     .run_commands(
+        # NOTE: no standalone `samtools` here - co-solving it with
+        # cnvpytor's pysam/htslib pins is unresolvable on bioconda. The
+        # .bai is already on the volume and both callers read the BAM via
+        # their own bundled/pysam htslib, so the CLI isn't needed.
         "micromamba install -y -n base -c conda-forge -c bioconda "
-        "cnvpytor manta samtools && micromamba clean -afy",
+        "cnvpytor manta && micromamba clean -afy",
     )
 )
 
