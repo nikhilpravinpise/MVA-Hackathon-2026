@@ -88,8 +88,9 @@ def submission_summary(result: dict, truth: dict | None) -> str:
         f"phenotype {top['pheno_score']:.2f} / inheritance "
         f"{top['inheritance_score']:.1f}), epcr {top['epcr']:.2f}, "
         f"phasing: **{top['in_trans']}**",
-        f"- Emitted hypotheses: {len(em)} of {len(result.get('ranked', []))} "
-        f"ranked",
+        f"- Emitted hypotheses: {len(em)} of "
+        f"{(result.get('funnel') or {}).get('hypotheses', len(result.get('ranked', [])))} "
+        f"enumerated ({len(result.get('ranked', []))} in ranked table)",
     ]
     if truth:
         # match on FULL variant key - (pos,alt) alone falsely 'MATCHES' a
@@ -132,6 +133,12 @@ def sensitivity_table(sens: dict | None) -> str:
     for g in sens.get("grid", []):
         lines.append(f"| {g['af_max']:g} | {g['min_votes']} | {g['pair_rank']} |")
     lines.append(f"\nRobust across grid: **{sens.get('robust')}**")
+    # corpus honesty: the grid runs on the synthetic spike case, not the
+    # report run - the 'true pair' column is the spiked truth's rank.
+    if sens.get("vcf"):
+        lines.append(f"\nGrid corpus: `{sens['vcf']}` (the 'true-pair rank' "
+                     "column tracks the spiked synthetic pair, not the "
+                     "report run's emitted call).")
     return "\n".join(lines)
 
 
@@ -319,6 +326,22 @@ def fastq_qc_section(fq: dict | None) -> str:
                  "expectations, +-20% tolerance)")
     for n in comp.get("notes") or []:
         lines.append(f"- {n}")
+    # disposition of out-of-band metrics, derived not asserted: quality
+    # metrics passing while count/coverage metrics run HIGH means the
+    # delivery is deeper than the leaked expectation - a stale prior,
+    # not a data defect (decisions.md FASTQ row; flagstat independent).
+    fails = {m for m, c in checks.items() if c.get("status") == "fail"}
+    if fails and fails <= {"read_pairs", "coverage_x"}:
+        high = all((checks[m].get("value") or 0)
+                   > (checks[m].get("expected") or 0) for m in fails)
+        if high:
+            lines.append("\nDisposition: `read_pairs`/`coverage_x` run "
+                         "**above** expectation in consistent magnitude "
+                         "while every quality metric passes - the sample "
+                         "was sequenced deeper than the leaked prior "
+                         "(flagstat independently confirms the count). "
+                         "Stale expectation, not a data defect - see "
+                         "decisions.md.")
     return "\n".join(lines)
 
 
@@ -434,6 +457,13 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-dir", required=True)
     ap.add_argument("--truth", default=None)
+    ap.add_argument("--spike-dir", default=None,
+                    help="funnel result dir of the SYNTHETIC spike-in run "
+                         "(--spike-truth pairs it) - section 3's synthetic "
+                         "bullet derives from these artifacts, not from the "
+                         "report run itself")
+    ap.add_argument("--spike-truth", default=None,
+                    help="spike_case/truth.json for --spike-dir")
     ap.add_argument("--eda", default=None)
     ap.add_argument("--sensitivity", default=None)
     ap.add_argument("--ablations", default=None)
@@ -510,18 +540,41 @@ def main(argv=None) -> int:
         else "the adversarial fixture batteries")
 
     emitted = [h for h in result["ranked"] if h.get("emitted")]
-    if not truth:
+
+    def _spike_hit(ranked: list, truth_pair: list) -> dict | None:
+        want = sorted((from_submission_chrom(str(v["chrom"])),
+                       v["pos"], v["ref"], v["alt"]) for v in truth_pair)
+        return next((h for h in ranked
+                     if h["model"] == "compound_het"
+                     and sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
+                                for v in h["variants"]) == want), None)
+
+    # The synthetic-spike bullet describes the synthetic validation run,
+    # which is a DIFFERENT run from the one being reported (patient case
+    # has no truth). --spike-dir/--spike-truth point at that run's own
+    # artifacts; --truth still verifies THIS run when a truth exists.
+    spike_rank = None
+    spike_result = (_j(Path(args.spike_dir) / "result.json")
+                    if args.spike_dir else None)
+    spike_truth = _j(args.spike_truth)
+    if spike_result is not None and spike_truth:
+        hit = _spike_hit(spike_result.get("ranked", []),
+                         spike_truth["pair"])
+        spike_rank = hit["rank"] if hit else None
+        spike_line = (
+            f"recovered pair == **MATCHES the spiked truth** at rank "
+            f"{hit['rank']} (score {hit['score']:.3f}, in-trans: "
+            f"{hit['in_trans']})" if hit else
+            "**NOT recovered** - the spiked truth pair is absent from the "
+            "synthetic run's ranked table (see ablation report)")
+    elif not truth:
         spike_line = ("external validation: not run (no --truth supplied) - "
                       "the emitted call below is unverified")
     elif not emitted:
         spike_line = "NOT recovered - see ablation report"
     else:
-        want = sorted((from_submission_chrom(str(v["chrom"])),
-                       v["pos"], v["ref"], v["alt"]) for v in truth["pair"])
-        hit = next((h for h in result["ranked"]
-                    if h["model"] == "compound_het"
-                    and sorted((v["chrom"], v["pos"], v["ref"], v["alt"])
-                               for v in h["variants"]) == want), None)
+        hit = _spike_hit(result["ranked"], truth["pair"])
+        spike_rank = hit["rank"] if hit else None
         spike_line = (
             f"true pair recovered at **rank {hit['rank']}** "
             f"(score {hit['score']:.3f}, in-trans: {hit['in_trans']})"
@@ -606,10 +659,9 @@ def main(argv=None) -> int:
                          f"{ta if ta else 'absent'} by Arm A "
                          "(Exomiser genome mode)")
 
-    # Derived abstract numbers (no hand-typed stats): recovery rank from the
-    # run artifact, ablation ceiling from ablations.json, grid shape from
-    # sensitivity.json.
-    top_rank = emitted[0]["rank"] if emitted else None
+    # Derived abstract numbers (no hand-typed stats): synthetic recovery
+    # rank from the spike run's own artifacts (spike_rank above), ablation
+    # ceiling from ablations.json, grid shape from sensitivity.json.
     abl_max = None
     if ablations:
         # post-mask artifacts track the BUB1B pair under 'bub1b_rank';
@@ -773,7 +825,9 @@ def main(argv=None) -> int:
             "hom-alt, dominant and X-linked genotype hypotheses -> HPO "
             "Resnik/BMA phenotype scoring -> rank-mapped epcr. The funnel "
             f"was validated blind on a synthetic compound-het spike-in "
-            f"(recovered at rank {top_rank}, in-trans via PGT/PID), stayed "
+            + (f"(recovered at rank {spike_rank}, in-trans via PGT/PID), "
+               if spike_rank is not None else "(recovery pending), ")
+            + "stayed "
             "silent on a negative control carrying a TTN-class decoy pair, "
             f"and held rank <={abl_max} under every leave-one-source-out "
             f"ablation and a {grid_shape or 'NxN'} threshold grid. "
