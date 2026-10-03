@@ -901,11 +901,25 @@ cnv_image = (
         "micromamba create -y -n manta -c conda-forge -c bioconda "
         "manta && "
         "micromamba clean -afy",
-        # cnvpytor's per-genome GC/mappability resource pack. Without it
-        # every step logs ERROR and exits 0 having produced NOTHING - the
+        # cnvpytor's per-genome GC/mask resource pack. Without it every
+        # step logs ERROR and exits 0 having produced NOTHING - the
         # -call tables come out empty and the BUB1B verdict silently
-        # rests on manta alone.
-        "/opt/conda/bin/cnvpytor -download",
+        # rests on manta alone. `cnvpytor -download` itself is broken on
+        # 1.3.2 (PosixPath.split AttributeError in genome.py), so fetch
+        # the same upstream files it would have pulled: check_resources
+        # requires every genome's gc_file + mask_file, not just hg38's.
+        "/opt/conda/bin/python -c \""
+        "import urllib.request, os, cnvpytor; "
+        "d = os.path.join(os.path.dirname(cnvpytor.__file__), 'data'); "
+        "os.makedirs(d, exist_ok=True); "
+        "base = 'https://raw.githubusercontent.com/abyzovlab/CNVpytor/"
+        "master/cnvpytor/data/'; "
+        "fs = ['gc_hg19.pytor','mask_hg19.pytor','gc_hg38.pytor',"
+        "'mask_hg38.pytor','gc_chm13v2.0.pytor','gc_chm13v1.1.pytor',"
+        "'gc_kn99.pytor']; "
+        "[urllib.request.urlretrieve(base+f, os.path.join(d,f)) "
+        "for f in fs]; "
+        "print('resources:', sorted(os.listdir(d)))\"",
     )
 )
 
