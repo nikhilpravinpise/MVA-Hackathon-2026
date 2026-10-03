@@ -228,3 +228,144 @@ def test_arm_a_control_variants_tsv_rejected(tmp_path):
                "--arm-a-control", str(tsv), "--out", str(out)])
     assert rc == 0
     assert "unreadable" in out.read_text()
+
+
+def test_ablation_table_post_mask_columns():
+    """Falsification: post-mask ablation JSONs carry bub1b_rank/top_emitted
+    while pair_rank is null - a table still keying pair_rank renders
+    'None' per row and hides the mask evidence."""
+    from tools.make_report import ablation_table
+    abl = {"gnomad": {"pair_rank": None, "bub1b_rank": 5,
+                      "top_emitted": {"gene": "BUB1B",
+                                      "model": "compound_het",
+                                      "variants": [["15", 1, "T", "G"],
+                                                   ["15", 2, "T", "G"]]},
+                      "emitted": 1},
+           "hpo": {"pair_rank": None, "bub1b_rank": None,
+                   "top_emitted": None, "emitted": 0}}
+    t = ablation_table(abl, None)
+    assert "| gnomad | 5 | BUB1B (compound_het) | 1 |" in t
+    assert "| hpo | None | None | 0 |" in t
+    assert "Pair rank" not in t.splitlines()[0]  # header uses new names
+
+
+def test_ablation_table_premask_fallback():
+    """Falsification: run-2 artifacts keyed the tracked pair under
+    pair_rank with no bub1b_rank - the table must still show the rank
+    rather than degrade to None."""
+    from tools.make_report import ablation_table
+    abl = {"clinvar": {"pair_rank": 2, "emitted": 4}}
+    t = ablation_table(abl, None)
+    assert "| clinvar | 2 | None | 4 |" in t
+
+
+def test_abl_max_uses_bub1b_rank_post_mask(tmp_path):
+    """Falsification: ABSTRACT derives 'held rank <=N' - post-mask every
+    pair_rank is null, so a pair_rank-only derivation renders literally
+    '<=None' in the abstract."""
+    from tools.make_report import main
+    abl = tmp_path / "ablations.json"
+    abl.write_text(json.dumps(
+        {s: {"pair_rank": None, "bub1b_rank": 5, "emitted": 1}
+         for s in ("clinvar", "gnomad")}))
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--ablations", str(abl), "--out", str(out)])
+    assert rc == 0
+    body = out.read_text()
+    assert "rank <=5" in body
+    assert "<=None" not in body
+
+
+def test_result_head_preferred_over_result(tmp_path):
+    """Falsification: result_head.json (the slim Modal artifact) must be
+    preferred - reading the 2 GB result.json when a head exists defeats
+    the heap-risk mitigation."""
+    from tools.make_report import main
+    run = _minimal_run(tmp_path)
+    (run / "result_head.json").write_text(json.dumps({
+        "ranked": [{"gene": "HEADGENE", "model": "compound_het",
+                    "score": 0.9, "variant_damage": 1.0,
+                    "pheno_score": 0.8, "inheritance_score": 1.0,
+                    "epcr": 0.95, "in_trans": "trans", "emitted": True,
+                    "rank": 1,
+                    "variants": [{"chrom": "7", "pos": 1, "ref": "A",
+                                  "alt": "T"},
+                                 {"chrom": "7", "pos": 2, "ref": "G",
+                                  "alt": "C"}]}],
+        "emitted": [1],
+        "funnel": {"records": 2, "locus_masked": 2, "emitted": 1},
+        "monotonicity_violations": [],
+        "provenance": {"vcf": "x.vcf", "config_sha256": "ab" * 32,
+                       "runtime_sec": 0.1}}))
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(run), "--out", str(out)])
+    assert rc == 0
+    assert "HEADGENE" in out.read_text()
+
+
+def test_new_slots_pending_when_absent(tmp_path):
+    """Falsification: the evidence render slots must render PENDING (not
+    crash, not fabricate) when their artifacts aren't wired."""
+    from tools.make_report import main
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--out", str(out)])
+    assert rc == 0
+    body = out.read_text()
+    assert "{{MOSDEPTH_SECTION}}" not in body
+    assert "{{ORTHOGONAL_SECTION}}" not in body
+    # the PENDING marker lands in all three new slots
+    assert body.count("Pending dataset access") >= 3
+
+
+def test_new_slots_fill_from_fixtures(tmp_path):
+    """Falsification: wired artifacts must surface in the report - a
+    slot that drops its JSON silently would publish an empty section."""
+    from tools.make_report import main
+    md = tmp_path / "mosdepth.json"
+    md.write_text(json.dumps(
+        {"WGS": {"mean": 43.2, "frac_ge_10x": 0.98, "frac_ge_30x": 0.87},
+         "region": {"mean": 51.0, "frac_ge_10x": 1.0,
+                    "frac_ge_30x": 0.99}}))
+    dv = tmp_path / "dv.json"
+    dv.write_text(json.dumps(
+        {"caller": "deepvariant-1.9.0",
+         "sites": {"40209701": {"gt": "0/1", "gq": "34", "filter": "PASS",
+                                 "recalled": True},
+                   "40220612": {"gt": "0/1", "gq": "44", "filter": "PASS",
+                                 "recalled": True}},
+         "all_recalled_het_pass_gq20": True}))
+    cnv = tmp_path / "cnv.json"
+    cnv.write_text(json.dumps(
+        {"bub1b_region": "15:40205000-40232000",
+         "bub1b_overlapping_calls": 0, "calls": [],
+         "verdict": "none", "callers": ["manta", "cnvpytor"]}))
+    fq = tmp_path / "fq.json"
+    fq.write_text(json.dumps(
+        {"mode": "fastp_json", "status": "ok",
+         "stats": {"read_pairs": 404000000},
+         "comparison": {"all_pass": True, "n_measured": 5,
+                        "checks": {"q30_rate": {"status": "pass",
+                                              "value": 0.94,
+                                              "expected": 0.935}},
+                        "notes": []}}))
+    off = tmp_path / "off.json"
+    off.write_text(json.dumps(
+        {"site": "15:40216470 A>G", "distance_to_nearest_exon_bp": 1026,
+         "ad": "28/18", "spliceai_deltas": 0.0,
+         "gnomad_genome_cov": "absent",
+         "verdict": "evaluated; splice-benign; does not change the call"}))
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--mosdepth", str(md), "--deepvariant", str(dv),
+               "--cnv", str(cnv), "--fastq-qc", str(fq),
+               "--offslice", str(off), "--out", str(out)])
+    assert rc == 0
+    body = out.read_text()
+    assert "| WGS | 43.2 | 0.98 | 0.87 |" in body
+    assert "| 15:40209701 | 0/1 | 34 | PASS | True |" in body
+    assert "**0** del/dup calls" in body or "del/dup" in body
+    assert "0.94" in body  # fastq check value
+    assert "splice-benign" in body
+    assert "{{MOSDEPTH_SECTION}}" not in body

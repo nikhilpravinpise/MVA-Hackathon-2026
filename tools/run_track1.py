@@ -221,6 +221,8 @@ def main(argv=None) -> int:
                     and h["model"] == "compound_het"), None)
         ph = {"evidence": [], "agreement": "n/a"}
         if top:
+            ph["gene"] = top["gene"]
+            ph["variants"] = top["variants"]
             # rebuild the two VariantFacts by FULL variant key - matching on
             # (chrom,pos) alone can pick two facts of the SAME variant when
             # a site annotates into multiple genes or is multi-allelic,

@@ -20,7 +20,7 @@ Two independent arms were specified a priori:
 * **Arm A (standard):** Exomiser 14.0.0 genome mode (hg38, `2406` bundles,
   PASS_ONLY preset chain) on the same VCF + HPO set - runner
   `tools/run_exomiser.py`, concordance via `tools/compare_arms.py`.
-* **Arm B (custom funnel, this report):** six deterministic stages:
+* **Arm B (custom funnel, this report):** seven deterministic stages:
 
 ```
 annotated VCF (VEP CSQ)
@@ -28,11 +28,14 @@ annotated VCF (VEP CSQ)
   -> [2] rarity tier                          (gnomAD pop-max AF; absent > rare)
   -> [3] consequence/damage tier              (LoF | damaging-missense ensemble |
                                                splice-altering | other)
-  -> [4] inheritance aggregation per gene     (compound-het, hom-alt,
+  -> [4] artifact-locus mask                  (declared low-mappability loci,
+                                               e.g. extended MHC; disclosed
+                                               `locus_masked` stage)
+  -> [5] inheritance aggregation per gene     (compound-het, hom-alt,
                                                dominant-het, X-linked)
-  -> [5] phenotype scoring                    (HPO Resnik/BMA semantic
+  -> [6] phenotype scoring                    (HPO Resnik/BMA semantic
                                                similarity + gene->disease prior)
-  -> [6] rank -> epcr                         (ranking artifact, not a
+  -> [7] rank -> epcr                         (ranking artifact, not a
                                                calibrated probability)
 ```
 
@@ -48,6 +51,14 @@ pipeline output is the submission.
 ## 2. Data audit / EDA
 
 {{EDA_SECTION}}
+
+### 2a. Coverage profile (mosdepth)
+
+{{MOSDEPTH_SECTION}}
+
+### 2b. FASTQ QC (fastp -> run_fastqc aggregate)
+
+{{FASTQ_QC_SECTION}}
 
 ## 3. External validation
 
@@ -77,6 +88,10 @@ The funnel was validated *blind* before the proband call:
 ## 4. Phasing evidence (phase-set + read-level status)
 
 {{PHASING_SECTION}}
+
+### 4a. Orthogonal evidence arms
+
+{{ORTHOGONAL_SECTION}}
 
 ## 5. Automated vs manual review
 

@@ -15,12 +15,21 @@ Functions:
     run_ablation - per-source ablation fan-out (drops ABLATION_SRCS)
     merge_ablations - detached merger into ablations.json
     run_phasing  - BUB1B pair read-level phase evidence
+    run_mosdepth - WGS windowed + BUB1B-region coverage
+    run_fastp    - per-lane-pair FASTQ QC (fastp JSONs)
+    run_deepvariant - independent caller on the BUB1B region slice
+    run_cnv      - manta + cnvpytor CNV screen on dedup.bam
+    slim_result  - funnel/result_head.json (ranked[:200] + metadata)
+
+All funnel/evidence fns take `out_name` (default shown per fn) so masked
+and unmasked runs stay auditable side by side on the same volume.
 
 Run:
     modal run tools/modal_app.py::stage_ann
     modal run tools/modal_app.py::run_vep
     modal run tools/modal_app.py::fetch_fastq    (needs secret hf-token)
     modal run tools/modal_app.py::realign
+    modal run --detach tools/modal_app.py::run_main --out-name track1_final
     modal volume get mva-data WGS_exon.vep.vcf.gz data/WGS_exon.vep.vcf.gz
 """
 from __future__ import annotations
@@ -56,7 +65,17 @@ repo_img = (
 )
 
 CASE = "/data/case"
-OUT = "/data/track1_out"
+OUT = "/data/track1_out"  # run-2 baseline (pre-mask); the masked rerun
+                          # targets "track1_final" via the fns' out_name arg
+
+
+def _atomic_write(path: Path, text: str) -> None:
+    """tmp-file + os.replace: a producer dying mid-write can otherwise
+    commit a truncated JSON that a consumer parses as complete."""
+    import os
+    tmp = Path(str(path) + ".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
 
 # Reference pairs carried as constants so ablation containers need no
 # baseline result.json (the local run is answer-blind, no truth.json).
@@ -171,7 +190,9 @@ vep_image = modal.Image.from_registry(
 def run_vep() -> None:
     """Cache-free VEP: --gtf + --fasta + CADD/AM/SpliceAI plugins +
     REVELSRC/gnomADe/CLIN custom VCFs. Same command shape run_vep.py
-    emits locally."""
+    emits locally. Note: this fn emits RAW plugin field names; the CSQ
+    header reconcile to contract names is enforced by `_case_inputs`/
+    `setup_case` before any funnel fn touches the VCF, not here."""
     import subprocess
 
     cmd = [
@@ -332,10 +353,15 @@ def realign() -> None:
         print("skip markdup (dedup.bam quickcheck ok)", flush=True)
     sh(f"samtools index {dedup}")
     sh(f"samtools flagstat {dedup} > {w}/flagstat.txt")
-    if not os.path.exists(f"{w}/region.bam.bai"):
+    # .bai-existence alone accepts a corrupt bam left by a preempted
+    # index; quickcheck the bam too before trusting the resume.
+    region = f"{w}/region.bam"
+    if not os.path.exists(f"{region}.bai") or subprocess.run(
+            ["samtools", "quickcheck", "-v", region],
+            env=env).returncode != 0:
         sh(f"samtools view -b {dedup} "
-           f"15:40100000-40250000 > {w}/region.bam && "
-           f"samtools index {w}/region.bam")
+           f"15:40100000-40250000 > {region} && "
+           f"samtools index {region}")
     sh(f"samtools view {w}/region.bam > {w}/region.sam")
     # whatshap must phase ONLY the region slice - feeding the full-genome
     # VCF silently yields 0 reads/0 variants (observed empirically). Slice
@@ -475,9 +501,11 @@ def _pair_rank(ranked, want, model):
 
 @app.function(image=repo_img, volumes={"/data": DATA},
               cpu=4, memory=32768, timeout=6 * 3600)
-def run_main() -> dict:
+def run_main(out_name: str = "track1_out") -> dict:
     """EDA + funnel + SF + phasing + ACMG + submission + concordance.
-    Ablations are skipped (--skip-ablations) - they fan out via .map()."""
+    Ablations are skipped (--skip-ablations) - they fan out via .map().
+    `out_name` names the volume output dir so masked/unmasked runs stay
+    auditable side by side (default = run-2's track1_out)."""
     import os
     import subprocess
     import sys
@@ -485,7 +513,7 @@ def run_main() -> dict:
     _case_inputs()  # ensure case dir is complete before the driver runs
     sam = "/data/realign/region.sam"
     cmd = [sys.executable, "/repo/tools/run_track1.py",
-           "--case", CASE, "--out", OUT,
+           "--case", CASE, "--out", f"/data/{out_name}",
            "--arm-a-tsv", "/data/exomiser_genes.tsv",
            "--skip-ablations"]
     if os.path.exists(sam):
@@ -499,63 +527,86 @@ def run_main() -> dict:
 
 @app.function(image=repo_img, volumes={"/data": DATA},
               cpu=4, memory=32768, timeout=6 * 3600)
-def run_ablation(src: str) -> dict:
+def run_ablation(src: str, out_name: str = "track1_out") -> dict:
     """One dropped-source funnel pass; tracks where the baseline emitted
-    pair and the BUB1B pair land without `src`'s annotation signal."""
+    pair and the BUB1B pair land without `src`'s annotation signal.
+    `pair_rank` null post-mask is itself the evidence the mask applied."""
     import json
-    import os
 
     vcf, hpo, cfg, corpus = _case_inputs()
     from src.pipeline import run_pipeline
     r = run_pipeline(str(vcf), hpo, sample=None, cfg=cfg,
                      drops=frozenset({src}), **corpus)
+    top = next((h for h in r["ranked"] if h.get("emitted")), None)
     out = {
         "pair_rank": _pair_rank(r["ranked"], BASE_TOP_PAIR,
                                 "compound_het"),
         "bub1b_rank": _pair_rank(r["ranked"], BUB1B_PAIR, "compound_het"),
+        "top_emitted": (
+            {"gene": top["gene"], "model": top["model"],
+             "variants": sorted(
+                 [[str(v["chrom"]), v["pos"], v["ref"], v["alt"]]
+                  for v in top["variants"]])}
+            if top else None),
         "emitted": r["funnel"]["emitted"],
     }
-    os.makedirs(f"{OUT}/ablations", exist_ok=True)
-    Path(f"{OUT}/ablations/{src}.json").write_text(
-        json.dumps(out, indent=1))
+    out_dir = Path(f"/data/{out_name}")
+    (out_dir / "ablations").mkdir(parents=True, exist_ok=True)
+    _atomic_write(out_dir / "ablations" / f"{src}.json",
+                  json.dumps(out, indent=1))
     DATA.commit()
     print(f"ABLATION_DONE {src} {out}", flush=True)
     return {src: out}
 
 
 @app.function(image=repo_img, volumes={"/data": DATA},
-              cpu=1, memory=2048, timeout=3 * 3600)
-def merge_ablations() -> dict:
-    """Poll the volume for all per-source ablation outputs, then merge
-    into ablations.json and patch run_summary.json. Fully detached -
-    launch alongside the ablation calls; it waits for them."""
+              cpu=1, memory=2048, timeout=5 * 3600, retries=2)
+def merge_ablations(out_name: str = "track1_out") -> dict:
+    """Poll the volume for all per-source ablation outputs AND
+    run_summary.json, then merge into ablations.json and patch the
+    summary. Fully detached - launch alongside the ablation calls; it
+    waits for them. A clean rerun can finish ablations BEFORE run_main
+    writes its summary, so the summary is part of the wait condition -
+    patching only `if rs.exists()` would silently lose the merge on a
+    fast fleet."""
     import json
     import time
 
-    abl_dir = Path(f"{OUT}/ablations")
-    deadline = time.time() + 2.5 * 3600
-    merged = {}
+    out_dir = Path(f"/data/{out_name}")
+    abl_dir = out_dir / "ablations"
+    rs_path = out_dir / "run_summary.json"
+    deadline = time.time() + 4 * 3600
+    merged: dict = {}
+    summary = None
     while time.time() < deadline:
         try:
             DATA.reload()  # see commits from sibling containers
         except Exception:
             pass
-        merged = {s: json.loads((abl_dir / f"{s}.json").read_text())
-                  for s in ABLATION_SRCS
-                  if (abl_dir / f"{s}.json").exists()}
-        if len(merged) == len(ABLATION_SRCS):
+        merged = {}
+        for s in ABLATION_SRCS:
+            try:
+                merged[s] = json.loads(
+                    (abl_dir / f"{s}.json").read_text())
+            except (OSError, json.JSONDecodeError):
+                pass  # absent or torn mid-write - treat as pending
+        try:
+            summary = json.loads(rs_path.read_text())
+        except (OSError, json.JSONDecodeError):
+            summary = None
+        if len(merged) == len(ABLATION_SRCS) and summary is not None:
             break
         time.sleep(60)
     if len(merged) != len(ABLATION_SRCS):
         raise RuntimeError(
             f"ablation timeout - got {sorted(merged)}")
-    (Path(OUT) / "ablations.json").write_text(
-        json.dumps(merged, indent=1))
-    rs = Path(OUT) / "run_summary.json"
-    if rs.exists():
-        s = json.loads(rs.read_text())
-        s.setdefault("steps", {})["ablations"] = merged
-        rs.write_text(json.dumps(s, indent=1))
+    if summary is None:
+        raise RuntimeError(
+            "run_summary.json never appeared - run_main failed?")
+    _atomic_write(out_dir / "ablations.json",
+                  json.dumps(merged, indent=1))
+    summary.setdefault("steps", {})["ablations"] = merged
+    _atomic_write(rs_path, json.dumps(summary, indent=1))
     DATA.commit()
     print("MERGE_DONE", flush=True)
     return merged
@@ -563,10 +614,10 @@ def merge_ablations() -> dict:
 
 @app.function(image=repo_img, volumes={"/data": DATA},
               cpu=2, memory=8192, timeout=3600)
-def run_phasing() -> dict:
+def run_phasing(out_name: str = "track1_out") -> dict:
     """Read-level phase evidence for the BUB1B compound_het pair from
     /data/realign/region.sam + PGT/PID fields. Writes
-    track1_out/bub1b_phasing.json (additive artifact - run_track1's
+    {out_name}/bub1b_phasing.json (additive artifact - run_track1's
     phasing_report.json covers the top-emitted pair)."""
     import json
 
@@ -610,8 +661,357 @@ def run_phasing() -> dict:
         comb = evidence_report(call, read_ph)
         ph["agreement"] = comb.get("consensus_relation",
                                    comb.get("agreement"))
-    p = Path(f"{OUT}/bub1b_phasing.json")
-    p.write_text(json.dumps(ph, indent=1))
+    out_dir = Path(f"/data/{out_name}")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    _atomic_write(out_dir / "bub1b_phasing.json",
+                  json.dumps(ph, indent=1))
     DATA.commit()
     print(f"PHASING_DONE {ph['agreement']}", flush=True)
     return ph
+
+
+# ------------------------------------------------------- evidence arms
+# Phase-3 fan-out: mosdepth / fastp / deepvariant / cnv / slim_result.
+# These write under the masked run's out dir (default track1_final) - the
+# report consumes their verdicts, not raw dumps.
+
+
+@app.function(image=align_image, volumes={"/data": DATA},
+              cpu=16, memory=32768, timeout=3600)
+def run_mosdepth(out_name: str = "track1_final") -> dict:
+    """WGS windowed coverage (500 bp bins) + focused depth over the BUB1B
+    locus slice -> {out_name}/mosdepth/. Resumable: existing outputs skip."""
+    import os
+    import subprocess
+
+    env = {**os.environ, "PATH": "/opt/conda/bin:" + os.environ["PATH"]}
+    out = f"/data/{out_name}/mosdepth"
+    os.makedirs(out, exist_ok=True)
+    done = {}
+
+    def mosdepth(prefix: str, bam: str, threads: int, extra: str = ""):
+        # mosdepth emits {prefix}.mosdepth.summary.txt on success
+        if os.path.exists(prefix + ".mosdepth.summary.txt"):
+            print(f"skip {prefix}", flush=True)
+            done[os.path.basename(prefix)] = "exists"
+            return
+        cmd = (f"mosdepth -t {threads} -n {extra} "
+               f"{prefix} {bam}").split()
+        print("+", " ".join(cmd), flush=True)
+        subprocess.run(cmd, check=True, env=env)
+        done[os.path.basename(prefix)] = "ok"
+
+    mosdepth(f"{out}/WGS", "/data/realign/WGS_EX2312012.dedup.bam", 16,
+             "--by 500")
+    # region.bam is already sliced to 15:40100000-40250000 - windowed
+    # depth over it IS the locus-depth evidence.
+    mosdepth(f"{out}/region", "/data/realign/region.bam", 4, "--by 100")
+
+    # Derived summary the report cites (mean depth + cumulative
+    # fraction >= 10x/30x), parsed from mosdepth's own outputs.
+    import json
+
+    def _summ(prefix: str) -> dict:
+        s = {}
+        try:
+            with open(prefix + ".mosdepth.summary.txt") as f:
+                hdr = f.readline().split("\t")
+                for line in f:
+                    row = dict(zip(hdr, line.rstrip("\n").split("\t")))
+                    if row.get("chrom") == "total":
+                        s["mean"] = float(row["mean"])
+        except OSError:
+            pass
+        try:
+            cov10 = cov30 = None
+            with open(prefix + ".mosdepth.global.dist.txt") as f:
+                for line in f:
+                    c = line.rstrip("\n").split("\t")
+                    if len(c) < 3 or c[0] != "total":
+                        continue
+                    d, p = int(float(c[1])), float(c[2])
+                    if d <= 10:
+                        cov10 = p
+                    if d <= 30:
+                        cov30 = p
+            s["frac_ge_10x"], s["frac_ge_30x"] = cov10, cov30
+        except OSError:
+            pass
+        return s
+
+    summary = {name: _summ(f"{out}/{name}") for name in ("WGS", "region")}
+    _atomic_write(Path(f"{out}/mosdepth_summary.json"),
+                  json.dumps(summary, indent=1))
+    DATA.commit()
+    print(f"MOSDEPTH_DONE {done}", flush=True)
+    return done
+
+
+qc_image = (
+    modal.Image.from_registry("mambaorg/micromamba:1.5-bookworm-slim",
+                              add_python="3.12")
+    .run_commands(
+        "micromamba install -y -n base -c conda-forge -c bioconda "
+        "fastp fastqc && micromamba clean -afy",
+    )
+)
+
+
+@app.function(image=qc_image, volumes={"/data": DATA},
+              cpu=8, memory=16384, timeout=2 * 3600)
+def run_fastp(out_name: str = "track1_final") -> dict:
+    """fastp per-lane PAIR QC (4 lanes -> 4 JSONs) -> {out_name}/fastq_qc/.
+    fastp processes read pairs, so this is 4 runs not 8. Filtered reads
+    land in /tmp and die with the container - only the reports persist.
+    Aggregation to fastqc_report.json/summary.md is a local post-pull
+    step via tools/run_fastqc.py (KB-scale JSONs)."""
+    import os
+    import subprocess
+
+    env = {**os.environ, "PATH": "/opt/conda/bin:" + os.environ["PATH"]}
+    out = f"/data/{out_name}/fastq_qc"
+    os.makedirs(out, exist_ok=True)
+    done = {}
+    for l in (1, 2, 3, 4):
+        lane = f"L00{l}"
+        jpath = f"{out}/{lane}_fastp.json"
+        if os.path.exists(jpath):
+            print(f"skip {lane}", flush=True)
+            done[lane] = "exists"
+            continue
+        r1 = (f"/data/WGS_EX2312012_HGWCNDSX7_S16_{lane}_R1_001."
+              "fastq.gz")
+        r2 = (f"/data/WGS_EX2312012_HGWCNDSX7_S16_{lane}_R2_001."
+              "fastq.gz")
+        cmd = [
+            "fastp", "-i", r1, "-I", r2,
+            "-o", f"/tmp/{lane}_R1.out.fq.gz",
+            "-O", f"/tmp/{lane}_R2.out.fq.gz",
+            "--json", jpath, "--html", f"{out}/{lane}_fastp.html",
+            "--thread", "8",
+        ]
+        print("+", " ".join(cmd), flush=True)
+        subprocess.run(cmd, check=True, env=env)
+        DATA.commit()  # per-lane commit: a preemption keeps finished lanes
+        done[lane] = "ok"
+    print(f"FASTP_DONE {done}", flush=True)
+    return done
+
+
+dv_image = modal.Image.from_registry(
+    "google/deepvariant:1.9.0", add_python="3.11")
+
+
+@app.function(image=dv_image, volumes={"/data": DATA},
+              cpu=16, memory=32768, timeout=2 * 3600)
+def run_deepvariant(out_name: str = "track1_final") -> dict:
+    """Independent-caller confirmation: DeepVariant WGS model over the
+    BUB1B region slice -> {out_name}/deepvariant/dv_region.vcf plus a
+    derived findings verdict (both BUB1B sites recalled het PASS GQ>20?).
+    DV 1.9.0 is the latest stable tag on Docker Hub - 1.10.x exists only
+    as beta tags; not shipped for evidence."""
+    import json
+    import os
+    import subprocess
+
+    out = f"/data/{out_name}/deepvariant"
+    os.makedirs(out, exist_ok=True)
+    vcf_path = f"{out}/dv_region.vcf"
+    if not os.path.exists(vcf_path):
+        cmd = [
+            "/opt/deepvariant/bin/run_deepvariant",
+            "--model_type=WGS",
+            "--ref=/data/GRCh38_no_alt_plus_hs38d1.fna",
+            "--reads=/data/realign/region.bam",
+            "--regions", "15:40100000-40250000",
+            "--num_shards=16",
+            f"--output_vcf={vcf_path}",
+            "--intermediate_results_dir=/tmp/dv_int",
+        ]
+        print("+", " ".join(cmd), flush=True)
+        subprocess.run(cmd, check=True)
+    else:
+        print(f"skip {vcf_path} (exists)", flush=True)
+
+    # Derived verdict: were the BUB1B sites recalled as het PASS GQ>20?
+    want = {p: (r, a) for _, p, r, a in BUB1B_PAIR}
+    found = {}
+    with open(vcf_path) as f:
+        for line in f:
+            if line.startswith("#"):
+                continue
+            c = line.split("\t")
+            pos = int(c[1])
+            if pos in want and c[0].lstrip("chr") == "15":
+                fmt = c[8].split(":")
+                samp = c[9].split(":")
+                rec = dict(zip(fmt, samp))
+                found[str(pos)] = {
+                    "gt": rec.get("GT"), "gq": rec.get("GQ"),
+                    "filter": c[6],
+                    "recalled": rec.get("GT") in ("0/1", "0|1")
+                        and c[6] in ("PASS", ".")
+                        and float(rec.get("GQ", 0) or 0) > 20,
+                }
+    verdict = {
+        "sites": found,
+        "all_recalled_het_pass_gq20":
+            len(found) == len(want)
+            and all(v["recalled"] for v in found.values()),
+        "caller": "deepvariant-1.9.0",
+    }
+    _atomic_write(Path(f"{out}/dv_findings.json"),
+                  json.dumps(verdict, indent=1))
+    DATA.commit()
+    print(f"DV_DONE {verdict['all_recalled_het_pass_gq20']}", flush=True)
+    return verdict
+
+
+cnv_image = (
+    modal.Image.from_registry("mambaorg/micromamba:1.5-bookworm-slim",
+                              add_python="3.12")
+    .run_commands(
+        "micromamba install -y -n base -c conda-forge -c bioconda "
+        "cnvpytor manta samtools && micromamba clean -afy",
+    )
+)
+
+# BUB1B locus window for the CNV verdict (gene body +- padding).
+_BUB1B_REGION = ("15", 40205000, 40232000)
+
+
+@app.function(image=cnv_image, volumes={"/data": DATA},
+              cpu=32, memory=65536, timeout=8 * 3600, retries=2)
+def run_cnv(out_name: str = "track1_final") -> dict:
+    """CNV/SV screen on the dedup BAM: manta (PE/SR evidence) + cnvpytor
+    (read-depth) - the exact invocations tools/run_cnv.py emits, minus the
+    docker nesting. Deliverable is {out_name}/cnv/summary.json: count of
+    del/dup calls overlapping the BUB1B locus + a verdict the report
+    cites. Expected none - hardens the biallelic-SNV story."""
+    import json
+    import os
+    import subprocess
+
+    env = {**os.environ, "PATH": "/opt/conda/bin:" + os.environ["PATH"]}
+    out = f"/data/{out_name}/cnv"
+    os.makedirs(out, exist_ok=True)
+    bam = "/data/realign/WGS_EX2312012.dedup.bam"
+    ref = "/data/GRCh38_no_alt_plus_hs38d1.fna"
+
+    def sh(cmd: str) -> None:
+        print("+", cmd, flush=True)
+        subprocess.run(cmd, shell=True, check=True, env=env,
+                       executable="/bin/bash")
+
+    # manta: configure + run local workflow (candidateSV VCF lands in
+    # manta/results/variants/candidateSV.vcf.gz)
+    manta_vcf = f"{out}/manta/results/variants/candidateSV.vcf.gz"
+    if not os.path.exists(manta_vcf):
+        sh(f"configManta.py --bam {bam} --referenceFasta {ref} "
+           f"--runDir {out}/manta && "
+           f"{out}/manta/runWorkflow.py -m local -j 32")
+    else:
+        print(f"skip manta ({manta_vcf} exists)", flush=True)
+
+    # cnvpytor: rd -> histogram -> partition -> call at 10k + 100k bins
+    pytor = f"{out}/proband.pytor"
+    t10, t100 = f"{out}/cnvpytor_calls.10k.tsv", \
+        f"{out}/cnvpytor_calls.100k.tsv"
+    if not (os.path.exists(t10) and os.path.exists(t100)):
+        sh(f"cnvpytor -root {pytor} -rd {bam} && "
+           f"cnvpytor -root {pytor} -his 10000 100000 && "
+           f"cnvpytor -root {pytor} -partition 10000 100000 && "
+           f"cnvpytor -root {pytor} -call 10000 > {t10} && "
+           f"cnvpytor -root {pytor} -call 100000 > {t100}")
+    else:
+        print("skip cnvpytor (call tables exist)", flush=True)
+
+    # Derived verdict: del/dup calls overlapping the BUB1B locus, from
+    # EITHER caller. Manta VCF rows carry END in INFO/END (symbolic alts)
+    # or a single-range deletion; cnvpytor TSV columns are
+    # CNVtype/start/end. Keep the parser conservative - a row we can't
+    # classify still counts as evidence to inspect, never as 'none'.
+    import gzip
+    ch, s0, e0 = _BUB1B_REGION
+    hits = []
+
+    def overlaps(c: str, s: int, e: int) -> bool:
+        c2 = c[3:] if c.startswith("chr") else c
+        return c2 == ch and s <= e0 and e >= s0
+
+    if os.path.exists(manta_vcf):
+        with gzip.open(manta_vcf, "rt") as f:
+            for line in f:
+                if line.startswith("#"):
+                    continue
+                c = line.rstrip("\n").split("\t")
+                info = dict(p.split("=", 1) for p in c[7].split(";")
+                            if "=" in p)
+                end = int(info.get("END", c[1]))
+                svtype = info.get("SVTYPE", "")
+                if svtype in ("DEL", "DUP", "CNV") and \
+                        overlaps(c[0], int(c[1]), end):
+                    hits.append({"caller": "manta", "type": svtype,
+                                 "region": f"{c[0]}:{c[1]}-{end}",
+                                 "filter": c[6]})
+    for tsv in (t10, t100):
+        if not os.path.exists(tsv):
+            continue
+        with open(tsv) as f:
+            for line in f:
+                if line.startswith("CNV") or line.startswith("#"):
+                    continue
+                c = line.rstrip("\n").split("\t")
+                if len(c) < 4:
+                    continue
+                try:
+                    # cnvpytor call rows: CNVtype <tab> region <tab> size
+                    cnv_type = c[0]
+                    region = c[1]
+                    rc, rspan = region.split(":")
+                    rs, re_ = (int(x) for x in rspan.split("-"))
+                except (ValueError, IndexError):
+                    continue
+                if "deletion" in cnv_type or "duplication" in cnv_type:
+                    if overlaps(rc, rs, re_):
+                        hits.append({"caller": "cnvpytor",
+                                     "type": cnv_type,
+                                     "region": region,
+                                     "bins": tsv.rsplit(".", 2)[-2]})
+    summary = {
+        "bub1b_region": f"{ch}:{s0}-{e0}",
+        "bub1b_overlapping_calls": len(hits),
+        "calls": hits,
+        "verdict": "none" if not hits else "review",
+        "callers": ["manta", "cnvpytor"],
+    }
+    _atomic_write(Path(f"{out}/summary.json"),
+                  json.dumps(summary, indent=1))
+    DATA.commit()
+    print(f"CNV_DONE overlapping={len(hits)}", flush=True)
+    return summary
+
+
+@app.function(image=repo_img, volumes={"/data": DATA},
+              cpu=1, memory=4096, timeout=3600)
+def slim_result(out_name: str = "track1_final") -> dict:
+    """Slimmed copy of funnel/result.json -> funnel/result_head.json
+    {provenance, funnel, monotonicity_violations, emitted, ranked[:200]}.
+    make_report prefers this file - a 2.2 GB json.loads is a ~15-20 GB
+    transient heap risk on the laptop (the emitted BUB1B row sits inside
+    ranked[:200] at rank ~5, so nothing the report cites is lost)."""
+    import json
+
+    src = Path(f"/data/{out_name}/funnel/result.json")
+    if not src.exists():
+        raise RuntimeError(f"{src} missing - run_main not finished?")
+    r = json.loads(src.read_text(encoding="utf-8"))
+    head = {k: r.get(k) for k in
+            ("provenance", "funnel", "monotonicity_violations",
+             "emitted")}
+    head["ranked"] = r.get("ranked", [])[:200]
+    dst = src.with_name("result_head.json")
+    _atomic_write(dst, json.dumps(head, indent=1))
+    DATA.commit()
+    print(f"SLIM_DONE ranked={len(head['ranked'])}", flush=True)
+    return {"ranked": len(head["ranked"])}
