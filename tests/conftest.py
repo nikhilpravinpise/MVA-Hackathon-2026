@@ -6,8 +6,6 @@ are independent of which variants are true (plan.md section 2.1.5 firewall).
 """
 from __future__ import annotations
 
-import csv
-import subprocess
 import sys
 import tempfile
 from pathlib import Path

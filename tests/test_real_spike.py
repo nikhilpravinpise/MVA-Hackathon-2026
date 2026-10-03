@@ -15,6 +15,7 @@ absent - run tools/fetch_public_vcfs.py then tools/build_real_spike.py
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import pytest

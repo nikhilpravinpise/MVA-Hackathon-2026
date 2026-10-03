@@ -26,7 +26,7 @@ A variant is a *candidate* when ``qc_pass and rare and tier != 'other_or_low'``
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 from .vcf import VcfRecord, SampleGenotype

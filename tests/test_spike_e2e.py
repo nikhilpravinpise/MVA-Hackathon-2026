@@ -71,14 +71,14 @@ def test_decoys_suppressed(spike):
 def test_spike_deterministic_bytes(spike, tmp_path):
     """Falsification: two identical runs write different result.json bytes -
     hidden nondeterminism would make the submission irreproducible."""
-    r1 = run_pipeline(spike["vcf"], spike["truth"]["hpo_terms"],
-                      obo_path=spike["obo"], hpoa_path=spike["hpoa"],
-                      g2d_path=spike["gene2disease"],
-                      out_dir=tmp_path / "r1")
-    r2 = run_pipeline(spike["vcf"], spike["truth"]["hpo_terms"],
-                      obo_path=spike["obo"], hpoa_path=spike["hpoa"],
-                      g2d_path=spike["gene2disease"],
-                      out_dir=tmp_path / "r2")
+    run_pipeline(spike["vcf"], spike["truth"]["hpo_terms"],
+                 obo_path=spike["obo"], hpoa_path=spike["hpoa"],
+                 g2d_path=spike["gene2disease"],
+                 out_dir=tmp_path / "r1")
+    run_pipeline(spike["vcf"], spike["truth"]["hpo_terms"],
+                 obo_path=spike["obo"], hpoa_path=spike["hpoa"],
+                 g2d_path=spike["gene2disease"],
+                 out_dir=tmp_path / "r2")
     b1 = json.loads((tmp_path / "r1" / "result.json").read_text())
     b2 = json.loads((tmp_path / "r2" / "result.json").read_text())
     # runtime fields are allowed to differ; everything else must not

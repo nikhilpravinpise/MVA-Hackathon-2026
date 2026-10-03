@@ -6,10 +6,10 @@ CNV screen on our re-aligned BAM as a secondary arm - it cannot change the
 primary call without evidence, but a confirmatory result hardens the claim.
 
 Like ``run_realign.py`` this tool does NOT execute bioinformatics
-binaries in-repo; it emits the exact commands to run locally or on the
-compute decision recorded in ``docs/decisions.md`` (Modal public-stand-in /
-AWS spot for proband jobs pending the attestation read). Patient BAMs never
-leave the local machine.
+binaries in-repo; it emits the exact commands to run. Patient-heavy
+work executes on Modal per the compute decision recorded in
+``docs/decisions.md`` (the command bodies translate directly to the
+Modal image's conda-installed binaries).
 
     python tools/run_cnv.py --bam results/realign/proband.bam --ref env/ref/GRCh38_no_alt.fa --out results/cnv/ --write-script
 """

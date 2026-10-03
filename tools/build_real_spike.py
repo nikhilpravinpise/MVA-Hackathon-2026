@@ -71,7 +71,6 @@ vep_cache.json (annotation cache; delete to force re-annotation).
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import random
 import re
@@ -755,7 +754,7 @@ def main(argv=None) -> int:
     mis = _pick(mis_pool, args.missense, "missense")
     if lof["pos"] == mis["pos"]:
         raise SystemExit("lof and missense collide at the same position")
-    print(f"\nCHOSEN PAIR (LoF + missense, in trans):")
+    print("\nCHOSEN PAIR (LoF + missense, in trans):")
     print(f"  LOF : {lof['pos']} {lof['ref']}>{lof['alt']} VCV{lof['vid']} "
           f"{lof['clnsig']} ({lof['mc'].split(',')[-1]})")
     print(f"  MISS: {mis['pos']} {mis['ref']}>{mis['alt']} VCV{mis['vid']} "

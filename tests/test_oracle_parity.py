@@ -11,7 +11,7 @@ import pytest
 
 pytestmark = pytest.mark.gate
 
-from conftest import (GT, HEADER, JUNK, REPO, V1, V2, prow, score_csv_text,
+from conftest import (HEADER, JUNK, REPO, V1, V2, prow, score_csv_text,
                       score_rows, vrow)
 
 

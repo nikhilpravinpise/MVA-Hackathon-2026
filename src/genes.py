@@ -28,7 +28,7 @@ from dataclasses import dataclass, field
 from itertools import combinations
 
 from . import phasing
-from .triage import VariantFacts, TIERS, eligible
+from .triage import VariantFacts, eligible
 
 
 @dataclass

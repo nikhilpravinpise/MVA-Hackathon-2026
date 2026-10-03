@@ -14,7 +14,6 @@ Skips when env/corpus is absent (fresh clone): run tools/fetch_refs.py first.
 """
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
