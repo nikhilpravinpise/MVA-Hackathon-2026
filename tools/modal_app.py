@@ -919,13 +919,21 @@ def run_cnv(out_name: str = "track1_final") -> dict:
 
     # manta: configure + run local workflow (candidateSV VCF lands in
     # manta/results/variants/candidateSV.vcf.gz). Manta lives in its own
-    # py2.7 conda env - entry points resolve under envs/manta/bin.
+    # py2.7 conda env - entry points resolve under envs/manta/bin. Its
+    # scripts carry `#!/usr/bin/env python2` shebangs and pyflow spawns
+    # bare `python2` subprocesses, so a python2 alias must sit ON PATH;
+    # scoped inline so the cnvpytor calls below keep base python3.12.
     menv = "/opt/conda/envs/manta/bin"
+    mb = "/tmp/mantabin"
+    os.makedirs(mb, exist_ok=True)
+    if not os.path.exists(f"{mb}/python2"):
+        os.symlink(f"{menv}/python", f"{mb}/python2")
     manta_vcf = f"{out}/manta/results/variants/candidateSV.vcf.gz"
     if not os.path.exists(manta_vcf):
-        sh(f"{menv}/configManta.py --bam {bam} --referenceFasta {ref} "
-           f"--runDir {out}/manta && "
-           f"{menv}/python {out}/manta/runWorkflow.py -m local -j 32")
+        sh(f"export PATH={mb}:{menv}:$PATH && "
+           f"python {menv}/configManta.py --bam {bam} "
+           f"--referenceFasta {ref} --runDir {out}/manta && "
+           f"python {out}/manta/runWorkflow.py -m local -j 32")
     else:
         print(f"skip manta ({manta_vcf} exists)", flush=True)
 
