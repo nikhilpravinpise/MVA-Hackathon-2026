@@ -943,11 +943,17 @@ def run_cnv(out_name: str = "track1_final") -> dict:
     if not os.path.exists(f"{mb}/python2"):
         os.symlink(f"{menv}/python", f"{mb}/python2")
     manta_vcf = f"{out}/manta/results/variants/candidateSV.vcf.gz"
+    rwf = f"{out}/manta/runWorkflow.py"
     if not os.path.exists(manta_vcf):
+        if not os.path.exists(rwf):
+            sh(f"export PATH={mb}:{menv}:$PATH && "
+               f"python {menv}/configManta.py --bam {bam} "
+               f"--referenceFasta {ref} --runDir {out}/manta")
+        # pyflow checkpoints survive a preemption - re-running the
+        # workflow script resumes unfinished tasks (configManta itself
+        # refuses an existing runDir, so it is gated on rwf absent).
         sh(f"export PATH={mb}:{menv}:$PATH && "
-           f"python {menv}/configManta.py --bam {bam} "
-           f"--referenceFasta {ref} --runDir {out}/manta && "
-           f"python {out}/manta/runWorkflow.py -m local -j 32")
+           f"python {rwf} -m local -j 32")
     else:
         print(f"skip manta ({manta_vcf} exists)", flush=True)
 
