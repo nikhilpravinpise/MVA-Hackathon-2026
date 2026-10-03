@@ -833,6 +833,20 @@ def run_deepvariant(out_name: str = "track1_final") -> dict:
     else:
         print(f"skip {vcf_path} (exists)", flush=True)
 
+    # DV's --output_vcf emits bgzipped bytes even when the name ends in
+    # `.vcf` (the postprocess shards land as *.gz). A gzipped file named
+    # .vcf is a footgun for every downstream consumer - normalize the
+    # volume artifact to real text before verifying.
+    with open(vcf_path, "rb") as fh:
+        if fh.read(2) == b"\x1f\x8b":
+            import gzip
+            import shutil
+            with gzip.open(vcf_path, "rb") as g, \
+                    open(vcf_path + ".txt", "wb") as t:
+                shutil.copyfileobj(g, t)
+            os.replace(vcf_path + ".txt", vcf_path)
+            print("normalized gzipped dv_region.vcf to text", flush=True)
+
     # Derived verdict: were the BUB1B sites recalled as het PASS GQ>20?
     want = {p: (r, a) for _, p, r, a in BUB1B_PAIR}
     found = {}
