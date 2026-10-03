@@ -16,6 +16,7 @@ from pathlib import Path
 
 from .config import config_dict_hash, config_hash, load_config
 from .genes import Hypothesis, attach_scores, enumerate_hypotheses
+from .loci import in_artifact_locus, validate_artifact_loci
 from .pheno import (InformationContent, OboOntology, best_match_average,
                     gene_disease_map, gene_hpo_terms, load_hpoa)
 from .prioritize import emitted, rank_hypotheses
@@ -35,7 +36,8 @@ class FunnelCounts:
         non-increasing among fact-level filters: one VCF record legitimately
         yields SEVERAL (alt x gene) facts, so 'records' is excluded - the
         funnel may fan out at extraction but must never grow after it."""
-        order = ["alt_gene_facts", "qc_pass", "rare", "candidates"]
+        order = ["alt_gene_facts", "qc_pass", "rare", "candidates",
+                 "locus_masked"]
         prev = None
         bad = []
         for s in order:
@@ -178,6 +180,7 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
     """
     t0 = time.time()
     cfg = cfg or load_config(cfg_path)
+    validate_artifact_loci(cfg)
     ont, disease2hpo, g2d = load_corpus(obo_path, hpoa_path, g2d_path)
     pheno_of_gene = make_pheno_scorer(
         proband_hpo, ont, disease2hpo, g2d,
@@ -239,7 +242,19 @@ def run_pipeline(vcf_path: str | Path, proband_hpo: list[str],
         1 for f in cand
         if f.gene and (f.is_het or f.is_hom_alt or f.is_hemi))
 
-    hyps = enumerate_hypotheses(cand, cfg)
+    # Artifact-locus mask: declared low-mappability loci (extended MHC et
+    # al., config `artifact_loci`) exit the funnel here - disclosed as a
+    # stage so the removal is auditable in the funnel table, not hidden.
+    masked = [f for f in cand
+              if not in_artifact_locus(f.chrom, f.pos, cfg)]
+    counts.stage_counts["locus_masked"] = sum(
+        1 for f in masked
+        if f.gene and (f.is_het or f.is_hom_alt or f.is_hemi))
+    counts.stage_counts["locus_masked_out"] = (
+        counts.stage_counts["candidates"]
+        - counts.stage_counts["locus_masked"])
+
+    hyps = enumerate_hypotheses(masked, cfg)
     attach_scores(hyps, pheno_of_gene, cfg)
     if "phasing" in drops:
         bonus = cfg.get("scoring", {}).get("inheritance_bonus", {})

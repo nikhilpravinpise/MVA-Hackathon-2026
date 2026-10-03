@@ -53,13 +53,16 @@ def _fmt(x, nd=3):
 def funnel_table(result: dict) -> str:
     fc = result.get("funnel", {})
     order = ["records", "alt_gene_facts", "qc_pass", "rare",
-             "candidates", "hypotheses", "emitted"]
+             "candidates", "locus_masked", "locus_masked_out",
+             "hypotheses", "emitted"]
     labels = {
         "records": "VCF records",
         "alt_gene_facts": "allele x gene evidence records",
         "qc_pass": "passing genotype QC + filters",
         "rare": "rare tier (pop-max AF <= af_max or absent)",
         "candidates": "eligible candidate variants",
+        "locus_masked": "post artifact-locus mask (declared loci)",
+        "locus_masked_out": "- removed inside declared artifact loci",
         "hypotheses": "genotype hypotheses enumerated",
         "emitted": "emitted (score >= emit_floor)",
     }

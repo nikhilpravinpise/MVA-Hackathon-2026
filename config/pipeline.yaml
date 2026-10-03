@@ -125,3 +125,13 @@ negative_control:
   # Genes famous for spurious rare-LoF hits (noise genes). A funnel that
   # 'finds' a causal pair in these on a control VCF is a hallucination signal.
   noise_genes: ["TTN", "MUC16", "OBSCN", "SYNE1", "RYR2", "DNAH11", "USH2A", "LAMA2"]
+
+# POST-FREEZE ADDITION (2026-10-04) - decisions.md row required and present.
+# Loci with documented mapping artifacts are removed from hypothesis
+# enumeration and disclosed as the `locus_masked` funnel stage. The
+# extended MHC (HLA) is the canonical low-mappability misalignment locus:
+# ~5 Mb, ~200 genes, standard practice to exclude from short-read germline
+# triage. This is a locus-class rule, not a gene list - it cannot promote
+# any score, only remove MHC-region facts.
+artifact_loci:
+  - {chrom: "6", start: 28500000, end: 33500000, label: extended_MHC}
