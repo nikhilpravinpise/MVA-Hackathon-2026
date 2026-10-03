@@ -17,6 +17,20 @@ local_dev/
 env/*
 !env/RETENTION.md
 
+# Patient/reference artifacts that landed at repo ROOT (realign exports,
+# reference FASTA duplicates, locus VCF slices). data/* env/* results/*
+# are already covered; these patterns stop a bare `git add -A` from
+# committing root-level genotype/reference files.
+/*.bam
+/*.bai
+/*.sam
+/*.vcf
+/*.vcf.gz
+/*.fna
+/*.fna.fai
+/*.fa
+/*.fa.fai
+
 # Secrets
 .env
 *.pem
@@ -31,3 +45,7 @@ Thumbs.db
 .coverage
 coverage.xml
 htmlcov/
+
+# Foreign artifact - FedGRAA-v2 doc from a different project; kept on
+# disk for reference but must never be committed to this repo
+docs/COMPUTE_INFRASTRUCTURE_2026-07-27.md

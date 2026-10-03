@@ -24,6 +24,11 @@ DELETE within 30 days of close (patient genotype-scale derived data):
 
 - annotated full-genome VCF outputs (VEP-annotated proband VCF)
 - variant-level dumps at genome scale (CSQ tables, per-variant score sheets)
+- **patient-run funnel dumps where hypotheses.tsv/result.json carry the
+  full ~1.5M-hypothesis enumeration** - the KEEP-class "ranked variant
+  list" means a curated top-N excerpt (report table), not the full
+  genotype-scale dump. Synthetic/spike hypotheses.tsv stays KEEP (no
+  patient genotypes).
 - region BAM exports, phasing evidence VCFs at genotype scale
 - notebook state containing genotypes; prompts/logs with pasted variant
   blocks
@@ -44,3 +49,26 @@ DELETE within 30 days of close (patient genotype-scale derived data):
 | results/arm_concordance.json | Arm A(Exomiser)/B(funnel) top-20 overlap + truth rank, real-spike | KEEP | Plan section-5 cross-method metric: PAH rank 1 both arms |
 | results/arm_concordance_spike.json | Same metric on the synthetic case | KEEP | Arm A absent for fake gene - no false confidence expected |
 | results/arm_concordance_control.json | Same metric on the negative control | KEEP | Both arms silent - Arm A max score 0.0003, Arm B 0 emitted |
+| results/det1/ | Determinism-check rerun A on synthetic case | KEEP | Byte-identical-vs-det2 evidence |
+| results/det2/ | Determinism-check rerun B on synthetic case | KEEP | Byte-identical-vs-det1 evidence |
+| results/t1_d1/ | Determinism-check driver run A | KEEP | submission.csv + run_summary |
+| results/t1_d2/ | Determinism-check driver run B | KEEP | submission.csv + run_summary |
+| results/t1_skip/ | --skip-ablations verification run | KEEP | "external" sentinel path check |
+| results/run_control/ | Early funnel-only run, synthetic control | KEEP | Superseded by t1_control/ |
+| results/run_spike/ | Early funnel-only run, synthetic spike | KEEP | Superseded by t1_spike/ |
+| results/run_verify/ | Early funnel-only verification run | KEEP | Superseded by det1/det2 |
+| results/smoke_funnel/ | Early smoke funnel run | KEEP | Superseded |
+| results/run_real/ | Early funnel-only run, real-spike (HG002) | KEEP | Public data, superseded by t1_real_full/ |
+| results/eda_patient/ | Patient EDA/QC report | KEEP | Aggregate stats only - no genotype rows |
+| results/t1_patient/ | Early partial patient driver run | DELETE | Patient variant-scale outputs; superseded by track1_patient_modal/ |
+| results/track1_patient/ | Local patient funnel run | DELETE | result.json 2.3 GB + hypotheses.tsv 151 MB = patient genotype-scale dumps; funnel_counts/eda aggregates may be re-derived |
+| results/track1_patient_modal/funnel/result.json | Modal patient funnel full dump (2.2 GB, 1.48M hypotheses) | DELETE | Per-variant patient score sheet |
+| results/track1_patient_modal/funnel/hypotheses.tsv | STALE - from the superseded Oct-2 degraded-annotation modal run (BUB1B rank ~136) | DELETE | Do NOT cite; canonical ranking lives in result.json (BUB1B pair rank 8) |
+| results/track1_patient_modal/funnel/funnel_counts.json | STALE (emitted:3, same superseded run) | DELETE | Canonical counts: result.json funnel block (emitted:4) |
+| results/track1_patient_modal/realign/*.vcf | Patient region/phased VCFs | DELETE | Genotype-scale per retention doctrine |
+| results/track1_patient_modal/realign/flagstat.txt | Alignment summary stats | KEEP | Aggregate counts only |
+| results/track1_patient_modal/submission.csv | Track-1 submission artifact | KEEP | The deliverable itself |
+| results/track1_patient_modal/{ablations,acmg_report,arm_concordance,bub1b_phasing,eda_report,phasing_report,run_summary,sf_findings}.json | Modal run finding artifacts | KEEP | Aggregates/ranked findings, no genotype-scale rows |
+| results/exomiser_patient/WGS_EX2312012-PASS_ONLY.{json,html,variants.tsv} | Exomiser per-variant patient score dumps (358 MB) | DELETE | Variant-level score sheets |
+| results/exomiser_patient/WGS_EX2312012-PASS_ONLY.genes.tsv | Exomiser gene ranking | KEEP | Gene-level findings only |
+| results/exomiser_patient/analysis.yml | Exomiser run config | KEEP | Methods record |

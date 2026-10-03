@@ -1,9 +1,9 @@
 # Team / display_name decision record
 
-**Status:** OPEN - must be decided before the first submission.
+**Status:** DECIDED 2026-10-03 - locked before any submission.
 
 ```
-DISPLAY_NAME: <TBD - set before first submission>
+DISPLAY_NAME: nikhilpise
 ```
 
 ## The contract (verified against the app source)
@@ -44,3 +44,4 @@ Consequences of getting this wrong:
 | Date | Event | Notes |
 |---|---|---|
 | 2026-09-26 | File created, display_name open | Phase-0 scaffolding; decision required before Gate 5 |
+| 2026-10-03 | `nikhilpise` decided | User decision; byte-identical on the submitting HF account. CSV `nikhilpise_answer-blind-funnel.csv`, report `nikhilpise_track1_report.md` |

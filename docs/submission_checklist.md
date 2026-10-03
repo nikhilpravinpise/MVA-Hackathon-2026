@@ -23,7 +23,10 @@ not submit.
       `python -c "import sys; sys.path.insert(0,'.'); sys.path.insert(0,'scorer'); from src.submit import validate_submission_bytes; import pathlib; ..."` (or use tests/test_e2e_gate.py which does this)
 - [ ] UTF-8 **no BOM** (`head -c3` != `EF BB BF`); ASCII-clean bytes
 - [ ] <= 10 rows, all `proband_id=PROBAND01`, `finding_type` in {primary,secondary}
-- [ ] `chr`-prefixed contigs; epcr in (0,1], strictly decreasing, row 1 = the pair @ 0.95
+- [ ] `chr`-prefixed contigs; epcr in (0,1], strictly decreasing; row 1 =
+      the top-emitted hypothesis at its rank-mapped epcr (a pair's epcr
+      reflects its RANK, not its CSV position - on the stand-in run the
+      rank-1 pair shows 0.95; post-mask a rank-5 pair emits 0.1324)
 - [ ] no `,,,,,,,,,,,` comma-only lines; no Excel export path (programmatic only)
 
 ## Submission discipline

@@ -11,8 +11,8 @@ submission CSV validated against the vendored official scorer.
 | Path | What |
 |---|---|
 | `src/` | funnel modules (vcf, triage, genes, pheno, prioritize, phasing, reads, sf_scan, acmg, submit, vcf_qc, synth) |
-| `tests/` | oracle parity, CSV contract, adversarial bytes, funnel unit, e2e gates (200+ tests and counting) |
-| `tools/` | runners: audit_scorer_fixtures, check_citations, fetch_public_vcfs, fetch_refs, fetch_big, genes_to_disease_json, normalize_contigs, run_pipeline, run_track1, run_sensitivity, make_report, run_eda, extract_hpo, run_fastqc, run_phasing, run_vep, run_exomiser, compare_arms, run_realign, run_cnv, build_real_spike |
+| `tests/` | oracle parity, CSV contract, adversarial bytes, funnel unit, e2e gates (290+ tests and counting) |
+| `tools/` | runners: audit_scorer_fixtures, check_citations, fetch_public_vcfs, fetch_refs, fetch_big, genes_to_disease_json, normalize_contigs, run_pipeline, run_track1, run_sensitivity, make_report, run_eda, extract_hpo, run_fastqc, run_phasing, run_vep, run_exomiser, compare_arms, run_realign, run_cnv, build_real_spike, revel_to_vcf, gnomad_split, modal_app |
 | `scorer/` | vendored `evaluation.py` - the official scorer oracle (see `scorer/NOTICE.md`) |
 | `config/` | frozen `pipeline.yaml` + `acmg_sf_v33.json` |
 | `docs/` | plan.md (source of truth), status.md (phase-by-phase compliance map), report.md (regenerated), report_map.md, decisions/team/llm/runtime logs, disclosure position |

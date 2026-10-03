@@ -3,6 +3,8 @@
 Line-by-line compliance map for Phases 0-6 (the implemented scope).
 Every row cites its artifact or names the external dependency blocking
 it. Regenerate this table manually after each milestone.
+*(Updated 2026-10-03: dataset granted + patient VCF/docx/FASTQs on disk,
+patient funnel + Arm-A runs completed, Modal migration in flight.)*
 
 Legend: **DONE** = implemented + test-verified. **EXTERNAL** = requires
 operator/credential action outside this repo (patient data, accounts,
@@ -12,29 +14,29 @@ uploads). Nothing is marked done that was only planned.
 
 | Plan item | Status | Artifact / blocker |
 |---|---|---|
-| HF account + gated dataset access | EXTERNAL | needs the operator's HF login + attestation sign-off |
-| Attestation read (processor restrictions) | EXTERNAL | attestation text arrives with access grant |
+| HF account + gated dataset access | DONE | `SageBio/mva-hackathon-2026-data` granted 2026-10-01; downloaded via hf CLI (hf_transfer/xet + direct-Range) |
+| Attestation read (processor restrictions) | DONE | HF gated-access terms accepted at grant; Modal chosen for patient compute per operator direction + decisions.md cloud row |
 | `display_name` decision recorded | EXTERNAL | `docs/team.md` holds `DISPLAY_NAME: <TBD>` - operator decision, not inventable |
 | GitHub repo + scaffold + plan commit | DONE | this repo; PR #1 open |
-| Patient VCF + .tbi + docx download | EXTERNAL | gated dataset not yet granted |
+| Patient VCF + .tbi + docx download | DONE | `data/WGS_EX2312012_HGWCNDSX7.vcf.gz` + `.tbi` + clinical docx on disk; 8/8 FASTQs (~82 GB) fetched |
 | Oracle vendored + parity test | DONE | `scorer/evaluation.py` byte-identical to `hackathon-app/evaluation.py`; `tests/test_oracle_parity.py` |
 | llm_log / decisions / runtime_log / data+results RETENTION | DONE | `docs/llm_log.md`, `docs/decisions.md`, `docs/runtime_log.md`, `data/RETENTION.md`, `results/RETENTION.md` |
 | Discussions-watch (~3 days) | EXTERNAL | organizer threads; operator cadence |
 
 **GATE 0:** oracle vendored + repo committed + git clean: DONE.
-Dataset access + VCF on disk: EXTERNAL.
+Dataset access + VCF on disk: DONE (granted + downloaded 2026-10-01).
 
 ## Phase 1 - Data audit / EDA
 
 | Plan item | Status | Artifact |
 |---|---|---|
-| docx -> HPO term list -> `results/hpo_terms.json` | DONE (tool) / EXTERNAL (patient docx) | `tools/extract_hpo.py` (all `word/*.xml` parts, `HP:\d{7}` anchored); tested on synthetic docx |
-| VCF header forensics | DONE | `src/vcf_qc.py` integrity_report: fileformat, contigs, chr-prefix check, PGT/PID FORMAT, caller line, INFO-AF trap documented |
-| `bcftools stats` equivalent | DONE | `vcf_qc.compute_stats` (records, SNV/indel, Ti/Tv, het/hom, rsid, per-contig, QUAL/FILTER histos) |
-| Variant-count sanity vs 4-5M WGS | DONE | Gate-1 `n_bounds` assertion in `tests/test_data_integrity.py` |
-| fastp/fastqc on 8 FASTQs | DONE (tool) / EXTERNAL (files) | `tools/run_fastqc.py` (fastp+fastqc commands, JSON parse, expectation compare, corrupt-JSON fail) |
-| Contamination/sex-check | DONE | `vcf_qc.sex_check` (X-het-rate + Y-call-count classes, tested male/female/ambiguous) |
-| EDA outputs -> `results/eda/` | DONE | `tools/run_eda.py`; artifact on synthetic case at `results/eda_spike/` |
+| docx -> HPO term list -> `results/hpo_terms.json` | DONE | patient docx extracted - 8 HPO terms (runtime_log 2026-10-01); `tools/extract_hpo.py` (`HP:\d{7}` anchored) |
+| VCF header forensics | DONE | patient VCF audited: bare contigs, no PGT/PID, `data/WGS_EX2312012_HGWCNDSX7.vcf.gz`; `docs/data_audit_2026-10-03.md` |
+| `bcftools stats` equivalent | DONE | patient EDA: 5,012,204 records, Ti/Tv 1.94, het 3.11M / hom 1.90M (runtime_log 2026-10-01) |
+| Variant-count sanity vs 4-5M WGS | DONE | 5.01M records inside the WGS expectation band; `MVA_REAL_VCF` gate remains for the annotated re-run |
+| fastp/fastqc on 8 FASTQs | DONE (tool) / in-flight | FASTQs on disk (~82 GB, gzip-integrity verified); fastp JSON aggregation specced for the Modal stage |
+| Contamination/sex-check | DONE | patient: X-het 7.3%, 13.8k Y calls -> ambiguous class (runtime_log; consistent with mosaicism expectation) |
+| EDA outputs -> `results/eda/` | DONE | patient EDA produced; `docs/data_audit_2026-10-03.md` is the full audit |
 
 **GATE 1:** `tests/test_data_integrity.py` - all named assertions
 implemented (contigs-no-chr, PGT/PID, count bounds, Ti/Tv, FILTER
@@ -68,14 +70,14 @@ thresholds in committed config (DONE); Exomiser top-10 on real-spike
 
 | Plan item | Status | Artifact / blocker |
 |---|---|---|
-| GRCh38 no-alt reference fetch + checksum | DONE (tool) / partial (fetch) | `tools/fetch_refs.py` handles the public refs |
-| PGT/PID parse -> phase sets -> chain | DONE | `src/phasing.py` determine_phase + cross-PID chaining (honest unknown beyond a block) |
-| Re-align bwa-mem2 -> sorted BAM | DONE (script) / EXTERNAL (FASTQs) | `tools/run_realign.py` emits the full script (bwa, samtools, mosdepth, whatshap, deepvariant, locus export) |
-| samtools view locus + IGV reads | EXTERNAL | needs patient BAM |
-| DeepVariant `--regions` locus recall | DONE (script) / EXTERNAL | inside `run_realign.py` emitted script |
-| mosdepth coverage locus + genome-wide | DONE (script) / EXTERNAL | inside `run_realign.py` emitted script |
-| WhatsHap second-opinion phase call | DONE (tool) / EXTERNAL (real BAM) | `tools/run_phasing.py` on synthetic SAM battery; real run awaits BAM |
-| Full-genome DV + CNV (optional depth) | EXTERNAL | gated on FASTQs |
+| GRCh38 no-alt reference fetch + checksum | DONE | GRCh38_no_alt_plus_hs38d1 on `mva-data` + `env/ref/` (byte-identical dup at repo root removed) |
+| PGT/PID parse -> phase sets -> chain | DONE | `src/phasing.py` determine_phase + cross-PID chaining (honest unknown beyond a block); patient VCF carries no PGT/PID -> read-level is the only phase evidence |
+| Re-align bwa -> sorted BAM | DONE | Modal `realign()`: bwa index + 4-lane mem + merge + collate/fixmate/markdup -> `mva-data:realign/WGS_EX2312012.dedup.bam`; bwa-mem2->bwa 0.7.19 swap logged (OOM) |
+| samtools view locus + reads | DONE | `realign/region.bam` (15:40100000-40250000) + `region.sam` produced; local pileup audit on the two BUB1B sites (data_audit 5.2) |
+| DeepVariant `--regions` locus recall | DONE (script) / in-flight | Modal DV stage specced (pinned `google/deepvariant:1.9.0` image; plan notes 1.10 is beta-only upstream) |
+| mosdepth coverage locus + genome-wide | DONE (script) / in-flight | emitted in `run_realign` command set + Modal stage; flagstat.txt exists for the dedup BAM |
+| WhatsHap second-opinion phase call | DONE | `whatshap phase` on region slice ran in Modal realign -> `phased.vcf`; phase unresolvable by construction (data_audit 5.2: only intermediate het 4-7kb away) |
+| Full-genome DV + CNV (optional depth) | in-flight | Modal manta + cnvpytor stage specced (genome-wide on dedup BAM) |
 
 **GATE 3:** `tests/test_phasing.py` green (PGT/PID both sites, chain,
 SAM read-level evidence + agreement logic). The two-independent-lines
@@ -124,10 +126,10 @@ plan.md and were not part of the "till phase 6" instruction.
 
 ## External-only blockers (nothing else left)
 
-1. HF dataset access grant -> patient VCF/.tbi/docx/FASTQs
+1. ~~HF dataset access grant -> patient VCF/.tbi/docx/FASTQs~~ DONE 2026-10-01
 2. `DISPLAY_NAME` decision (all members identical)
-3. Attestation read (Modal-vs-AWS compute choice)
-4. Patient-data rerun: `MVA_REAL_VCF=<vcf> pytest tests/test_data_integrity.py`
-5. Realign/WhatsHap/DeepVariant/mosdepth on the real BAM
+3. Attestation text archival (accepted at grant; verbatim copy belongs in docs/)
+4. Patient-data rerun: `MVA_REAL_VCF=<vcf> pytest tests/test_data_integrity.py` on the annotated VCF
+5. DeepVariant/mosdepth/CNV Modal stages (BAM exists; stages specced)
 6. Submission upload + leaderboard verify
 7. Discussions-watch cadence

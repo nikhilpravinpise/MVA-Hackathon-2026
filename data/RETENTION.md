@@ -38,3 +38,8 @@ finding; genome-scale genotype tables = prohibited derived data.
 | `data/Challenge_Clinical_Phenotype_1.docx` | clinical phenotype narrative (gated) | DELETE | patient document |
 | `data/hpo_terms.json` | 8 HPO terms extracted from the docx via `tools/extract_hpo.py` | KEEP | extracted term list (reportable) |
 | `data/WGS_EX2312012_HGWCNDSX7_S16_L00{1-4}_R{1,2}_001.fastq.gz` | 8 patient FASTQs (4 lanes x R1/R2, ~80 GB, download in progress 2026-10-01) | DELETE | raw reads |
+| `data/WGS_exon.vcf.gz` + `.tbi` | exon-slice of the patient VCF | DELETE | patient genotype slice |
+| `data/WGS_exon.vep.vcf.gz` + `_warnings.txt` | VEP-annotated exon slice | DELETE | patient genotype annotations |
+| `data/smoke.vcf` + `smoke.vep.txt*` | smoke-test slice of the patient VCF | DELETE | patient genotype slice |
+| `data/smoke_region.vcf.gz` + `.tbi`, `smoke_region.vep.*` | regional smoke-test slice + VEP outputs | DELETE | patient genotype slice |
+| `data/case/` | Modal-style case bundle: `patient.vcf.gz` (patient genotypes) + public-corpus copies (hp.obo, phenotype.hpoa, gene2disease.json, hpo_terms.json) | DELETE | corpus files are re-fetchable public data; the patient VCF is genotype-scale |
