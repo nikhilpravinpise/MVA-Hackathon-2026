@@ -952,6 +952,14 @@ def run_cnv(out_name: str = "track1_final") -> dict:
         # pyflow checkpoints survive a preemption - re-running the
         # workflow script resumes unfinished tasks (configManta itself
         # refuses an existing runDir, so it is gated on rwf absent).
+        # A preempted container also leaves a stale PID lock that pyflow
+        # refuses to start past; the owning process is definitionally
+        # dead (it ran in a different container), so dropping it is safe.
+        lock = f"{out}/manta/workspace/pyflow.data/" \
+            "active_pyflow_process.txt"
+        if os.path.exists(lock):
+            os.remove(lock)
+            print("removed stale pyflow lock", flush=True)
         sh(f"export PATH={mb}:{menv}:$PATH && "
            f"python {rwf} -m local -j 32")
     else:
