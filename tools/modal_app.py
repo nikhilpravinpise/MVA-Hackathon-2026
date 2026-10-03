@@ -878,8 +878,12 @@ cnv_image = (
         # manta is a python-2.7-only bioconda package: it lives in its
         # OWN conda env (never co-solvable with the py3.12 base), and its
         # entry points run via /opt/conda/envs/manta/bin/*.
+        # python=3.12 pin is load-bearing: an unpinned cnvpytor solve
+        # upgrades base to python 3.14, which Modal's injected grpclib
+        # runtime cannot hello() under (events.py __slots__ assertion) -
+        # container dies before user code.
         "micromamba install -y -n base -c conda-forge -c bioconda "
-        "cnvpytor && "
+        "\"python=3.12\" cnvpytor && "
         "micromamba create -y -n manta -c conda-forge -c bioconda "
         "manta && "
         "micromamba clean -afy",
