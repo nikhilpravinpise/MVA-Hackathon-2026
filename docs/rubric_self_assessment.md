@@ -17,7 +17,7 @@ artifacts at close-out gets corrected, not spun.
 | Pair score | 0.7159 (bit-identical pre/post mask - the mask is rank-only) | `result.json` ranked block |
 | Rank / epcr | rank 7 -> `epcr=0.0749` (honest rank-map; was rank 5 / 0.1324 pre-indel-fix) | `submission.csv` row 1 |
 | Local oracle on upload bytes | rank_points 100.0, f_max 1.000, full_match_rank 1 | Phase-5 `validate_submission_bytes` run |
-| Leaderboard | *pending upload + direct leaderboard read* | Phase 7 |
+| Leaderboard | 100.0 / 1.000, full match rank 1 | row 139, `model1_nikhilpise_answer-blind-funnel.csv`, verified via public leaderboard_df read 2026-10-04 |
 
 ## Novelty
 

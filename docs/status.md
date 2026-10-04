@@ -3,11 +3,13 @@
 Line-by-line compliance map for Phases 0-6 (the implemented scope).
 Every row cites its artifact or names the external dependency blocking
 it. Regenerate this table manually after each milestone.
-*(Updated 2026-10-04: indel-fix Modal rerun COMPLETE - all acceptance
-gates green on `track1_final_indelfix/`: emitted=1, csv_rows=1,
-epcr=0.0749 (rank 7; recovered ~78k VEP-trimmed indel annotations),
-all 5 ablations + merge landed. `main` pushed to origin (25 commits,
-0 ahead). Remaining external: leaderboard upload/verification only.)*
+*(Updated 2026-10-04: SUBMITTED + LEADERBOARD-VERIFIED - official
+server score rank_points=100.0, F-max=1.000, full match at rank 1
+(`model1_nikhilpise_answer-blind-funnel.csv`, leaderboard row 139,
+2026-10-04 07:30 UTC). Indel-fix run `track1_final_indelfix/` gates
+green: emitted=1, epcr=0.0749 (rank 7). `main` even with origin.
+Remaining externals: attestation-text archival, discussions-watch,
+post-deadline repo-public flip + deletion runbook.)*
 
 Legend: **DONE** = implemented + test-verified. **EXTERNAL** = requires
 operator/credential action outside this repo (patient data, accounts,
@@ -109,7 +111,7 @@ row has a notes justification, criteria table in report section 7.
 | Contract + adversarial batteries against the vendored oracle | DONE | 60 fixtures incl. byte-level (BOM, cp1252, CRLF, comma-lines) - `tools/audit_scorer_fixtures.py` all green 2026-10-03 |
 | Final CSV + byte-level oracle | DONE | `track1_final_indelfix/submission.csv`: 1 row, PROBAND01, chr15 pair, epcr=0.0749, primary; vendored scorer on the exact bytes -> rank_points=100.0, f_max=1.0, full_match_rank=1 (BUB1B stand-in GT); superseded masked CSV (epcr=0.1324) kept in `track1_final/` |
 | Dry-run upload-form checklist | DONE | `docs/submission_checklist.md` |
-| Submit once + leaderboard verify | EXTERNAL | operator OAuth at hackathon-app; file staged as `nikhilpise_answer-blind-funnel.csv` |
+| Submit once + leaderboard verify | DONE | uploaded 2026-10-04 07:30 UTC (operator OAuth, @T0X1N / display `nikhilpise`): server result rank_points=100.0, f_max=1.000, full_match_rank=1, `model1_nikhilpise_answer-blind-funnel.csv`; leaderboard row 139 read back via public API |
 
 **GATE 5:** local oracle `rank_points=100.0, f_max=1.000` on the exact
 bytes of the final CSV (verified 2026-10-03 on the masked bytes;
@@ -168,5 +170,5 @@ tags.
 5. ~~DeepVariant/mosdepth/CNV Modal stages~~ DONE 2026-10-03
 6. ~~Indel CSQ-matching fix + patient rerun on `track1_final_indelfix`~~ DONE 2026-10-04 (rank 7, epcr 0.0749; emitted call unchanged)
 7. ~~`git push` of local commits~~ DONE 2026-10-04 (main even with origin/main)
-8. Submission upload + leaderboard verify (operator OAuth)
+8. ~~Submission upload + leaderboard verify~~ DONE 2026-10-04 (100.0 / 1.000, full match rank 1, leaderboard row 139)
 9. Discussions-watch cadence

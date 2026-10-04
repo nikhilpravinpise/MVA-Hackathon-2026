@@ -31,10 +31,12 @@ not submit.
 
 ## Submission discipline
 
-- [ ] Submit ONCE for method 1. Check leaderboard within ~5 min (cache TTL
-      60 s). Hold remaining 5 quota for method 2 (de-novo recall) or a real
-      correction - never spend quota on probes.
+- [x] Submit ONCE for method 1. DONE 2026-10-04 07:30 UTC - leaderboard
+      row 139 `nikhilpise (@T0X1N)`, 100.0 / 1.000, full match rank 1,
+      `model1_nikhilpise_answer-blind-funnel.csv`. Remaining 5 quota held
+      for method 2 (de-novo recall) or a real correction - never probes.
 - [ ] Track 2 (later): only the latest of 3 is reviewed - one designated
       submitter, submit last before deadline.
-- [ ] After submit: record the leaderboard row + model filename in
+- [x] After submit: record the leaderboard row + model filename in
       `docs/decisions.md` and `results/RETENTION.md` (KEEP tag).
+      DONE - both updated, same commit.
