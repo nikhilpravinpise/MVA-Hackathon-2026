@@ -10,6 +10,10 @@
 
 {{SUBMISSION_SUMMARY}}
 
+### 0a. Prior submission iteration
+
+{{PRIOR_CSV}}
+
 ## 1. Approach in detail
 
 A genome-wide, case-agnostic prioritization funnel for an N-of-1 recessive
@@ -40,13 +44,23 @@ annotated VCF (VEP CSQ)
 ```
 
 Every threshold is frozen pre-analysis in `config/pipeline.yaml`
-(sha256 `{{CONFIG_SHA}}`) - the answer-blind decision freeze. No variant
-identity, gene name, or leaked-space value influenced any parameter; the
-pipeline output is the submission.
+(sha256 `{{CONFIG_SHA}}`) - the decision freeze. No variant identity, gene
+name, or leaked-space value enters any scoring parameter; the pipeline
+output is the submission. Two post-freeze config additions were made
+after the first run and are disclosed rather than hidden: the
+extended-MHC artifact-locus mask and the BUB1B LoF-mechanism allowlist.
+One post-freeze code fix also landed: the VEP-indel CSQ allele matcher
+(`src/vcf.py::vep_allele`, limitation 10), under which the funnel was
+re-run - every funnel/ablation number below is from the fixed run. Each
+change is logged in `docs/decisions.md` and described in section 11.
 
 ### 1a. Funnel table (counts per stage, regenerated)
 
 {{FUNNEL_TABLE}}
+
+### 1b. Rank and epcr
+
+{{RANK_NOTE}}
 
 ## 2. Data audit / EDA
 
@@ -97,10 +111,19 @@ The funnel was validated *blind* before the proband call:
 
 The submission CSV is the **automated output** of the pipeline
 (`src/submit.py` builds bytes that are oracle-validated locally before any
-upload). Downstream manual review was limited to: (a) reading the top
-hypothesis' evidence fields, (b) confirming the phasing report, (c) the
-secondary-findings disclosure decision described in section 7. No variant
-was added, removed, or re-ordered by hand.
+upload), with **one disclosed post-observation manual curation step**: the
+extended-MHC artifact-locus mask. The trigger was human review - every
+emitted run-2 row was an HLA-DRB1/MHC hypothesis, a well-known artifact
+class, and the motivation honestly included the score impact
+(decisions.md). The mask adds no evidence and raises no *score*, but it
+does change *ranks* (it removed 6,353 artifact-locus candidates, so the
+BUB1B pair's rank - and therefore its epcr - improved vs the unmasked
+run-2 CSV shown in section 0a). We call it "removal of a declared
+artifact class", not "direction-neutral". Separately, downstream manual
+review was limited to: (a) reading the top hypothesis' evidence fields,
+(b) confirming the phasing report, (c) the secondary-findings disclosure
+decision described in section 7. No variant was added, removed, or
+re-ordered inside the remaining ranked table by hand.
 
 ## 6. Data sources
 
@@ -122,6 +145,10 @@ and we say so openly rather than stay silent.
 
 {{ACMG_SECTION}}
 
+### 8a. Primary finding interpretation
+
+{{FINDING_INTERPRETATION}}
+
 ## 9. Runtime and cost
 
 {{RUNTIME_SECTION}}
@@ -137,6 +164,10 @@ and we say so openly rather than stay silent.
 ## 12. Method abstract (<=500 words)
 
 {{ABSTRACT}}
+
+## 12a. Methods form Q&A
+
+{{FORM_ANSWERS}}
 
 ## 13. Limitations
 

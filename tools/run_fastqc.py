@@ -10,7 +10,7 @@ checks:
 (b) ``parse_fastq_stats`` - a pure-Python FASTQ streamer fallback computing
     n_reads, mean read length, GC fraction and the phred+33 Q30 fraction
     (.gz-aware via magic bytes);
-(c) ``compare_to_expectations`` - score measured metrics against the leaked
+(c) ``compare_to_expectations`` - score measured metrics against the participant-reported
     run metrics (~404M read pairs, Q30 ~93.5%, GC ~41%, dup ~8.4%, ~35x
     coverage). plan.md Phase 1 treats those numbers as *expectations*, not
     truth, so each check returns pass/fail/missing plus a note rather than
@@ -34,7 +34,7 @@ import re
 import sys
 from pathlib import Path
 
-#: Leaked / participant-reported run metrics (plan.md Phase 1; deep dive).
+#: Participant-reported run metrics (plan.md Phase 1; deep dive).
 #: ``tolerance`` is the fractional +- bound applied to each expected value
 #: (Gate 1: "FASTQ read counts within 20% of expectation").
 EXPECTED_RUN = {
@@ -185,7 +185,7 @@ def parse_fastq_stats(path) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# (c) compare against the leaked run-metric expectations
+# (c) compare against the participant-reported run-metric expectations
 # ---------------------------------------------------------------------------
 
 def compare_to_expectations(stats: dict, expected: dict | None = None) -> dict:
@@ -373,7 +373,7 @@ def _render_summary(report: dict) -> str:
             L.append(f"| {k} | {v} |")
         L.append("")
     if comp:
-        L.append("## Comparison to leaked run expectations (+-20%)")
+        L.append("## Comparison to participant-reported run expectations (+-20%)")
         L.append("")
         L.append("| metric | status | value | expected | note |")
         L.append("|---|---|---|---|---|")
@@ -394,7 +394,7 @@ def _render_summary(report: dict) -> str:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
-        description="FASTQ QC vs leaked run expectations (plan.md Phase 1)")
+        description="FASTQ QC vs participant-reported run expectations (plan.md Phase 1)")
     ap.add_argument("--fastq-dir", required=True,
                     help="dir holding *.fastq[.gz] / *.fq[.gz] and/or "
                          "fastp *.json reports")

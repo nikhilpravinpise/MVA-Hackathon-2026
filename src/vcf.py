@@ -182,8 +182,41 @@ class VcfRecord:
             out.append(d)
         return out
 
+    def csq_allele_known(self, allele: str) -> bool:
+        """True if a CSQ ``Allele`` string denotes one of this record's ALTs
+        under VEP's --vcf allele convention (see :func:`vep_allele`)."""
+        return any(allele in (a, vep_allele(self.ref, self.alts, a))
+                   for a in self.alts)
+
     def csq_for_alt(self, alt: str) -> list[dict[str, str]]:
-        return [a for a in self.annotations() if a.get("Allele") == alt]
+        """CSQ blocks for ``alt``.
+
+        VEP ``--vcf`` output writes the MINIMAL allele in the CSQ ``Allele``
+        field - an indel loses the shared leading base (``C/GC`` annotates
+        ``G``-as-``C``; a deletion's ``AATG/A`` comes back ``-``), so an
+        exact-match on the VCF ALT drops every indel annotation. Synthetic
+        fixtures and non-``--vcf`` VEP output carry the verbatim ALT, so the
+        match accepts either form.
+        """
+        key = vep_allele(self.ref, self.alts, alt)
+        want = {alt} if key == alt else {alt, key}
+        return [a for a in self.annotations() if a.get("Allele") in want]
+
+
+def vep_allele(ref: str, alts: list[str], alt: str) -> str:
+    """The allele string VEP writes in the CSQ ``Allele`` field under ``--vcf``.
+
+    VEP's VCF output factory trims ONE shared leading base when the record
+    contains an indel AND REF plus every ALT start with the same base:
+    ``C/CGAGA`` -> ``GAGA``, ``AATG/A`` -> ``-`` (empty allele). If any ALT
+    lacks the shared base (e.g. ``G/[T,GT]``), alleles are emitted verbatim.
+    SNVs are never trimmed.
+    """
+    if len(ref) == len(alt) == 1:
+        return alt
+    if all(a.startswith(ref[0]) for a in alts):
+        return alt[1:] or "-"
+    return alt
 
 
 class VcfReader:

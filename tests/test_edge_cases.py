@@ -565,6 +565,65 @@ class TestReadsFlagSkips:
         assert r["stats"]["skipped_unmapped"] == 1
 
 
+class TestVepTrimmedIndelAllele:
+    """Regression (audit H4): VEP ``--vcf`` writes the MINIMAL allele in the
+    CSQ ``Allele`` field for indels - it drops the shared leading base
+    (``C/GC`` annotates ``C``, ``AATG/A`` annotates ``-``). ``csq_for_alt``
+    used to require ``Allele == ALT`` verbatim, so ~99.5% of indels in the
+    patient VCF silently lost their gene/consequence (never reached a
+    hypothesis). Multi-allelic sites whose ALTs disagree on the leading
+    base are NOT trimmed; SNVs are never trimmed."""
+
+    FMT = "GT:AD:DP:GQ:PGT:PID\t0/1:22,23:45:99:.:."
+
+    def test_vep_allele_convention(self):
+        from src.vcf import vep_allele
+        assert vep_allele("A", ["T"], "T") == "T"          # SNV: verbatim
+        assert vep_allele("G", ["GC"], "GC") == "C"        # insertion
+        assert vep_allele("C", ["CGAGA"], "CGAGA") == "GAGA"
+        assert vep_allele("AATG", ["A"], "A") == "-"       # full deletion
+        assert vep_allele("GA", ["G"], "G") == "-"         # partial del
+        # multi-allelic: not all ALTs share the leading base -> verbatim
+        assert vep_allele("G", ["T", "GT"], "GT") == "GT"
+        assert vep_allele("G", ["T", "GT"], "T") == "T"
+
+    def _indel_facts(self, tmp_path, rec_line, sample="PROBAND01"):
+        vcf = _write_raw(tmp_path, [rec_line])
+        return _facts(vcf, sample)
+
+    def test_insertion_annotation_recovered(self, tmp_path):
+        a = synth.Ann("C", "frameshift_variant", "HIGH", "FSIG", "G1",
+                      extra={"CADD_PHRED": 30})
+        f = self._indel_facts(tmp_path,
+                              "7\t100\t.\tG\tGC\t60.0\tPASS\tCSQ="
+                              + a.to_csq() + "\t" + self.FMT)
+        assert f, "trimmed CSQ allele unmatched - indel lost its annotation"
+        assert f[0].gene == "FSIG" and f[0].damage_tier == "lof"
+
+    def test_deletion_dash_allele_recovered(self, tmp_path):
+        a = synth.Ann("-", "frameshift_variant", "HIGH", "FSIG", "G1")
+        f = self._indel_facts(tmp_path,
+                              "7\t200\t.\tAATG\tA\t60.0\tPASS\tCSQ="
+                              + a.to_csq() + "\t" + self.FMT)
+        assert f and f[0].gene == "FSIG"
+
+    def test_untrimmed_multiallelic_still_matches(self, tmp_path):
+        a = synth.Ann("GT", "frameshift_variant", "HIGH", "FSIG", "G1")
+        f = self._indel_facts(tmp_path,
+                              "7\t300\t.\tG\tT,GT\t60.0\tPASS\tCSQ="
+                              + a.to_csq() + "\t" + self.FMT)
+        assert any(x.gene == "FSIG" and x.alt == "GT" for x in f)
+
+    def test_trimmed_allele_not_counted_as_unmatched(self, tmp_path):
+        from src.vcf_qc import compute_stats
+        a = synth.Ann("C", "frameshift_variant", "HIGH", "FSIG", "G1")
+        vcf = _write_raw(tmp_path, [
+            "7\t100\t.\tG\tGC\t60.0\tPASS\tCSQ=" + a.to_csq()
+            + "\t" + self.FMT])
+        st = compute_stats(str(vcf), sample="PROBAND01")
+        assert st["n_csq_allele_unmatched"] == 0
+
+
 class TestCsqAlleleUnmatched:
     """Falsification: a CSQ block whose Allele field matches NO record ALT
     (annotation/allele mismatch) silently loses the variant's gene - the

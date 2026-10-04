@@ -54,21 +54,25 @@ sha1 (`sha1("blob <size>\0" + bytes)`), not a raw sha256 - verified accordingly.
 
 ### 1.2 FASTQs - one coherent sequencing run
 
-- All 8 files share read-header instrument `A01973`, run `164`, flowcell
-  `HGWCNDSX7`; lanes 1-4 x R1/R2, dual-indexed (`GTGACGGAGC+NGGACCGCCA`).
-  Exactly the structure of a real 4-lane NovaSeq WGS run.
+- All 8 files share read-header instrument/run/flowcell IDs from one
+  coherent NovaSeq run (barcode-level identifiers redacted for the
+  public repo); lanes 1-4 x R1/R2, dual-indexed. Exactly the structure
+  of a real 4-lane NovaSeq WGS run.
 - Integrity proven two ways: (a) all sizes byte-match the manifest; (b) the
   full realignment consumed every file end-to-end (1,076,022,541 reads,
   99.61% mapped, 98.12% properly paired, 12.9% marked duplicates) - any
   truncated/corrupt member would have aborted the stream.
 - Effective depth ~536M read pairs x 151 bp ≈ 160 Gb → ~50x raw coverage,
-  deeper than the leaked ~404M-pair expectation (more data, not less).
+  deeper than the participant-reported ~404M-pair expectation (more data,
+  not less).
 
 ### 1.3 Clinical phenotype
 
 docx is a real clinical narrative (not a template): rhabdomyosarcoma,
-nephrocalcinosis, short stature, failure to thrive, skeletal muscle atrophy,
-prematurity (32 wk), severe IUGR (~1 kg), parental recurrent miscarriages.
+nephrocalcinosis, short stature, failure to thrive, skeletal muscle
+atrophy, prematurity, severe IUGR, parental recurrent miscarriages.
+(Exact gestational age and birth weight are redacted from the public
+repo - they are re-identifying narrative detail beyond the HPO terms.)
 All 8 extracted terms in `data/hpo_terms.json` resolve to real ontology names
 in `env/corpus/hp.obo` and match the document 1:1:
 

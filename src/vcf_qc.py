@@ -170,8 +170,10 @@ def compute_stats(vcf_path, sample: str | None = None) -> dict:
                 for blk in csq.split(","):
                     # A CSQ Allele matching no record ALT vanishes entirely
                     # in triage (csq_for_alt) - a systemic annotation-format
-                    # break would silently lose every gene assignment
-                    if blk.split("|")[0] not in rec.alts:
+                    # break would silently lose every gene assignment.
+                    # csq_allele_known resolves VEP's trimmed-indel Allele
+                    # convention, so only a REAL mismatch is counted.
+                    if not rec.csq_allele_known(blk.split("|")[0]):
                         n_csq_allele_unmatched += 1
 
             sg = rec.samples.get(sample) if sample else None

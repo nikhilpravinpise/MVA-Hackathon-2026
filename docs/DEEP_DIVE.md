@@ -272,10 +272,11 @@ pipeline others can reuse, a family-facing explainer, or tooling for the MVA com
 
 ### 9a. Data-leak incident (discussion #23)
 
-- A participant Space `kipasyangin5/mva-syndrome-exploreraaaa` is PUBLIC and contains derived
+- A participant Space (name redacted for the public repo; see discussion
+  #23) is PUBLIC and contains derived
   patient data: `data/candidate_genes_variants.json` (16 genes, hundreds of variants with VAFs),
   `data/clinical_phenotype.json`, `wgs_sequencing_metrics.json`, and a 219-table research
-  dashboard. Flagged by participant trblnfxn in discussion #23 ("is ist ok?", opened ~14:24 UTC
+  dashboard. Flagged by a participant in discussion #23 ("is ist ok?", opened ~14:24 UTC
   Sep 15; closed Sep 16-17 with a canned organizer reply, Space still live as of Sep 18).
 - Do NOT rehost or republish this. Organizers' rule: a handful of named variants in a report =
   finding; genome-scale genotype tables = prohibited derived data. This Space crosses that line.
@@ -288,7 +289,8 @@ pipeline others can reuse, a family-facing explainer, or tooling for the MVA com
 
 ### 9b. Sequencing run facts (from leaked metrics, plausible/consistent)
 
-- NovaSeq 6000, flowcell `HGWCNDSX7`, sample `EX2312012`, library S16, 4 lanes, paired-end.
+- NovaSeq-class instrument, one flowcell/library across 4 lanes,
+  paired-end (barcode-level IDs redacted for the public repo).
 - ~101M read pairs/lane (~404M total), Q30 ~93.5%, mean GC ~41%, dup ~8.4%, mapping ~99.5%.
 - ~35x mean coverage. Consistent with the 8x ~10 GB FASTQ files in the gated dataset.
 
@@ -296,11 +298,16 @@ pipeline others can reuse, a family-facing explainer, or tooling for the MVA com
 
 Rare/absent-from-gnomAD BUB1B heterozygotes in the candidate table (63 total; rest are common):
 
-| GRCh38 pos (chr15) | change | VAF | VEP consequence (ENST00000287598, plus strand) |
-|---|---|---|---|
-| 40,209,701 | T>G | 0.543 | **stop_gained - p.Leu737Ter** (PVS1-class nonsense) |
-| 40,216,470 | A>G | 0.391 | intron_variant (MODIFIER; deep intronic per VEP default - needs SpliceAI) |
-| 40,220,612 | T>G | 0.464 | missense_variant (MODERATE) = **p.Asn1002Lys** |
+| GRCh38 pos (chr15) | change | VEP consequence (ENST00000287598, plus strand) |
+|---|---|---|
+| 40,209,701 | T>G | **stop_gained - p.Leu737Ter** (PVS1-class nonsense) |
+| 40,216,470 | A>G | intron_variant (MODIFIER; deep intronic per VEP default - needs SpliceAI) |
+| 40,220,612 | T>G | missense_variant (MODERATE) = **p.Asn1002Lys** |
+
+(The leaked table's per-variant VAF values are redacted here - republishing
+proband-derived genotype metrics crosses the same derived-data line the
+leak itself crossed. Positions/consequences are kept because they are also
+independently in our own findings-scale artifacts.)
 
 Re-verified live via Ensembl REST VEP + sequence endpoints, 2026-09-18: GRCh38 REF bases T/A/T at
 the three sites respectively; 40,209,701 T>G gives codons tTa->tGa at protein position 737;
@@ -326,7 +333,7 @@ impossible - GRCh38 REF there is G.
   (biallelic truncating is usually embryonic-lethal). That points to GT =
   {**40209701 T>G (p.Leu737Ter)** + **40220612 T>G (missense)**} as the leading hypothesis, with
   {A>G-intron + T>G-missense} as the alternate if the nonsense happens to be a common SNP context
-  (unlikely - VAF 0.54, no rsID in the leak).
+  (unlikely - the leaked table shows it heterozygous at ~50% with no rsID).
 - VERIFY from the real VCF in minutes once you have access: `tabix vcf.gz 15:40189000-40251000`,
   keep het + rare + damaging, then confirm in-trans via PGT/PID. Submissions must use `chr15`
   prefix (template uses `chr1`; `_parse_variant` does verbatim string compare).
@@ -403,7 +410,8 @@ repurposing screen they're already funding.
   and organizers plainly contemplate participants using paid cloud compute.
 - **#23 (leak flag) - CLOSED, badly.** gandreoletti answered with a canned "cannot accept the
   submission in its current form" template - the report was apparently misread as a
-  submission. The leaked Space `kipasyangin5/mva-syndrome-exploreraaaa` is STILL LIVE
+  submission. The leaked participant Space (name redacted for the public
+  repo) is STILL LIVE
   (HTTP 200, 2026-09-17). No public enforcement action taken. Our firewall doctrine stands
   regardless - and the episode confirms the Space's content is not organizer-endorsed.
 

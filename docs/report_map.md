@@ -17,10 +17,11 @@ description may be judged less favorably").
 | 5 | Public-only data, or proprietary also used? | section 6 |
 | 6 | Describe public data used in detail | section 6 |
 | 7 | Describe proprietary data used | section 6 ("none") |
-| 8 | Does the approach output compound-het pairs? | section 1 stage [4] + 0 (submission summary: pair in ONE row) |
+| 8 | Does the approach output compound-het pairs? | section 1 stage [5] + 0 (submission summary: pair in ONE row) |
 | 9 | How were secondary/incidental findings handled? | section 7 |
 | 10 | Estimate of run time and cost | section 9 + docs/runtime_log.md |
 | 11 | Method abstract <=500 words, strengths+limitations | sections 12 + 13 |
+| - | (all 13, verbatim, with pointers) | section 12a (form Q&A) |
 
 ## Structural content requirements (plan.md Phase 6)
 
@@ -38,6 +39,9 @@ description may be judged less favorably").
 | Strengths AND limitations | sections 12 + 13 |
 | Provenance / firewall statement | section 11 |
 | Data-handling compliance note | section 11 |
+| Rank/epcr explanation (why rank-5 pair emits 0.1324) | section 1b |
+| Prior-submission iteration audit trail | section 0a |
+| Patient-specific finding interpretation (HPO + biology) | section 8a |
 
 ## Gate
 

@@ -41,12 +41,11 @@ def rank_hypotheses(hyps: list[Hypothesis], cfg: dict) -> list[Hypothesis]:
     emit_floor = float(sc.get("emit_floor", 0.70))
     decay = float(sc.get("epcr_decay", 0.55))
 
-    # singleton hypotheses (dominant_het/x_linked carry one variant) can
-    # never FULL-match the scorer's 2-variant ground truth - their best
-    # outcome is partial credit. They compete in the same score space as
-    # pairs, so without a higher bar a lone damaging het in a max-pheno
-    # gene could outrank a true pair and dilute F-max. Emit them only
-    # when the evidence is exceptional.
+    # singleton hypotheses (any model carrying <2 variants: dominant_het,
+    # x_linked, AND hom_alt) lack corroborating pair evidence yet compete
+    # in the same score space - unguarded, lone 'LoF' singletons outrank
+    # true pairs (the patient table shows exactly this; report sec 1b).
+    # Emit them only when the evidence is exceptional.
     single_floor = float(sc.get("singleton_emit_floor", emit_floor + 0.10))
     ranked = sorted(hyps, key=_sort_key)
     for i, h in enumerate(ranked):

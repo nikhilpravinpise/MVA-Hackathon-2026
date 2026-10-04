@@ -1,11 +1,12 @@
 # GenAI / LLM use disclosure log
 
-Required by plan.md section 2.3 (compliance doctrine): commercial/API-tier
-LLM use only, no-training terms, with a running log so the methods-xlsx
-required GenAI-disclosure question writes itself (question marked
-"(required)" in `methods_description_form.xlsx`; organizer resolution in
-discussion #21 - consumer tier acceptable only if terms are verifiable,
-API/commercial recommended otherwise).
+Required by plan.md section 2.3 (compliance doctrine): commercial-tier LLM
+use only, with the plan's data-handling terms verified and recorded
+honestly, plus a running log so the methods-xlsx required GenAI-disclosure
+question writes itself (question marked "(required)" in
+`methods_description_form.xlsx`; organizer resolution in discussion #21 -
+consumer tier acceptable only if terms are verifiable, API/commercial
+recommended otherwise).
 
 Rule: **no patient data, no proband genotypes, and no variant-level detail
 ever enters an LLM prompt** (deletion doctrine: prompts/logs containing
@@ -34,10 +35,20 @@ that work it will cite the same rule.
 | 2026-10-02/03 | Cognition Devin CLI | Commercial product | SWE-2 Max | No-training clause check required for patient-derived prompts | FINDINGS-SCALE ONLY - annotation-stack assembly + Modal migration + repo audit: public annotation sources (CADD/AlphaMissense/SpliceAI/REVEL/ClinVar/gnomAD) fetched and reshaped; named BUB1B locus coordinates (chr15:40209701/40220612) referenced for phasing/orchestration specs per retention 2.3; no proband VCF/BAM blocks pasted |
 | 2026-10-04 | Cognition Devin CLI | Commercial product | SWE-2 Max | No-training clause check required for patient-derived prompts | FINDINGS-SCALE ONLY - masked Modal rerun + evidence fleet execution (run_main/ablations/merge/phasing/mosdepth/fastp/deepvariant/cnv/slim on track1_final), acceptance-gate verification, artifact pulls, mosdepth-summary bug fix, nonpreemptible gnomad retry, docs sync (status/runtime_log/decisions/RETENTION). Aggregate findings (funnel counts, ablation ranks, coverage stats, named BUB1B coordinates) in tool output per retention 2.3; zero proband VCF/BAM/genotype blocks in prompts - all patient-scale compute stayed on the Modal volume |
 
+| 2026-10-04 | Cognition Devin CLI | Devin Pro (operator-stated plan) | SWE-2 Max | Verified published terms (docs.devin.ai/admin/security): Pro default = Cognition MAY use customer data for model training unless the account opts out via Data Controls (opt-out also enables zero data retention with model providers); account opt-out state NOT asserted - default stated | FINDINGS-SCALE ONLY - audit-implementation session: indel CSQ allele-matching fix (src/vcf.py csq_for_alt/vep_allele + tests), report truthfulness/depth pass (tools/make_report.py + template), report-patient Make target, hygiene fixes, Modal indel-fix rerun orchestration (track1_final_indelfix). Named BUB1B coordinates/HGVS in tool output per retention 2.3; zero proband VCF/BAM/genotype blocks in prompts |
+
 ## Guidance per tier (plan.md 2.3)
 
-- **Allowed:** commercial/API products with no-training terms for any
-  code/docs/methods work; public-data pipelines.
+- **Allowed:** commercial/API products with verifiable data-handling terms
+  for any code/docs/methods work; public-data pipelines.
+- **Devin Pro terms (verified 2026-10-04, docs.devin.ai/admin/security):**
+  by default Cognition may use customer data for model training; a paid
+  account can opt out on the Data Controls settings page, after which data
+  is not used for training and zero data retention is enabled with model
+  providers. The account's opt-out state is operator-managed and is NOT
+  asserted in this ledger - rows state the default. This is why the
+  no-patient-data-in-prompts rule exists: it is the load-bearing control,
+  not the plan's training terms.
 - **Gate:** before ANY prompt could touch patient-derived data (should never
   happen by design), the specific plan's no-training clause must be verified
   and cited here.

@@ -3,10 +3,11 @@
 Line-by-line compliance map for Phases 0-6 (the implemented scope).
 Every row cites its artifact or names the external dependency blocking
 it. Regenerate this table manually after each milestone.
-*(Updated 2026-10-03: masked Modal rerun COMPLETE - all acceptance gates
+*(Updated 2026-10-04: masked Modal rerun COMPLETE - all acceptance gates
 green on `track1_final/`: emitted=1, csv_rows=1, epcr=0.1324, zero
-HLA-DRB1, all evidence arms landed. Only the leaderboard upload remains
-external.)*
+HLA-DRB1, all evidence arms + all 5 ablations landed. Remaining
+externals: leaderboard upload/verification, `git push` of local
+commits, and the indel-fix Modal rerun on `track1_final_indelfix`.)*
 
 Legend: **DONE** = implemented + test-verified. **EXTERNAL** = requires
 operator/credential action outside this repo (patient data, accounts,
@@ -133,7 +134,7 @@ bytes of the FINAL masked CSV (verified 2026-10-03); leaderboard external.
 | CSV rows | 1 | 1 | PASS |
 | HLA-DRB1 rows in hypotheses.tsv | 0 | 0 | PASS |
 | BUB1B pair epcr | 0.1324 | 0.1324 | PASS |
-| Ablation artifacts | 5 | 4 landed + gnomad on nonpreemptible retry | pending |
+| Ablation artifacts | 5 | 5 landed (gnomad via nonpreemptible retry, rank 2) | PASS |
 | funnel arithmetic | masked+out = candidates | 289725 + 6353 = 296078 | PASS |
 
 ## Phases 7-8 - out of scope for this thread

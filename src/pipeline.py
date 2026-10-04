@@ -336,13 +336,18 @@ def _hyp_to_dict(h: Hypothesis) -> dict:
             for v in h.variants],
         "phase_detail": h.phase_detail,
         # CSV notes carry the one-line justification a human reviewer
-        # needs at a glance: model, proven phase, consequence classes
+        # needs at a glance: model, proven phase, consequence classes,
+        # then HGVS (protein preferred, else coding) so a reviewer can
+        # identify the alleles without reopening the VCF
         "notes": (
             f"{h.gene} {h.model}"
             + {"trans": " trans", "cis": " cis"}.get(h.in_trans, "")
             + (" " + "+".join(dict.fromkeys(
                 (v.consequence or "?").split("&")[0]
                 for v in h.variants)))
+            + (" " + "+".join(
+                (v.hgvsp or v.hgvsc or "").split(":")[-1] or v.vid
+                for v in h.variants))
         ).strip(),
         # evidence flags (truncated_het_pool / noise_gene / cis-invalidated)
         # must reach the artifact - 'documented in config' is not the same

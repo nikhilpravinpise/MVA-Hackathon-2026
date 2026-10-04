@@ -11,7 +11,7 @@ submission CSV validated against the vendored official scorer.
 | Path | What |
 |---|---|
 | `src/` | funnel modules (vcf, triage, genes, pheno, prioritize, phasing, reads, sf_scan, acmg, submit, vcf_qc, synth) |
-| `tests/` | oracle parity, CSV contract, adversarial bytes, funnel unit, e2e gates (290+ tests and counting) |
+| `tests/` | oracle parity, CSV contract, adversarial bytes, funnel unit, e2e gates (340 tests, 1 env-gated skip) |
 | `tools/` | runners: audit_scorer_fixtures, check_citations, fetch_public_vcfs, fetch_refs, fetch_big, genes_to_disease_json, normalize_contigs, run_pipeline, run_track1, run_sensitivity, make_report, run_eda, extract_hpo, run_fastqc, run_phasing, run_vep, run_exomiser, compare_arms, run_realign, run_cnv, build_real_spike, revel_to_vcf, gnomad_split, modal_app |
 | `scorer/` | vendored `evaluation.py` - the official scorer oracle (see `scorer/NOTICE.md`) |
 | `config/` | frozen `pipeline.yaml` + `acmg_sf_v33.json` |
@@ -28,7 +28,11 @@ python -m venv .venv
 make refs        # download hp.obo + phenotype.hpoa + genes_to_phenotype
 make spike control    # build synthetic proband + negative control
 make track1      # EDA -> funnel -> SF -> phasing -> CSV -> oracle score
-make report      # regenerate docs/report.md from results/
+make report      # regenerate docs/report.md from results/ (synthetic run)
+make report-patient  # regenerate docs/report.md from the PATIENT artifacts
+                     # (results/track1_patient_modal/track1_final) - the
+                     # submission report; `make report` alone renders the
+                     # synthetic spike run instead
 make audit       # 60-fixture scorer audit battery
 make gate        # gate-critical tests only
 make citations   # docs/plan.md citation checker

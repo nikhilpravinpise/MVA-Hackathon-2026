@@ -259,22 +259,24 @@ def test_ablation_table_premask_fallback():
     assert "| clinvar | 2 | None | 4 |" in t
 
 
-def test_abl_max_uses_bub1b_rank_post_mask(tmp_path):
-    """Falsification: ABSTRACT derives 'held rank <=N' - post-mask every
-    pair_rank is null, so a pair_rank-only derivation renders literally
-    '<=None' in the abstract."""
+def test_abl_fragility_uses_bub1b_rank_post_mask(tmp_path):
+    """Falsification: ABSTRACT derives the fragility clause from the
+    tracked pair's ablation ranks - post-mask every pair_rank is null,
+    so a pair_rank-only derivation renders 'None' ranks (or nothing)
+    instead of the real fragility numbers."""
     from tools.make_report import main
     abl = tmp_path / "ablations.json"
     abl.write_text(json.dumps(
-        {s: {"pair_rank": None, "bub1b_rank": 5, "emitted": 1}
-         for s in ("clinvar", "gnomad")}))
+        {"clinvar": {"pair_rank": None, "bub1b_rank": 125, "emitted": 0},
+         "gnomad": {"pair_rank": None, "bub1b_rank": 2, "emitted": 1}}))
     out = tmp_path / "report.md"
     rc = main(["--run-dir", str(_minimal_run(tmp_path)),
                "--ablations", str(abl), "--out", str(out)])
     assert rc == 0
     body = out.read_text()
-    assert "rank <=5" in body
-    assert "<=None" not in body
+    assert "ablation rule on 1 of 2" in body
+    assert "clinvar (rank 125)" in body
+    assert "(rank None)" not in body
 
 
 def test_result_head_preferred_over_result(tmp_path):

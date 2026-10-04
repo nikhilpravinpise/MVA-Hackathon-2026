@@ -39,7 +39,7 @@ doesn't match the pulled artifacts at close-out gets corrected, not spun.
 - **Decision freeze with append-only ledger**: config frozen pre-data;
   every post-freeze change is a `decisions.md` row with alternatives
   considered - including a correction row that preserves the original
-  text rather than editing history (2026-10-04 singleton_emit_floor row).
+  text rather than editing history (2026-10-03 singleton_emit_floor row).
 - **Monotonicity machine-checked**: stage counts must be non-increasing;
   `locus_masked` joins the chain as a *remaining* count with
   `locus_masked_out` the audited removed count

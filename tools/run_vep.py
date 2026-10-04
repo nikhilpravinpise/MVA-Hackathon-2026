@@ -155,7 +155,12 @@ def _ann_plugins(ann: Path) -> tuple[list[str], list[str]]:
         missing.append("AlphaMissense")
     if (ann / SPLICEAI_SNV).exists() \
             and (ann / (SPLICEAI_SNV + ".tbi")).exists():
-        args += ["--plugin", f"SpliceAI,snv=/ann/{SPLICEAI_SNV}"]
+        # VEP 116 SpliceAI.pm calls add_file() on BOTH snv and indel params
+        # unconditionally - passing only snv dies with "No file specified".
+        # Pointing indel at the same file is an idempotent no-op.
+        args += ["--plugin",
+                 f"SpliceAI,snv=/ann/{SPLICEAI_SNV},"
+                 f"indel=/ann/{SPLICEAI_SNV}"]
     else:
         missing.append("SpliceAI")
     if (ann / REVEL_VCF).exists() \

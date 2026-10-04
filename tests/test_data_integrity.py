@@ -381,7 +381,8 @@ def test_real_vcf_gate():
     MVA_REAL_VCF points at the downloaded file."""
     path = os.environ.get("MVA_REAL_VCF")
     if not path or not Path(path).exists():
-        pytest.skip("MVA_REAL_VCF not set - patient VCF not on disk yet")
+        pytest.skip("MVA_REAL_VCF not set - point it at the patient WGS "
+                    "VCF (e.g. data/WGS_EX2312012_HGWCNDSX7.vcf.gz)")
     stats, head, sex = _assert_vcf_gate(
         path, n_bounds=(3_000_000, 7_000_000), titv_bounds=(1.9, 2.1))
     rep = integrity_report(path)

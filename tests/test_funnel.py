@@ -8,7 +8,6 @@ import pytest
 
 pytestmark = pytest.mark.gate
 
-from conftest import REPO  # noqa: F401  (sys.path setup side-effect)
 from src import synth
 from src.config import load_config
 from src.genes import enumerate_hypotheses

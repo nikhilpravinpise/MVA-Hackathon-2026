@@ -12,7 +12,6 @@ import pytest
 
 pytestmark = pytest.mark.gate
 
-from conftest import REPO  # noqa: F401  (sys.path setup side-effect)
 from src import synth
 from src.config import load_config
 from src.loci import in_artifact_locus, validate_artifact_loci
