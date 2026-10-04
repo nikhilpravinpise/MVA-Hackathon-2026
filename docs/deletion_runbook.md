@@ -92,7 +92,14 @@ both submission.csv files, `genes.tsv`, synthetic/spike/control trees,
 (`funnel/result_head.json`, first-200 ranked rows) is a curated top-N
 excerpt - KEEP per the ranked-variant-list rule.
 
-## 3. Modal volume `mva-data` - the big one (~280 GB)
+## 3. Modal volume `mva-data` - EXECUTED EARLY 2026-10-04 (billing stop)
+
+**Both volumes deleted 2026-10-04** - `mva-data` (~280 GB) and `mva-ann`
+(~115 GB) removed via `modal volume delete` to stop all volume billing.
+Verified `modal volume list` shows only unrelated legacy volumes. All
+canonical artifacts were already pulled to `results/` (Phase 4) and the
+leaderboard result was verified-final, so no audit evidence was lost.
+The commands below are preserved as the record of what the volumes held.
 
 ```bash
 # Patient genotype-scale objects - all DELETE:
