@@ -120,3 +120,12 @@ Append the execution row to `docs/runtime_log.md` (date, paths removed,
 approx GB freed, verifier commands run) and mark each manifest table's
 deleted rows. Rules item 10 expects deletion inside 30 days - the runtime
 log row is the compliance record.
+
+## 7. Confirmation email
+
+Send the deletion confirmation to BOTH mailboxes - the attestation text
+(docs/attestation_hf_gated_access.md #6) names
+`MVAHackathon2026@synapse.org`, while the rules/runbook text names
+`RarediseaserealkidMVAhackathon2026@synapse.org` (rejects senders
+without registered Synapse accounts - discussion #15). If either
+bounces, post the attempt in Discussions; organizers log it.

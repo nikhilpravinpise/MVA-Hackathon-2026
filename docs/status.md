@@ -165,7 +165,7 @@ tags.
 
 1. ~~HF dataset access grant -> patient VCF/.tbi/docx/FASTQs~~ DONE 2026-10-01
 2. ~~`DISPLAY_NAME` decision~~ DONE - `nikhilpise` (docs/team.md)
-3. Attestation text archival (accepted at grant; verbatim copy belongs in docs/)
+3. ~~Attestation text archival~~ DONE 2026-10-04 - verbatim gating form dumped from HF API cardData into `docs/attestation_hf_gated_access.md` (all 15 fields; deletion-confirmation mailbox discrepancy vs runbook recorded)
 4. ~~Patient-data rerun: `MVA_REAL_VCF` gate~~ DONE 2026-10-03 (328-gate suite incl. real VCF)
 5. ~~DeepVariant/mosdepth/CNV Modal stages~~ DONE 2026-10-03
 6. ~~Indel CSQ-matching fix + patient rerun on `track1_final_indelfix`~~ DONE 2026-10-04 (rank 7, epcr 0.0749; emitted call unchanged)

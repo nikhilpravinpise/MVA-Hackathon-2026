@@ -55,3 +55,4 @@ that work it will cite the same rule.
   and cited here.
 - **Prohibited:** pasting proband VCF/BAM content, genotypes, or variant
   blocks into any prompt; consumer tiers whose terms cannot be verified.
+| 2026-10-04 | Cognition Devin CLI | Devin Pro (operator-stated plan) | SWE-2 Max | same verified-terms wording as row above | ZERO patient data - compliance/community docs only: verbatim HF gated-access attestation archived from public API cardData (docs/attestation_hf_gated_access.md), family-facing MVA explainer (docs/FAMILY_EXPLAINER.md), reusable answer-blind protocol template (docs/ANSWER_BLIND_PROTOCOL.md), deletion-runbook mailbox reconciliation, status.md blocker 3 closed. No patient data touched; artifacts are public-source text + repo methodology |
