@@ -5,8 +5,9 @@ answer) with the methods write-up reviewed by judges "for scientific rigor
 and depth of understanding" (`hackathon-app/tabs/about.py:110`). This file
 is our own honest score against the four axes a write-up of that kind is
 graded on, with the artifact that proves each claim. Numbers cited are the
-**masked `track1_final/` run** values unless marked run-2; any cell that
-doesn't match the pulled artifacts at close-out gets corrected, not spun.
+**indel-fix `track1_final_indelfix/` run** values unless marked run-2 or
+pre-fix (`track1_final/`); any cell that doesn't match the pulled
+artifacts at close-out gets corrected, not spun.
 
 ## Automated score (the objective 50%)
 
@@ -14,7 +15,7 @@ doesn't match the pulled artifacts at close-out gets corrected, not spun.
 |---|---|---|
 | Emitted rows | 1 (the BUB1B comp-het pair, in one CSV row) | `run_summary.json` `csv_rows`, `submission.csv` |
 | Pair score | 0.7159 (bit-identical pre/post mask - the mask is rank-only) | `result.json` ranked block |
-| Rank / epcr | rank 5 -> `epcr=0.1324` (honest rank-map, not a fabricated 0.95) | `submission.csv` row 1 |
+| Rank / epcr | rank 7 -> `epcr=0.0749` (honest rank-map; was rank 5 / 0.1324 pre-indel-fix) | `submission.csv` row 1 |
 | Local oracle on upload bytes | rank_points 100.0, f_max 1.000, full_match_rank 1 | Phase-5 `validate_submission_bytes` run |
 | Leaderboard | *pending upload + direct leaderboard read* | Phase 7 |
 

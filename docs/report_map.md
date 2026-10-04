@@ -39,7 +39,7 @@ description may be judged less favorably").
 | Strengths AND limitations | sections 12 + 13 |
 | Provenance / firewall statement | section 11 |
 | Data-handling compliance note | section 11 |
-| Rank/epcr explanation (why rank-5 pair emits 0.1324) | section 1b |
+| Rank/epcr explanation (why rank-7 pair emits 0.0749) | section 1b |
 | Prior-submission iteration audit trail | section 0a |
 | Patient-specific finding interpretation (HPO + biology) | section 8a |
 

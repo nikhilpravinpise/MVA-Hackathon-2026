@@ -30,7 +30,8 @@ make spike control    # build synthetic proband + negative control
 make track1      # EDA -> funnel -> SF -> phasing -> CSV -> oracle score
 make report      # regenerate docs/report.md from results/ (synthetic run)
 make report-patient  # regenerate docs/report.md from the PATIENT artifacts
-                     # (results/track1_patient_modal/track1_final) - the
+                     # (results/track1_patient_modal/track1_final_indelfix
+                     # funnel + track1_final orthogonal arms) - the
                      # submission report; `make report` alone renders the
                      # synthetic spike run instead
 make audit       # 60-fixture scorer audit battery

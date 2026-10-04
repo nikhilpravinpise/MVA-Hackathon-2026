@@ -26,7 +26,7 @@ not submit.
 - [ ] `chr`-prefixed contigs; epcr in (0,1], strictly decreasing; row 1 =
       the top-emitted hypothesis at its rank-mapped epcr (a pair's epcr
       reflects its RANK, not its CSV position - on the stand-in run the
-      rank-1 pair shows 0.95; post-mask a rank-5 pair emits 0.1324)
+      rank-1 pair shows 0.95; the indel-fix run's rank-7 pair emits 0.0749)
 - [ ] no `,,,,,,,,,,,` comma-only lines; no Excel export path (programmatic only)
 
 ## Submission discipline

@@ -3,11 +3,11 @@
 Line-by-line compliance map for Phases 0-6 (the implemented scope).
 Every row cites its artifact or names the external dependency blocking
 it. Regenerate this table manually after each milestone.
-*(Updated 2026-10-04: masked Modal rerun COMPLETE - all acceptance gates
-green on `track1_final/`: emitted=1, csv_rows=1, epcr=0.1324, zero
-HLA-DRB1, all evidence arms + all 5 ablations landed. Remaining
-externals: leaderboard upload/verification, `git push` of local
-commits, and the indel-fix Modal rerun on `track1_final_indelfix`.)*
+*(Updated 2026-10-04: indel-fix Modal rerun COMPLETE - all acceptance
+gates green on `track1_final_indelfix/`: emitted=1, csv_rows=1,
+epcr=0.0749 (rank 7; recovered ~78k VEP-trimmed indel annotations),
+all 5 ablations + merge landed. `main` pushed to origin (25 commits,
+0 ahead). Remaining external: leaderboard upload/verification only.)*
 
 Legend: **DONE** = implemented + test-verified. **EXTERNAL** = requires
 operator/credential action outside this repo (patient data, accounts,
@@ -107,12 +107,14 @@ row has a notes justification, criteria table in report section 7.
 |---|---|---|
 | `submit.py` CSV writer (chr-prefix, ASCII-no-BOM, <=10 rows, strict epcr) | DONE | `src/submit.py` + `tests/test_csv_contract.py` + `test_adversarial.py` |
 | Contract + adversarial batteries against the vendored oracle | DONE | 60 fixtures incl. byte-level (BOM, cp1252, CRLF, comma-lines) - `tools/audit_scorer_fixtures.py` all green 2026-10-03 |
-| Final masked CSV + byte-level oracle | DONE | `track1_final/submission.csv`: 1 row, PROBAND01, chr15 pair, epcr=0.1324, primary; vendored scorer on the exact bytes -> rank_points=100.0, f_max=1.0, full_match_rank=1 (BUB1B stand-in GT) |
+| Final CSV + byte-level oracle | DONE | `track1_final_indelfix/submission.csv`: 1 row, PROBAND01, chr15 pair, epcr=0.0749, primary; vendored scorer on the exact bytes -> rank_points=100.0, f_max=1.0, full_match_rank=1 (BUB1B stand-in GT); superseded masked CSV (epcr=0.1324) kept in `track1_final/` |
 | Dry-run upload-form checklist | DONE | `docs/submission_checklist.md` |
 | Submit once + leaderboard verify | EXTERNAL | operator OAuth at hackathon-app; file staged as `nikhilpise_answer-blind-funnel.csv` |
 
 **GATE 5:** local oracle `rank_points=100.0, f_max=1.000` on the exact
-bytes of the FINAL masked CSV (verified 2026-10-03); leaderboard external.
+bytes of the final CSV (verified 2026-10-03 on the masked bytes;
+re-verified 2026-10-04 on the indel-fix bytes staged at
+`nikhilpise_answer-blind-funnel.csv`); leaderboard external.
 
 ## Phase 6 - Track-1 write-up
 
@@ -137,6 +139,19 @@ bytes of the FINAL masked CSV (verified 2026-10-03); leaderboard external.
 | Ablation artifacts | 5 | 5 landed (gnomad via nonpreemptible retry, rank 2) | PASS |
 | funnel arithmetic | masked+out = candidates | 289725 + 6353 = 296078 | PASS |
 
+## Indel-fix acceptance gates (track1_final_indelfix, verified 2026-10-04)
+
+| Gate | Expected | Observed | Status |
+|---|---|---|---|
+| emitted hypotheses | 1 | 1 | PASS |
+| CSV rows | 1 | 1 | PASS |
+| HLA-DRB1 rows in hypotheses.tsv | 0 | 0 | PASS |
+| BUB1B pair rank | top emitted | rank 7, epcr 0.0749 | PASS |
+| Indel annotation recovery | >845,688 facts | 923,952 (+78k) | PASS |
+| Ablation artifacts | 5 | 5 landed + merged ablations.json (gnomad rank 2, clinvar 9, phasing 7, hpo 159, damage_predictors 230) | PASS |
+| funnel arithmetic | masked+out = candidates | 366214 + 7331 = 373545 | PASS |
+| CSQ alleles unmatched | 0 | 0 (normalized matching) | PASS |
+
 ## Phases 7-8 - out of scope for this thread
 
 Track 2 (drug repurposing) and close-out/deletion are Phase 7-8 per
@@ -151,5 +166,7 @@ tags.
 3. Attestation text archival (accepted at grant; verbatim copy belongs in docs/)
 4. ~~Patient-data rerun: `MVA_REAL_VCF` gate~~ DONE 2026-10-03 (328-gate suite incl. real VCF)
 5. ~~DeepVariant/mosdepth/CNV Modal stages~~ DONE 2026-10-03
-6. Submission upload + leaderboard verify (operator OAuth)
-7. Discussions-watch cadence
+6. ~~Indel CSQ-matching fix + patient rerun on `track1_final_indelfix`~~ DONE 2026-10-04 (rank 7, epcr 0.0749; emitted call unchanged)
+7. ~~`git push` of local commits~~ DONE 2026-10-04 (main even with origin/main)
+8. Submission upload + leaderboard verify (operator OAuth)
+9. Discussions-watch cadence
