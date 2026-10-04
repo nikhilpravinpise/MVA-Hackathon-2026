@@ -1,8 +1,8 @@
 # MVA Hackathon 2026 - Exhaustive Deep Dive
 
 Researched 2026-09-15. Sources: full Space source code (cloned to `hackathon-app/`), all 22
-community discussions, live leaderboard via Gradio API, gated dataset card, Synapse project
-syn76251147, mvasociety.org, Rare Revolution feature on the family.
+community discussions, live leaderboard via Gradio API, gated dataset card, public MVA
+Society material (identifiers redacted per the re-identification rule).
 
 ---
 
@@ -10,12 +10,12 @@ syn76251147, mvasociety.org, Rare Revolution feature on the family.
 
 - "Rare Disease, Real Kid: MVA Hackathon 2026" - Sage Bionetworks + MVA Society + Hugging Face +
   BEACON, prize sponsorship AWS ($25k cash) + Anthropic ($25k Claude credits).
-- The proband is publicly identifiable as **George**, the MVA Society founder's son (Synapse
-  project syn76251147 description links the Rare Revolution article "For George: the MVA Society").
-  Diagnosed Aug 2023 at age ~2 at Great Ormond Street Hospital (GOSH) with rhabdomyosarcoma
-  (liver/intra-bile-duct), then found to have MVA. Treated with two-stage NanoKnife + resection -
-  first child in UK to receive NanoKnife on liver. The causal variant is described in the rules as
-  "NHS-validated" - consistent with a real clinical diagnostic report.
+- The proband is publicly identifiable from published MVA Society material (a public
+  project description links a named patient story - name, hospital, diagnosis dates and
+  treatment details redacted for the public repo per rules.py:148-150; the firewall-relevant
+  fact is that the identity was inferable, not the identity itself). The causal variant is
+  described in the rules as "NHS-validated" - consistent with a real clinical diagnostic
+  report.
 - MVA = Mosaic Variegated Aneuploidy, autosomal recessive, <50 known cases. Cells have wrong
   chromosome counts due to a weakened spindle assembly checkpoint (SAC). Three known genes:
   **BUB1B (MVA1, majority of cases), CEP57 (MVA2), TRIP13 (MVA3)**. Features: intrauterine growth
@@ -360,7 +360,8 @@ repurposing screen they're already funding.
 - Space: https://huggingface.co/spaces/SageBio/rare-disease-real-kid-mva-hackathon-2026
 - Live app: https://sagebio-rare-disease-real-kid-mva-hackathon-2026.hf.space
 - Dataset: https://huggingface.co/datasets/SageBio/mva-hackathon-2026-data
-- Synapse project: https://www.synapse.org/Synapse:syn76251147
+- Synapse project: (public project linking the dataset to a named patient story - URL
+  redacted for the public repo per rules.py:148-150)
 - Leaderboard API (no auth): POST /gradio_api/call/leaderboard_df {"data":[]} then GET
   /gradio_api/call/leaderboard_df/{event_id}
 - Local copy of app source: ./hackathon-app (cloned)

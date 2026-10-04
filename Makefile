@@ -77,7 +77,7 @@ report-patient:
 	  --offslice results/track1_patient_modal/track1_final/offslice_eval.json \
 	  --run-where Modal \
 	  --team nikhilpise \
-	  --data-status "PATIENT RUN (WGS_EX2312012 proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses." \
+	  --data-status "PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses." \
 	  --out docs/report.md
 
 ## scorer-fixture audit battery (60 fixtures vs vendored oracle)

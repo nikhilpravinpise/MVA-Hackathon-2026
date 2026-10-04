@@ -1,8 +1,8 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-04 00:07 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-04 07:22 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
-> **Data status banner:** PATIENT RUN (WGS_EX2312012 proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses.
+> **Data status banner:** PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses.
 
 ---
 
