@@ -1,0 +1,2 @@
+proband_id,chrom_1,pos_1,ref_1,alt_1,chrom_2,pos_2,ref_2,alt_2,epcr,finding_type,notes
+PROBAND01,chr15,40209701,T,G,chr15,40220612,T,G,0.9819,primary,BUB1B_AR Exomiser 14.0.0 rank1 combined 0.9819 OMIM:257300 c.2210T>G p.(Leu737*) + c.3006T>G p.(Asn1002Lys)

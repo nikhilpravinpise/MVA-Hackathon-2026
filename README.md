@@ -15,7 +15,8 @@ submission CSV validated against the vendored official scorer.
 | `tools/` | runners: audit_scorer_fixtures, check_citations, fetch_public_vcfs, fetch_refs, fetch_big, genes_to_disease_json, normalize_contigs, run_pipeline, run_track1, run_sensitivity, make_report, run_eda, extract_hpo, run_fastqc, run_phasing, run_vep, run_exomiser, compare_arms, run_realign, run_cnv, build_real_spike, revel_to_vcf, gnomad_split, modal_app |
 | `scorer/` | vendored `evaluation.py` - the official scorer oracle (see `scorer/NOTICE.md`) |
 | `config/` | frozen `pipeline.yaml` + `acmg_sf_v33.json` |
-| `docs/` | plan.md (source of truth), status.md (phase-by-phase compliance map), report.md (regenerated), report_map.md, decisions/team/llm/runtime logs, disclosure position, attestation_hf_gated_access.md (verbatim gating form), FAMILY_EXPLAINER.md + ANSWER_BLIND_PROTOCOL.md (community/award artifacts) |
+| `docs/` | plan.md (source of truth), status.md (phase-by-phase compliance map), report.md (regenerated), report_map.md, report_model2.md (Arm-A model report), figures/ (report SVGs + ASCII pileup, generated), decisions/team/llm/runtime logs, disclosure position, attestation_hf_gated_access.md (verbatim gating form), FAMILY_EXPLAINER.md + ANSWER_BLIND_PROTOCOL.md (community/award artifacts) |
+| `submissions/` | upload-ready CSVs (as-submitted model1 copy + model2 candidates), each oracle-verified |
 | `data/` `results/` | patient data + outputs - gitignored; `RETENTION.md` manifests tracked |
 | `env/` | downloaded public corpora (gitignored, re-fetchable) |
 
@@ -29,11 +30,15 @@ make refs        # download hp.obo + phenotype.hpoa + genes_to_phenotype
 make spike control    # build synthetic proband + negative control
 make track1      # EDA -> funnel -> SF -> phasing -> CSV -> oracle score
 make report      # regenerate docs/report.md from results/ (synthetic run)
+make figures     # regenerate docs/figures/*.svg + pileup_ascii.md
 make report-patient  # regenerate docs/report.md from the PATIENT artifacts
                      # (results/track1_patient_modal/track1_final_indelfix
                      # funnel + track1_final orthogonal arms) - the
                      # submission report; `make report` alone renders the
                      # synthetic spike run instead
+make report-upload   # figures + report-patient + the repo-root upload
+                     # copy nikhilpise_track1_report.md (figure links
+                     # prefixed docs/figures/ for root-relative paths)
 make audit       # 60-fixture scorer audit battery
 make gate        # gate-critical tests only
 make citations   # docs/plan.md citation checker
@@ -61,3 +66,13 @@ fail the file. `src/submit.py` satisfies all of it; the test suite replays
 
 Patient data never leaves `data/`; no variant from any leaked Space is used
 as ground truth - the pipeline output is the submission.
+
+## Acknowledgement
+
+*This work was made possible through the Hackathon, organized by Sage
+Bionetworks in partnership with the MVA Society, Hugging Face, and
+BEACON (The Benchmarking, Evaluation, and Assessment Consortium for
+Science), with prize sponsorship from AWS and Anthropic. We are deeply
+grateful to the child and their family who generously contributed their
+data and their story to advance research into this rare disease. We
+acknowledge their trust in making this Hackathon possible.*

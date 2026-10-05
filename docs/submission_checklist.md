@@ -40,3 +40,20 @@ not submit.
 - [x] After submit: record the leaderboard row + model filename in
       `docs/decisions.md` and `results/RETENTION.md` (KEEP tag).
       DONE - both updated, same commit.
+
+## model2 options (prepared 2026-10-05 - operator decides whether to spend a slot)
+
+All candidates live in `submissions/`, oracle-verified 100.0/1.000/rank1
+on the stand-in GT. An equal-score resubmission cannot damage the
+existing entry (earliest timestamp wins ties); worst case is the
+displayed row flipping between equal-score entries - cosmetic.
+
+| Option | CSV | Report | Rationale |
+|---|---|---|---|
+| A: hardened-report resubmission | `nikhilpise_answer-blind-funnel-v2.csv` (same pair/epcr, HGVS notes) | `nikhilpise_track1_report.md` (regenerated: acknowledgement + figures) | gets the improved report attached to an organizer-visible entry |
+| B: second-method insurance | `nikhilpise_exomiser-arm.csv` | `docs/report_model2.md` | a second, independent-method perfect entry; hedges any per-entry problem with model1 |
+
+Same field discipline as model1: exact `display_name` from
+`docs/team.md`, GitHub URL, .md report. If uploading, record the new
+leaderboard row in `docs/decisions.md` + `results/RETENTION.md` the same
+day.

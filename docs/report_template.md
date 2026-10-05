@@ -58,6 +58,8 @@ change is logged in `docs/decisions.md` and described in section 11.
 
 {{FUNNEL_TABLE}}
 
+{{FIG_FUNNEL}}
+
 ### 1b. Rank and epcr
 
 {{RANK_NOTE}}
@@ -69,6 +71,8 @@ change is logged in `docs/decisions.md` and described in section 11.
 ### 2a. Coverage profile (mosdepth)
 
 {{MOSDEPTH_SECTION}}
+
+{{FIG_COVERAGE}}
 
 ### 2b. FASTQ QC (fastp -> run_fastqc aggregate)
 
@@ -95,6 +99,8 @@ The funnel was validated *blind* before the proband call:
 
 {{ABLATION_TABLE}}
 
+{{FIG_ABLATION}}
+
 ### 3b. Threshold sensitivity grid
 
 {{SENSITIVITY_TABLE}}
@@ -106,6 +112,10 @@ The funnel was validated *blind* before the proband call:
 ### 4a. Orthogonal evidence arms
 
 {{ORTHOGONAL_SECTION}}
+
+{{FIG_PILEUP}}
+
+{{FIG_ALLELE_BALANCE}}
 
 ## 5. Automated vs manual review
 
@@ -172,6 +182,16 @@ and we say so openly rather than stay silent.
 ## 13. Limitations
 
 {{LIMITATIONS}}
+
+## Acknowledgement
+
+*This work was made possible through the Hackathon, organized by Sage
+Bionetworks in partnership with the MVA Society, Hugging Face, and
+BEACON (The Benchmarking, Evaluation, and Assessment Consortium for
+Science), with prize sponsorship from AWS and Anthropic. We are deeply
+grateful to the child and their family who generously contributed their
+data and their story to advance research into this rare disease. We
+acknowledge their trust in making this Hackathon possible.*
 
 ---
 

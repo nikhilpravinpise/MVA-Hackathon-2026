@@ -110,3 +110,13 @@ did.
 - [ ] Dry-run the scorer on the exact upload bytes before spending a
       submission slot
 - [ ] Tag every artifact KEEP/DELETE on the day it is created
+
+---
+
+*This work was made possible through the Hackathon, organized by Sage
+Bionetworks in partnership with the MVA Society, Hugging Face, and
+BEACON (The Benchmarking, Evaluation, and Assessment Consortium for
+Science), with prize sponsorship from AWS and Anthropic. We are deeply
+grateful to the child and their family who generously contributed their
+data and their story to advance research into this rare disease. We
+acknowledge their trust in making this Hackathon possible.*

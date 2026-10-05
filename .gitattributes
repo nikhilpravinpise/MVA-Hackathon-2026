@@ -1,0 +1,4 @@
+# Submission CSVs are byte-contract files: LF newlines only
+# (src/submit.py emits LF; the oracle tolerates CRLF but the archived
+# upload bytes must be byte-exact).
+*.csv text eol=lf

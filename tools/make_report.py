@@ -812,6 +812,34 @@ def form_answers_section() -> str:
     return "\n".join(lines)
 
 
+def figure_block(fig_dir, name: str, caption: str, prefix: str,
+                 ascii_path=None) -> str:
+    """Markdown embed for one report figure.
+
+    The SVG renders in the repo view (``docs/figures/`` is committed);
+    an uploaded standalone .md cannot display image links, so the caption
+    always names the repo path and - when supplied - an inline ASCII
+    rendering carries the evidence inside the file itself. A missing
+    figure degrades to a pending-note, never a broken link (same doctrine
+    as the PENDING section placeholders). ``prefix`` is the link path
+    relative to the report's location ('figures/' for docs/report.md,
+    'docs/figures/' for the repo-root upload copy).
+    """
+    parts = []
+    if (Path(fig_dir) / name).is_file():
+        parts += [f"![{caption}]({prefix}{name})",
+                  f"*(SVG: `{prefix}{name}` - {caption})*"]
+    else:
+        parts.append(f"*(figure `{name}` not generated - run "
+                     "`make figures` first)*")
+    # the ASCII evidence block is independent of the SVG - it is the
+    # version that survives inside an uploaded standalone .md
+    if ascii_path and Path(ascii_path).is_file():
+        parts.append(Path(ascii_path).read_text(
+            encoding="utf-8").strip())
+    return "\n\n".join(parts)
+
+
 def _flatten(cfg: dict, prefix: str = "") -> set[str]:
     out = set()
     for k, v in (cfg or {}).items():
@@ -922,6 +950,18 @@ def main(argv=None) -> int:
     ap.add_argument("--run-where", default="local",
                     help="where the funnel run executed (e.g. 'Modal') - "
                          "rendered in the runtime table")
+    ap.add_argument("--figures-dir",
+                    default=str(REPO / "docs" / "figures"),
+                    help="dir holding generated SVG/ASCII figures "
+                         "(existence check drives the embed vs "
+                         "pending-note decision)")
+    ap.add_argument("--figures-prefix", default="figures/",
+                    help="link path prefix relative to the report file "
+                         "('figures/' for docs/report.md; 'docs/figures/' "
+                         "for the repo-root upload copy)")
+    ap.add_argument("--pileup-ascii", default=None,
+                    help="ASCII pileup markdown to embed inline "
+                         "(default: <figures-dir>/pileup_ascii.md)")
     ap.add_argument("--out", default=str(REPO / "docs" / "report.md"))
     ap.add_argument("--team", default="<TBD - see docs/team.md>")
     ap.add_argument("--model-n", default="1")
@@ -1375,6 +1415,28 @@ def main(argv=None) -> int:
         "FINDING_INTERPRETATION": finding_interpretation(
             args.hpo_terms, arma_bub, _j(args.allele_balance)),
         "FORM_ANSWERS": form_answers_section(),
+        "FIG_FUNNEL": figure_block(
+            args.figures_dir, "funnel_waterfall.svg",
+            "Prioritization funnel - records surviving each stage "
+            "(log scale)", args.figures_prefix),
+        "FIG_COVERAGE": figure_block(
+            args.figures_dir, "coverage_depth.svg",
+            "Cumulative WGS coverage distribution (mosdepth)",
+            args.figures_prefix),
+        "FIG_ABLATION": figure_block(
+            args.figures_dir, "ablation_loso.svg",
+            "Leave-one-source-out ablation - tracked-pair rank per "
+            "dropped evidence source", args.figures_prefix),
+        "FIG_PILEUP": figure_block(
+            args.figures_dir, "pileup_bub1b.svg",
+            "Realigned reads across the BUB1B locus - coverage track "
+            "plus per-site read stacks", args.figures_prefix,
+            ascii_path=(args.pileup_ascii
+                        or str(Path(args.figures_dir)
+                               / "pileup_ascii.md"))),
+        "FIG_ALLELE_BALANCE": figure_block(
+            args.figures_dir, "allele_balance.svg",
+            "Allele balance at the called sites", args.figures_prefix),
     }
 
     template = TEMPLATE.read_text(encoding="utf-8")

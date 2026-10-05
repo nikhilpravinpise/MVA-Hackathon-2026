@@ -148,3 +148,13 @@ genome-to-hypothesis pipeline can produce that idea in days.
 
 *Questions about MVA: the MVA Society (mvasociety.org) maintains an
 Information Hub for families.*
+
+---
+
+*This work was made possible through the Hackathon, organized by Sage
+Bionetworks in partnership with the MVA Society, Hugging Face, and
+BEACON (The Benchmarking, Evaluation, and Assessment Consortium for
+Science), with prize sponsorship from AWS and Anthropic. We are deeply
+grateful to the child and their family who generously contributed their
+data and their story to advance research into this rare disease. We
+acknowledge their trust in making this Hackathon possible.*

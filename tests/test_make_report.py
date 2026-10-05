@@ -371,3 +371,58 @@ def test_new_slots_fill_from_fixtures(tmp_path):
     assert "0.94" in body  # fastq check value
     assert "splice-benign" in body
     assert "{{MOSDEPTH_SECTION}}" not in body
+
+
+def test_report_contains_required_acknowledgement(tmp_path):
+    """Falsification: the rules-mandated acknowledgement (rules.py
+    'Citation and Acknowledgement') must be in every rendered report - a
+    template edit that drops it would silently break compliance."""
+    from tools.make_report import main
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--out", str(out)])
+    assert rc == 0
+    body = out.read_text()
+    assert "## Acknowledgement" in body
+    assert ("This work was made possible through the Hackathon, "
+            "organized by Sage" in body)
+
+
+def test_figures_embed_when_present(tmp_path):
+    """Falsification: when docs/figures/*.svg exist the report must link
+    them at the report's own relative prefix - a hard-coded prefix would
+    render broken links in either docs/report.md or the repo-root copy."""
+    from tools.make_report import main
+    figs = tmp_path / "figs"
+    figs.mkdir()
+    (figs / "funnel_waterfall.svg").write_text(
+        '<svg xmlns="http://www.w3.org/2000/svg"></svg>')
+    (figs / "pileup_ascii.md").write_text("```\nASCII-PILEUP\n```")
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--figures-dir", str(figs),
+               "--figures-prefix", "docs/figures/",
+               "--out", str(out)])
+    assert rc == 0
+    body = out.read_text()
+    assert "![Prioritization funnel - records surviving each stage " \
+           "(log scale)](docs/figures/funnel_waterfall.svg)" in body
+    assert "ASCII-PILEUP" in body  # inline pileup survives standalone md
+    # the other figures have no files - pending notes, no broken links
+    assert "coverage_depth.svg` not generated" in body
+    assert "](docs/figures/coverage_depth.svg)" not in body
+
+
+def test_figures_pending_when_dir_empty(tmp_path):
+    """Falsification: missing figure files must render pending notes, not
+    dangling image links (a broken <img> reads as sloppiness to judges)."""
+    from tools.make_report import main
+    figs = tmp_path / "empty"
+    figs.mkdir()
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--figures-dir", str(figs), "--out", str(out)])
+    assert rc == 0
+    body = out.read_text()
+    assert "not generated - run `make figures`" in body
+    assert "![" not in body

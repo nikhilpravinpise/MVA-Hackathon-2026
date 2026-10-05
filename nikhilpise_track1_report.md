@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-04 07:22 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-05 12:16 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses.
 
@@ -75,6 +75,10 @@ change is logged in `docs/decisions.md` and described in section 11.
 | genotype hypotheses enumerated | 2025791 |
 | emitted (score >= emit_floor) | 1 |
 
+![Prioritization funnel - records surviving each stage (log scale)](docs/figures/funnel_waterfall.svg)
+
+*(SVG: `docs/figures/funnel_waterfall.svg` - Prioritization funnel - records surviving each stage (log scale))*
+
 ### 1b. Rank and epcr
 
 Ranks 1-6 are singleton `hom_alt` 'LoF' calls (MDM2, NF1, DHCR24, RAF1, MAD2L2, KIF1B), all un-emitted. Shared artifact signature: 6 of 6 carry ZERO predictor-damage votes; 6 of 6 are 'absent' only in an exome-ONLY gnomAD (genome coverage cannot confirm); 2 of 6 sit on non-coding / non-canonical transcripts (HGVSc `c.-`/`n.` calls like `c.-602+2C>T`, `n.187-2A>G`).
@@ -99,6 +103,10 @@ Singleton rows of the same class also occupy ranks 8-10 immediately below the pa
 | region | 45.26 | 1.0 | 0.9867 |
 
 `WGS` = whole-genome 500-bp windows on the dedup BAM; `region` = 100-bp windows over the BUB1B locus slice (15:40100000-40250000).
+
+![Cumulative WGS coverage distribution (mosdepth)](docs/figures/coverage_depth.svg)
+
+*(SVG: `docs/figures/coverage_depth.svg` - Cumulative WGS coverage distribution (mosdepth))*
 
 ### 2b. FASTQ QC (fastp -> run_fastqc aggregate)
 
@@ -150,6 +158,10 @@ The funnel was validated *blind* before the proband call:
 
 Note: the `phasing` drop is vacuous on this case - there is no phase evidence to remove (0 spanning reads, no PGT/PID at either site), so its tracked rank equals the baseline by construction, not by robustness.
 
+![Leave-one-source-out ablation - tracked-pair rank per dropped evidence source](docs/figures/ablation_loso.svg)
+
+*(SVG: `docs/figures/ablation_loso.svg` - Leave-one-source-out ablation - tracked-pair rank per dropped evidence source)*
+
 ### 3b. Threshold sensitivity grid
 
 | af_max | min damage votes | true-pair rank |
@@ -197,6 +209,99 @@ Verdict: **True** (both BUB1B sites independently recalled)
 - site: `15:40216470 A>G` (1026 bp outside the exon slice)
 - AD 28/18; SpliceAI deltas 0.0; gnomAD genomes: absent
 - verdict: evaluated; splice-benign under available model; does not change the call
+
+![Realigned reads across the BUB1B locus - coverage track plus per-site read stacks](docs/figures/pileup_bub1b.svg)
+
+*(SVG: `docs/figures/pileup_bub1b.svg` - Realigned reads across the BUB1B locus - coverage track plus per-site read stacks)*
+
+```
+site 15:40209701 T>G - 48 covering reads
+        TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGTGAAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+                                                ^
+r01 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AA                                      
+r02 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AA                                      
+r03 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGT                                    
+r04 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGT                                    
+r05 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTG                                   
+r06 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCC                                 
+r07 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCCTCT                              
+r08 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]ACGTGCCTCT                              
+r09 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCCTCT                              
+r10 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCCTCTGCAGAGTTG                     
+r11 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCCTCTGCAGAGTTGTGTAT                
+r12 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGTTGTGTAT                
+r13 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGTTGTGTATAGAAGAC         
+r14 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+r15 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+r16 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+r17 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGGTGTGTATAGAAGACAGACCAATG
+r18 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+r19 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCGACCAGAGT[G]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+r20 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+r21 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+r22 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
+... 26 more covering reads
+
+site 15:40216470 A>G - 46 covering reads
+        ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACACACTTTACATATATATATAAAATACATATGTATATTTTATAT
+                                                ^
+r01 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]C                                       
+r02 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTA                                   
+r03 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACA                                 
+r04 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATA                               
+r05 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATA                               
+r06 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATA                             
+r07 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATA                             
+r08 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATATAT                          
+r09 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATAT                        
+r10 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATATATATA                       
+r11 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAA                      
+r12 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTAC  ATATATATAAAATACAAATGTGTA        
+r13 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r14 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r15 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r16 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r17 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r18 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r19 ALT ACCTTGTCTAAGAAACCAAACAAATCACACACATGCACAC[G]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r20 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r21 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+r22 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
+... 24 more covering reads
+
+site 15:40220612 T>G - 29 covering reads
+        ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAATGCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+                                                ^
+r01 ALT ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[G]GC                                      
+r02 ALT ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[G]GCCAATGA                                
+r03 ALT ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[G]GCCAATGA                                
+r04 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATG                              
+r05 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATG                              
+r06 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGG                           
+r07 ref ATGGTGAATTGTGGAATAAAGTCTTTGTGCGGATGCTGAA[T]GCCAATGATGAGGC                          
+r08 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAG                     
+r09 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTG               
+r10 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTGTTCTT          
+r11 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGG      
+r12 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r13 ALT ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[G]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r14 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r15 ALT ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[G]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r16 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r17 ALT ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[G]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r18 ALT ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[G]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r19 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r20 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r21 ref ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[T]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+r22 ALT    GTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAA[G]GCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
+... 7 more covering reads
+
+window = site +/-40 bp; [X] marks the variant column; blank = read does not cover the position
+```
+
+![Allele balance at the called sites](docs/figures/allele_balance.svg)
+
+*(SVG: `docs/figures/allele_balance.svg` - Allele balance at the called sites)*
 
 ## 5. Automated vs manual review
 
@@ -382,6 +487,16 @@ Section 10 + docs/llm_log.md.
 10. indel annotation: VEP --vcf writes MINIMAL indel alleles in the CSQ Allele field, and an exact ALT-match (pre-2026-10-04 `csq_for_alt`) silently dropped ~99.5% of indel annotations. The emitted call is unchanged (both called variants are SNVs), but the fix enlarged the annotated-fact pool ~9% and moved the pair's rank (and therefore epcr) - the funnel was re-run under the corrected matcher (`src/vcf.py::vep_allele`) and every funnel/ablation number above comes from that run.
 11. the CSQ CANONICAL flag is parsed but unused: consequence tier takes the worst transcript per gene, so non-canonical/UTR LoF calls can outrank real pairs (see section 0a) - the singleton emit floor is the only guard today, not a transcript filter.
 12. SpliceAI coverage is SNV-only (no public precomputed indel file exists; the plugin's indel= parameter points at the SNV file as a documented no-op), so indels never receive SpliceAI deltas.
+
+## Acknowledgement
+
+*This work was made possible through the Hackathon, organized by Sage
+Bionetworks in partnership with the MVA Society, Hugging Face, and
+BEACON (The Benchmarking, Evaluation, and Assessment Consortium for
+Science), with prize sponsorship from AWS and Anthropic. We are deeply
+grateful to the child and their family who generously contributed their
+data and their story to advance research into this rare disease. We
+acknowledge their trust in making this Hackathon possible.*
 
 ---
 

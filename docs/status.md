@@ -154,6 +154,16 @@ re-verified 2026-10-04 on the indel-fix bytes staged at
 | funnel arithmetic | masked+out = candidates | 366214 + 7331 = 373545 | PASS |
 | CSQ alleles unmatched | 0 | 0 (normalized matching) | PASS |
 
+## Post-submission hardening (2026-10-05)
+
+| Item | Status |
+|---|---|
+| Required acknowledgement (rules.py citation) in report/README/community docs | DONE - static block in report_template.md; regenerated docs/report.md + nikhilpise_track1_report.md; README + FAMILY_EXPLAINER + ANSWER_BLIND_PROTOCOL + report_model2 footers |
+| Report figures | DONE - tools/make_figures.py (zero-dep SVG + ASCII pileup); docs/figures/{funnel_waterfall,coverage_depth,allele_balance,ablation_loso,pileup_bub1b}.svg + pileup_ascii.md; embedded at sections 1a/2a/3a/4a with pending-note degradation |
+| `make figures` + `make report-upload` targets | DONE - report-upload = figures + report-patient + root upload copy (`--figures-prefix docs/figures/`) |
+| model2 candidates prepared (not uploaded) | DONE - submissions/{model1 archive, v2 HGVS-notes, exomiser-arm} + docs/report_model2.md + submissions/README.md; all oracle-verified 100/1.000/rank1 |
+| Tests | 358 passed + 1 env-gated skip; gate battery + 60-fixture audit + citations all green |
+
 ## Phases 7-8 - out of scope for this thread
 
 Track 2 (drug repurposing) and close-out/deletion are Phase 7-8 per

@@ -2,7 +2,7 @@
 # Python lives in .venv; override with PY=python3 if needed.
 PY := .venv/Scripts/python.exe
 
-.PHONY: test gate refs spike control report report-patient track1 citations audit all
+.PHONY: test gate refs spike control report report-patient report-upload figures track1 citations audit all
 
 ## full test suite (skips slow / missing-corpus tests gracefully)
 test:
@@ -79,6 +79,55 @@ report-patient:
 	  --team nikhilpise \
 	  --data-status "PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses." \
 	  --out docs/report.md
+
+## regenerate report figures (zero-dep SVG + ASCII pileup) into docs/figures/
+figures:
+	$(PY) tools/make_figures.py \
+	  --sam results/track1_patient_modal/realign/region.sam \
+	  --allele-balance results/track1_patient_modal/track1_final/allele_balance.json \
+	  --funnel-counts results/track1_patient_modal/track1_final_indelfix/funnel/funnel_counts.json \
+	  --mosdepth-dist results/track1_patient_modal/track1_final/mosdepth/WGS.mosdepth.global.dist.txt \
+	  --mosdepth-summary results/track1_patient_modal/track1_final/mosdepth/mosdepth_summary.json \
+	  --ablations results/track1_patient_modal/track1_final_indelfix/ablations.json \
+	  --out-dir docs/figures
+
+## regenerate the UPLOAD copy of the report at repo root. Same generator
+## and args as report-patient but --figures-prefix docs/figures/ (the
+## root file resolves links relative to the repo root, not docs/) and a
+## different --out - the root file is what gets uploaded to the Space.
+report-upload: figures report-patient
+	$(PY) tools/make_report.py \
+	  --run-dir results/track1_patient_modal/track1_final_indelfix/funnel \
+	  --eda results/track1_patient_modal/track1_final_indelfix/eda_report.json \
+	  --eda-raw results/eda_patient/eda_report.json \
+	  --hpo-terms data/case/hpo_terms.json \
+	  --arm-a-genes results/exomiser_patient/WGS_EX2312012-PASS_ONLY.genes.tsv \
+	  --allele-balance results/track1_patient_modal/track1_final/allele_balance.json \
+	  --prior-run-dir results/track1_patient_modal_run2 \
+	  --sensitivity results/sensitivity.json \
+	  --ablations results/track1_patient_modal/track1_final_indelfix/ablations.json \
+	  --phasing results/track1_patient_modal/track1_final_indelfix/phasing_report.json \
+	  --sf results/track1_patient_modal/track1_final_indelfix/sf_findings.json \
+	  --acmg results/track1_patient_modal/track1_final_indelfix/acmg_report.json \
+	  --runlog results/track1_patient_modal/runlog.json \
+	  --control-dir results/t1_control/funnel \
+	  --spike-dir results/t1_spike/funnel \
+	  --spike-truth results/spike_case/truth.json \
+	  --real-spike-dir results/real_spike_run \
+	  --real-spike-build env/real_spike/BUILD_REPORT.json \
+	  --real-spike-truth env/real_spike/truth.json \
+	  --arm-concordance results/track1_patient_modal/track1_final_indelfix/arm_concordance.json \
+	  --arm-a-control env/exomiser/control/PROBAND01-PASS_ONLY.genes.tsv \
+	  --mosdepth results/track1_patient_modal/track1_final/mosdepth/mosdepth_summary.json \
+	  --deepvariant results/track1_patient_modal/track1_final/deepvariant/dv_findings.json \
+	  --cnv results/track1_patient_modal/track1_final/cnv/summary.json \
+	  --fastq-qc results/track1_patient_modal/track1_final/fastq_qc/aggregate/fastqc_report.json \
+	  --offslice results/track1_patient_modal/track1_final/offslice_eval.json \
+	  --run-where Modal \
+	  --team nikhilpise \
+	  --figures-prefix docs/figures/ \
+	  --data-status "PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses." \
+	  --out nikhilpise_track1_report.md
 
 ## scorer-fixture audit battery (60 fixtures vs vendored oracle)
 audit:
