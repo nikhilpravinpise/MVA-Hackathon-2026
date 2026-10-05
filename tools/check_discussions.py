@@ -23,16 +23,14 @@ API = "https://huggingface.co/api/{kind}s/{repo}/discussions?p={page}"
 
 
 def fetch(kind: str, repo: str) -> list[dict]:
-    """Discussion list entries across pages; stops on empty page."""
+    """Discussion list entries across pages; stops at `count`."""
     out = []
     for page in range(50):
         url = API.format(kind=kind, repo=repo, page=page)
         with urllib.request.urlopen(url, timeout=20) as r:
-            batch = json.loads(r.read().decode())
-        if not batch:
-            break
-        out += batch
-        if len(batch) < 10:  # HF paginates ~10/page
+            d = json.loads(r.read().decode())
+        out += d["discussions"]
+        if len(out) >= d.get("count", 0) or not d["discussions"]:
             break
     return out
 
@@ -53,19 +51,16 @@ def main(argv=None) -> int:
             return 2
         for t in threads:
             created = date.fromisoformat(t["createdAt"][:10])
-            updated = None
-            ev = t.get("lastActivity") or {}
-            if ev.get("createdAt"):
-                updated = date.fromisoformat(ev["createdAt"][:10])
-            if since and created < since and (not updated or
-                                              updated < since):
+            if since and created < since:
                 continue
             found += 1
+            flags = (" PR" if t.get("isPullRequest") else "") + \
+                    (" PINNED" if t.get("pinned") else "")
             print(f"[{repo}] #{t.get('num')} {t.get('title')!r} "
-                  f"by {t.get('author',{}).get('name','?')} "
-                  f"created {created}"
-                  + (f", last activity {updated}" if updated else "")
-                  + f" [{t.get('status','?')}]")
+                  f"by {t.get('author', {}).get('name', '?')} "
+                  f"created {created} "
+                  f"({t.get('numComments', 0)} comments) "
+                  f"[{t.get('status', '?')}{flags}]")
     print(f"\n{found} discussion(s)"
           + (f" since {since}" if since else ""))
     return 0

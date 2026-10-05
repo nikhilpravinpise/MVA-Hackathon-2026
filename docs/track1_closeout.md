@@ -107,7 +107,7 @@ listed with its prep state. Verified server-side, not self-reported:
 | Action | When | Prep state |
 |---|---|---|
 | (Optional) model2 upload | any time while quota remains | `submissions/` holds both candidates + `docs/report_model2.md`; form fields in `submission_checklist.md`; equal score cannot hurt the existing entry |
-| Repo public flip | 2026-10-24 close | run `python tools/public_release_check.py`, review findings, then flip visibility; steps in checklist below |
+| Repo public flip | 2026-10-24 close (winners Dec 18 per discussion #26 - judging extension only) | run `python tools/public_release_check.py`, review findings, then flip visibility; steps in checklist below |
 | Deletion email | within 30 days of close | draft staged at `docs/deletion_email_draft.md`; mailbox per `docs/deletion_runbook.md` |
 | Discussions-watch | every ~3 days | `python tools/check_discussions.py` - lists threads since last check |
 | Freshness sweep | before any upload + after any change | `make freshness` (exit nonzero on drift) + `pytest -m gate` |

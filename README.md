@@ -40,6 +40,7 @@ make report-upload   # figures + report-patient + the repo-root upload
                      # copy nikhilpise_track1_report.md (figure links
                      # prefixed docs/figures/ for root-relative paths)
 make audit       # 60-fixture scorer audit battery
+make freshness   # doc-vs-artifact staleness audit (audit_freshness.py)
 make gate        # gate-critical tests only
 make citations   # docs/plan.md citation checker
 make all         # refs -> cases -> track1 -> report end to end
