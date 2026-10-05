@@ -409,7 +409,7 @@ def test_figures_embed_when_present(tmp_path):
            "(log scale)](docs/figures/funnel_waterfall.svg)" in body
     assert "ASCII-PILEUP" in body  # inline pileup survives standalone md
     # the other figures have no files - pending notes, no broken links
-    assert "coverage_depth.svg` not generated" in body
+    assert "coverage_depth.svg` not generated for this run" in body
     assert "](docs/figures/coverage_depth.svg)" not in body
 
 
@@ -424,5 +424,20 @@ def test_figures_pending_when_dir_empty(tmp_path):
                "--figures-dir", str(figs), "--out", str(out)])
     assert rc == 0
     body = out.read_text()
-    assert "not generated - run `make figures`" in body
+    assert "not generated for this run" in body
     assert "![" not in body
+
+
+def test_figures_never_ambient(tmp_path):
+    """Falsification: --figures-dir unset must render pending notes even
+    though docs/figures exists on disk - figures are run-scoped; a
+    synthetic-run report must not embed patient figures just because the
+    files happen to be committed."""
+    from tools.make_report import main
+    out = tmp_path / "report.md"
+    rc = main(["--run-dir", str(_minimal_run(tmp_path)),
+               "--out", str(out)])  # no --figures-dir on purpose
+    assert rc == 0
+    body = out.read_text()
+    assert "not generated for this run" in body
+    assert "](figures/funnel_waterfall.svg)" not in body

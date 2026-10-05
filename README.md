@@ -11,8 +11,8 @@ submission CSV validated against the vendored official scorer.
 | Path | What |
 |---|---|
 | `src/` | funnel modules (vcf, triage, genes, pheno, prioritize, phasing, reads, sf_scan, acmg, submit, vcf_qc, synth) |
-| `tests/` | oracle parity, CSV contract, adversarial bytes, funnel unit, e2e gates (340 tests, 1 env-gated skip) |
-| `tools/` | runners: audit_scorer_fixtures, check_citations, fetch_public_vcfs, fetch_refs, fetch_big, genes_to_disease_json, normalize_contigs, run_pipeline, run_track1, run_sensitivity, make_report, run_eda, extract_hpo, run_fastqc, run_phasing, run_vep, run_exomiser, compare_arms, run_realign, run_cnv, build_real_spike, revel_to_vcf, gnomad_split, modal_app |
+| `tests/` | oracle parity, CSV contract, adversarial bytes, funnel unit, e2e gates, freshness pins (371 tests, 1 env-gated skip) |
+| `tools/` | runners: audit_scorer_fixtures, audit_freshness, check_citations, check_discussions, fetch_public_vcfs, fetch_refs, fetch_big, genes_to_disease_json, normalize_contigs, run_pipeline, run_track1, run_sensitivity, make_report, make_figures, make_arm_a_csv, public_release_check, run_eda, extract_hpo, run_fastqc, run_phasing, run_vep, run_exomiser, compare_arms, run_realign, run_cnv, build_real_spike, revel_to_vcf, gnomad_split, modal_app |
 | `scorer/` | vendored `evaluation.py` - the official scorer oracle (see `scorer/NOTICE.md`) |
 | `config/` | frozen `pipeline.yaml` + `acmg_sf_v33.json` |
 | `docs/` | plan.md (source of truth), status.md (phase-by-phase compliance map), report.md (regenerated), report_map.md, report_model2.md (Arm-A model report), figures/ (report SVGs + ASCII pileup, generated), decisions/team/llm/runtime logs, disclosure position, attestation_hf_gated_access.md (verbatim gating form), FAMILY_EXPLAINER.md + ANSWER_BLIND_PROTOCOL.md (community/award artifacts) |

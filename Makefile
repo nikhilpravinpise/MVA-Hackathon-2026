@@ -2,7 +2,7 @@
 # Python lives in .venv; override with PY=python3 if needed.
 PY := .venv/Scripts/python.exe
 
-.PHONY: test gate refs spike control report report-patient report-upload figures track1 citations audit all
+.PHONY: test gate refs spike control report report-patient report-upload figures freshness track1 citations audit all
 
 ## full test suite (skips slow / missing-corpus tests gracefully)
 test:
@@ -77,6 +77,7 @@ report-patient:
 	  --offslice results/track1_patient_modal/track1_final/offslice_eval.json \
 	  --run-where Modal \
 	  --team nikhilpise \
+	  --figures-dir docs/figures \
 	  --data-status "PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses." \
 	  --out docs/report.md
 
@@ -125,9 +126,14 @@ report-upload: figures report-patient
 	  --offslice results/track1_patient_modal/track1_final/offslice_eval.json \
 	  --run-where Modal \
 	  --team nikhilpise \
+	  --figures-dir docs/figures \
 	  --figures-prefix docs/figures/ \
 	  --data-status "PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses." \
 	  --out nikhilpise_track1_report.md
+
+## freshness sweep: every checkable doc claim vs live artifacts
+freshness:
+	$(PY) tools/audit_freshness.py
 
 ## scorer-fixture audit battery (60 fixtures vs vendored oracle)
 audit:

@@ -826,12 +826,11 @@ def figure_block(fig_dir, name: str, caption: str, prefix: str,
     'docs/figures/' for the repo-root upload copy).
     """
     parts = []
-    if (Path(fig_dir) / name).is_file():
+    if fig_dir is not None and (Path(fig_dir) / name).is_file():
         parts += [f"![{caption}]({prefix}{name})",
                   f"*(SVG: `{prefix}{name}` - {caption})*"]
     else:
-        parts.append(f"*(figure `{name}` not generated - run "
-                     "`make figures` first)*")
+        parts.append(f"*(figure `{name}` not generated for this run)*")
     # the ASCII evidence block is independent of the SVG - it is the
     # version that survives inside an uploaded standalone .md
     if ascii_path and Path(ascii_path).is_file():
@@ -950,11 +949,13 @@ def main(argv=None) -> int:
     ap.add_argument("--run-where", default="local",
                     help="where the funnel run executed (e.g. 'Modal') - "
                          "rendered in the runtime table")
-    ap.add_argument("--figures-dir",
-                    default=str(REPO / "docs" / "figures"),
-                    help="dir holding generated SVG/ASCII figures "
+    ap.add_argument("--figures-dir", default=None,
+                    help="dir holding THIS RUN's generated figures "
                          "(existence check drives the embed vs "
-                         "pending-note decision)")
+                         "pending-note decision). Unset = pending notes "
+                         "always - figures are run-scoped; the patient "
+                         "targets pass docs/figures explicitly so a "
+                         "synthetic report never embeds patient figures")
     ap.add_argument("--figures-prefix", default="figures/",
                     help="link path prefix relative to the report file "
                          "('figures/' for docs/report.md; 'docs/figures/' "
@@ -1432,8 +1433,9 @@ def main(argv=None) -> int:
             "Realigned reads across the BUB1B locus - coverage track "
             "plus per-site read stacks", args.figures_prefix,
             ascii_path=(args.pileup_ascii
-                        or str(Path(args.figures_dir)
-                               / "pileup_ascii.md"))),
+                        or (str(Path(args.figures_dir)
+                                / "pileup_ascii.md")
+                            if args.figures_dir else None))),
         "FIG_ALLELE_BALANCE": figure_block(
             args.figures_dir, "allele_balance.svg",
             "Allele balance at the called sites", args.figures_prefix),
