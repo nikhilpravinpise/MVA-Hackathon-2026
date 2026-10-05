@@ -1,5 +1,13 @@
 # Track 1 data audit - 2026-10-03
 
+> **Resolution status (2026-10-05):** point-in-time audit; its "pending"
+> rows have since run - the CNV/SV + coverage arms completed on
+> 2026-10-03 (manta + cnvpytor, mosdepth), the extended-MHC
+> `artifact_loci` mask was added and the funnel re-run twice (masked,
+> then the indel-CSQ-matching fix), and `data/case/patient.vcf.gz` was
+> deleted as a sha256-verified duplicate. This file remains verbatim;
+> current state lives in `docs/status.md` and `docs/track1_closeout.md`.
+
 Question answered: do we have all the data required for Track 1, is any more
 needed, and is the data legitimate (real files, internally consistent, not
 placeholder/slop). Method: byte-level verification against the gated-dataset

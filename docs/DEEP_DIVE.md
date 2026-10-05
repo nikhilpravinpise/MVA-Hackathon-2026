@@ -1,5 +1,11 @@
 # MVA Hackathon 2026 - Exhaustive Deep Dive
 
+> **Status-date snapshot (2026-10-05 banner):** researched 2026-09-15 as
+> the pre-execution research record; checklist boxes and claims reflect
+> that date and are deliberately left unticked - this file is evidence,
+> not a live tracker. Current state lives in `docs/status.md`;
+> Track-1 completion is consolidated in `docs/track1_closeout.md`.
+
 Researched 2026-09-15. Sources: full Space source code (cloned to `hackathon-app/`), all 22
 community discussions, live leaderboard via Gradio API, gated dataset card, public MVA
 Society material (identifiers redacted per the re-identification rule).

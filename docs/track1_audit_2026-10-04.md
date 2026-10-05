@@ -1,5 +1,14 @@
 # Track 1 completion audit - 2026-10-04
 
+> **Resolution status (2026-10-05):** all four blockers below were closed
+> on 2026-10-04 - the leaderboard upload verified server-side (100.0 rank
+> points / 1.000 F-max, full match rank 1, row 139), `main` was pushed to
+> origin, the GenAI disclosure + no-training record completed
+> (`docs/llm_log.md`), and the report's factual errors were fixed
+> (answer-aware framing, post-freeze config-change log, firewall wording).
+> This file remains verbatim as the point-in-time audit record; current
+> state lives in `docs/status.md` and `docs/track1_closeout.md`.
+
 Scope: everything the hackathon requires for a Track 1 submission (CSV +
 GitHub URL + methods report, scored automatically and then judged "for
 scientific rigor and depth of understanding"), checked against the repo's own

@@ -42,4 +42,4 @@ finding; genome-scale genotype tables = prohibited derived data.
 | `data/WGS_exon.vep.vcf.gz` + `_warnings.txt` | VEP-annotated exon slice | DELETE | patient genotype annotations |
 | `data/smoke.vcf` + `smoke.vep.txt*` | smoke-test slice of the patient VCF | DELETE | patient genotype slice |
 | `data/smoke_region.vcf.gz` + `.tbi`, `smoke_region.vep.*` | regional smoke-test slice + VEP outputs | DELETE | patient genotype slice |
-| `data/case/` | Modal-style case bundle: `patient.vcf.gz` (patient genotypes) + public-corpus copies (hp.obo, phenotype.hpoa, gene2disease.json, hpo_terms.json) | DELETE | corpus files are re-fetchable public data; the patient VCF is genotype-scale |
+| `data/case/` | Modal-style case bundle: public-corpus copies (hp.obo, phenotype.hpoa, gene2disease.json, hpo_terms.json) | DELETE | corpus files are re-fetchable public data; the bundle's `patient.vcf.gz` was deleted 2026-10-04 (sha256-verified duplicate of `data/WGS_exon.vep.vcf.gz` - the annotated canonical) |

@@ -9,7 +9,7 @@ not submit.
 | Field | Requirement | Source |
 |---|---|---|
 | GitHub repo URL | must start with `https://github.com/` | submit_track1.py:140-156 |
-| Report file | `.pdf` or `.md` - we upload `docs/report.md` (`.md` is accepted; pandoc-built PDF optional, not required) | same |
+| Report file | `.pdf` or `.md` - model1 upload was `nikhilpise_track1_report.md` (repo-root copy built by `make report-upload`, links prefixed `docs/figures/`). NOTE: the repo copy has since gained figures + the mandated acknowledgement - fresher than the attached artifact; that delta is what model2 option A exists to ship | same |
 | CSV | `results/.../submission.csv` built by `src/submit.py` | same |
 | display_name | EXACT string in `docs/team.md` (grouping key - a typo forks the leaderboard entry) | utils.py:180-202 |
 | model filename | becomes `model{N}_{filename}` server-side; the "Model" column on the leaderboard shows it - name it like a methods summary: `<team>_<method-descriptor>.csv` | submit_track1.py:167,192 |
