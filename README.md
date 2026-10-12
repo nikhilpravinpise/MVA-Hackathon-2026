@@ -1,6 +1,6 @@
 # MVA Hackathon 2026 - Track 1 pipeline
 
-An answer-blind, deterministic N-of-1 variant-prioritization funnel for the
+A deterministic, leak-firewalled N-of-1 variant-prioritization funnel for the
 Mosaic Variegated Aneuploidy hackathon: genotype QC -> gnomAD rarity tier ->
 consequence/damage ensemble -> per-gene inheritance hypotheses (compound-het,
 hom-alt, dominant, X-linked) -> HPO phenotype scoring -> rank-mapped epcr ->

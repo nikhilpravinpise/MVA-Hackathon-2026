@@ -7,6 +7,10 @@
 > then the indel-CSQ-matching fix), and `data/case/patient.vcf.gz` was
 > deleted as a sha256-verified duplicate. This file remains verbatim;
 > current state lives in `docs/status.md` and `docs/track1_closeout.md`.
+>
+> Correction (2026-10-12): the `gnomADe_*_AF` count in section 2 was
+> corrected from 9 to 10 populations - the VEP CSQ carries 10 gnomAD
+> exome sub-population AFs.
 
 Question answered: do we have all the data required for Track 1, is any more
 needed, and is the data legitimate (real files, internally consistent, not
@@ -93,7 +97,7 @@ HP:0200067 Recurrent spontaneous abortion
 
 | Artifact | Check |
 |---|---|
-| `data/case/patient.vcf.gz` (= VEP-annotated exon slice, 179 MB, 478,174 records) | CSQ header carries the full plugin stack: `CADD_PHRED`, `CADD_RAW`, `AlphaMissense_{class,score}`, all 4 `SpliceAI_pred_DS_*`, `REVEL`, `gnomADe_*_AF` (9 populations), `CLIN/CLIN_SIG`. VEP ran cache-free (GTF+fasta mode); warnings file contains only benign UTR/start_codon feature ignores. |
+| `data/case/patient.vcf.gz` (= VEP-annotated exon slice, 179 MB, 478,174 records) | CSQ header carries the full plugin stack: `CADD_PHRED`, `CADD_RAW`, `AlphaMissense_{class,score}`, all 4 `SpliceAI_pred_DS_*`, `REVEL`, `gnomADe_*_AF` (10 populations), `CLIN/CLIN_SIG`. VEP ran cache-free (GTF+fasta mode); warnings file contains only benign UTR/start_codon feature ignores. |
 | `env/exomiser/patient.chr.vcf` (1.16 GB) | chr-normalized copy for Arm A; ran to completion → `results/exomiser_patient/` (BUB1B_AR **rank 1**, score 0.9819; BUB1B_AD also rank 4). |
 | `region.bam` (3.3 MB, root) + `.bai` | Valid BAM, no-chr dictionary, coordinate-sorted. Full provenance in `@PG`: per-lane `bwa mem 0.7.19` with correct `@RG` (SM=WGS_EX2312012, PL=ILLUMINA) -> samtools 1.24 sort/merge/collate/fixmate/markdup -> `samtools view 15:40100000-40250000`. |
 | `bub1b_region.vcf` / `phased_local.vcf` / `results/track1_patient_modal/realign/{phased,region_variants}.vcf` | Consistent across local and Modal runs; both candidate sites remain `0/1` (see 5.2). |

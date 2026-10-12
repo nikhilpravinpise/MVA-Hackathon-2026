@@ -26,3 +26,7 @@ of `env/ref/` copies) DELETED; `env/vep_ann;C` stray empty dir removed
 
 Rule: nothing under env/ is committed. If a derived artifact contains
 patient reads or genotypes at scale it is DELETE-class per plan.md 2.3.
+
+2026-10-12 note: GRCh38 reference bases cited in audits can be re-checked
+after local `env/ref/` deletion via the public Ensembl REST `sequence/region`
+endpoint or UCSC - no local FASTA copy required.

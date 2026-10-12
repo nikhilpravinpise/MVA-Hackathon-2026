@@ -6,7 +6,7 @@ and how each step is verified.
 
 ## 1. Where Track 1 stands (verified 2026-10-12)
 
-- Score: leaderboard row 139, `nikhilpise (@T0X1N)`, rank_points 100.0,
+- Score: leaderboard row 138 (139 on Oct 4; the index drifts), `nikhilpise (@T0X1N)`, rank_points 100.0,
   F-max 1.000, full match at rank 1. Re-read live today (154 rows, exactly
   one entry for us, no duplicate).
 - Submitted bytes: the three CSV copies are identical and re-score 100 /

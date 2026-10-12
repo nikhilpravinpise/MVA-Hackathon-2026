@@ -266,6 +266,8 @@ def load_hpoa(path: str | Path) -> dict[str, set[str]]:
         if not raw or raw.startswith("#"):
             continue
         cols = raw.split("\t")
+        # canonical .hpoa layout: database_id in col 0, hpo_id
+        # (HP:nnnnnnn) in col 3
         if len(cols) >= 4 and HPO_RE.fullmatch(cols[3] or ""):
             if cols[2].strip().upper() == "NOT":
                 continue
