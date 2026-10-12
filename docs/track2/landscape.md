@@ -175,6 +175,13 @@ SAC-loss MVA-like microcephaly model (**that paper is not on PubMed as of
   BubR1 acetylation site is **K668**; the resolved 2014 paper says **K250**.
   K668 is the *mitotic-phosphorylation-regulated* acetylation site in some
   later papers - verify from primary sources before we name a residue.
+  **Resolved 2026-10-12 (lead, abstracts re-read):** both residues are
+  real and both papers stand. North 2014 EMBO J (PMID:24825348) reports
+  SIRT2 keeping BubR1 **lysine-668** deacetylated (the lifespan / NAD+
+  axis); Kim 2014 BBRC (PMID:25285631) reports SIRT2 deacetylating
+  **K250** (the PCAF prometaphase site). The competitors' K668 is correct
+  for the North paper; any text naming one site must cite the matching
+  paper.
 
 ## 5. How we differentiate (and where the bar actually is)
 
