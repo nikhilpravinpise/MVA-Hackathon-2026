@@ -1,0 +1,68 @@
+{
+  "schema": "t2.dossier/1",
+  "drug": "sirolimus",
+  "axis": "B",
+  "approval": {
+    "chembl_id": "CHEMBL413",
+    "chembl_max_phase": 4,
+    "chembl_first_approval": 1999,
+    "openfda_label_set_id": "09f24e7a-0bea-4e02-b557-c60eb842d41a",
+    "openfda_label_effective_time": "20250630",
+    "note": "Approved mTORC1 inhibitor (renal-transplant rejection prophylaxis >=13y; LAM adults). Carries a boxed warning."
+  },
+  "claims": [
+    {"id": "c1",
+     "text": "Rapamycin-class mTOR inhibition is senomorphic rather than senolytic: it selectively blunts the senescence-associated secretory phenotype by suppressing IL1A translation, reducing downstream NF-kB-driven cytokine secretion; in mice, rapamycin suppressed the ability of senescent fibroblasts to stimulate tumour growth.",
+     "kind": "mechanism", "cites": ["PMID:26147250"], "strength": "direct"},
+    {"id": "c2",
+     "text": "A second mechanism study confirms mTOR controls the SASP at the translational level via MAPKAPK2, reinforcing that mTOR inhibitors dampen - rather than eliminate - the senescent program.",
+     "kind": "mechanism", "cites": ["PMID:26280535"], "strength": "direct"},
+    {"id": "c3",
+     "text": "Disease-specific link: in monoallelic BubR1-mutant mice modelling MVA, predisposition to sarcopenia correlated with mTORC1 hyperactivity - the same tissue (skeletal muscle) that shows p16-driven senescence in BubR1 insufficiency. mTORC1 hyperactivity is a plausible, genotype-linked drug target.",
+     "kind": "preclinical", "cites": ["PMID:31738183"], "strength": "direct"},
+    {"id": "c4",
+     "text": "Progeria precedent: rapamycin reversed the cellular phenotype of Hutchinson-Gilford progeria fibroblasts via autophagy activation - evidence that mTOR inhibition can modify progeroid cell biology, though HGPS is lamin-based, not checkpoint-based.",
+     "kind": "preclinical", "cites": ["PMID:22170152"], "strength": "analogy"},
+    {"id": "c5",
+     "text": "Genome-stability caveat: in yeast mutation-accumulation lines, rapamycin only marginally changed mutation rates but was associated with chromosome XII amplifications (a compensatory rDNA response); the long-term effect of chronic mTOR inhibition on karyotypic stability is not fully characterised.",
+     "kind": "safety", "cites": ["PMID:37931001"], "strength": "indirect"},
+    {"id": "c6",
+     "text": "BubR1 insufficiency engages p16Ink4a senescence in muscle and fat; suppressing the SASP (rather than killing the cells) may reduce tissue damage while preserving the senescence-mediated brake on aneuploid-cell expansion.",
+     "kind": "mechanism", "cites": ["PMID:18516091", "PMID:20123995"], "strength": "indirect"}
+  ],
+  "pediatric": {
+    "label_source": "openFDA drug/label set_id 09f24e7a-0bea-4e02-b557-c60eb842d41a (effective 2025-06-30); sirolimus tablets",
+    "boxed_warning": "IMMUNOSUPPRESSION: 'Increased susceptibility to infection and the possible development of lymphoma and other malignancies may result from immunosuppression.' Also boxed: not recommended in liver/lung transplant (excess mortality, graft loss, bronchial anastomotic dehiscence). The malignancy warning is directly on-point for a cancer-predisposition syndrome.",
+    "approved_pediatric_indication": "Prophylaxis of organ rejection in renal transplant patients aged 13 years and older (quoted label fact). Safety and efficacy NOT established <13 years for transplant use, and <18 years for LAM.",
+    "label_pediatric_dosing_fact": "Adult/maintenance renal-transplant dosing is trough-guided; no established pediatric dosing below age 13 exists on this label (quoted label fact, not advice).",
+    "key_risks": [
+      "Boxed-warning malignancy risk (lymphoma and other malignancies, particularly skin) in a child already predisposed to cancer (rhabdomyosarcoma in the HPO profile) - the single most important safety flag of any candidate.",
+      "Decline in renal function and proteinuria (label 5.8/5.9): nephrocalcinosis is in the child's HPO profile, so renal function is already a concern; label warns against chronic use with calcineurin inhibitors due to renal deterioration.",
+      "Hyperlipidaemia, impaired wound healing, interstitial lung disease/non-infectious pneumonitis, latent viral reactivation, live-vaccine contraindication, male infertility (future consideration), embryo-fetal toxicity.",
+      "Immunosuppression in a growing child: infection risk + reduced immune surveillance of emerging neoplastic clones - mechanistically counter to the cancer-interception goal."
+    ],
+    "monitoring": [
+      "Sirolimus trough concentrations (label-recommended therapeutic drug monitoring)",
+      "Renal function and proteinuria (nephrocalcinosis phenotype)",
+      "Lipids, CBC, infection surveillance; no live vaccines",
+      "Cancer surveillance intensified (boxed warning)"
+    ]
+  },
+  "testability": {
+    "celegans": {"assay": "san-1/bub-3 mutant + let-363 (TOR) pathway readout", "readout": "lifespan, growth rate, embryonic viability", "expected": "lifespan extension plausible via conserved TOR-longevity link, but does not test aneuploidy directly", "priority": "medium"},
+    "fibroblasts": {"assay": "chronic low-dose sirolimus on MVA patient fibroblasts", "readout": "SASP cytokines (IL6/IL8), p-S6 biomarker, aneuploidy rate (FISH/scDNA-seq), BubR1 level", "expected": "SASP suppression without killing senescent cells; check it does not increase aneuploidy rate", "priority": "high"},
+    "scrnaseq": {"assay": "SASP/inflammatory module reversal on patient signature", "readout": "NF-kB/IL1A program scores", "expected": "partial reversal of inflammatory modules", "priority": "medium"},
+    "supplements": {"assay": "n/a", "readout": "-", "expected": "-", "priority": "n/a"}
+  },
+  "verdict": "shortlist",
+  "verdict_reason": "Mechanistically the cleanest senomorphic: direct evidence that mTOR inhibition blunts the SASP (PMID:26147250, PMID:26280535) plus a genotype-specific hook - mTORC1 hyperactivity tracks sarcopenia in the BubR1-mutant MVA mouse model (PMID:31738183). But the boxed-warning immunosuppression/malignancy risk is squarely against the child's cancer-predisposition phenotype, and no pediatric approval exists below age 13. Shortlisted as a testable hypothesis with a hard safety gate: fibroblast and worm evidence of benefit must clear the immunosuppression concern before any clinical consideration.",
+  "citations": {
+    "PMID:26147250": {"title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation", "journal": "Nat Cell Biol", "year": 2015, "doi": "10.1038/ncb3195"},
+    "PMID:26280535": {"title": "mTOR regulates MAPKAPK2 translation to control the senescence-associated secretory phenotype", "journal": "Nat Cell Biol", "year": 2015, "doi": "10.1038/ncb3225"},
+    "PMID:31738183": {"title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome", "journal": "J Clin Invest", "year": 2020, "doi": "10.1172/JCI126863"},
+    "PMID:22170152": {"title": "Rapamycin activates autophagy in Hutchinson-Gilford progeria syndrome: implications for normal aging and age-dependent neurodegenerative disorders", "journal": "Autophagy", "year": 2012, "doi": "10.4161/auto.8.1.18331"},
+    "PMID:37931001": {"title": "Genome instability footprint under rapamycin and hydroxyurea treatments", "journal": "PLoS Genet", "year": 2023, "doi": "10.1371/journal.pgen.1011012"},
+    "PMID:18516091": {"title": "Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency", "journal": "Nat Cell Biol", "year": 2008, "doi": "10.1038/ncb1744"},
+    "PMID:20123995": {"title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism", "journal": "J Cell Biol", "year": 2010, "doi": "10.1083/jcb.200905057"}
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "t2.dossier/1",
+  "drug": "aspirin",
+  "axis": "C",
+  "approval": {
+    "chembl_id": "CHEMBL25",
+    "chembl_max_phase": 4,
+    "chembl_first_approval": 1950,
+    "openfda_label_set_id": "0058175f-3474-40c3-a046-6cfaec86d84b",
+    "openfda_label_effective_time": "20240416",
+    "note": "OTC NSAID; chemoprevention is off-label. Label queried is a low-dose (81 mg) product."
+  },
+  "claims": [
+    {"id": "c1",
+     "text": "Mechanistic interception angle: a phenotypic screen found aspirin (and resveratrol) selectively eliminate tetraploid cells - the genomically metastable precursor state to aneuploidy - by slowing cell-cycle progression and triggering intrinsic apoptosis. In MVA, where aneuploid cells arise continuously, preferential pruning of the pre-/aneuploid compartment is the Axis-C interception hypothesis.",
+     "kind": "preclinical", "cites": ["PMID:24516128"], "strength": "direct"},
+    {"id": "c2",
+     "text": "Strongest clinical chemoprevention precedent: in the randomised double-blind CAPP2 trial (861 Lynch-syndrome patients, 600 mg aspirin daily), colorectal cancer incidence was reduced (ITT HR 0.65, 95% CI 0.43-0.97) at 10-year follow-up - RCT evidence that chronic aspirin prevents cancer in a hereditary predisposition syndrome.",
+     "kind": "clinical", "cites": ["PMID:32534647"], "strength": "analogy"},
+    {"id": "c3",
+     "text": "Honest bound on c2: the CAPP2 effect was specific to colorectal cancer (mismatch-repair-deficiency biology); non-colorectal Lynch cancers showed no ITT effect. MVA-associated tumours (rhabdomyosarcoma, Wilms, leukaemias) arise from chromosomal instability, not MMR loss - so the clinical analogy is weak and mechanism-dependent on c1.",
+     "kind": "clinical", "cites": ["PMID:32534647", "PMID:39169218"], "strength": "analogy"},
+    {"id": "c4",
+     "text": "Tetraploid elimination as cancer interception is mechanism-consistent with the aneuploidy-selective killing field (AICAR/17-AAG/chloroquine class evidence), but no aspirin experiment exists in a BUB1B/MVA model.",
+     "kind": "mechanism", "cites": ["PMID:21315436", "PMID:24516128"], "strength": "indirect"}
+  ],
+  "pediatric": {
+    "label_source": "openFDA drug/label set_id 0058175f-3474-40c3-a046-6cfaec86d84b (effective 2024-04-16); low-dose (81 mg) OTC product",
+    "boxed_warning": "None (OTC monograph label).",
+    "approved_pediatric_indication": "None for chronic use. Label directions: 'children under 12 years: consult a doctor'. Label carries the Reye's syndrome warning (see key_risks).",
+    "label_pediatric_dosing_fact": "No pediatric chemoprevention dosing exists; OTC label dosing is for analgesia only.",
+    "key_risks": [
+      "Reye's syndrome (label warning verbatim): 'Children and teenagers who have or are recovering from chicken pox or flu-like symptoms should not use this product' - a real, label-level pediatric hazard for chronic daily use.",
+      "Stomach bleeding warning (NSAID class) plus allergy alert; cumulative GI/renal caution.",
+      "Antiplatelet effect: bleeding-risk interactions (e.g. with dasatinib's platelet inhibition if combined).",
+      "Chronic daily dosing in a child would be an unprecedented preventive exposure; the only RCT evidence is in adults."
+    ],
+    "monitoring": [
+      "GI/bleeding surveillance",
+      "Withhold during varicella/influenza-like illness (Reye's precaution, label)",
+      "Renal function (nephrocalcinosis phenotype)"
+    ]
+  },
+  "testability": {
+    "celegans": {"assay": "san-1 mutant + aspirin exposure", "readout": "viability, him rate, growth", "expected": "weak rationale; low cost to include in screen", "priority": "low"},
+    "fibroblasts": {"assay": "chronic low-dose aspirin on MVA patient fibroblasts", "readout": "tetraploid/aneuploid cell fraction over passages (FISH/scDNA-seq), apoptosis markers", "expected": "enrichment for euploid fraction if tetraploid pruning is active", "priority": "medium"},
+    "scrnaseq": {"assay": "signature reversal", "readout": "aneuploid-signature cell fraction", "expected": "possible reduction of aneuploid-signature cells", "priority": "low"},
+    "supplements": {"assay": "n/a", "readout": "-", "expected": "-", "priority": "n/a"}
+  },
+  "verdict": "adjunct",
+  "verdict_reason": "Cheapest possible cancer-interception lever with a real mechanism (selective tetraploid-cell elimination, PMID:24516128) and the only RCT-grade chemoprevention precedent in a hereditary syndrome (CAPP2, PMID:32534647). But the RCT benefit was colorectal-cancer-specific in MMR-deficient Lynch syndrome - mechanism, not syndrome, must carry the extrapolation to MVA's sarcoma/nephroblastoma spectrum; pediatric chronic use hits the label's Reye's-syndrome warning; and no MVA-model data exist. Kept as an adjunct consideration alongside structured cancer surveillance rather than a lead candidate.",
+  "citations": {
+    "PMID:24516128": {"title": "Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention", "journal": "Proc Natl Acad Sci U S A", "year": 2014, "doi": "10.1073/pnas.1318440111"},
+    "PMID:32534647": {"title": "Cancer prevention with aspirin in hereditary colorectal cancer (Lynch syndrome), 10-year follow-up and registry-based 20-year data in the CAPP2 study: a double-blind, randomised, placebo-controlled trial", "journal": "Lancet", "year": 2020, "doi": "10.1016/S0140-6736(20)30366-4"},
+    "PMID:39169218": {"title": "Mosaic variegated aneuploidy in development, ageing and cancer", "journal": "Nat Rev Genet", "year": 2024, "doi": "10.1038/s41576-024-00762-6"},
+    "PMID:21315436": {"title": "Identification of aneuploidy-selective antiproliferation compounds", "journal": "Cell", "year": 2011, "doi": "10.1016/j.cell.2011.01.017"}
+  }
+}

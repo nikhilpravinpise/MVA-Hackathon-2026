@@ -1,0 +1,142 @@
+{
+  "schema": "t2.rejected/1",
+  "generated_by": "lane L3 manual curation",
+  "generated_date": "2026-10-12",
+  "note": "Considered-and-rejected candidates. Approval statuses are from live ChEMBL max_phase queries run 2026-10-12; literature claims carry resolved PMIDs (abstracts read via efetch). 'Rejected' here means rejected as a candidate for the MVA repurposing hypothesis - several remain legitimate drugs for their labeled indications.",
+  "entries": [
+    {
+      "drug": "recombinant human growth hormone (somatropin)",
+      "category": "contraindicated-by-phenotype",
+      "approval_status": "approved (ChEMBL max_phase 4 class) - approval not the issue",
+      "reason": "Tempting target for the child's short stature/failure-to-thrive phenotype, but it treats a symptom while stimulating proliferation in a cancer-predisposition syndrome. In the Childhood Cancer Survivor Study, GH-treated survivors had a second-neoplasm rate ratio of 2.15 (95% CI 1.3-3.5) versus untreated survivors - an elevated SN signal in a population already cancer-prone, directly analogous to MVA risk biology. IGF-1-driven growth promotion in a child whose mosaic aneuploid clones are under relaxed surveillance is the wrong direction.",
+      "cites": ["PMID:16822820", "PMID:15144231", "PMID:39169218"],
+      "note": "Re-evaluate only if endocrine workup shows true GH deficiency and oncology signs off; not a repurposing candidate here."
+    },
+    {
+      "drug": "navitoclax (ABT-263)",
+      "category": "not-approved",
+      "approval_status": "ChEMBL443684 max_phase 3, no first_approval recorded (live query 2026-10-12)",
+      "reason": "Potent BCL-2/BCL-xL senolytic - mechanistically the most direct senolytic after D+Q - but fails the hard rule: market-approved medications only. Additionally causes dose-limiting thrombocytopenia (BCL-xL in platelets), undesirable in a child.",
+      "cites": ["PMID:25754370"],
+      "note": "If a BCL-xL/BCL-2 senolytic gains approval, re-screen; dasatinib covers the senolytic axis today."
+    },
+    {
+      "drug": "quercetin (alone)",
+      "category": "supplement-adjunct",
+      "approval_status": "CHEMBL50 max_phase 3, no approval (live query 2026-10-12)",
+      "reason": "Not a market-approved drug. Retained only as the adjunct half of the D+Q senolytic pair whose human pilot data exist (PMID:31542391); it cannot anchor a candidate on its own under the approved-only rule.",
+      "cites": ["PMID:25754370", "PMID:31542391"]
+    },
+    {
+      "drug": "fisetin",
+      "category": "supplement",
+      "approval_status": "CHEMBL31574 max_phase 2, no approval (live query 2026-10-12)",
+      "reason": "Flavonoid senolytic in trials, but not a market-approved medication; excluded by the approved-only rule. Could appear in the MVA Society supplements program outside the drug dossier set.",
+      "cites": ["PMID:25754370"]
+    },
+    {
+      "drug": "nicotinamide riboside / nicotinamide mononucleotide (NR/NMN)",
+      "category": "supplement-adjunct",
+      "approval_status": "NR: CHEMBL438497 max_phase 3, no approval; NMN: no approved entry (live queries 2026-10-12)",
+      "reason": "NMN is literally the NAD+ precursor that raised BubR1 abundance in the anchor study (PMID:24825348) - mechanistically the most direct Axis-A agent - but neither form is a market-approved drug. Approved NAD precursors (niacin, niacinamide) carry the dossier instead; NR/NMN remain adjuncts fitting the MVA Society supplements program.",
+      "cites": ["PMID:24825348", "PMID:41436848"]
+    },
+    {
+      "drug": "resveratrol",
+      "category": "supplement",
+      "approval_status": "not an approved drug",
+      "reason": "Co-headliner of the tetraploid-elimination screen (with aspirin) but a supplement, not a medication; also has poor bioavailability. Aspirin carries the dossier for this mechanism.",
+      "cites": ["PMID:24516128"]
+    },
+    {
+      "drug": "MPS1 (TTK) inhibitors (e.g. reversine-class), Aurora kinase inhibitors, KIF18A inhibitors",
+      "category": "mechanism-opposed",
+      "approval_status": "investigational oncology agents; none approved for this purpose",
+      "reason": "These drugs exist to weaken or exploit the spindle assembly checkpoint and spindle mechanics in cancer. Aneuploid cancer cells are indeed selectively vulnerable to SAC/KIF18A perturbation (Nature 2021: synthetic-lethal aneuploidy-SAC interaction) - but that is a tumour-killing strategy. In an MVA child the residual SAC in NORMAL mosaic cells is what limits new aneuploidy; systemic SAC inhibition would accelerate mis-segregation in every dividing tissue - pharmacologically recreating the disease mechanism. Rejected for preventive/chronic use; the vulnerability may matter later only if a frank malignancy is being treated by oncologists.",
+      "cites": ["PMID:33505028", "PMID:21315436"]
+    },
+    {
+      "drug": "p53-pathway inhibition (e.g. pifithrin-class; no approved selective agent)",
+      "category": "mechanism-opposed",
+      "approval_status": "no approved selective p53 inhibitor exists",
+      "reason": "Proposed by naive reasoning as 'relieve the growth arrest' for failure-to-thrive, but p53 is the brake that limits proliferation of aneuploid cells; disabling it removes the main tumour-suppressive barrier in a syndrome whose cancers emerge from aneuploid clones. Direction is pro-oncogenic - the opposite of the goal.",
+      "cites": ["PMID:20123995", "PMID:39169218"]
+    },
+    {
+      "drug": "antimitotic agents (taxanes, vinca alkaloids, benzimidazole anthelmintics incl. mebendazole)",
+      "category": "mechanism-opposed",
+      "approval_status": "approved for oncology/anthelmintic indications, not for this purpose",
+      "reason": "Spindle-poisons cause chromosome mis-segregation - the exact lesion MVA already produces. Benzimidazoles specifically show aneugenic activity in micronucleus assays. Mebendazole surfaced in the systematic screen (aneuploid-selective killing query) but is rejected on this mechanism.",
+      "cites": ["PMID:7739397", "PMID:33505028"]
+    },
+    {
+      "drug": "HSP90 inhibitors (17-AAG/tanespimycin and class)",
+      "category": "not-approved + class-risk",
+      "approval_status": "tanespimycin CHEMBL109480 max_phase 3, no approval (live query 2026-10-12); no HSP90 inhibitor is approved",
+      "reason": "17-AAG was one of the three aneuploidy-selective compounds in the founding screen (proteotoxic-stress angle) - but the class never reached approval (development abandoned on toxicity/efficacy), and chaperone inhibition destabilises client kinases broadly. Excluded on the approved-only rule; the selectivity rationale is covered by chloroquine in the HCQ dossier.",
+      "cites": ["PMID:21315436"]
+    },
+    {
+      "drug": "AICAR (5-aminoimidazole-4-carboxamide ribonucleotide)",
+      "category": "not-approved",
+      "approval_status": "not an approved drug (research compound)",
+      "reason": "The energy-stress hit in the aneuploidy-selective screen (p53-dependent apoptosis in trisomic MEFs) - mechanistically appealing, but not market-approved. Metformin is the nearest approved energy-stress/AMPK agent and carries the analogy in its dossier.",
+      "cites": ["PMID:21315436"]
+    },
+    {
+      "drug": "APC/C inhibitors (TAME, proTAME)",
+      "category": "not-approved + mechanism-opposed",
+      "approval_status": "research compounds only (TAME characterised as an APC/C inhibitor, Nat Chem Biol 2012)",
+      "reason": "BubR1 restrains APC/C; an APC/C inhibitor sits downstream of the defect and would mimic/amplify checkpoint failure rather than rescue it. Also not approved.",
+      "cites": ["PMID:22366722"]
+    },
+    {
+      "drug": "direct SIRT2 activators",
+      "category": "not-approved",
+      "approval_status": "no approved SIRT2 activator exists; selective SIRT2 tool compounds are investigational",
+      "reason": "Pharmacologically the cleanest Axis-A lever (stabilise BubR1 via K668 deacetylation) but no approved agent exists; the feasible proxy is NAD+ repletion (niacin/nicotinamide dossier). Selective SIRT2 INHIBITORS exist but point the wrong way for this disease.",
+      "cites": ["PMID:24825348", "PMID:38009412", "PMID:25672491"]
+    },
+    {
+      "drug": "hydroxyurea",
+      "category": "mechanism-opposed",
+      "approval_status": "approved (oncology/sickle-cell) - excluded on mechanism",
+      "reason": "Surfaced in the systematic screen. In yeast mutation-accumulation lines it elevated mutation rates broadly with a particularly high occurrence of aneuploidy - the precise phenotype to avoid in MVA.",
+      "cites": ["PMID:37931001"]
+    },
+    {
+      "drug": "hematopoietic stem cell transplantation (HSCT)",
+      "category": "not-a-drug + adverse-case-evidence",
+      "approval_status": "procedure, not a medication",
+      "reason": "Considered because it could replace a compartment that accumulates aneuploid clones (e.g. marrow). The only published MVA1 HSCT case (11-year-old, MDS with monosomy 7): TCRab/CD19-depleted RIC transplant engrafted but was followed by day +47 graft rejection, prolonged pancytopenia and fatal sepsis (death day +156). Does not address aneuploidy in non-hematopoietic tissues; single-case evidence is adverse.",
+      "cites": ["PMID:31053147"]
+    },
+    {
+      "drug": "INK-ATTAC-style inducible senescent-cell ablation (transgenic)",
+      "category": "not-a-drug",
+      "approval_status": "transgenic research system, not a medication",
+      "reason": "This is the actual intervention that rescued the BubR1-hypomorph mouse phenotype in Nature 2011 - the scientific anchor for the whole Axis-B hypothesis - listed here explicitly so the record is honest that the anchor intervention is a gene circuit, not a drug. Dasatinib+quercetin is its pharmacologic approximation.",
+      "cites": ["PMID:22048312", "PMID:25754370"]
+    }
+  ],
+  "citations": {
+    "PMID:16822820": {"title": "Growth hormone treatment and risk of second neoplasms in the childhood cancer survivor", "journal": "J Clin Endocrinol Metab", "year": 2006, "doi": "10.1210/jc.2006-0656"},
+    "PMID:15144231": {"title": "Cancer risk following growth hormone use in childhood: implications for current practice", "journal": "Drug Saf", "year": 2004, "doi": "10.2165/00002018-200427060-00002"},
+    "PMID:39169218": {"title": "Mosaic variegated aneuploidy in development, ageing and cancer", "journal": "Nat Rev Genet", "year": 2024, "doi": "10.1038/s41576-024-00762-6"},
+    "PMID:25754370": {"title": "The Achilles' heel of senescent cells: from transcriptome to senolytic drugs", "journal": "Aging Cell", "year": 2015, "doi": "10.1111/acel.12344"},
+    "PMID:31542391": {"title": "Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease", "journal": "EBioMedicine", "year": 2019, "doi": "10.1016/j.ebiom.2019.08.069"},
+    "PMID:24825348": {"title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan", "journal": "EMBO J", "year": 2014, "doi": "10.15252/embj.201386907"},
+    "PMID:38009412": {"title": "SIRT2 transgenic over-expression does not impact lifespan in mice", "journal": "Aging Cell", "year": 2023, "doi": "10.1111/acel.14027"},
+    "PMID:41436848": {"title": "Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage", "journal": "Aging Cell", "year": 2026, "doi": "10.1111/acel.70319"},
+    "PMID:24516128": {"title": "Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention", "journal": "Proc Natl Acad Sci U S A", "year": 2014, "doi": "10.1073/pnas.1318440111"},
+    "PMID:33505028": {"title": "Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition", "journal": "Nature", "year": 2021, "doi": "10.1038/s41586-020-03114-6"},
+    "PMID:21315436": {"title": "Identification of aneuploidy-selective antiproliferation compounds", "journal": "Cell", "year": 2011, "doi": "10.1016/j.cell.2011.01.017"},
+    "PMID:20123995": {"title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism", "journal": "J Cell Biol", "year": 2010, "doi": "10.1083/jcb.200905057"},
+    "PMID:7739397": {"title": "Clastogenic and aneugenic effects of three benzimidazole derivatives in the in vitro micronucleus test using human lymphocytes", "journal": "Mutagenesis", "year": 1995, "doi": "10.1093/mutage/10.1.23"},
+    "PMID:22366722": {"title": "An APC/C inhibitor stabilizes cyclin B1 by prematurely terminating ubiquitination", "journal": "Nat Chem Biol", "year": 2012, "doi": "10.1038/nchembio.801"},
+    "PMID:25672491": {"title": "Selective Sirt2 inhibition by ligand-induced rearrangement of the active site", "journal": "Nat Commun", "year": 2015, "doi": "10.1038/ncomms7263"},
+    "PMID:37931001": {"title": "Genome instability footprint under rapamycin and hydroxyurea treatments", "journal": "PLoS Genet", "year": 2023, "doi": "10.1371/journal.pgen.1011012"},
+    "PMID:31053147": {"title": "Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome", "journal": "Orphanet J Rare Dis", "year": 2019, "doi": "10.1186/s13023-019-1073-x"},
+    "PMID:22048312": {"title": "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders", "journal": "Nature", "year": 2011, "doi": "10.1038/nature10600"}
+  }
+}

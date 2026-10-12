@@ -431,6 +431,20 @@
    "via": "crossref",
    "resolved_at": "2026-10-12"
   },
+  "PMID:11746029": {
+   "found": true,
+   "title": "Cancer-prone syndrome of mosaic variegated aneuploidy and total premature chromatid separation: report of five infants.",
+   "year": 2001,
+   "pubtypes": [
+    "Case Reports",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Review"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:12297502": {
    "found": true,
    "title": "Inhibition of silencing and accelerated aging by nicotinamide, a putative negative regulator of yeast sir2 and human SIRT1.",
@@ -556,6 +570,19 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:21190457": {
+   "found": true,
+   "title": "Homozygous BUB1B mutation and susceptibility to gastrointestinal neoplasia.",
+   "year": 2010,
+   "pubtypes": [
+    "Case Reports",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:21315436": {
    "found": true,
    "title": "Identification of aneuploidy-selective antiproliferation compounds.",
@@ -624,6 +651,19 @@
    "found": true,
    "title": "Increased expression of BubR1 protects against aneuploidy and cancer and extends healthy lifespan.",
    "year": 2013,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:23300461": {
+   "found": true,
+   "title": "Reduced life- and healthspan in mice carrying a mono-allelic BubR1 MVA mutation.",
+   "year": 2012,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
@@ -733,6 +773,19 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:25964054": {
+   "found": true,
+   "title": "BubR1 kinase: protection against aneuploidy and premature aging.",
+   "year": 2015,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Review"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:26147250": {
    "found": true,
    "title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation.",
@@ -755,6 +808,17 @@
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:28553959": {
+   "found": true,
+   "title": "Biallelic TRIP13 mutations predispose to Wilms tumor and chromosome missegregation.",
+   "year": 2017,
+   "pubtypes": [
+    "Journal Article"
    ],
    "retracted": false,
    "via": "esummary:pubmed",
@@ -786,6 +850,18 @@
   "PMID:31053147": {
    "found": true,
    "title": "Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome.",
+   "year": 2019,
+   "pubtypes": [
+    "Case Reports",
+    "Journal Article"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:31081598": {
+   "found": true,
+   "title": "Long-term remission of bilateral Wilms tumors that developed from premature separation of chromatids/mosaic variegated aneuploidy syndrome due to bilateral nephrectomy and peritoneal dialysis.",
    "year": 2019,
    "pubtypes": [
     "Case Reports",
@@ -881,6 +957,17 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:36322655": {
+   "found": true,
+   "title": "Biallelic germline mutations in MAD1L1 induce a syndrome of aneuploidy with high tumor susceptibility.",
+   "year": 2022,
+   "pubtypes": [
+    "Journal Article"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:37931001": {
    "found": true,
    "title": "Genome instability footprint under rapamycin and hydroxyurea treatments.",
@@ -912,6 +999,32 @@
    "pubtypes": [
     "Journal Article",
     "Review"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:39264246": {
+   "found": true,
+   "title": "Update on Recommendations for Cancer Screening and Surveillance in Children with Genomic Instability Disorders.",
+   "year": 2024,
+   "pubtypes": [
+    "Journal Article",
+    "Review"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:39490401": {
+   "found": true,
+   "title": "BubR1 and SIRT2: Insights into aneuploidy, aging, and cancer.",
+   "year": 2024,
+   "pubtypes": [
+    "Journal Article",
+    "Review",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
    ],
    "retracted": false,
    "via": "esummary:pubmed",

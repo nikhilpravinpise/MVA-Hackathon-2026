@@ -1,0 +1,108 @@
+{
+  "schema": "t2.testability/1",
+  "generated_by": "lane L3 manual curation",
+  "generated_date": "2026-10-12",
+  "programs": ["worm_repurposing_screen", "patient_fibroblasts", "multi_patient_scrnaseq", "supplements_cell_health"],
+  "program_notes": {
+    "worm_repurposing_screen": "Page says 'worm model of MVA' (species unstated); C. elegans inferred from society-linked platform paper PMID:39773880. san-1 = MAD3/BubR1 worm ortholog (PMID:18248670).",
+    "patient_fibroblasts": "MVA-family skin-biopsy fibroblasts grown in London; mosaic culture gives an internal euploid control for aneuploidy-selectivity readouts.",
+    "multi_patient_scrnaseq": "Several-patient scRNA-seq comparison (Spain).",
+    "supplements_cell_health": "Supplement testing on human MVA cells (USA)."
+  },
+  "cost_tiers": {"T0": "in-silico / literature only", "T1": "< $5k (bench assays, standard reagents)", "T2": "$5k-50k (sequencing, screens, animal work)", "T3": "> $50k"},
+  "matrix": [
+    {
+      "drug": "dasatinib + quercetin",
+      "axis": "B",
+      "entries": [
+        {"program": "patient_fibroblasts", "assay": "Intermittent D+Q exposure (hit-and-run schedule per PMID:31542391) on MVA patient fibroblasts", "readout": "SA-beta-gal/p16/p21+ fraction, SASP cytokine panel (IL-6, IL-8, IL-1a), aneuploidy rate (interphase FISH / scDNA-seq), micronuclei", "expected_direction": "reduced senescent fraction and SASP; aneuploidy rate expected UNCHANGED (senolytics do not repair the SAC - a null result on aneuploidy is itself informative)", "go_no_go": "GO if >=50% reduction in senescent-marker fraction with no rise in aneuploidy rate or cytotoxicity to euploid cells; NO-GO if nonselective toxicity", "cost_tier": "T1", "time_to_result": "2-4 weeks", "rationale": "The anchor senolysis study was performed in the BubR1-hypomorph model (PMID:22048312); patient fibroblasts are the nearest human system."},
+        {"program": "multi_patient_scrnaseq", "assay": "post-exposure scRNA-seq of treated fibroblasts", "readout": "senescence/SASP module scores; p16 program", "expected_direction": "down-shift of senescence modules", "go_no_go": "GO if SASP modules significantly reduced vs untreated", "cost_tier": "T2", "time_to_result": "6-8 weeks", "rationale": "confirms pharmacodynamic knockdown at single-cell level"},
+        {"program": "worm_repurposing_screen", "assay": "san-1(ok1580) or bub-3 mutant + dasatinib exposure", "readout": "embryonic/larval viability, him rate, growth, behavioural tracking", "expected_direction": "uncertain; worm lacks a classical senescent compartment - weak model fit for senolytics", "go_no_go": "informational only", "cost_tier": "T1", "time_to_result": "2-3 weeks", "rationale": "low expected mechanistic read-through; include only in a broad screen"},
+        {"program": "supplements_cell_health", "assay": "n/a (dasatinib is a drug; quercetin half could appear here)", "readout": "-", "expected_direction": "-", "go_no_go": "-", "cost_tier": "n/a", "time_to_result": "-", "rationale": "quercetin belongs to the supplements arm by regulatory class"}
+      ]
+    },
+    {
+      "drug": "sirolimus",
+      "axis": "B",
+      "entries": [
+        {"program": "patient_fibroblasts", "assay": "chronic low-dose sirolimus on MVA patient fibroblasts", "readout": "SASP cytokines, p-S6 (pharmacodynamic), aneuploidy rate, BubR1 protein, growth rate", "expected_direction": "SASP suppression (senomorphic) without cell killing; key negative control: aneuploidy rate must not rise", "go_no_go": "GO if SASP down >=30% with stable aneuploidy rate and no growth suppression; NO-GO on aneuploidy rise or cytostasis (a growth-retarded child cannot take a growth-suppressing drug)", "cost_tier": "T1", "time_to_result": "2-4 weeks", "rationale": "mTORC1 hyperactivity tracks MVA-mouse sarcopenia (PMID:31738183); SASP mechanism direct (PMID:26147250)"},
+        {"program": "worm_repurposing_screen", "assay": "san-1/bub-3 mutant + rapamycin", "readout": "lifespan, growth, embryonic viability", "expected_direction": "possible lifespan extension (conserved TOR-longevity link)", "go_no_go": "informational", "cost_tier": "T1", "time_to_result": "3-6 weeks (lifespan assays are slow)", "rationale": "cheap pharmacodynamic confirmation"},
+        {"program": "multi_patient_scrnaseq", "assay": "signature reversal", "readout": "HALLMARK_MTORC1_SIGNALING, SASP modules", "expected_direction": "mTORC1/SASP module down-shift", "go_no_go": "GO if mTORC1 module significantly reduced", "cost_tier": "T2", "time_to_result": "6-8 weeks", "rationale": "confirms target engagement in patient cells"},
+        {"program": "supplements_cell_health", "assay": "n/a", "readout": "-", "expected_direction": "-", "go_no_go": "-", "cost_tier": "n/a", "time_to_result": "-", "rationale": "prescription drug; supplements arm not applicable"}
+      ]
+    },
+    {
+      "drug": "everolimus",
+      "axis": "B",
+      "entries": [
+        {"program": "patient_fibroblasts", "assay": "as sirolimus, plus growth-rate kinetic readout (pediatric relevance)", "readout": "SASP cytokines, p-S6, aneuploidy rate, proliferation index, BubR1 level", "expected_direction": "SASP suppression; check cytostasis - a growth-retarded child cannot tolerate anti-proliferative effects", "go_no_go": "GO if SASP down >=30%, stable aneuploidy, <20% proliferation slowdown; NO-GO on cytostasis", "cost_tier": "T1", "time_to_result": "2-4 weeks", "rationale": "same mechanism as sirolimus; preferred clinical candidate (pediatric TSC approvals, no growth harm in label data)"},
+        {"program": "worm_repurposing_screen", "assay": "san-1 mutant + everolimus", "readout": "lifespan, growth, viability", "expected_direction": "as sirolimus", "go_no_go": "informational", "cost_tier": "T1", "time_to_result": "3-6 weeks", "rationale": "pharmacodynamic confirmation"},
+        {"program": "multi_patient_scrnaseq", "assay": "signature reversal", "readout": "mTORC1/SASP modules", "expected_direction": "down-shift", "go_no_go": "GO on significant reduction", "cost_tier": "T2", "time_to_result": "6-8 weeks", "rationale": "target-engagement confirmation"},
+        {"program": "supplements_cell_health", "assay": "n/a", "readout": "-", "expected_direction": "-", "go_no_go": "-", "cost_tier": "n/a", "time_to_result": "-", "rationale": "prescription drug"}
+      ]
+    },
+    {
+      "drug": "metformin",
+      "axis": "B (secondary C)",
+      "entries": [
+        {"program": "patient_fibroblasts", "assay": "metformin across clinical-to-high dose range (uM to mM) on MVA patient fibroblasts", "readout": "SASP cytokines (IKK/NF-kB axis per PMID:23521863), micronuclei, aneuploidy rate, p-AMPK, BUBR1/MAD2 expression (per PMID:35568294 caveat)", "expected_direction": "SASP suppression at clinical-range exposure; genotoxicity/SAC-deregulation only at mM doses", "go_no_go": "GO if a dose window exists with SASP down AND no micronucleus increase; NO-GO if micronuclei rise within/near clinical exposure (the Lyu 2022 caveat is the whole experiment)", "cost_tier": "T1", "time_to_result": "2-4 weeks", "rationale": "defines the therapeutic window between senomorphic benefit and checkpoint harm"},
+        {"program": "worm_repurposing_screen", "assay": "san-1 mutant + metformin dose ladder", "readout": "viability, growth, him rate, lifespan", "expected_direction": "possible stress-pathway benefit at low dose, toxicity at high", "go_no_go": "informational", "cost_tier": "T1", "time_to_result": "3-6 weeks", "rationale": "dose-window behaviour in vivo"},
+        {"program": "multi_patient_scrnaseq", "assay": "signature reversal", "readout": "NF-kB/SASP modules", "expected_direction": "partial reversal", "go_no_go": "secondary", "cost_tier": "T2", "time_to_result": "6-8 weeks", "rationale": "confirmatory"},
+        {"program": "supplements_cell_health", "assay": "n/a", "readout": "-", "expected_direction": "-", "go_no_go": "-", "cost_tier": "n/a", "time_to_result": "-", "rationale": "prescription drug"}
+      ]
+    },
+    {
+      "drug": "hydroxychloroquine / chloroquine",
+      "axis": "C",
+      "entries": [
+        {"program": "patient_fibroblasts", "assay": "CQ/HCQ exposure on MVA patient fibroblasts (mosaic = internal euploid control) + autophagic-flux tracking (LC3-II)", "readout": "fraction of aneuploid vs euploid cells before/after (FISH or scDNA-seq), viability, autophagy markers", "expected_direction": "selective depletion of aneuploid-cell fraction - the direct test of the PMID:21315436 finding in the disease's own cells", "go_no_go": "GO if aneuploid-fraction reduction >=2-fold preferential vs euploid; NO-GO if no selectivity or broad toxicity", "cost_tier": "T1-T2", "time_to_result": "3-6 weeks", "rationale": "the single most decisive test in the matrix: it assays the exact claimed mechanism on the exact disease cell type with a built-in control"},
+        {"program": "multi_patient_scrnaseq", "assay": "post-exposure scRNA-seq", "readout": "aneuploid-signature cell fraction; autophagy/proteotoxic modules", "expected_direction": "depletion of aneuploid-signature cells", "go_no_go": "GO on aneuploid-signature depletion", "cost_tier": "T2", "time_to_result": "6-8 weeks", "rationale": "single-cell confirmation of selective depletion"},
+        {"program": "worm_repurposing_screen", "assay": "san-1 mutant + CQ", "readout": "viability, him rate, growth", "expected_direction": "uncertain either way", "go_no_go": "informational", "cost_tier": "T1", "time_to_result": "2-3 weeks", "rationale": "in-vivo stress readout"},
+        {"program": "supplements_cell_health", "assay": "n/a", "readout": "-", "expected_direction": "-", "go_no_go": "-", "cost_tier": "n/a", "time_to_result": "-", "rationale": "prescription drug"}
+      ]
+    },
+    {
+      "drug": "niacin / nicotinamide (approved NAD+ precursors)",
+      "axis": "A",
+      "entries": [
+        {"program": "patient_fibroblasts", "assay": "niacin vs nicotinamide vs NR (comparator) exposure on MVA patient fibroblasts", "readout": "BubR1 protein level (western/IF), NAD+ level, mitotic timing under nocodazole, aneuploidy rate", "expected_direction": "increased BubR1 abundance per PMID:24825348 (the direct Axis-A pharmacodynamic readout); test whether nicotinamide's sirtuin-inhibition property (PMID:12297502) blunts it vs niacin", "go_no_go": "GO if BubR1 protein up measurably (e.g. >=1.3-fold) with no aneuploidy rise; head-to-head niacin vs nicotinamide resolves the form question", "cost_tier": "T1", "time_to_result": "2-4 weeks", "rationale": "the only Axis-A pharmacodynamic readout; answers the approved-form question the dossier flags"},
+        {"program": "worm_repurposing_screen", "assay": "san-1 mutant + NAD+ precursor", "readout": "viability, him rate, growth, lifespan", "expected_direction": "rescue direction if NAD/SIRT stabilises residual checkpoint function", "go_no_go": "GO on viability/him improvement", "cost_tier": "T1", "time_to_result": "3-6 weeks", "rationale": "cheapest whole-organism genetic test of Axis A"},
+        {"program": "multi_patient_scrnaseq", "assay": "signature reversal", "readout": "progeroid/stress modules", "expected_direction": "partial reversal", "go_no_go": "secondary", "cost_tier": "T2", "time_to_result": "6-8 weeks", "rationale": "confirmatory"},
+        {"program": "supplements_cell_health", "assay": "NAD+ precursors in the USA supplements-on-MVA-cells program", "readout": "cell stability endpoints", "expected_direction": "improved stability per program's mouse-data premise", "go_no_go": "program-defined", "cost_tier": "T1", "time_to_result": "program-dependent", "rationale": "direct fit - the program's premise matches the Axis-A mechanism (PMID:24825348, PMID:41436848)"}
+      ]
+    },
+    {
+      "drug": "aspirin",
+      "axis": "C",
+      "entries": [
+        {"program": "patient_fibroblasts", "assay": "chronic low-dose aspirin on MVA patient fibroblasts over multiple passages", "readout": "tetraploid/aneuploid fraction trajectory (FISH/scDNA-seq), apoptosis markers", "expected_direction": "enrichment of euploid fraction if tetraploid pruning active (PMID:24516128)", "go_no_go": "GO on >=1.5-fold euploid enrichment vs vehicle", "cost_tier": "T1", "time_to_result": "3-5 weeks", "rationale": "mechanism test for the interception hypothesis"},
+        {"program": "worm_repurposing_screen", "assay": "san-1 mutant + aspirin", "readout": "viability, him rate", "expected_direction": "weak rationale", "go_no_go": "informational", "cost_tier": "T1", "time_to_result": "2-3 weeks", "rationale": "screen inclusion cheap"},
+        {"program": "multi_patient_scrnaseq", "assay": "post-exposure scRNA-seq", "readout": "aneuploid-signature fraction", "expected_direction": "possible reduction", "go_no_go": "secondary", "cost_tier": "T2", "time_to_result": "6-8 weeks", "rationale": "confirmatory"},
+        {"program": "supplements_cell_health", "assay": "n/a", "readout": "-", "expected_direction": "-", "go_no_go": "-", "cost_tier": "n/a", "time_to_result": "-", "rationale": "drug (OTC)"}
+      ]
+    }
+  ],
+  "fibroblast_core_readouts": [
+    "aneuploidy rate (interphase FISH panel / scDNA-seq / micronucleus index) - the disease-defining readout; the mosaic culture gives an internal euploid control",
+    "BubR1 protein level (Axis-A pharmacodynamic)",
+    "mitotic timing under nocodazole challenge (functional SAC strength)",
+    "SA-beta-gal / p16 / p21 senescent fraction + SASP cytokines (Axis-B pharmacodynamic)"
+  ],
+  "decision_logic": "Fibroblast assays are the decisive tier (T1 cost, disease-relevant cells, internal euploid control, 2-6 weeks). Worm assays are cheap whole-organism confirmation. scRNA-seq quantifies signature reversal. The supplements program is the natural home for NAD-precursor adjuncts. Any candidate showing an INCREASE in aneuploidy rate or micronuclei on patient cells is an automatic NO-GO regardless of other benefits.",
+  "citations": {
+    "PMID:39773880": {"title": "High-throughput tracking enables systematic phenotyping and drug repurposing in C. elegans disease models", "journal": "eLife", "year": 2025, "doi": "10.7554/eLife.92491"},
+    "PMID:18248670": {"title": "Genetic analysis of the spindle checkpoint genes san-1, mdf-2, bub-3 and the CENP-F homologues hcp-1 and hcp-2 in Caenorhabditis elegans", "journal": "Cell Div", "year": 2008, "doi": "10.1186/1747-1028-3-6"},
+    "PMID:29046436": {"title": "Caenorhabditis elegans BUB-3 and SAN-1/MAD3 Spindle Assembly Checkpoint Components Are Required for Genome Stability in Response to Treatment with Ionizing Radiation", "journal": "G3 (Bethesda)", "year": 2017, "doi": "10.1534/g3.117.1122"},
+    "PMID:22048312": {"title": "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders", "journal": "Nature", "year": 2011, "doi": "10.1038/nature10600"},
+    "PMID:31542391": {"title": "Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease", "journal": "EBioMedicine", "year": 2019, "doi": "10.1016/j.ebiom.2019.08.069"},
+    "PMID:26147250": {"title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation", "journal": "Nat Cell Biol", "year": 2015, "doi": "10.1038/ncb3195"},
+    "PMID:31738183": {"title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome", "journal": "J Clin Invest", "year": 2020, "doi": "10.1172/JCI126863"},
+    "PMID:21315436": {"title": "Identification of aneuploidy-selective antiproliferation compounds", "journal": "Cell", "year": 2011, "doi": "10.1016/j.cell.2011.01.017"},
+    "PMID:35568294": {"title": "High-dose metformin induces a low-glucose dependent genotoxic stress", "journal": "Food Chem Toxicol", "year": 2022, "doi": "10.1016/j.fct.2022.113129"},
+    "PMID:23521863": {"title": "Metformin inhibits the senescence-associated secretory phenotype by interfering with IKK/NF-kB activation", "journal": "Aging Cell", "year": 2013, "doi": "10.1111/acel.12075"},
+    "PMID:24825348": {"title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan", "journal": "EMBO J", "year": 2014, "doi": "10.15252/embj.201386907"},
+    "PMID:12297502": {"title": "Inhibition of silencing and accelerated aging by nicotinamide, a putative negative regulator of yeast sir2 and human SIRT1", "journal": "J Biol Chem", "year": 2002, "doi": "10.1074/jbc.M205670200"},
+    "PMID:24516128": {"title": "Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention", "journal": "Proc Natl Acad Sci U S A", "year": 2014, "doi": "10.1073/pnas.1318440111"},
+    "PMID:41436848": {"title": "Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage", "journal": "Aging Cell", "year": 2026, "doi": "10.1111/acel.70319"}
+  }
+}

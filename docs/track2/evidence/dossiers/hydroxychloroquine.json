@@ -1,0 +1,62 @@
+{
+  "schema": "t2.dossier/1",
+  "drug": "hydroxychloroquine",
+  "related_compound": "chloroquine (the molecule actually tested in the anchor study; HCQ preferred clinically for wider safety margin)",
+  "axis": "C",
+  "approval": {
+    "chembl_id": "CHEMBL1535",
+    "chembl_max_phase": 4,
+    "chembl_first_approval": 1955,
+    "chloroquine_chembl_id": "CHEMBL76",
+    "chloroquine_chembl_max_phase": 4,
+    "openfda_label_set_id": "04139607-f7c0-4fe1-a210-ffa5af347d56",
+    "openfda_label_effective_time": "20251009",
+    "chloroquine_label_set_id": "06c69e2b-211b-4746-9f3a-f86d36520570",
+    "note": "Both approved (antimalarial/rheumatic indications). Lysosomal autophagy inhibition is off-label."
+  },
+  "claims": [
+    {"id": "c1",
+     "text": "Direct aneuploidy-selective evidence: a phenotypic screen identified chloroquine - alongside AICAR and 17-AAG - as selectively antiproliferative to aneuploid versus euploid cells; autophagy inhibition is proposed to exploit the proteotoxic/metabolic stress state that aneuploid cells depend on.",
+     "kind": "preclinical", "cites": ["PMID:21315436"], "strength": "direct"},
+    {"id": "c2",
+     "text": "Autophagy inhibition is an active cancer-therapy strategy: chloroquine-class agents sensitise tumour cells to cytotoxic and antiangiogenic therapy, and combined MAPK + autophagy blockade is under clinical translation in RAS-mutant cancers - supporting plausibility of the autophagy-dependence angle in aneuploid clones.",
+     "kind": "preclinical", "cites": ["PMID:23461901", "PMID:34830283"], "strength": "indirect"},
+    {"id": "c3",
+     "text": "Disease link: MVA1 mosaicism means a lifelong stream of new aneuploid cells; a drug class that preferentially impairs aneuploid-cell proliferation could, in principle, trim the aneuploid compartment that seeds the cancer-predisposition phenotype. This is the Axis-C interception hypothesis - plausible, untested in MVA.",
+     "kind": "mechanism", "cites": ["PMID:39169218", "PMID:21315436"], "strength": "indirect"},
+    {"id": "c4",
+     "text": "Counter-considerations: (i) the selective-kill data are cell-line/short-term; chronic systemic autophagy inhibition affects all tissues including those needing autophagy for quality control in a checkpoint-defective child; (ii) aneuploid cancer cells show complex, time-dependent responses to checkpoint/stress perturbation - not simple vulnerability; (iii) no study has tested CQ/HCQ in a BubR1/MVA model.",
+     "kind": "safety", "cites": ["PMID:33505028", "PMID:21315436"], "strength": "indirect"}
+  ],
+  "pediatric": {
+    "label_source": "openFDA drug/label set_id 04139607-f7c0-4fe1-a210-ffa5af347d56 (effective 2025-10-09); hydroxychloroquine sulfate tablets",
+    "boxed_warning": "None on this label.",
+    "approved_pediatric_indication": "Established in pediatric patients only for malaria treatment and prophylaxis, and only >=31 kg because tablets cannot be divided; NOT established for RA/discoid lupus/SLE in children (quoted label fact). Chloroquine label (set_id 06c69e2b-211b-4746-9f3a-f86d36520570) provides weight-based pediatric malaria dosing.",
+    "label_pediatric_dosing_fact": "Malaria prophylaxis >=31 kg: 6.5 mg/kg up to 400 mg weekly (quoted label fact, not advice). No pediatric dosing exists for any chronic indication.",
+    "key_risks": [
+      "Retinal toxicity: label warns of irreversible retinal damage related to CUMULATIVE dose and duration, recommending baseline and ongoing retinal exams - the dominant concern for any chronic chemopreventive use in a young child.",
+      "Cardiomyopathy and ventricular arrhythmias incl. QT prolongation (fatal cases reported); serious skin reactions (SJS/TEN/DRESS); hematologic toxicity (myelosuppression); renal toxicity/phospholipidosis - relevant given nephrocalcinosis phenotype.",
+      "Chronic daily dosing for interception would exceed the cumulative exposure pattern the retinal-toxicity warning is anchored to; any use would need ophthalmologic surveillance from baseline."
+    ],
+    "monitoring": [
+      "Baseline + periodic retinal examination (label recommendation)",
+      "ECG/QT assessment, CBC, renal function",
+      "Cumulative-dose accounting"
+    ]
+  },
+  "testability": {
+    "celegans": {"assay": "san-1 mutant + autophagy-inhibitor exposure", "readout": "embryonic viability, him rate, growth", "expected": "uncertain - autophagy inhibition may stress checkpoint-defective embryos either direction; informative either way", "priority": "medium"},
+    "fibroblasts": {"assay": "HCQ/CQ exposure on MVA patient fibroblasts (mosaic culture = internal euploid control)", "readout": "differential viability of aneuploid vs euploid cells (FISH + live imaging or scDNA-seq after exposure), autophagic flux (LC3-II), micronuclei", "expected": "selective reduction of aneuploid-cell fraction = the direct Axis-C test, uniquely possible in mosaic patient cells", "priority": "high"},
+    "scrnaseq": {"assay": "post-exposure scRNA-seq", "readout": "autophagy/proteotoxic-stress modules; aneuploid-signature cell fraction", "expected": "depletion of aneuploid-signature cells", "priority": "medium"},
+    "supplements": {"assay": "n/a", "readout": "-", "expected": "-", "priority": "n/a"}
+  },
+  "verdict": "shortlist",
+  "verdict_reason": "The only candidate with direct aneuploidy-selective antiproliferative evidence in the founding screen (PMID:21315436), and the only Axis-C drug whose target biology is exactly 'preferentially eliminate aneuploid cells'. The mosaic nature of patient fibroblasts makes the decisive experiment - selective depletion of aneuploid cells in the child's own cell model - directly testable with an internal euploid control. Kept out of the top tier by (i) selectivity shown for chloroquine in short-term cell assays, not validated in vivo or in MVA; (ii) irreversible retinal toxicity with cumulative exposure in a child who would need years of treatment; (iii) autophagy's double-edged role in a checkpoint-defective organism.",
+  "citations": {
+    "PMID:21315436": {"title": "Identification of aneuploidy-selective antiproliferation compounds", "journal": "Cell", "year": 2011, "doi": "10.1016/j.cell.2011.01.017"},
+    "PMID:23461901": {"title": "Autophagy inhibition sensitizes colon cancer cells to antiangiogenic and cytotoxic therapy", "journal": "Clin Cancer Res", "year": 2013, "doi": "10.1158/1078-0432.CCR-12-1542"},
+    "PMID:34830283": {"title": "Clinical Translation of Combined MAPK and Autophagy Inhibition in RAS Mutant Cancer", "journal": "Int J Mol Sci", "year": 2021, "doi": "10.3390/ijms222212402"},
+    "PMID:39169218": {"title": "Mosaic variegated aneuploidy in development, ageing and cancer", "journal": "Nat Rev Genet", "year": 2024, "doi": "10.1038/s41576-024-00762-6"},
+    "PMID:33505028": {"title": "Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition", "journal": "Nature", "year": 2021, "doi": "10.1038/s41586-020-03114-6"}
+  }
+}
