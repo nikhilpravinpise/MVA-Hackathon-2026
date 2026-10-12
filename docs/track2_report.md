@@ -2,7 +2,7 @@
 
 **Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
 **Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
-**Report generated:** 2026-10-12 from commit `641fb3e` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
+**Report generated:** 2026-10-12 from commit `cf35f2d` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
 
 > **This is a hypothesis-generation document for research follow-up, not medical advice.** Every candidate below is an existing approved medicine proposed for laboratory testing first; none should be given to any child on the strength of this report.
 
@@ -110,7 +110,7 @@ Full table and positive controls: [repo:docs/track2/evidence/prism.json].
 
 ### 5.1 Systematic literature screen
 
-> *PENDING - input artifact not yet produced; this section fills on regeneration.*
+50 PubMed queries, logged verbatim with hit counts and screening decisions, returned 1,614 hits (per query, not de-duplicated) -> 264 title/abstract screenings -> 51 distinct papers carried into the dossiers, the programs file and the rejected table. Inclusion rule: an approved medicine (ChEMBL max_phase 4 + openFDA label) or direct mechanistic evidence on BubR1 / SAC / aneuploid-cell biology that maps to one. Supplements were demoted to adjuncts. No MVA-specific drug-treatment paper exists, so every dossier is explicitly mechanistic extrapolation. Query log: [repo:docs/track2/candidates.md].
 
 ### 5.2 Ranked shortlist
 

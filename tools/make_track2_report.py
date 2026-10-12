@@ -365,14 +365,39 @@ def testability_section(t: dict | None, refs: Refs) -> str:
             f"**Decision logic:** {refs.linkify(md_cell(t.get('decision_logic')))}")
 
 
-def screen_section(port: dict | None) -> str:
-    if not port or not port.get("screen"):
+def screen_counts(md_path: Path) -> dict | None:
+    """Recompute the literature-screen flow from the query-log table in
+    candidates.md (section 1), so the report cannot drift from the log."""
+    if not md_path.is_file():
+        return None
+    text = md_path.read_text(encoding="utf-8")
+    sec = text.split("## 1.", 1)[-1].split("\n## ", 1)[0]
+    queries = hits = screened = 0
+    for line in sec.splitlines():
+        c = [x.strip() for x in line.split("|")]
+        if len(c) < 6 or not c[1].isdigit():
+            continue
+        if c[3].isdigit():
+            queries += 1
+            hits += int(c[3])
+        if c[4].isdigit():
+            screened += int(c[4])
+    papers = len(set(re.findall(r"PMID:(\d+)", text)))
+    return {"queries": queries, "hits": hits, "screened": screened, "papers": papers}
+
+
+def screen_section(_port=None) -> str:
+    s = screen_counts(REPO / "docs" / "track2" / "candidates.md")
+    if not s or not s["queries"]:
         return PENDING
-    s = port["screen"]
-    return (f"{s['queries']} PubMed queries (logged verbatim) -> {s['retrieved']} records -> "
-            f"~{s['screened']} screened on title/abstract -> {s['included']} papers carried into the "
-            f"dossiers, plus {s['labels']} openFDA label records and {s['chembl_checks']} ChEMBL approval "
-            f"checks. The full query log is [repo:docs/track2/candidates.md].")
+    return (f"{s['queries']} PubMed queries, logged verbatim with hit counts and screening decisions, "
+            f"returned {s['hits']:,} hits (per query, not de-duplicated) -> {s['screened']} "
+            f"title/abstract screenings -> {s['papers']} distinct papers carried into the dossiers, the "
+            f"programs file and the rejected table. Inclusion rule: an approved medicine (ChEMBL "
+            f"max_phase 4 + openFDA label) or direct mechanistic evidence on BubR1 / SAC / aneuploid-cell "
+            f"biology that maps to one. Supplements were demoted to adjuncts. No MVA-specific "
+            f"drug-treatment paper exists, so every dossier is explicitly mechanistic extrapolation. "
+            f"Query log: [repo:docs/track2/candidates.md].")
 
 
 # ---------------------------------------------------------------- rigor

@@ -75,8 +75,10 @@ demoted to adjuncts per plan section 0.
 | 50 | `san-1 mdf-1 C elegans lifespan` / `mdf-1 mdf-2 ... aneuploidy` | 0 | - | recorded nulls |
 | 51 | (screened from query-2 hit list, no separate query) | - | 1 | BubR1 background review (25964054) |
 
-**Flow:** 1,616 records retrieved across 50 queries -> ~380 screened on
-title/abstract -> 51 papers resolved and carried into dossiers, the programs
+**Flow** (recomputed from the table above by `tools/make_track2_report.py`;
+hit counts are per query and not de-duplicated across queries): 50 queries
+returned 1,614 hits -> 264 title/abstract screenings -> 51 distinct papers
+resolved and carried into dossiers, the programs
 file and the rejection table (plus 9 openFDA label
 records and 14 ChEMBL approval checks). No MVA-specific drug-treatment paper
 exists in the literature (queries 4-5, 7 confirm) - every dossier is therefore
