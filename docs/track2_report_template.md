@@ -8,7 +8,7 @@
 
 ## For the family and patient advocates (plain language)
 
-The child's genome carries two changes in a gene called *BUB1B*. This gene makes a protein, BubR1, that acts like a quality-control inspector during cell division: it holds the process until every chromosome is properly attached, so each new cell gets the right number. One of the child's copies is predicted to make no protein at all; the other makes a protein that is probably present but weaker or less stable. With too little working BubR1, some cells end up with the wrong number of chromosomes - this is "mosaic variegated aneuploidy" (MVA).
+The child's genome carries two changes in a gene called *BUB1B*. This gene makes a protein, BubR1, that acts like a quality-control inspector during cell division: it holds the process until every chromosome is properly attached, so each new cell gets the right number. One of the child's copies is predicted to make no protein at all; the other makes a protein that is probably present but weaker or less stable. With too little working BubR1, some cells end up with the wrong number of chromosomes - this is "mosaic variegated aneuploidy" (MVA). One honest gap sits underneath that sentence: the data we had could not show that the two changes sit on *different* copies rather than the same one. Everything below assumes they are on different copies, because that is the pattern this condition almost always takes, but it was not observed in this child (section 2.3).
 
 We asked three questions, each of which points to medicines that already exist:
 

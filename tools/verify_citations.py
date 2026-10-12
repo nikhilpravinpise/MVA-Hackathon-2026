@@ -91,6 +91,9 @@ RETRACTION_TITLE_PREFIXES = ("retracted:", "retraction:")
 COVERAGE_SKIP_BASENAMES = {"rules_refresh.md", "landscape.md",
                            "form_map.md", "family_summary.md",
                            "status.md", "submission_fields.md",
+                           # internal review notes about this package,
+                           # like the agent_reports they sit beside
+                           "redteam.md", "rubric_self_assessment.md",
                            # byte-identical build artifact of
                            # docs/track2_report.md (pinned by
                            # tests/test_make_track2_report.py): scanning
@@ -457,12 +460,33 @@ def _has_citation(unit: str) -> bool:
                 or _DB_SOURCE_PAT.search(unit))
 
 
+_OPERATIONAL = re.compile(
+    r"\b\d[\d,]*(?:\.\d+)?\s*"
+    r"(?:[KMGT]i?B|bytes?|min(?:ute)?s?|s(?:ec(?:ond)?s?)?|h(?:ou)?rs?"
+    r"|ms|vCPU|CPUs?|GPUs?|workers?|lines?|rows?|files?|tests?|commits?)\b"
+    r"|\$\s*\d|\b\d+\s*(?:MB|GB)\b", re.I)
+
+
+def _is_operational(sentence: str) -> bool:
+    """True when every numeric trigger in the sentence is an engineering
+    measurement (size, runtime, cost, worker count) and nothing in it
+    asserts a mechanism."""
+    if _MECH_VERBS.search(sentence):
+        return False
+    nums = _NUM_UNIT.findall(sentence)
+    if not nums:
+        return bool(_OPERATIONAL.search(sentence))
+    stripped = _OPERATIONAL.sub(" ", sentence)
+    return not _NUM_UNIT.search(stripped)
+
+
 def _trigger_sentences(unit: str) -> list[str]:
     """Sentences in `unit` carrying a number+unit / % / mechanism verb."""
     clean = _strip_code(unit)
     hits = [s for s in _SENTENCE_SPLIT.split(clean)
             if (_NUM_UNIT.search(s) or _MECH_VERBS.search(s))
-            and not s.rstrip().endswith("?")]   # a question asserts nothing
+            and not s.rstrip().endswith("?")    # a question asserts nothing
+            and not _is_operational(s)]         # runtimes/sizes/costs are ours
     if (not hits and not clean.rstrip().endswith(("?", ".", "!"))
             and (_NUM_UNIT.search(clean) or _MECH_VERBS.search(clean))):
         hits = [clean]  # single-line fragment without terminal punctuation

@@ -1,63 +1,134 @@
 {
-  "schema": "t2.dossier/1",
-  "drug": "everolimus",
-  "axis": "B",
-  "approval": {
-    "chembl_id": "CHEMBL1908360",
-    "chembl_max_phase": 4,
-    "chembl_first_approval": 2009,
-    "openfda_label_set_id": "01f7b5fb-be0d-4adf-acd2-6899018de966",
-    "openfda_label_effective_time": "20250905",
-    "note": "Approved mTORC1 inhibitor with genuine pediatric indications (TSC-SEGA >=1y, TSC partial-onset seizures >=2y, oral suspension). The only candidate with an approved pediatric oncology-adjacent indication in a tumour-predisposition syndrome (TSC)."
+ "schema": "t2.dossier/1",
+ "drug": "everolimus",
+ "axis": "B",
+ "approval": {
+  "chembl_id": "CHEMBL1908360",
+  "chembl_max_phase": 4,
+  "chembl_first_approval": 2009,
+  "openfda_label_set_id": "01f7b5fb-be0d-4adf-acd2-6899018de966",
+  "openfda_label_effective_time": "20250905",
+  "note": "Approved mTORC1 inhibitor with genuine pediatric indications (TSC-SEGA >=1y, TSC partial-onset seizures >=2y, oral suspension). The only candidate with an approved pediatric oncology-adjacent indication in a tumour-predisposition syndrome (TSC)."
+ },
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Same senomorphic mechanism as sirolimus: mTORC1 inhibition blunts the pro-inflammatory SASP via translational control of IL1A and MAPKAPK2, dampening senescent-cell paracrine damage without killing the cells.",
+   "kind": "mechanism",
+   "cites": [
+    "PMID:26147250",
+    "PMID:26280535"
+   ],
+   "strength": "indirect"
   },
-  "claims": [
-    {"id": "c1",
-     "text": "Same senomorphic mechanism as sirolimus: mTORC1 inhibition blunts the pro-inflammatory SASP via translational control of IL1A and MAPKAPK2, dampening senescent-cell paracrine damage without killing the cells.",
-     "kind": "mechanism", "cites": ["PMID:26147250", "PMID:26280535"], "strength": "indirect"},
-    {"id": "c2",
-     "text": "Pediatric tumour-predisposition precedent: in the phase 3 EXIST-1 trial, everolimus produced significant SEGA volume reductions versus placebo in children/adults with tuberous sclerosis complex - proof that chronic mTOR inhibition is tolerated and effective in a paediatric cancer-predisposition population.",
-     "kind": "clinical", "cites": ["PMID:23158522"], "strength": "analogy"},
-    {"id": "c3",
-     "text": "Label-reported pediatric tolerability: in EXIST-1/Study 2485 open-label follow-up (115 pediatric patients, median 4.1 years exposure), everolimus did not appear to adversely impact growth and pubertal development - the key reassurance for use in a growth-restricted child, tempered by higher infection rates in patients <6 years (96% any infection, 35% serious infection).",
-     "kind": "clinical", "cites": ["PMID:23158522"], "strength": "analogy",
-     "note": "Growth/puberty statement is from the FDA label pediatric_use text (set_id in approval block), summarised here as a label fact."},
-    {"id": "c4",
-     "text": "Genotype-specific hook shared with sirolimus: mTORC1 hyperactivity correlates with sarcopenia predisposition in monoallelic BubR1-mutant MVA mice.",
-     "kind": "preclinical", "cites": ["PMID:31738183"], "strength": "direct"},
-    {"id": "c5",
-     "text": "Counter-consideration: as with all mTOR inhibitors, immunosuppression reduces tumour immune surveillance; everolimus additionally carries renal-failure and metabolic warnings relevant to a child with nephrocalcinosis, and label advises completing childhood vaccinations before starting treatment.",
-     "kind": "safety", "cites": ["PMID:26147250"], "strength": "indirect",
-     "note": "Renal/metabolic/infection warnings are label facts (set_id in approval block); the immune-surveillance reasoning is ours."}
-  ],
-  "pediatric": {
-    "label_source": "openFDA drug/label set_id 01f7b5fb-be0d-4adf-acd2-6899018de966 (effective 2025-09-05); everolimus tablets and tablets for oral suspension",
-    "boxed_warning": "None on this label.",
-    "approved_pediatric_indication": "TSC-associated SEGA requiring intervention: patients >=1 year. Adjunctive treatment of TSC-associated partial-onset seizures: >=2 years (oral suspension). (Quoted label facts.)",
-    "label_pediatric_dosing_fact": "TSC-SEGA: 4.5 mg/m2 once daily titrated to trough 5-15 ng/mL; TSC partial-onset seizures: 5 mg/m2 once daily, trough 5-15 ng/mL (quoted label facts, not advice).",
-    "key_risks": [
-      "Infections, including serious infections, at higher frequency under age 6 (label: 96% any infection vs 67% in >=6y; 35% serious vs 7%) - immunosuppression concern in a cancer-predisposed child.",
-      "Non-infectious pneumonitis, stomatitis, renal failure (monitor renal function - nephrocalcinosis phenotype), hyperglycaemia/hyperlipidaemia, myelosuppression, impaired wound healing, radiation sensitisation, embryo-fetal toxicity, live-vaccine avoidance.",
-      "No boxed warning on this oncology label, unlike sirolimus's transplant boxed warning - but the same class-level immunosuppression applies."
-    ],
-    "monitoring": [
-      "Trough concentrations (5-15 ng/mL target in labeled uses)",
-      "Renal function, glucose, lipids, CBC",
-      "Infection surveillance; complete childhood vaccinations before initiation (label advice); no live vaccines",
-      "Cancer surveillance"
-    ]
+  {
+   "id": "c2",
+   "text": "Pediatric tumour-predisposition precedent: in the phase 3 EXIST-1 trial, everolimus produced significant SEGA volume reductions versus placebo in children/adults with tuberous sclerosis complex - proof that chronic mTOR inhibition is tolerated and effective in a paediatric cancer-predisposition population.",
+   "kind": "clinical",
+   "cites": [
+    "PMID:23158522"
+   ],
+   "strength": "analogy"
   },
-  "testability": {
-    "celegans": {"assay": "san-1/bub-3 mutant lifespan/growth rescue", "readout": "viability, growth, lifespan", "expected": "as sirolimus; mTOR-pathway conservation makes worm a plausible pharmacodynamic model", "priority": "medium"},
-    "fibroblasts": {"assay": "everolimus exposure on MVA patient fibroblasts", "readout": "SASP cytokines, p-S6, aneuploidy rate, BubR1 level, growth rate", "expected": "SASP suppression; confirm no increase in aneuploidy or growth suppression", "priority": "high"},
-    "scrnaseq": {"assay": "signature reversal", "readout": "SASP/inflammatory modules, mTORC1 signature (e.g. HALLMARK_MTORC1_SIGNALING)", "expected": "mTORC1 module down-shift", "priority": "medium"},
-    "supplements": {"assay": "n/a", "readout": "-", "expected": "-", "priority": "n/a"}
+  {
+   "id": "c3",
+   "text": "Label-reported pediatric tolerability (openFDA set_id 01f7b5fb; the EXIST-1 primary trial is PMID:23158522, whose own exposure was ~1 year): in EXIST-1/Study 2485 open-label follow-up (115 pediatric patients, median 4.1 years exposure), everolimus did not appear to adversely impact growth and pubertal development - the key reassurance for use in a growth-restricted child, tempered by higher infection rates in patients <6 years (96% any infection, 35% serious infection).",
+   "kind": "clinical",
+   "cites": [
+    "PMID:23158522"
+   ],
+   "strength": "analogy",
+   "note": "Growth/puberty statement is from the FDA label pediatric_use text (set_id in approval block), summarised here as a label fact."
   },
-  "verdict": "shortlist",
-  "verdict_reason": "Preferred mTOR-axis candidate over sirolimus for this child: it has real approved pediatric indications in a tumour-predisposition syndrome (TSC-SEGA >=1y; TSC seizures >=2y) with label-reported absence of growth/puberty harm over ~4 years (PMID:23158522 context), where sirolimus has no pediatric approval below 13 and a malignancy boxed warning. Same senomorphic mechanism (PMID:26147250) and the same genotype-specific mTORC1-hyperactivity hook (PMID:31738183). Residual concerns: immunosuppression in a cancer-predisposed child, renal function monitoring given nephrocalcinosis, and higher infection rates under age 6.",
-  "citations": {
-    "PMID:26147250": {"title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation", "journal": "Nat Cell Biol", "year": 2015, "doi": "10.1038/ncb3195"},
-    "PMID:26280535": {"title": "mTOR regulates MAPKAPK2 translation to control the senescence-associated secretory phenotype", "journal": "Nat Cell Biol", "year": 2015, "doi": "10.1038/ncb3225"},
-    "PMID:23158522": {"title": "Efficacy and safety of everolimus for subependymal giant cell astrocytomas associated with tuberous sclerosis complex (EXIST-1): a multicentre, randomised, placebo-controlled phase 3 trial", "journal": "Lancet", "year": 2013, "doi": "10.1016/S0140-6736(12)61134-9"},
-    "PMID:31738183": {"title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome", "journal": "J Clin Invest", "year": 2020, "doi": "10.1172/JCI126863"}
+  {
+   "id": "c4",
+   "text": "Genotype-specific hook shared with sirolimus: mTORC1 hyperactivity correlates with sarcopenia predisposition in monoallelic BubR1-mutant MVA mice.",
+   "kind": "preclinical",
+   "cites": [
+    "PMID:31738183"
+   ],
+   "strength": "direct"
+  },
+  {
+   "id": "c5",
+   "text": "Counter-consideration: as with all mTOR inhibitors, immunosuppression reduces tumour immune surveillance; everolimus additionally carries renal-failure and metabolic warnings relevant to a child with nephrocalcinosis, and label advises completing childhood vaccinations before starting treatment.",
+   "kind": "safety",
+   "cites": [
+    "PMID:26147250"
+   ],
+   "strength": "indirect",
+   "note": "Renal/metabolic/infection warnings are label facts (set_id in approval block); the immune-surveillance reasoning is ours."
   }
+ ],
+ "pediatric": {
+  "label_source": "openFDA drug/label set_id 01f7b5fb-be0d-4adf-acd2-6899018de966 (effective 2025-09-05); everolimus tablets and tablets for oral suspension",
+  "boxed_warning": "None on this label.",
+  "approved_pediatric_indication": "TSC-associated SEGA requiring intervention: patients >=1 year. Adjunctive treatment of TSC-associated partial-onset seizures: >=2 years (oral suspension). (Quoted label facts.)",
+  "label_pediatric_dosing_fact": "TSC-SEGA: 4.5 mg/m2 once daily titrated to trough 5-15 ng/mL; TSC partial-onset seizures: 5 mg/m2 once daily, trough 5-15 ng/mL (quoted label facts, not advice).",
+  "key_risks": [
+   "Infections, including serious infections, at higher frequency under age 6 (label: 96% any infection vs 67% in >=6y; 35% serious vs 7%) - immunosuppression concern in a cancer-predisposed child.",
+   "Non-infectious pneumonitis, stomatitis, renal failure (monitor renal function - nephrocalcinosis phenotype), hyperglycaemia/hyperlipidaemia, myelosuppression, impaired wound healing, radiation sensitisation, embryo-fetal toxicity, live-vaccine avoidance.",
+   "No boxed warning on this oncology label, unlike sirolimus's transplant boxed warning - but the same class-level immunosuppression applies."
+  ],
+  "monitoring": [
+   "Trough concentrations (5-15 ng/mL target in labeled uses)",
+   "Renal function, glucose, lipids, CBC",
+   "Infection surveillance; complete childhood vaccinations before initiation (label advice); no live vaccines",
+   "Cancer surveillance"
+  ]
+ },
+ "testability": {
+  "celegans": {
+   "assay": "san-1/bub-3 mutant lifespan/growth rescue",
+   "readout": "viability, growth, lifespan",
+   "expected": "as sirolimus; mTOR-pathway conservation makes worm a plausible pharmacodynamic model",
+   "priority": "medium"
+  },
+  "fibroblasts": {
+   "assay": "everolimus exposure on MVA patient fibroblasts",
+   "readout": "SASP cytokines, p-S6, aneuploidy rate, BubR1 level, growth rate",
+   "expected": "SASP suppression; confirm no increase in aneuploidy or growth suppression",
+   "priority": "high"
+  },
+  "scrnaseq": {
+   "assay": "signature reversal",
+   "readout": "SASP/inflammatory modules, mTORC1 signature (e.g. HALLMARK_MTORC1_SIGNALING)",
+   "expected": "mTORC1 module down-shift",
+   "priority": "medium"
+  },
+  "supplements": {
+   "assay": "n/a",
+   "readout": "-",
+   "expected": "-",
+   "priority": "n/a"
+  }
+ },
+ "verdict": "shortlist",
+ "verdict_reason": "Preferred mTOR-axis candidate over sirolimus for this child: it has real approved pediatric indications in a tumour-predisposition syndrome (TSC-SEGA >=1y; TSC seizures >=2y) with label-reported absence of growth/puberty harm over ~4 years (PMID:23158522 context), where sirolimus has no pediatric approval below 13 and a malignancy boxed warning. Same senomorphic mechanism (PMID:26147250) and the same genotype-specific mTORC1-hyperactivity hook (PMID:31738183). Residual concerns: immunosuppression in a cancer-predisposed child, renal function monitoring given nephrocalcinosis, and higher infection rates under age 6.",
+ "citations": {
+  "PMID:26147250": {
+   "title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation",
+   "journal": "Nat Cell Biol",
+   "year": 2015,
+   "doi": "10.1038/ncb3195"
+  },
+  "PMID:26280535": {
+   "title": "mTOR regulates MAPKAPK2 translation to control the senescence-associated secretory phenotype",
+   "journal": "Nat Cell Biol",
+   "year": 2015,
+   "doi": "10.1038/ncb3225"
+  },
+  "PMID:23158522": {
+   "title": "Efficacy and safety of everolimus for subependymal giant cell astrocytomas associated with tuberous sclerosis complex (EXIST-1): a multicentre, randomised, placebo-controlled phase 3 trial",
+   "journal": "Lancet",
+   "year": 2013,
+   "doi": "10.1016/S0140-6736(12)61134-9"
+  },
+  "PMID:31738183": {
+   "title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome",
+   "journal": "J Clin Invest",
+   "year": 2020,
+   "doi": "10.1172/JCI126863"
+  }
+ }
 }

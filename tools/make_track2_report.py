@@ -108,6 +108,16 @@ def md_cell(s) -> str:
     return str(s if s is not None else "").replace("|", "/").replace("\n", " ")
 
 
+def clip(text: str, limit: int) -> str:
+    """Trim to `limit` on a word boundary. Mid-word truncation ('(Quot',
+    'RA/discoid') is visible in the submitted table and reads as a bug."""
+    text = md_cell(text)
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:-(")
+    return cut + " ..."
+
+
 # ---------------------------------------------------------------- mechanism
 
 def allele_table(m: dict | None, refs: Refs) -> str:
@@ -225,6 +235,30 @@ def _ped(x: dict) -> str:
     return "label text" if (x.get("approval") or {}).get("pediatric_labeling") else "-"
 
 
+def _merged(f: dict) -> int:
+    """Collected names minus the four gate outcomes: synonyms that mapped
+    onto a ChEMBL id another candidate already held. Printed so the funnel
+    sentence adds up instead of leaving a reader 13 short."""
+    return max(0, (f.get("collected") or 0)
+               - sum(f.get(k) or 0 for k in ("gated_in", "gated_out_phase",
+                                             "gated_out_withdrawn", "gated_out_unresolved")))
+
+
+def _salt_forms(cands: list[dict]) -> list[str]:
+    """Approved entries that are a salt/ester of another entry's active
+    moiety, by name ('metformin hydrochloride' vs 'metformin')."""
+    bases = {c["drug"].lower() for c in cands}
+    out = []
+    for c in cands:
+        n = c["drug"].lower()
+        for suffix in (" hydrochloride", " sulfate", " phosphate", " anhydrous",
+                       " mepesuccinate", " acetate", " maleate", " mesylate"):
+            if n.endswith(suffix) and n[: -len(suffix)] in bases:
+                out.append(c["drug"])
+                break
+    return sorted(out)
+
+
 def engine_section(c: dict | None, refs: Refs) -> str:
     if not c:
         return PENDING
@@ -238,7 +272,8 @@ def engine_section(c: dict | None, refs: Refs) -> str:
             f"interactions -> {f.get('collected')} distinct drug names -> approval gate: "
             f"{f.get('gated_in')} approved, {f.get('gated_out_phase')} not phase 4, "
             f"{f.get('gated_out_withdrawn')} withdrawn, {f.get('gated_out_unresolved')} unresolvable "
-            f"names (investigational codes or non-drug entities, counted rather than guessed). "
+            f"names (investigational codes or non-drug entities, counted rather than guessed; "
+            f"{_merged(f)} further names resolved onto a ChEMBL id another candidate already held). "
             f"LINCS L1000 reversal: status `{lincs.get('status')}`, {lincs.get('n_reversers')} reversers "
             f"on `{lincs.get('library')}` [repo:docs/track2/evidence/candidates.json].")
     if opposed:
@@ -257,11 +292,22 @@ def engine_section(c: dict | None, refs: Refs) -> str:
         tail = ("\n\nTop mechanism-opposed exclusions (would-be rank, rule): " + "; ".join(
             f"{md_cell(x['drug'])} (#{x.get('rank_before_direction', '?')}, "
             f"{md_cell(', '.join(x.get('direction_reasons') or []))})" for x in opposed[:8]) + ".")
-    return (head + "\n\n" + "\n".join(rows) + tail +
+    salts = _salt_forms(cands + opposed)
+    salt_note = ""
+    if salts:
+        salt_note = (f" The {f.get('gated_in')} approved entries include {len(salts)} salt or ester "
+                     f"forms of an active already counted ({md_cell(', '.join(salts))}), so the "
+                     f"distinct active count is {(f.get('gated_in') or 0) - len(salts)}.")
+    return (head + "\n\n" + "\n".join(rows) + tail + salt_note +
             "\n\nThe engine ranks *evidence density*, not suitability for this child: databases "
             "over-represent oncology, so the curated layer (section 5) and the pediatric facts decide "
-            "the portfolio. Full output incl. every evidence channel: "
-            "[repo:docs/track2/evidence/candidates.json].")
+            "the portfolio. What the engine does establish is twofold: it independently reaches the "
+            "mTOR axis (sirolimus and everolimus are its top mechanism-aligned hits) without being "
+            "told to, and it produces the exclusion receipt - the named list of approved drugs that "
+            "the mechanism forbids here, which is the part a hand-written shortlist cannot show. Two "
+            "of the four leads lie outside its reach entirely (section 5.2), which is the measured "
+            "limit of target-network repurposing, not a result we hide. Full output incl. every "
+            "evidence channel: [repo:docs/track2/evidence/candidates.json].")
 
 
 RECALL_KEYS = ("recall_at_1", "recall_at_5", "recall_at_10", "recall_at_25")
@@ -289,7 +335,8 @@ def benchmark_section(b: dict | None, refs: Refs) -> str:
         v1s = (" (frozen pre-direction-layer run: "
                + " / ".join(f"{v1[k]:.2f}" for k in RECALL_KEYS if k in v1) + ")")
     return (f"The identical pipeline, run blind on {b.get('n_cases')} genes whose approved repurposed or "
-            f"targeted drug is established (truth committed in `config/track2.yaml` before the run; the "
+            f"targeted drug is established (the truth list is declared in `config/track2.yaml`, which "
+            f"the engine reads at run time and whose hash it records in the output; the "
             f"drug is never seeded). **recall@1 / @5 / @10 / @25 = {rec}**{v1s} "
             f"[repo:docs/track2/evidence/benchmark.json].\n\n" + "\n".join(rows) +
             "\n\n**Reading it honestly.** Every miss is structural: the known drug acts on a target "
@@ -401,7 +448,7 @@ def shortlist_table(port: dict | None, refs: Refs, cands: dict | None = None) ->
         rows.append(
             f"| {item['rank']} | **{md_cell(item['label'])}** | {md_cell(AXIS_NAME.get(d.get('axis'), d.get('axis')))} | "
             f"ChEMBL max_phase {ap.get('chembl_max_phase')}, first approval {ap.get('chembl_first_approval', '-')}; "
-            f"openFDA set_id `{str(ap.get('openfda_label_set_id', ''))[:8]}` | {md_cell(ped)[:160]} | "
+            f"openFDA set_id `{str(ap.get('openfda_label_set_id', ''))[:8]}` | {clip(ped, 160)} | "
             f"{md_cell(item.get('grade'))} | {md_cell(engine_rank(item.get('engine_drugs') or [], cands))} |")
     return "\n".join(rows)
 

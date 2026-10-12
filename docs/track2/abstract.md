@@ -15,11 +15,13 @@ evidence from Open Targets, ChEMBL and DGIdb, keeps only approved medicines
 (ChEMBL max_phase 4, not withdrawn, openFDA label present), scores network
 proximity, and queries LINCS L1000 signature reversal. On BUB1B it collected
 482 drug names and ranked 96 approved candidates
-[repo:docs/track2/evidence/candidates.json]. Run blind on 9 genes with
-established genotype-to-drug answers declared before the run, the identical
-pipeline recovered the known drug at recall@1/5/10/25 of 0.00/0.33/0.44/0.56
-- an honest floor, since every miss was a drug acting outside the disease
-module [repo:docs/track2/evidence/benchmark.json]. Two independent
+[repo:docs/track2/evidence/candidates.json]. Run blind on 9 genes whose
+genotype-to-drug answer is established and declared in the frozen config the
+engine reads, the identical pipeline recovered the known drug at
+recall@1/5/10/25 of 0.00/0.33/0.56/0.56 (0.00/0.33/0.44/0.56 before the
+mechanism-direction layer, which removed an opposed drug ranked above one
+known answer) - an honest floor, since every miss was a drug acting outside
+the disease module [repo:docs/track2/evidence/benchmark.json]. Two independent
 computational checks tempered the literature: our PRISM 19Q4 re-analysis of
 588 launched compounds found no FDR-significant aneuploidy-selective
 approved drug (minimum q = 0.069) [repo:docs/track2/evidence/prism.json],
@@ -54,4 +56,4 @@ pharmacogenomics is not a child's tissue; and pediatric label facts bound,
 but do not settle, safety. This is a hypothesis-generation method for
 laboratory follow-up, not medical advice.
 
-Word count: 444
+Word count: 451 (body only; excludes the heading and the [repo:...] artifact markers, which are pointers rather than prose. The form's limit is 500.)

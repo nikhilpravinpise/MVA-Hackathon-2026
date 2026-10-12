@@ -182,9 +182,11 @@ contraindication below.
   and the protective effect on muscle/fat (PMID:20123995, 23602569).
 - **Growth hormone for short stature** - guidance flags caution in
   chromosomal-breakage/DNA-repair syndromes owing to malignancy risk;
-  counter-evidence: the largest childhood-cancer-survivor cohort found no
-  significant second-neoplasm increase on GH, so this is precautionary,
-  stated as such (PMID:30500870, 32738133).
+  counter-evidence: a later French childhood-cancer-survivor cohort (196
+  GH-treated, ~26 y follow-up) found no significant second-neoplasm
+  increase on GH, where the larger CCSS analysis did report an elevated
+  rate ratio, so this is precautionary and the evidence is mixed, stated
+  as such (PMID:30500870, 32738133, 16822820).
 - **Antimitotic/aneugen exposures** - chronic mis-segregation inducers
   run opposite to the therapeutic goal (PMID:20516114, 15475955).
 
