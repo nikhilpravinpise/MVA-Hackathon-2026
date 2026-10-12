@@ -6,9 +6,10 @@
   "approval": {
     "chembl_id": "CHEMBL573 (niacin), CHEMBL1140 (niacinamide)",
     "chembl_max_phase": 4,
+    "chembl_first_approval": 1982,
     "openfda_label_set_id": "bf287412-160b-403f-8eb4-57f29a475902",
     "openfda_label_effective_time": "20211223",
-    "note": "NIACOR (nicotinic acid) label queried; approved for hypercholesterolemia adjunct therapy. NAD-restoration use is off-label."
+    "note": "NIACOR (nicotinic acid) label queried; approved for hypercholesterolemia adjunct therapy. NAD-restoration use is off-label. ChEMBL records first_approval 1982 for both CHEMBL573 (niacin) and CHEMBL1140 (niacinamide), live-checked 2026-10-13 - a registry value, since these vitamins predate modern approval records."
   },
   "claims": [
     {"id": "c1",

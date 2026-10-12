@@ -38,6 +38,7 @@
     "label_source": "openFDA drug/label set_id 02b04c6f-4ea5-4fcb-bf6d-2631d5ab31e4 (effective 2026-03-05); dasatinib tablets",
     "boxed_warning": "None on this label.",
     "approved_pediatric_indication": "Pediatric patients 1 year of age and older: Ph+ CML in chronic phase; newly diagnosed Ph+ ALL in combination with chemotherapy (quoted label fact).",
+    "engine_flag_note": "candidates.json reports pediatric_flag 'none' for 'dasatinib anhydrous'. That flag reads only the openFDA pediatric_use field, which is absent on the label record the name resolved to - the >=1y pediatric indication above is stated in the label's Indications and Usage (section 1) instead (set_id 02b04c6f, live-checked 2026-10-13). This dossier's pediatric block, not the engine flag, is authoritative.",
     "label_pediatric_dosing_fact": "Label Table 1 starting dose by body weight, once daily (quoted label fact, not advice): 10-<20 kg 40 mg; 20-<30 kg 60 mg; 30-<45 kg 70 mg; >=45 kg 100 mg; tablets not recommended <10 kg.",
     "key_risks": [
       "Label section 5.10 'Effects on Growth and Development in Pediatric Patients': epiphyses delayed fusion, osteopenia, growth retardation and gynecomastia reported; label advises monitoring bone growth and development. Directly relevant to a child with short stature and failure to thrive.",

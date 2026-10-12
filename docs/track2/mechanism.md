@@ -85,8 +85,8 @@ but REVEL is middling and the exact-missense ClinVar record is thin (see
 uncertainties).
 
 **Structural context (AlphaFold DB v6 model, parsed locally).** pLDDT at
-N1002 = 91.1 (high confidence). The residue has 27 residues within 8 A
-(all-atom) / 8 by CA - a contact number at the 54th percentile of the
+N1002 = 91.06 (high confidence). The residue has 27 residues within 8 A
+(all-atom) / 8 by CA - a contact number at the 53.7th percentile of the
 pseudokinase domain, i.e. a **partially packed surface site** on the
 C-lobe near the C-terminus. Introducing a charged Lys here plausibly
 perturbs local packing rather than ablating a binding hot-spot -
@@ -148,7 +148,8 @@ contraindication below.
 
 ## 5. Therapeutic implications (feeding lanes L2/L3)
 
-1. **Residual-allele rescue** - the missense allele is the only functional
+1. **Residual-allele rescue** [repo:docs/track2/evidence/mechanism.json] -
+   the missense allele is the only functional
    copy; raising its abundance/stability is disease-modifying. BubR1 is
    pharmacologically tractable: SIRT2 maintains BubR1 (K668
    deacetylation; falls with age-related NAD+ decline; NMN or SIRT2

@@ -79,8 +79,10 @@ demoted to adjuncts per plan section 0.
 hit counts are per query and not de-duplicated across queries): 50 queries
 returned 1,614 hits -> 264 title/abstract screenings -> 51 distinct papers
 resolved and carried into dossiers, the programs
-file and the rejection table (plus 9 openFDA label
-records and 14 ChEMBL approval checks). No MVA-specific drug-treatment paper
+file and the rejection table (row 51 screened one extra paper from query 2's
+hit list without a new query). Per-candidate approval checks are recorded in
+the dossiers and rejection table: 8 openFDA label set_ids and 18 distinct
+ChEMBL molecule ids. No MVA-specific drug-treatment paper
 exists in the literature (queries 4-5, 7 confirm) - every dossier is therefore
 explicitly mechanistic extrapolation, stated as such.
 
@@ -88,8 +90,8 @@ explicitly mechanistic extrapolation, stated as such.
 
 | Rank | Candidate | Axis | Why | Key caveat |
 |---|---|---|---|---|
-| 1 | **dasatinib + quercetin** (D+Q, senolytic) | B | The only candidate whose anchor experiment was run in the literal disease model: clearing p16+ senescent cells rescued the BubR1-hypomorph mouse phenotype (PMID:22048312); human senescent-cell clearance demonstrated (PMID:31542391). Approved drug (dasatinib, CHEMBL5416410 ph4, pediatric label >=1y Ph+ CML/ALL) + supplement adjunct (quercetin). | Label warns of pediatric growth retardation/osteopenia - in a child already failing to thrive. Senescence is also tumour-suppressive. |
-| 2 | **everolimus** (senomorphic mTOR) | B | Best regulatory path: approved in children >=1y (TSC-SEGA) and >=2y (TSC seizures) inside a tumour-predisposition syndrome, with label-reported absence of growth/puberty harm over ~4y (EXIST-1, PMID:23158522). Direct senomorphic mechanism (PMID:26147250) + genotype hook: mTORC1 hyperactivity tracks MVA-mouse sarcopenia (PMID:31738183). | Immunosuppression in a cancer-predisposed child; infection rates higher <6y; renal monitoring (nephrocalcinosis). |
+| 1 | **dasatinib + quercetin** (D+Q, senolytic) | B | Anchored in the literal disease model: clearing p16+ senescent cells rescued the BubR1-hypomorph mouse phenotype (PMID:22048312); the only candidate class with human senescent-burden-reduction evidence (PMID:31542391). Approved drug (dasatinib, CHEMBL5416410 ph4, pediatric label >=1y Ph+ CML/ALL) + supplement adjunct (quercetin). | Label warns of pediatric growth retardation/osteopenia - in a child already failing to thrive. Senescence is also tumour-suppressive. |
+| 2 | **everolimus** (senomorphic mTOR) | B | Best regulatory path: approved in children >=1y (TSC-SEGA) and >=2y (TSC seizures) inside a tumour-predisposition syndrome, with label-reported absence of growth/puberty harm over a median 4.1 years of pediatric exposure (openFDA set_id 01f7b5fb; the EXIST-1 primary trial it builds on is PMID:23158522). Direct senomorphic mechanism (PMID:26147250) + genotype hook: mTORC1 hyperactivity tracks MVA-mouse sarcopenia (PMID:31738183). | Immunosuppression in a cancer-predisposed child; infection rates higher <6y; renal monitoring (nephrocalcinosis). |
 | 3 | **niacin / nicotinamide** (approved NAD+ precursors) | A | Only Axis-A candidate - aims to raise residual BubR1 output rather than manage damage: NAD+/SIRT2 raises BubR1 in vivo and extended lifespan specifically in BubR1-hypomorphs (PMID:24825348; BubR1-conditional benefit confirmed PMID:38009412). Approved forms (CHEMBL573/1140 ph4). Fits the MVA Society supplements program direction. | The anchor used NMN - a supplement; extrapolation to niacin/nicotinamide is indirect. Nicotinamide itself inhibits sirtuins (PMID:12297502) - form choice is unresolved. No pediatric approval. |
 | 4 | **hydroxychloroquine** (+chloroquine) | C | Only candidate with direct aneuploidy-selective kill data (PMID:21315436); the mosaic fibroblast test is decisive and cheap. Approved (CHEMBL1535 ph4). | Selectivity shown in cell lines only; irreversible retinal toxicity with cumulative dose; autophagy is double-edged in a checkpoint-defective child. |
 
@@ -108,12 +110,12 @@ the non-drug intervention most defensible today.
 
 | Candidate | Approval (live check) | Mechanism in disease model | Preclinical | Human | Grade |
 |---|---|---|---|---|---|
-| D+Q | dasatinib ph4 + ped label; quercetin adjunct | direct: BubR1-H/H senolysis rescued phenotype (22048312) | strong | senescent-cell clearance in humans (31542391), feasibility in IPF (30616998) | moderate+ |
-| everolimus | ph4, pediatric TSC indications | indirect: mTORC1 hyperactivity in MVA mice (31738183) | moderate (SASP mechanism 26147250) | pediatric TSC RCT (23158522, different disease) | moderate |
-| niacin/nicotinamide | ph4 (lipid/vitamin indications) | direct-ish: NAD/SIRT2 raises BubR1, rescues hypomorph lifespan (24825348, 38009412) | moderate | NAD reviews in progeroid/DNA-repair disease (41436848; not MVA) | moderate- |
-| HCQ/CQ | ph4 | indirect: aneuploidy-selective kill (21315436, non-MVA cells) | moderate | none for this purpose | low-moderate |
-| metformin | ph4, pediatric T2DM >=10y | indirect: SASP suppression (23521863); AICAR analogy (21315436) | weak-moderate | none relevant | low-moderate |
-| aspirin | ph4 (OTC) | indirect: tetraploid elimination (24516128) | moderate | CAPP2 RCT, different syndrome+endpoint (32534647) | low-moderate |
+| D+Q | dasatinib ph4 + ped label; quercetin adjunct | direct: BubR1-H/H senolysis rescued phenotype (PMID:22048312) | strong | senescent-cell clearance in humans (PMID:31542391), feasibility in IPF (PMID:30616998) | moderate+ |
+| everolimus | ph4, pediatric TSC indications | indirect: mTORC1 hyperactivity in MVA mice (PMID:31738183) | moderate (SASP mechanism PMID:26147250) | pediatric TSC RCT (PMID:23158522, different disease) | moderate |
+| niacin/nicotinamide | ph4 (lipid/vitamin indications) | direct-ish: NAD/SIRT2 raises BubR1, rescues hypomorph lifespan (PMID:24825348, PMID:38009412) | moderate | NAD reviews in progeroid/DNA-repair disease (PMID:41436848; not MVA) | moderate- |
+| HCQ/CQ | ph4 | indirect: aneuploidy-selective kill (PMID:21315436, non-MVA cells) | moderate | none for this purpose | low-moderate |
+| metformin | ph4, pediatric T2DM >=10y | indirect: SASP suppression (PMID:23521863); AICAR analogy (PMID:21315436) | weak-moderate | none relevant | low-moderate |
+| aspirin | ph4 (OTC) | indirect: tetraploid elimination (PMID:24516128) | moderate | CAPP2 RCT, different syndrome+endpoint (PMID:32534647) | low-moderate |
 
 "Grade" here is an honesty label for evidence distance to the MVA use-case,
 not clinical readiness: nothing above low-moderate, because no MVA-specific
@@ -121,15 +123,15 @@ drug study exists at all.
 
 ## 4. Safety synthesis (child-specific)
 
-| Drug | Label pediatric status | Dominant risk for THIS phenotype |
+| Drug | Label pediatric status (label record cited in dossier) | Dominant risk for THIS phenotype |
 |---|---|---|
-| dasatinib | approved >=1y Ph+ CML/ALL | growth retardation/osteopenia (label 5.10) stacked on short stature/FTT; myelosuppression/bleeding |
-| sirolimus | NOT established <13y; BOXED WARNING malignancy | immunosuppression + lymphoma/malignancy risk vs cancer predisposition; renal decline vs nephrocalcinosis |
-| everolimus | approved >=1y TSC-SEGA, >=2y TSC seizures | infections (esp. <6y), renal failure monitoring, metabolic; same class immunosuppression minus boxed warning |
-| metformin | approved >=10y T2DM | lactic-acidosis boxed warning gated by renal function (nephrocalcinosis); B12 loss vs FTT; in-vitro SAC/genotoxic signal at mM doses (35568294) |
-| HCQ/CQ | pediatric only for malaria >=31kg | cumulative irreversible retinal toxicity; cardiomyopathy/QT; renal phospholipidosis |
-| niacin | not established in children | hepatotoxicity/hyperglycaemia/hyperuricaemia at pharmacologic doses; sirtuin-inhibition paradox for nicotinamide |
-| aspirin | no pediatric chronic use; Reye's warning | Reye's syndrome, GI bleeding, antiplatelet interactions |
+| dasatinib | approved >=1y Ph+ CML/ALL [repo:docs/track2/evidence/dossiers/dasatinib.json] | growth retardation/osteopenia (label 5.10) stacked on short stature/FTT; myelosuppression/bleeding |
+| sirolimus | NOT established <13y; BOXED WARNING malignancy [repo:docs/track2/evidence/dossiers/sirolimus.json] | immunosuppression + lymphoma/malignancy risk vs cancer predisposition; renal decline vs nephrocalcinosis |
+| everolimus | approved >=1y TSC-SEGA, >=2y TSC seizures [repo:docs/track2/evidence/dossiers/everolimus.json] | infections (esp. <6y), renal failure monitoring, metabolic; same class immunosuppression minus boxed warning |
+| metformin | approved >=10y T2DM [repo:docs/track2/evidence/dossiers/metformin.json] | lactic-acidosis boxed warning gated by renal function (nephrocalcinosis); B12 loss vs FTT; in-vitro SAC/genotoxic signal at mM doses (PMID:35568294) |
+| HCQ/CQ | pediatric only for malaria >=31kg [repo:docs/track2/evidence/dossiers/hydroxychloroquine.json] | cumulative irreversible retinal toxicity; cardiomyopathy/QT; renal phospholipidosis |
+| niacin | not established in children [repo:docs/track2/evidence/dossiers/nicotinamide.json] | hepatotoxicity/hyperglycaemia/hyperuricaemia at pharmacologic doses; sirtuin-inhibition paradox for nicotinamide |
+| aspirin | no pediatric chronic use; Reye's warning [repo:docs/track2/evidence/dossiers/aspirin.json] | Reye's syndrome, GI bleeding, antiplatelet interactions |
 
 Cross-cutting: the AACR workshop update notes genomic-instability disorders can
 show exquisite sensitivity to radiation/chemotherapy (PMID:39264246) - any
@@ -139,22 +141,25 @@ benzimidazoles) deserves extra caution.
 ## 5. Testability summary (see testability.json)
 
 Decisive, cheapest first: **patient-fibroblast panel** (T1, 2-6 weeks, internal
-euploid control). Per-lead critical experiment:
+euploid control; thresholds per
+[repo:docs/track2/evidence/testability.json]). Per-lead critical experiment:
 - D+Q: does intermittent exposure cut p16/SA-beta-gal burden without raising
-  aneuploidy? GO >=50% senescent-fraction reduction.
+  aneuploidy? GO >=50% senescent-fraction reduction
+  [repo:docs/track2/evidence/testability.json].
 - everolimus: does p-S6/SASP fall without proliferation loss? GO >=30% SASP,
-  <20% proliferation slowdown.
-- niacin/nicotinamide: does BubR1 protein rise (Axis-A PD marker)? GO >=1.3x,
-  niacin-vs-nicotinamide head-to-head resolves the form question.
+  <20% proliferation slowdown
+  [repo:docs/track2/evidence/testability.json].
+- niacin/nicotinamide: does BubR1 protein rise (Axis-A PD marker)? GO >=1.3x - a niacin-vs-nicotinamide head-to-head resolves the form question [repo:docs/track2/evidence/testability.json].
 - HCQ: does the aneuploid fraction fall preferentially (the PMID:21315436
-  mechanism on the child's own cells)? GO >=2-fold selective depletion.
+  mechanism on the child's own cells)? GO >=2-fold selective depletion
+  [repo:docs/track2/evidence/testability.json].
 Universal NO-GO: any candidate raising aneuploidy rate/micronuclei on patient
 cells is out regardless of other benefits. Worm program (san-1/bub-3) gives
 cheap whole-organism confirmation; scRNA-seq quantifies signature reversal.
 
 ## 6. What would make us wrong
 
-- **D+Q**: We are wrong if the INK-ATTAC rescue depended on genetic targeting
+- **D+Q**: We are wrong if the INK-ATTAC rescue (PMID:22048312) depended on genetic targeting
   rather than cell removal (i.e., pharmacologic senolysis fails to reproduce
   it in BubR1-defective cells), if the child's senescent compartment is
   protective (holding aneuploid clones arrested) so clearing it accelerates
@@ -193,6 +198,14 @@ cheap whole-organism confirmation; scRNA-seq quantifies signature reversal.
 5. The worm model species/assay is inferred, not confirmed (see
    mva_programs.json).
 6. Cost tiers are order-of-magnitude estimates for planning, not quotes.
+7. The engine's `pediatric_flag` in candidates.json is a coarse lookup
+   artifact with known false negatives: it reads only the openFDA
+   `pediatric_use` field of whatever label record the drug name resolved
+   to, so 'dasatinib anhydrous' shows `none` (the >=1y indication sits in
+   Indications and Usage, not pediatric_use) and 'metformin' shows `none`
+   (name resolved to the ZITUVIMET combination label). The dossier
+   pediatric blocks above, each tied to a recorded set_id, are
+   authoritative.
 
 ## Citations
 

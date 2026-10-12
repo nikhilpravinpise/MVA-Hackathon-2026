@@ -30,6 +30,7 @@
     "label_source": "openFDA drug/label set_id 05d4df4b-dfe8-4828-b423-a3d4f2c4114a (effective 2018-12-06); RIOMET (metformin HCl oral solution)",
     "boxed_warning": "LACTIC ACIDOSIS: postmarketing cases have resulted in death, hypothermia, hypotension and resistant bradyarrhythmias; risk factors include renal impairment, contrast studies, surgery, hypoxic states, hepatic impairment. Contraindicated at eGFR <30 mL/min/1.73m2; not recommended at eGFR 30-45.",
     "approved_pediatric_indication": "Type 2 diabetes mellitus in pediatric patients 10 years of age and older (10-16 studied); safety/effectiveness not established below 10 years (quoted label fact).",
+    "engine_flag_note": "candidates.json reports pediatric_flag 'none' for both metformin entries. The engine's openFDA query resolved the ZITUVIMET sitagliptin/metformin combination-product label, whose section 8.4 text states 'not established' - a label-name-matching miss. The single-agent RIOMET label recorded above (set_id 05d4df4b, live-checked 2026-10-13) carries the established >=10y T2DM indication and is authoritative here.",
     "label_pediatric_dosing_fact": "Pediatric (>=10y) start 500 mg twice daily with meals, titrate weekly to max 2,000 mg/day (quoted label fact, not advice).",
     "key_risks": [
       "Lactic-acidosis boxed warning: nephrocalcinosis in the HPO profile makes renal function the gating safety question; label mandates eGFR assessment before and during use and discontinuation below eGFR 30.",
