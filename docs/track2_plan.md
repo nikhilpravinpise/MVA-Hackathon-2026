@@ -151,6 +151,10 @@ Track 1).
 - Operator action (one command, browser login):
   `! modal token new --profile track2` (adds a profile to `~/.modal.toml`;
   the existing `nikhilpise2006` profile stays active).
+- **Done 2026-10-12:** profile `track2` -> workspace `nikhilpise69` (empty:
+  0 apps, 0 volumes). `modal token new` made `track2` the active profile in
+  `~/.modal.toml`; the Track 1 profile `nikhilpise2006` remains available
+  (its volumes were already wiped).
 - Every Track 2 Modal command runs with `MODAL_PROFILE=track2` set
   explicitly; the active profile is not changed.
 - **Public data only** on this account: PRISM/DepMap downloads, ESM weights,
