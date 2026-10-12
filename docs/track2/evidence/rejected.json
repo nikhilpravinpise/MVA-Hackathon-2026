@@ -7,9 +7,9 @@
     {
       "drug": "recombinant human growth hormone (somatropin)",
       "category": "contraindicated-by-phenotype",
-      "approval_status": "approved (ChEMBL max_phase 4 class) - approval not the issue",
-      "reason": "Tempting target for the child's short stature/failure-to-thrive phenotype, but it treats a symptom while stimulating proliferation in a cancer-predisposition syndrome. In the Childhood Cancer Survivor Study, GH-treated survivors had a second-neoplasm rate ratio of 2.15 (95% CI 1.3-3.5) versus untreated survivors - an elevated SN signal in a population already cancer-prone, directly analogous to MVA risk biology. IGF-1-driven growth promotion in a child whose mosaic aneuploid clones are under relaxed surveillance is the wrong direction.",
-      "cites": ["PMID:16822820", "PMID:15144231", "PMID:39169218"],
+      "approval_status": "approved (somatropin CHEMBL1201621, max_phase 4, first_approval 1976) - approval not the issue",
+      "reason": "Tempting target for the child's short stature/failure-to-thrive phenotype, but it treats a symptom while stimulating proliferation in a cancer-predisposition syndrome. The evidence is honestly mixed: an earlier Childhood Cancer Survivor Study analysis found GH-treated survivors had an elevated second-neoplasm rate ratio of 2.15 (95% CI 1.3-3.5), whereas a later French CCS cohort (196 GH-treated, ~26y follow-up) found no significant SN increase (non-brain cancer RR 0.7; non-significant meningioma trend with duration). In a child whose mosaic aneuploid clones are under relaxed surveillance, with no GH-safety data specific to genomic-instability syndromes, the precautionary position is to reject: GH's anabolic/mitogenic + IGF-1 anti-apoptotic action is mechanistically pointed at the wrong lever, and benefit (height) is cosmetic relative to the stakes. Stated plainly: the rejection rests on precaution plus mechanism, not on proven harm.",
+      "cites": ["PMID:16822820", "PMID:15144231", "PMID:32738133", "PMID:39169218"],
       "note": "Re-evaluate only if endocrine workup shows true GH deficiency and oncology signs off; not a repurposing candidate here."
     },
     {
@@ -65,7 +65,7 @@
     {
       "drug": "antimitotic agents (taxanes, vinca alkaloids, benzimidazole anthelmintics incl. mebendazole)",
       "category": "mechanism-opposed",
-      "approval_status": "approved for oncology/anthelmintic indications, not for this purpose",
+      "approval_status": "approved for oncology/anthelmintic indications (paclitaxel CHEMBL428647, vinblastine CHEMBL159, mebendazole CHEMBL685 - all max_phase 4), not for this purpose",
       "reason": "Spindle-poisons cause chromosome mis-segregation - the exact lesion MVA already produces. Benzimidazoles specifically show aneugenic activity in micronucleus assays. Mebendazole surfaced in the systematic screen (aneuploid-selective killing query) but is rejected on this mechanism.",
       "cites": ["PMID:7739397", "PMID:33505028"]
     },
@@ -94,13 +94,13 @@
       "drug": "direct SIRT2 activators",
       "category": "not-approved",
       "approval_status": "no approved SIRT2 activator exists; selective SIRT2 tool compounds are investigational",
-      "reason": "Pharmacologically the cleanest Axis-A lever (stabilise BubR1 via K668 deacetylation) but no approved agent exists; the feasible proxy is NAD+ repletion (niacin/nicotinamide dossier). Selective SIRT2 INHIBITORS exist but point the wrong way for this disease.",
+      "reason": "Pharmacologically the cleanest Axis-A lever (stabilise BubR1 via K668 deacetylation) but no approved agent exists; the feasible proxy is NAD+ repletion (niacin/nicotinamide dossier). Selective SIRT2 INHIBITORS exist but point the wrong way for this disease: the tool compound SirReal2 destabilises BubR1 protein in cells - direct evidence that SIRT2 inhibition (not activation) depletes the checkpoint protein this child already lacks.",
       "cites": ["PMID:24825348", "PMID:38009412", "PMID:25672491"]
     },
     {
       "drug": "hydroxyurea",
       "category": "mechanism-opposed",
-      "approval_status": "approved (oncology/sickle-cell) - excluded on mechanism",
+      "approval_status": "approved (CHEMBL467, max_phase 4, boxed warning) - excluded on mechanism",
       "reason": "Surfaced in the systematic screen. In yeast mutation-accumulation lines it elevated mutation rates broadly with a particularly high occurrence of aneuploidy - the precise phenotype to avoid in MVA.",
       "cites": ["PMID:37931001"]
     },
@@ -122,6 +122,7 @@
   "citations": {
     "PMID:16822820": {"title": "Growth hormone treatment and risk of second neoplasms in the childhood cancer survivor", "journal": "J Clin Endocrinol Metab", "year": 2006, "doi": "10.1210/jc.2006-0656"},
     "PMID:15144231": {"title": "Cancer risk following growth hormone use in childhood: implications for current practice", "journal": "Drug Saf", "year": 2004, "doi": "10.2165/00002018-200427060-00002"},
+    "PMID:32738133": {"title": "Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer", "journal": "Eur J Endocrinol", "year": 2020, "doi": "10.1530/EJE-20-0369", "note": "counter-evidence: no significant SN increase in the French CCS cohort"},
     "PMID:39169218": {"title": "Mosaic variegated aneuploidy in development, ageing and cancer", "journal": "Nat Rev Genet", "year": 2024, "doi": "10.1038/s41576-024-00762-6"},
     "PMID:25754370": {"title": "The Achilles' heel of senescent cells: from transcriptome to senolytic drugs", "journal": "Aging Cell", "year": 2015, "doi": "10.1111/acel.12344"},
     "PMID:31542391": {"title": "Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease", "journal": "EBioMedicine", "year": 2019, "doi": "10.1016/j.ebiom.2019.08.069"},

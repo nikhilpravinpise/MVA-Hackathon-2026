@@ -69,6 +69,9 @@ REPORT_SCHEMA = "t2.citation_check/1"
 
 EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
 CROSSREF = "https://api.crossref.org/works/"
+# Dataset DOIs (figshare, Zenodo, Dryad) are registered with DataCite, not
+# Crossref; they are resolved there when Crossref has no record.
+DATACITE = "https://api.datacite.org/dois/"
 BATCH_SIZE = 200
 MIN_INTERVAL = 0.34  # seconds between HTTP calls -> <= 3 req/s
 HTTP_TIMEOUT = 30
@@ -245,6 +248,27 @@ def crossref_url(doi: str) -> str:
     return CROSSREF + urllib.parse.quote(doi, safe="")
 
 
+def datacite_url(doi: str) -> str:
+    return DATACITE + urllib.parse.quote(doi, safe="")
+
+
+def _parse_datacite(payload: dict | None) -> dict | None:
+    """DataCite JSON:API record -> resolved-entry dict, or None."""
+    attrs = ((payload or {}).get("data") or {}).get("attributes") or {}
+    titles = [t.get("title") for t in attrs.get("titles") or [] if t.get("title")]
+    if not titles:
+        return None
+    rtype = (attrs.get("types") or {}).get("resourceTypeGeneral")
+    return {
+        "found": True,
+        "title": titles[0].strip(),
+        "year": attrs.get("publicationYear"),
+        "pubtypes": [rtype] if rtype else [],
+        "retracted": titles[0].lower().startswith(RETRACTION_TITLE_PREFIXES),
+        "via": "datacite",
+    }
+
+
 def _year_from_pubdate(pubdate: str | None) -> int | None:
     m = re.search(r"\b(19|20)\d{2}\b", pubdate or "")
     return int(m.group(0)) if m else None
@@ -326,7 +350,8 @@ def _resolve_dois(dois: list[str], client: HttpClient) -> dict[str, dict]:
         titles = msg.get("title") or []
         title = titles[0].strip() if titles else None
         if not title:
-            out[doi] = {"found": False, "via": "crossref"}
+            dc = _parse_datacite(client.get_json(datacite_url(doi)))
+            out[doi] = dc or {"found": False, "via": "crossref+datacite"}
             continue
         updates = (msg.get("updated-by") or []) + (msg.get("update-to") or [])
         retracted = (any(u.get("type") == "retraction" for u in updates)

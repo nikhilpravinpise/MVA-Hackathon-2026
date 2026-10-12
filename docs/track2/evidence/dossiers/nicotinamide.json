@@ -13,7 +13,7 @@
   "claims": [
     {"id": "c1",
      "text": "Axis-A anchor: the age-related decline of BubR1 protein is driven by declining NAD+ and loss of SIRT2-mediated deacetylation of BubR1 lysine-668 (opposed by CBP acetylation); in mice, SIRT2 overexpression OR treatment with the NAD+ precursor NMN increased BubR1 abundance in vivo, and SIRT2 overexpression extended median lifespan specifically in BubR1-hypomorphic (H/H) animals.",
-     "kind": "mechanism", "cites": ["PMID:24825348"], "strength": "direct"},
+     "kind": "mechanism", "cites": ["PMID:24825348", "PMID:25672491"], "strength": "direct"},
     {"id": "c2",
      "text": "Raising BubR1 abundance is itself disease-modifying in models: sustained high BubR1 expression in mice preserves genomic integrity, corrects checkpoint and microtubule-kinetochore attachment defects, reduces tumorigenesis even with oncogenic Ras, and extends healthy lifespan - the proof that increasing residual BubR1 output compensates a defective checkpoint.",
      "kind": "preclinical", "cites": ["PMID:23242215"], "strength": "direct"},
@@ -61,6 +61,7 @@
     "PMID:38009412": {"title": "SIRT2 transgenic over-expression does not impact lifespan in mice", "journal": "Aging Cell", "year": 2023, "doi": "10.1111/acel.14027"},
     "PMID:41436848": {"title": "Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage", "journal": "Aging Cell", "year": 2026, "doi": "10.1111/acel.70319"},
     "PMID:12297502": {"title": "Inhibition of silencing and accelerated aging by nicotinamide, a putative negative regulator of yeast sir2 and human SIRT1", "journal": "J Biol Chem", "year": 2002, "doi": "10.1074/jbc.M205670200"},
-    "PMID:25285631": {"title": "Deacetylation of the mitotic checkpoint protein BubR1 at lysine 250 by SIRT2 and subsequent effects on BubR1 degradation during the prometaphase/anaphase transition", "journal": "Biochem Biophys Res Commun", "year": 2014, "doi": "10.1016/j.bbrc.2014.09.128"}
+    "PMID:25285631": {"title": "Deacetylation of the mitotic checkpoint protein BubR1 at lysine 250 by SIRT2 and subsequent effects on BubR1 degradation during the prometaphase/anaphase transition", "journal": "Biochem Biophys Res Commun", "year": 2014, "doi": "10.1016/j.bbrc.2014.09.128"},
+    "PMID:25672491": {"title": "Selective Sirt2 inhibition by ligand-induced rearrangement of the active site", "journal": "Nat Commun", "year": 2015, "doi": "10.1038/ncomms7263", "note": "the tool compound SirReal2 (SIRT2 inhibitor) destabilises BubR1 protein in cells - corroborates that SIRT2 activity maintains BubR1 stability"}
   }
 }

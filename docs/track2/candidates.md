@@ -73,10 +73,11 @@ demoted to adjuncts per plan section 0.
 | 48 | `BubR1 overexpression extends lifespan reduces cancer` | 0 | - | recorded null |
 | 49 | `BubR1 transgenic overexpression aging aneuploidy` | 0 | - | recorded null |
 | 50 | `san-1 mdf-1 C elegans lifespan` / `mdf-1 mdf-2 ... aneuploidy` | 0 | - | recorded nulls |
-| 51 | `BubR1 kinase protection aneuploidy premature aging` (review) | ~1 | 1 | background review (25964054) |
+| 51 | (screened from query-2 hit list, no separate query) | - | 1 | BubR1 background review (25964054) |
 
-**Flow:** ~1,100 records retrieved across 51 queries -> ~380 screened on
-title/abstract -> 42 papers carried into dossiers (plus 9 openFDA label
+**Flow:** 1,616 records retrieved across 50 queries -> ~380 screened on
+title/abstract -> 51 papers resolved and carried into dossiers, the programs
+file and the rejection table (plus 9 openFDA label
 records and 14 ChEMBL approval checks). No MVA-specific drug-treatment paper
 exists in the literature (queries 4-5, 7 confirm) - every dossier is therefore
 explicitly mechanistic extrapolation, stated as such.
@@ -90,7 +91,10 @@ explicitly mechanistic extrapolation, stated as such.
 | 3 | **niacin / nicotinamide** (approved NAD+ precursors) | A | Only Axis-A candidate - aims to raise residual BubR1 output rather than manage damage: NAD+/SIRT2 raises BubR1 in vivo and extended lifespan specifically in BubR1-hypomorphs (PMID:24825348; BubR1-conditional benefit confirmed PMID:38009412). Approved forms (CHEMBL573/1140 ph4). Fits the MVA Society supplements program direction. | The anchor used NMN - a supplement; extrapolation to niacin/nicotinamide is indirect. Nicotinamide itself inhibits sirtuins (PMID:12297502) - form choice is unresolved. No pediatric approval. |
 | 4 | **hydroxychloroquine** (+chloroquine) | C | Only candidate with direct aneuploidy-selective kill data (PMID:21315436); the mosaic fibroblast test is decisive and cheap. Approved (CHEMBL1535 ph4). | Selectivity shown in cell lines only; irreversible retinal toxicity with cumulative dose; autophagy is double-edged in a checkpoint-defective child. |
 
-**Adjuncts (not standalone):** metformin (senomorphic fallback if mTOR
+**Adjuncts (not standalone):** sirolimus (backup mTOR agent - same mechanism
+as everolimus but no pediatric approval <13y and a malignancy boxed warning;
+dossier kept shortlist-verdict for completeness, deferred behind everolimus);
+metformin (senomorphic fallback if mTOR
 immunosuppression is disqualifying; dose-window caveat PMID:35568294); aspirin
 (long-horizon interception, tetraploid-elimination mechanism PMID:24516128 +
 CAPP2 precedent PMID:32534647; Reye's/bleeding caution); quercetin (only
@@ -235,6 +239,7 @@ cheap whole-organism confirmation; scRNA-seq quantifies signature reversal.
 | PMID:25672491 | Selective Sirt2 inhibition by ligand-induced rearrangement of the active site (Nat Commun) | 2015 |
 | PMID:16822820 | Growth hormone treatment and risk of second neoplasms in the childhood cancer survivor (J Clin Endocrinol Metab) | 2006 |
 | PMID:15144231 | Cancer risk following growth hormone use in childhood: implications for current practice (Drug Saf) | 2004 |
+| PMID:32738133 | Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer (Eur J Endocrinol; counter-evidence to GH harm) | 2020 |
 | PMID:31053147 | Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome (Orphanet J Rare Dis) | 2019 |
 | PMID:18248670 | Genetic analysis of the spindle checkpoint genes san-1, mdf-2, bub-3 and the CENP-F homologues hcp-1 and hcp-2 in Caenorhabditis elegans (Cell Div) | 2008 |
 | PMID:19109417 | Systematic analysis in Caenorhabditis elegans reveals that the spindle checkpoint is composed of two largely independent branches (Mol Biol Cell) | 2009 |

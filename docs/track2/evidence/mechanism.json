@@ -1,0 +1,1134 @@
+{
+ "schema": "t2.mechanism/1",
+ "generated_by": "tools/t2_mechanism.py",
+ "gene": "BUB1B",
+ "uniprot": "O60566",
+ "transcript": {
+  "transcript": "ENST00000287598",
+  "version": 11,
+  "gene": "ENSG00000156970",
+  "biotype": "protein_coding",
+  "is_canonical": true,
+  "strand": 1,
+  "n_exons": 23,
+  "exons": [
+   {
+    "id": "ENSE00001929183",
+    "start": 40161069,
+    "end": 40161255,
+    "len": 187
+   },
+   {
+    "id": "ENSE00003642586",
+    "start": 40165053,
+    "end": 40165196,
+    "len": 144
+   },
+   {
+    "id": "ENSE00003506275",
+    "start": 40170062,
+    "end": 40170121,
+    "len": 60
+   },
+   {
+    "id": "ENSE00003578473",
+    "start": 40170537,
+    "end": 40170681,
+    "len": 145
+   },
+   {
+    "id": "ENSE00001029411",
+    "start": 40176477,
+    "end": 40176673,
+    "len": 197
+   },
+   {
+    "id": "ENSE00001029410",
+    "start": 40183714,
+    "end": 40183883,
+    "len": 170
+   },
+   {
+    "id": "ENSE00001029414",
+    "start": 40185165,
+    "end": 40185379,
+    "len": 215
+   },
+   {
+    "id": "ENSE00001029407",
+    "start": 40185551,
+    "end": 40185642,
+    "len": 92
+   },
+   {
+    "id": "ENSE00003514834",
+    "start": 40196545,
+    "end": 40196774,
+    "len": 230
+   },
+   {
+    "id": "ENSE00003683831",
+    "start": 40199615,
+    "end": 40199727,
+    "len": 113
+   },
+   {
+    "id": "ENSE00003589403",
+    "start": 40200244,
+    "end": 40200359,
+    "len": 116
+   },
+   {
+    "id": "ENSE00003561918",
+    "start": 40200931,
+    "end": 40200980,
+    "len": 50
+   },
+   {
+    "id": "ENSE00003520890",
+    "start": 40202405,
+    "end": 40202465,
+    "len": 61
+   },
+   {
+    "id": "ENSE00003593922",
+    "start": 40202589,
+    "end": 40202694,
+    "len": 106
+   },
+   {
+    "id": "ENSE00001029402",
+    "start": 40206184,
+    "end": 40206458,
+    "len": 275
+   },
+   {
+    "id": "ENSE00001029391",
+    "start": 40208637,
+    "end": 40208770,
+    "len": 134
+   },
+   {
+    "id": "ENSE00001029409",
+    "start": 40209635,
+    "end": 40209775,
+    "len": 141
+   },
+   {
+    "id": "ENSE00001029401",
+    "start": 40210110,
+    "end": 40210210,
+    "len": 101
+   },
+   {
+    "id": "ENSE00001029392",
+    "start": 40212499,
+    "end": 40212648,
+    "len": 150
+   },
+   {
+    "id": "ENSE00001029395",
+    "start": 40213332,
+    "end": 40213474,
+    "len": 143
+   },
+   {
+    "id": "ENSE00001029397",
+    "start": 40217496,
+    "end": 40217667,
+    "len": 172
+   },
+   {
+    "id": "ENSE00003491855",
+    "start": 40218456,
+    "end": 40218562,
+    "len": 107
+   },
+   {
+    "id": "ENSE00001948417",
+    "start": 40220564,
+    "end": 40221123,
+    "len": 560
+   }
+  ],
+  "translation": {
+   "id": "ENSP00000287598",
+   "start": 40161221,
+   "end": 40220759,
+   "length_aa": 1050
+  },
+  "source": "Ensembl REST lookup/id?expand=1"
+ },
+ "alleles": [
+  {
+   "hgvs_genomic": "chr15:40209701 T>G",
+   "hg38_pos": 40209701,
+   "cdna": "c.2210T>G",
+   "protein": "p.Leu737Ter",
+   "vep": {
+    "consequence_terms": [
+     "stop_gained"
+    ],
+    "impact": "HIGH",
+    "codons": "tTa/tGa",
+    "amino_acids": "L/*",
+    "cds_start": 2210,
+    "cds_end": 2210,
+    "cdna_start": 2362,
+    "protein_start": 737,
+    "sift_score": null,
+    "sift_prediction": null,
+    "polyphen_score": null,
+    "polyphen_prediction": null,
+    "revel": null,
+    "cadd_raw": 7.961909,
+    "cadd_phred": 36,
+    "alphamissense": null,
+    "phylop470way_mammalian": 4.189
+   },
+   "exon": {
+    "index": 17,
+    "of": 23,
+    "id": "ENSE00001029409"
+   },
+   "nmd": {
+    "exons": 23,
+    "last_junction_offset": 3109,
+    "ptc_spliced_offset": 2361,
+    "ptc_to_last_junction_nt": 748,
+    "predicted_nmd": true,
+    "rule_nt": 50,
+    "note": "PTC 748 nt upstream of last exon-exon junction"
+   },
+   "features_at_residue": [
+    {
+     "type": "Chain",
+     "start": 1,
+     "end": 1050,
+     "description": "Mitotic checkpoint serine/threonine-protein kinase BUB1 beta"
+    }
+   ],
+   "gnomad": {
+    "exome": {
+     "ac": 115,
+     "an": 1461846,
+     "af": 7.866765719508074e-05,
+     "homozygote_count": 0
+    },
+    "genome": {
+     "ac": 5,
+     "an": 152174,
+     "af": 3.2857124081643385e-05,
+     "homozygote_count": 0
+    }
+   },
+   "clinvar": {
+    "records": [
+     {
+      "uid": "533901",
+      "accession": "VCV000533901.9",
+      "title": "NM_001211.6(BUB1B):c.2210T>G (p.Leu737Ter)",
+      "classification": "Pathogenic/Likely pathogenic",
+      "review_status": "criteria provided, multiple submitters, no conflicts",
+      "last_evaluated": "2024/10/09 00:00",
+      "traits": [
+       "not provided",
+       "Mosaic variegated aneuploidy syndrome 1"
+      ]
+     }
+    ],
+    "searched_hg38_pos": 40209701
+   },
+   "protein_loss": {
+    "wt_length": 1050,
+    "truncated_product_length": 736,
+    "residues_lost": 314,
+    "fraction_lost_pct": 29.9,
+    "removed_features": [
+     {
+      "type": "Domain",
+      "start": 766,
+      "end": 1050,
+      "description": "Protein kinase"
+     },
+     {
+      "type": "Active site",
+      "start": 882,
+      "end": 882,
+      "description": "Proton acceptor"
+     },
+     {
+      "type": "Binding site",
+      "start": 772,
+      "end": 780,
+      "description": ""
+     },
+     {
+      "type": "Binding site",
+      "start": 795,
+      "end": 795,
+      "description": ""
+     },
+     {
+      "type": "Modified residue",
+      "start": 792,
+      "end": 792,
+      "description": "Phosphothreonine; by PLK1"
+     },
+     {
+      "type": "Modified residue",
+      "start": 1008,
+      "end": 1008,
+      "description": "Phosphothreonine; by PLK1"
+     },
+     {
+      "type": "Modified residue",
+      "start": 1042,
+      "end": 1042,
+      "description": "Phosphothreonine"
+     },
+     {
+      "type": "Modified residue",
+      "start": 1043,
+      "end": 1043,
+      "description": "Phosphoserine"
+     }
+    ],
+    "retained_features": [
+     {
+      "type": "Domain",
+      "start": 62,
+      "end": 226,
+      "description": "BUB1 N-terminal"
+     },
+     {
+      "type": "Region",
+      "start": 152,
+      "end": 185,
+      "description": "Necessary for interaction with KNL1"
+     },
+     {
+      "type": "Region",
+      "start": 368,
+      "end": 393,
+      "description": "Disordered"
+     },
+     {
+      "type": "Region",
+      "start": 456,
+      "end": 480,
+      "description": "Disordered"
+     },
+     {
+      "type": "Motif",
+      "start": 111,
+      "end": 118,
+      "description": "Nuclear localization signal"
+     },
+     {
+      "type": "Motif",
+      "start": 224,
+      "end": 232,
+      "description": "D-box"
+     },
+     {
+      "type": "Site",
+      "start": 579,
+      "end": 580,
+      "description": "Cleavage; by caspase-3"
+     },
+     {
+      "type": "Site",
+      "start": 610,
+      "end": 611,
+      "description": "Cleavage; by caspase-3"
+     },
+     {
+      "type": "Modified residue",
+      "start": 250,
+      "end": 250,
+      "description": "N6-acetyllysine; by PCAF"
+     },
+     {
+      "type": "Modified residue",
+      "start": 367,
+      "end": 367,
+      "description": "Phosphoserine"
+     },
+     {
+      "type": "Modified residue",
+      "start": 435,
+      "end": 435,
+      "description": "Phosphoserine"
+     },
+     {
+      "type": "Modified residue",
+      "start": 543,
+      "end": 543,
+      "description": "Phosphoserine"
+     },
+     {
+      "type": "Modified residue",
+      "start": 665,
+      "end": 665,
+      "description": "Phosphoserine"
+     },
+     {
+      "type": "Modified residue",
+      "start": 670,
+      "end": 670,
+      "description": "Phosphoserine"
+     },
+     {
+      "type": "Modified residue",
+      "start": 676,
+      "end": 676,
+      "description": "Phosphoserine; by PLK1"
+     },
+     {
+      "type": "Modified residue",
+      "start": 697,
+      "end": 697,
+      "description": "Phosphoserine"
+     }
+    ]
+   },
+   "interpretation": "null (predicted loss-of-function via NMD)",
+   "clinvar_class": "Pathogenic/Likely pathogenic",
+   "clinvar_review": "criteria provided, multiple submitters, no conflicts"
+  },
+  {
+   "hgvs_genomic": "chr15:40220612 T>G",
+   "hg38_pos": 40220612,
+   "cdna": "c.3006T>G",
+   "protein": "p.Asn1002Lys",
+   "vep": {
+    "consequence_terms": [
+     "missense_variant"
+    ],
+    "impact": "MODERATE",
+    "codons": "aaT/aaG",
+    "amino_acids": "N/K",
+    "cds_start": 3006,
+    "cds_end": 3006,
+    "cdna_start": 3158,
+    "protein_start": 1002,
+    "sift_score": 0.01,
+    "sift_prediction": "deleterious",
+    "polyphen_score": 0.997,
+    "polyphen_prediction": "probably_damaging",
+    "revel": 0.472,
+    "cadd_raw": 4.167419,
+    "cadd_phred": 24.5,
+    "alphamissense": {
+     "am_pathogenicity": 0.9229,
+     "am_class": "likely_pathogenic"
+    },
+    "phylop470way_mammalian": 5.115
+   },
+   "exon": {
+    "index": 23,
+    "of": 23,
+    "id": "ENSE00001948417"
+   },
+   "nmd": {
+    "applicable": false,
+    "note": "missense allele - no premature termination codon introduced"
+   },
+   "features_at_residue": [
+    {
+     "type": "Chain",
+     "start": 1,
+     "end": 1050,
+     "description": "Mitotic checkpoint serine/threonine-protein kinase BUB1 beta"
+    },
+    {
+     "type": "Domain",
+     "start": 766,
+     "end": 1050,
+     "description": "Protein kinase"
+    }
+   ],
+   "gnomad": {
+    "exome": {
+     "ac": 1,
+     "an": 1461878,
+     "af": 6.840516103258959e-07,
+     "homozygote_count": 0
+    },
+    "genome": {
+     "ac": 0,
+     "an": 0,
+     "af": 0.0,
+     "homozygote_count": 0
+    }
+   },
+   "clinvar": {
+    "records": [
+     {
+      "uid": "4842697",
+      "accession": "VCV004842697.1",
+      "title": "NM_001211.6(BUB1B):c.3006T>C (p.Asn1002=)",
+      "classification": "Likely benign",
+      "review_status": "criteria provided, single submitter",
+      "last_evaluated": "2025/12/17 00:00",
+      "traits": [
+       "Inborn genetic diseases"
+      ]
+     },
+     {
+      "uid": "4600147",
+      "accession": "VCV004600147.1",
+      "title": "NM_001211.6(BUB1B):c.3006T>A (p.Asn1002Lys)",
+      "classification": "Uncertain significance",
+      "review_status": "criteria provided, single submitter",
+      "last_evaluated": "2025/09/19 00:00",
+      "traits": [
+       "Inborn genetic diseases"
+      ]
+     }
+    ],
+    "searched_hg38_pos": 40220612
+   },
+   "scores": {
+    "sift": 0.01,
+    "sift_prediction": "deleterious",
+    "polyphen": 0.997,
+    "polyphen_prediction": "probably_damaging",
+    "revel": 0.472,
+    "cadd_raw": 4.167419,
+    "cadd_phred": 24.5,
+    "alphamissense": 0.9229,
+    "alphamissense_class": "likely_pathogenic",
+    "phylop": 5.115
+   },
+   "structure": {
+    "plddt": 91.06,
+    "ca_neighbors_within_8a": [
+     977,
+     978,
+     998,
+     999,
+     1000,
+     1001,
+     1003,
+     1004
+    ],
+    "n_ca_neighbors_within_8a": 8,
+    "residues_within_8a_allatom": [
+     941,
+     944,
+     950,
+     953,
+     954,
+     971,
+     972,
+     973,
+     974,
+     976,
+     977,
+     978,
+     979,
+     980,
+     994,
+     995,
+     996,
+     997,
+     998,
+     999,
+     1000,
+     1001,
+     1003,
+     1004,
+     1005,
+     1006,
+     1011
+    ],
+    "n_residues_within_8a_allatom": 27,
+    "burial": {
+     "contact_number": 27,
+     "percentile_in_domain": 53.7,
+     "domain": [
+      766,
+      1050
+     ],
+     "domain_min": 7,
+     "domain_max": 42
+    }
+   },
+   "interpretation": "hypomorphic missense (predicted: unstable pseudokinase-domain product)",
+   "clinvar_note": "No ClinVar entry for c.3006T>G itself; same amino-acid change via c.3006T>A is VUS VCV004600147 (single submitter).",
+   "alphamissense_track": [
+    "chr15",
+    "40220612",
+    "T",
+    "A",
+    "hg38",
+    "O60566",
+    "ENST00000287598.10",
+    "N1002K",
+    "0.9229",
+    "likely_pathogenic"
+   ]
+  }
+ ],
+ "pathway": [
+  {
+   "step": "genotype",
+   "claim": "p.Leu737Ter allele: transcript predicted NMD-degraded (PTC ~750 nt upstream of last junction); any escaped product lacks the kinase-like domain. p.Asn1002Lys allele: full-length protein with a destabilising substitution in the pseudokinase domain.",
+   "cites": [
+    "PMID:9644970",
+    "PMID:27618451",
+    "PMID:20516114",
+    "PMID:33207204"
+   ],
+   "evidence": "rule-based prediction + human class analogy"
+  },
+  {
+   "step": "protein dosage",
+   "claim": "Cellular BubR1 abundance falls towards a single partially-functional allele's output; >50% loss of BubR1 expression/activity is sufficient for the PCS/MVA phenotype.",
+   "cites": [
+    "PMID:16411201",
+    "PMID:20516114"
+   ],
+   "evidence": "human (patient cells)"
+  },
+  {
+   "step": "checkpoint + attachment",
+   "claim": "Low BubR1 weakens the spindle-assembly checkpoint and reduces KARD-dependent PP2A-B56 recruitment that corrects kinetochore-microtubule attachment errors.",
+   "cites": [
+    "PMID:20516114",
+    "PMID:23079597",
+    "PMID:23345399"
+   ],
+   "evidence": "human cells + cell biology"
+  },
+  {
+   "step": "mis-segregation -> aneuploidy",
+   "claim": "Uncorrected errors produce constitutional mosaic gains and losses of whole chromosomes - the defining feature of MVA1.",
+   "cites": [
+    "PMID:15475955",
+    "PMID:20516114"
+   ],
+   "evidence": "human"
+  },
+  {
+   "step": "cellular response",
+   "claim": "Aneuploid daughter cells arrest via p53/p21, acquire proteotoxic stress and senescence programmes (p16 effector), and signal for immune clearance.",
+   "cites": [
+    "PMID:20123995",
+    "PMID:28633018",
+    "PMID:34216545",
+    "PMID:18516091"
+   ],
+   "evidence": "cell + mouse"
+  },
+  {
+   "step": "organism outcomes",
+   "claim": "Chronic aneuploidy plus senescence yields growth failure and progeroid decline, while rare escaping aneuploid clones drive childhood cancer (rhabdomyosarcoma, Wilms; adult GI cancers on milder genotypes).",
+   "cites": [
+    "PMID:15208629",
+    "PMID:23300461",
+    "PMID:15475955",
+    "PMID:31081598",
+    "PMID:21190457"
+   ],
+   "evidence": "human + mouse"
+  }
+ ],
+ "claims": [
+  {
+   "id": "c01",
+   "text": "p.Leu737Ter (c.2210T>G) creates a premature termination codon in exon 17 of 23 of ENST00000287598 (MANE); the PTC lies 748 nt upstream of the last exon-exon junction, far beyond the 50-55 nt rule threshold, so the mutant transcript is predicted to be degraded by nonsense-mediated mRNA decay",
+   "cites": [
+    "PMID:9644970",
+    "PMID:27618451",
+    "DOI:10.1093/nar/gkab1049"
+   ],
+   "strength": "computational prediction + established rule"
+  },
+  {
+   "id": "c02",
+   "text": "If translated despite predicted NMD, the truncated product would carry only residues 1-736 (29.9% of the 1050-aa protein lost): the entire C-terminal kinase-like domain (UniProt 766-1050), the PLK1 phosphoacceptor sites T792/T1008, and the 772-780 binding region are absent, while the N-terminal KEN boxes, TPR, KNL1-binding (152-185), D-box (224-232), K250 acetylation site and KARD phospho-region (S670/S676) are retained - consistent with a null allele",
+   "cites": [
+    "DOI:10.1093/nar/gkae1010",
+    "PMID:23079597",
+    "PMID:23345399"
+   ],
+   "strength": "direct (feature mapping)"
+  },
+  {
+   "id": "c03",
+   "text": "p.Leu737Ter is ultra-rare in population data: gnomAD v4 exomes 115/1461846 alleles (AF 7.87e-05), genomes 5/152174 (AF 3.29e-05), 0 homozygotes - consistent with a deleterious germline allele",
+   "cites": [
+    "PMID:32461654"
+   ],
+   "strength": "population database"
+  },
+  {
+   "id": "c04",
+   "text": "ClinVar records c.2210T>G (VCV000533901) as Pathogenic/Likely pathogenic for Mosaic variegated aneuploidy syndrome 1 (OMIM 257300), criteria provided, multiple submitters, no conflicts",
+   "cites": [
+    "PMID:29165669"
+   ],
+   "strength": "clinical database"
+  },
+  {
+   "id": "c05",
+   "text": "p.Asn1002Lys (c.3006T>G, exon 23, the last exon) substitutes a positively charged Lys for a highly conserved Asn at residue 1002 inside the C-terminal kinase-like domain (766-1050), 6 residues from the PLK1 phosphosite T1008",
+   "cites": [
+    "DOI:10.1093/nar/gkae1010"
+   ],
+   "strength": "direct (feature mapping)"
+  },
+  {
+   "id": "c06",
+   "text": "Missense-effect predictors converge on deleterious for N1002K: AlphaMissense 0.9229 (likely_pathogenic), SIFT 0.01 (deleterious), PolyPhen-2 0.997 (probably_damaging), CADD_phred 24.5, phyloP 5.115; REVEL 0.472 is moderate and below the commonly used 0.5-0.75 supporting thresholds, stated honestly rather than overclaimed",
+   "cites": [
+    "PMID:37733863",
+    "DOI:10.1186/s13059-016-0974-4"
+   ],
+   "strength": "computational (ensemble)"
+  },
+  {
+   "id": "c07",
+   "text": "On the AlphaFold O60566 model (v6), N1002 has pLDDT 91.06 and 27 residues within 8 A (all-atom; 8 by CA) - a partially packed surface region of the pseudokinase C-lobe (contact-number percentile 53.7% within the domain), so the Asn->Lys charge introduction plausibly perturbs local packing/stability rather than a catalytic centre",
+   "cites": [
+    "DOI:10.1093/nar/gkad1011",
+    "PMID:22698286"
+   ],
+   "strength": "structural model"
+  },
+  {
+   "id": "c08",
+   "text": "p.Asn1002Lys is absent from gnomAD v4 genomes and seen once in 1461878 exome alleles (AF 6.84e-07, 0 homozygotes); ClinVar has no entry for c.3006T>G itself, while the same protein change via c.3006T>A is a VUS (VCV004600147, single submitter) - the allele is novel to this child",
+   "cites": [
+    "PMID:32461654",
+    "PMID:29165669"
+   ],
+   "strength": "population + clinical databases"
+  },
+  {
+   "id": "c09",
+   "text": "MVA-patient missense alleles that map in or near the BUBR1 kinase domain characteristically produce unstable protein (high turnover), so N1002K is predicted to act as a hypomorph through reduced abundance; residual function is unmeasured in this child",
+   "cites": [
+    "PMID:20516114"
+   ],
+   "strength": "human (class analogy)"
+  },
+  {
+   "id": "c10",
+   "text": "The C-terminal pseudokinase domain where N1002 sits is required for KARD phosphorylation and PP2A-B56 recruitment to kinetochores, for spindle-checkpoint silencing and for chromosome alignment - so a stability- or fold-disrupting lesion in this domain weakens error correction even though BUBR1 catalytic activity itself is dispensable",
+   "cites": [
+    "PMID:33207204",
+    "PMID:22698286",
+    "PMID:23079597"
+   ],
+   "strength": "cell"
+  },
+  {
+   "id": "c11",
+   "text": "In published biallelic MVA1 cases a missense allele pairs with a truncating allele - completely truncating genotypes are effectively unseen, consistent with lethality of full BUBR1 loss; the proband's stop + kinase-domain missense pair fits this pattern exactly",
+   "cites": [
+    "PMID:15475955",
+    "PMID:20516114",
+    "PMID:23300461"
+   ],
+   "strength": "human"
+  },
+  {
+   "id": "c12",
+   "text": "Roughly >50% reduction of BUBR1 expression or activity is sufficient to cause the PCS/MVA phenotype, and single-allele carriers show mild mitotic defects - the genotype here is expected to leave only the N1002K allele as the functional copy",
+   "cites": [
+    "PMID:16411201",
+    "PMID:23300461"
+   ],
+   "strength": "human + mouse"
+  },
+  {
+   "id": "c13",
+   "text": "MVA patient cells show impaired spindle-assembly checkpoint, chromosome-alignment defects and low overall BUBR1 abundance; ectopic BUBR1 rescues the checkpoint, proving segregation errors stem from BUBR1 dysfunction",
+   "cites": [
+    "PMID:20516114"
+   ],
+   "strength": "human (patient cells)"
+  },
+  {
+   "id": "c14",
+   "text": "Reduced BUBR1 weakens both its mitotic-checkpoint arm and its attachment-error-correction arm: the KARD domain recruits PP2A-B56 to kinetochores in a PLK1-phosphorylation-dependent manner to counter Aurora B and stabilise kinetochore-microtubule attachments",
+   "cites": [
+    "PMID:23079597",
+    "PMID:23345399"
+   ],
+   "strength": "cell"
+  },
+  {
+   "id": "c15",
+   "text": "Chromosome mis-segregation in otherwise diploid cells triggers p53 accumulation and p21-dependent cell-cycle delay, limiting proliferation of aneuploid cells; loss of p53 permits aneuploid clones to expand",
+   "cites": [
+    "PMID:20123995"
+   ],
+   "strength": "cell (human)"
+  },
+  {
+   "id": "c16",
+   "text": "Cells that mis-segregate acquire complex karyotypes, proteotoxic stress and senescent features with pro-inflammatory signalling that flags them for immune clearance - senescence is a direct consequence of aneuploidy",
+   "cites": [
+    "PMID:28633018",
+    "PMID:34216545"
+   ],
+   "strength": "cell + fly"
+  },
+  {
+   "id": "c17",
+   "text": "BubR1-insufficient mice develop progressive aneuploidy plus progeroid phenotypes (short lifespan, dwarfism, lordokyphosis, cataracts, fat and skeletal-muscle loss), and p16Ink4a is an effector of the senescence - graded BubR1 reduction increases aneuploidy and senescence dose-dependently",
+   "cites": [
+    "PMID:15208629",
+    "PMID:18516091"
+   ],
+   "strength": "mouse"
+  },
+  {
+   "id": "c18",
+   "text": "BUBR1-insufficiency states are cancer-prone: biallelic carriers developed embryonal rhabdomyosarcoma in the original MVA families, Wilms tumour is reported in BUB1B PCS/MVA, and a homozygous hypomorphic allele produced adult gastrointestinal neoplasia - aneuploidy is the causal link",
+   "cites": [
+    "PMID:15475955",
+    "PMID:31081598",
+    "PMID:21190457"
+   ],
+   "strength": "human"
+  },
+  {
+   "id": "c19",
+   "text": "BubR1 abundance is pharmacologically tractable: SIRT2 keeps BubR1 K668 deacetylated and its decline with falling NAD+ drives age-related BubR1 loss; SIRT2 overexpression or NMN raises BubR1 in vivo, and K250 acetylation by PCAF stabilises BubR1 by blocking its ubiquitin-dependent degradation",
+   "cites": [
+    "PMID:24825348",
+    "PMID:19407811"
+   ],
+   "strength": "mouse + cell"
+  },
+  {
+   "id": "c20",
+   "text": "Raising BubR1 is protective: sustained high-level expression in mice preserves genomic integrity, corrects checkpoint and attachment defects, reduces tumorigenesis even on aneuploidising backgrounds, and extends healthy lifespan",
+   "cites": [
+    "PMID:23242215"
+   ],
+   "strength": "mouse"
+  },
+  {
+   "id": "c21",
+   "text": "Clearing p16-positive senescent cells in BubR1 progeroid mice delayed onset of age-related pathologies in adipose tissue, skeletal muscle and eye, and late-life clearance attenuated established disorders - the senescence burden is modifiable",
+   "cites": [
+    "PMID:22048312",
+    "PMID:18516091"
+   ],
+   "strength": "mouse"
+  },
+  {
+   "id": "c22",
+   "text": "Aneuploid cancer cells are selectively vulnerable to spindle-checkpoint perturbation and to KIF18A loss (synthetic-lethal interaction) - a therapeutic window against aneuploid malignant clones but the opposite of what a child with constitutional mis-segregation should receive prophylactically",
+   "cites": [
+    "PMID:33505028",
+    "PMID:33505027"
+   ],
+   "strength": "cell/screen (cancer context)"
+  },
+  {
+   "id": "c23",
+   "text": "Growth-hormone treatment in chromosomal-breakage / DNA-repair-disorder children is flagged for careful evaluation owing to malignancy risk; the largest childhood-cancer-survivor cohort found no significant increase in second neoplasms on GH, so the contraindication is precautionary, not proven",
+   "cites": [
+    "PMID:30500870",
+    "PMID:32738133"
+   ],
+   "strength": "review + cohort (counter-evidence stated)"
+  },
+  {
+   "id": "c24",
+   "text": "p53 is protective in this context: it limits aneuploid-cell propagation and delays functional decline of muscle and fat in BubR1-insufficient mice - suppressing p53 would remove the brake on aneuploid clone expansion and worsen tissue decline",
+   "cites": [
+    "PMID:20123995",
+    "PMID:23602569"
+   ],
+   "strength": "cell + mouse"
+  }
+ ],
+ "citations": {
+  "DOI:10.1093/nar/gkab1049": {
+   "title": "Ensembl 2022",
+   "year": 2021,
+   "journal": "Nucleic Acids Research"
+  },
+  "DOI:10.1093/nar/gkad1011": {
+   "title": "AlphaFold Protein Structure Database in 2024: providing structure coverage for over 214 million protein sequences",
+   "year": 2023,
+   "journal": "Nucleic Acids Research"
+  },
+  "DOI:10.1093/nar/gkae1010": {
+   "title": "UniProt: the Universal Protein Knowledgebase in 2025",
+   "year": 2024,
+   "journal": "Nucleic Acids Research"
+  },
+  "DOI:10.1186/s13059-016-0974-4": {
+   "title": "The Ensembl Variant Effect Predictor",
+   "year": 2016,
+   "journal": "Genome Biology"
+  },
+  "PMID:15208629": {
+   "title": "BubR1 insufficiency causes early onset of aging-associated phenotypes and infertility in mice",
+   "year": 2004,
+   "journal": "Nature genetics"
+  },
+  "PMID:15475955": {
+   "title": "Constitutional aneuploidy and cancer predisposition caused by biallelic mutations in BUB1B",
+   "year": 2004,
+   "journal": "Nature genetics"
+  },
+  "PMID:16411201": {
+   "title": "Monoallelic BUB1B mutations and defective mitotic-spindle checkpoint in seven families with premature chromatid separation (PCS) syndrome",
+   "year": 2006,
+   "journal": "American journal of medical genetics. Part A"
+  },
+  "PMID:18516091": {
+   "title": "Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency",
+   "year": 2008,
+   "journal": "Nature cell biology"
+  },
+  "PMID:19407811": {
+   "title": "BubR1 acetylation at prometaphase is required for modulating APC/C activity and timing of mitosis",
+   "year": 2009,
+   "journal": "The EMBO journal"
+  },
+  "PMID:20123995": {
+   "title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism",
+   "year": 2010,
+   "journal": "The Journal of cell biology"
+  },
+  "PMID:20516114": {
+   "title": "Molecular causes for BUBR1 dysfunction in the human cancer predisposition syndrome mosaic variegated aneuploidy",
+   "year": 2010,
+   "journal": "Cancer research"
+  },
+  "PMID:21190457": {
+   "title": "Homozygous BUB1B mutation and susceptibility to gastrointestinal neoplasia",
+   "year": 2010,
+   "journal": "The New England journal of medicine"
+  },
+  "PMID:22048312": {
+   "title": "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders",
+   "year": 2011,
+   "journal": "Nature"
+  },
+  "PMID:22698286": {
+   "title": "The vertebrate mitotic checkpoint protein BUBR1 is an unusual pseudokinase",
+   "year": 2012,
+   "journal": "Developmental cell"
+  },
+  "PMID:23079597": {
+   "title": "Integration of kinase and phosphatase activities by BUBR1 ensures formation of stable kinetochore-microtubule attachments",
+   "year": 2012,
+   "journal": "Developmental cell"
+  },
+  "PMID:23242215": {
+   "title": "Increased expression of BubR1 protects against aneuploidy and cancer and extends healthy lifespan",
+   "year": 2013,
+   "journal": "Nature cell biology"
+  },
+  "PMID:23300461": {
+   "title": "Reduced life- and healthspan in mice carrying a mono-allelic BubR1 MVA mutation",
+   "year": 2012,
+   "journal": "PLoS genetics"
+  },
+  "PMID:23345399": {
+   "title": "Direct binding between BubR1 and B56-PP2A phosphatase complexes regulate mitotic progression",
+   "year": 2013,
+   "journal": "Journal of cell science"
+  },
+  "PMID:23602569": {
+   "title": "p21 both attenuates and drives senescence and aging in BubR1 progeroid mice",
+   "year": 2013,
+   "journal": "Cell reports"
+  },
+  "PMID:24825348": {
+   "title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan",
+   "year": 2014,
+   "journal": "The EMBO journal"
+  },
+  "PMID:27618451": {
+   "title": "The rules and impact of nonsense-mediated mRNA decay in human cancers",
+   "year": 2016,
+   "journal": "Nature genetics"
+  },
+  "PMID:28633018": {
+   "title": "Chromosome Mis-segregation Generates Cell-Cycle-Arrested Cells with Complex Karyotypes that Are Eliminated by the Immune System",
+   "year": 2017,
+   "journal": "Developmental cell"
+  },
+  "PMID:29165669": {
+   "title": "ClinVar: improving access to variant interpretations and supporting evidence",
+   "year": 2018,
+   "journal": "Nucleic acids research"
+  },
+  "PMID:30500870": {
+   "title": "Growth Hormone's Links to Cancer",
+   "year": 2019,
+   "journal": "Endocrine reviews"
+  },
+  "PMID:31081598": {
+   "title": "Long-term remission of bilateral Wilms tumors that developed from premature separation of chromatids/mosaic variegated aneuploidy syndrome due to bilateral nephrectomy and peritoneal dialysis",
+   "year": 2019,
+   "journal": "Pediatric blood & cancer"
+  },
+  "PMID:31659324": {
+   "title": "The impact of nonsense-mediated mRNA decay on genetic disease, gene editing and cancer immunotherapy",
+   "year": 2019,
+   "journal": "Nature genetics"
+  },
+  "PMID:32461654": {
+   "title": "The mutational constraint spectrum quantified from variation in 141,456 humans",
+   "year": 2020,
+   "journal": "Nature"
+  },
+  "PMID:32738133": {
+   "title": "Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer",
+   "year": 2020,
+   "journal": "European journal of endocrinology"
+  },
+  "PMID:33207204": {
+   "title": "BUBR1 Pseudokinase Domain Promotes Kinetochore PP2A-B56 Recruitment, Spindle Checkpoint Silencing, and Chromosome Alignment",
+   "year": 2020,
+   "journal": "Cell reports"
+  },
+  "PMID:33505027": {
+   "title": "Whole-genome doubling confers unique genetic vulnerabilities on tumour cells",
+   "year": 2021,
+   "journal": "Nature"
+  },
+  "PMID:33505028": {
+   "title": "Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition",
+   "year": 2021,
+   "journal": "Nature"
+  },
+  "PMID:34216545": {
+   "title": "Proteostasis failure and mitochondrial dysfunction leads to aneuploidy-induced senescence",
+   "year": 2021,
+   "journal": "Developmental cell"
+  },
+  "PMID:37733863": {
+   "title": "Accurate proteome-wide missense variant effect prediction with AlphaMissense",
+   "year": 2023,
+   "journal": "Science (New York, N.Y.)"
+  },
+  "PMID:9644970": {
+   "title": "A rule for termination-codon position within intron-containing genes: when nonsense affects RNA abundance",
+   "year": 1998,
+   "journal": "Trends in biochemical sciences"
+  }
+ },
+ "uncertainties": [
+  {
+   "id": "u1",
+   "text": "Phase is UNKNOWN in this child (0 spanning reads in Track 1). In-trans configuration is inferred from the MVA1 genotype pattern (null + hypomorph) and phenotype fit, not observed. Resolution: parental testing, targeted long-range PCR or long-read phasing.",
+   "cites": [
+    "PMID:20516114"
+   ]
+  },
+  {
+   "id": "u2",
+   "text": "p.Asn1002Lys residual function is unmeasured. Assays that would quantify it: patient-fibroblast BubR1 western blot (abundance), nocodazole-arrest timing (SAC competency), k-fibre stability / cold-stable microtubule assay, aneuploidy rate by FISH or single-cell DNA-seq.",
+   "cites": [
+    "PMID:20516114",
+    "PMID:16411201"
+   ]
+  },
+  {
+   "id": "u3",
+   "text": "NMD for p.Leu737Ter is a positional prediction, not a measured decay rate; NMD efficiency varies and rare escape could yield a 736-aa fragment of uncertain activity.",
+   "cites": [
+    "PMID:27618451",
+    "PMID:31659324"
+   ]
+  },
+  {
+   "id": "u4",
+   "text": "Predictor agreement is strong but not unanimous: REVEL 0.472 is below usual supporting thresholds and the ClinVar record for the same amino-acid change (c.3006T>A) is a single-submitter VUS.",
+   "cites": [
+    "PMID:29165669"
+   ]
+  }
+ ],
+ "therapeutic_implications": [
+  {
+   "axis": "residual-allele rescue",
+   "text": "The missense allele is the only functional copy; raising its abundance/stability is disease-modifying. BubR1 levels are druggable: SIRT2/NAD+ maintains BubR1 (NMN or SIRT2 upregulation raises BubR1 in vivo), K250 acetylation blocks BubR1 degradation, and transgenic BubR1 overexpression corrects checkpoint defects, aneuploidy, tumorigenesis and progeroid decline.",
+   "cites": [
+    "PMID:24825348",
+    "PMID:19407811",
+    "PMID:23242215",
+    "PMID:20516114"
+   ]
+  },
+  {
+   "axis": "damage mitigation",
+   "text": "Senescent-cell burden is a downstream driver of the growth/progeroid phenotype and is modifiable: p16 clearance in BubR1 progeroid mice delayed and attenuated tissue dysfunction.",
+   "cites": [
+    "PMID:22048312",
+    "PMID:18516091",
+    "PMID:23602569"
+   ]
+  },
+  {
+   "axis": "aneuploid-clone control",
+   "text": "Surviving aneuploid cells are the cancer substrate; immune clearance of complex karyotypes is part of natural control, and aneuploid tumour cells carry selective vulnerabilities (SAC dependency, KIF18A) relevant if malignancy arises.",
+   "cites": [
+    "PMID:28633018",
+    "PMID:33505028",
+    "PMID:33505027"
+   ]
+  },
+  {
+   "axis": "cancer surveillance",
+   "text": "Mechanism predicts childhood embryonal rhabdomyosarcoma and Wilms tumour risk plus later GI neoplasia - regular surveillance is mechanism-justified independent of any drug choice.",
+   "cites": [
+    "PMID:15475955",
+    "PMID:31081598",
+    "PMID:21190457"
+   ]
+  }
+ ],
+ "contraindications": [
+  {
+   "agent": "SAC/MPS1/KIF18A inhibitors",
+   "text": "Systemic weakening of an already-insufficient checkpoint increases mis-segregation and aneuploid-clone supply. Nuance: aneuploid CANCER cells are selectively killed by these agents - relevant to treating an established tumour, contraindicated as prophylaxis.",
+   "cites": [
+    "PMID:33505028",
+    "PMID:33505027",
+    "PMID:20516114"
+   ]
+  },
+  {
+   "agent": "p53 suppression",
+   "text": "p53/p21 is the brake limiting propagation of aneuploid cells and protecting muscle/fat in BubR1-insufficient mice; lifting it expands aneuploid clones.",
+   "cites": [
+    "PMID:20123995",
+    "PMID:23602569"
+   ]
+  },
+  {
+   "agent": "growth hormone (for short stature)",
+   "text": "Guidance flags GH use in chromosomal-breakage / DNA-repair disorders for caution because of malignancy risk; in a constitutional-aneuploidy cancer-predisposition syndrome, accelerating clone expansion is mechanistically counterproductive. Counter-evidence: a large survivor cohort found no significant second-neoplasm increase, so this is precautionary.",
+   "cites": [
+    "PMID:30500870",
+    "PMID:32738133",
+    "PMID:15475955"
+   ]
+  },
+  {
+   "agent": "antimitotic agents producing aneuploidy",
+   "text": "Chronic spindle poisons / aneugens add mis-segregation on top of a constitutionally weak checkpoint - the opposite direction of the therapeutic goal.",
+   "cites": [
+    "PMID:20516114",
+    "PMID:15475955"
+   ]
+  }
+ ]
+}

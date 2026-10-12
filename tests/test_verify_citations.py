@@ -325,3 +325,17 @@ def test_cli_end_to_end(tmp_path, capsys):
     rep = json.loads(out.read_text(encoding="utf-8"))
     assert rep["schema"] == vc.REPORT_SCHEMA and rep["ok"]
     assert "PASS" in capsys.readouterr().out
+
+
+def test_dataset_doi_falls_back_to_datacite():
+    """figshare/Zenodo DOIs are DataCite-registered: Crossref 404s, the
+    DataCite record resolves (title + year), and a DOI unknown to both
+    registries stays unresolved."""
+    client = FixtureClient("crossref_figshare_404", "datacite_figshare_prism",
+                           "crossref_nonexistent_404", "datacite_nonexistent_404")
+    res = vc.resolve_ids(["DOI:10.6084/m9.figshare.11384241",
+                          "DOI:10.9999/definitely.not.real"], client)
+    fig = res["DOI:10.6084/m9.figshare.11384241"]
+    assert fig["found"] and fig["via"] == "datacite"
+    assert fig["title"] and isinstance(fig["year"], int)
+    assert not res["DOI:10.9999/definitely.not.real"]["found"]

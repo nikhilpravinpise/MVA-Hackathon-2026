@@ -178,6 +178,17 @@
    "via": "crossref",
    "resolved_at": "2026-10-12"
   },
+  "DOI:10.1038/s43018-019-0018-6": {
+   "found": true,
+   "title": "Discovering the anticancer potential of non-oncology drugs by systematic viability profiling",
+   "year": 2020,
+   "pubtypes": [
+    "journal-article"
+   ],
+   "retracted": false,
+   "via": "crossref",
+   "resolved_at": "2026-10-12"
+  },
   "DOI:10.1073/pnas.1318440111": {
    "found": true,
    "title": "Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention",
@@ -237,6 +248,39 @@
    "found": true,
    "title": "Clastogenic and aneugenic effects of three benzimidazole derivatives in the <i>in vitro</i> micronucleus test using human lymphocytes",
    "year": 1995,
+   "pubtypes": [
+    "journal-article"
+   ],
+   "retracted": false,
+   "via": "crossref",
+   "resolved_at": "2026-10-12"
+  },
+  "DOI:10.1093/nar/gkab1049": {
+   "found": true,
+   "title": "Ensembl 2022",
+   "year": 2021,
+   "pubtypes": [
+    "journal-article"
+   ],
+   "retracted": false,
+   "via": "crossref",
+   "resolved_at": "2026-10-12"
+  },
+  "DOI:10.1093/nar/gkad1011": {
+   "found": true,
+   "title": "AlphaFold Protein Structure Database in 2024: providing structure coverage for over 214 million protein sequences",
+   "year": 2023,
+   "pubtypes": [
+    "journal-article"
+   ],
+   "retracted": false,
+   "via": "crossref",
+   "resolved_at": "2026-10-12"
+  },
+  "DOI:10.1093/nar/gkae1010": {
+   "found": true,
+   "title": "UniProt: the Universal Protein Knowledgebase in 2025",
+   "year": 2024,
    "pubtypes": [
     "journal-article"
    ],
@@ -343,6 +387,17 @@
    "via": "crossref",
    "resolved_at": "2026-10-12"
   },
+  "DOI:10.1186/s13059-016-0974-4": {
+   "found": true,
+   "title": "The Ensembl Variant Effect Predictor",
+   "year": 2016,
+   "pubtypes": [
+    "journal-article"
+   ],
+   "retracted": false,
+   "via": "crossref",
+   "resolved_at": "2026-10-12"
+  },
   "DOI:10.1210/jc.2006-0656": {
    "found": true,
    "title": "Growth Hormone Treatment and Risk of Second Neoplasms in the Childhood Cancer Survivor",
@@ -369,6 +424,17 @@
    "found": true,
    "title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan",
    "year": 2014,
+   "pubtypes": [
+    "journal-article"
+   ],
+   "retracted": false,
+   "via": "crossref",
+   "resolved_at": "2026-10-12"
+  },
+  "DOI:10.1530/eje-20-0369": {
+   "found": true,
+   "title": "Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer",
+   "year": 2020,
    "pubtypes": [
     "journal-article"
    ],
@@ -418,6 +484,17 @@
    ],
    "retracted": false,
    "via": "crossref",
+   "resolved_at": "2026-10-12"
+  },
+  "DOI:10.6084/m9.figshare.11384241": {
+   "found": true,
+   "title": "DepMap 19Q4 Public",
+   "year": 2020,
+   "pubtypes": [
+    "Dataset"
+   ],
+   "retracted": false,
+   "via": "datacite",
    "resolved_at": "2026-10-12"
   },
   "DOI:10.7554/elife.92491": {
@@ -494,6 +571,18 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:16411201": {
+   "found": true,
+   "title": "Monoallelic BUB1B mutations and defective mitotic-spindle checkpoint in seven families with premature chromatid separation (PCS) syndrome.",
+   "year": 2006,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:16822820": {
    "found": true,
    "title": "Growth hormone treatment and risk of second neoplasms in the childhood cancer survivor.",
@@ -558,6 +647,18 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:19407811": {
+   "found": true,
+   "title": "BubR1 acetylation at prometaphase is required for modulating APC/C activity and timing of mitosis.",
+   "year": 2009,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:20123995": {
    "found": true,
    "title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism.",
@@ -565,6 +666,18 @@
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:20516114": {
+   "found": true,
+   "title": "Molecular causes for BUBR1 dysfunction in the human cancer predisposition syndrome mosaic variegated aneuploidy.",
+   "year": 2010,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
    ],
    "retracted": false,
    "via": "esummary:pubmed",
@@ -632,6 +745,30 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:22698286": {
+   "found": true,
+   "title": "The vertebrate mitotic checkpoint protein BUBR1 is an unusual pseudokinase.",
+   "year": 2012,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:23079597": {
+   "found": true,
+   "title": "Integration of kinase and phosphatase activities by BUBR1 ensures formation of stable kinetochore-microtubule attachments.",
+   "year": 2012,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:23158522": {
    "found": true,
    "title": "Efficacy and safety of everolimus for subependymal giant cell astrocytomas associated with tuberous sclerosis complex (EXIST-1): a multicentre, randomised, placebo-controlled phase 3 trial.",
@@ -667,6 +804,18 @@
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:23345399": {
+   "found": true,
+   "title": "Direct binding between BubR1 and B56-PP2A phosphatase complexes regulate mitotic progression.",
+   "year": 2013,
+   "pubtypes": [
+    "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
    "retracted": false,
@@ -813,6 +962,18 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:27618451": {
+   "found": true,
+   "title": "The rules and impact of nonsense-mediated mRNA decay in human cancers.",
+   "year": 2016,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:28553959": {
    "found": true,
    "title": "Biallelic TRIP13 mutations predispose to Wilms tumor and chromosome missegregation.",
@@ -824,12 +985,49 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:28633018": {
+   "found": true,
+   "title": "Chromosome Mis-segregation Generates Cell-Cycle-Arrested Cells with Complex Karyotypes that Are Eliminated by the Immune System.",
+   "year": 2017,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:29046436": {
    "found": true,
    "title": "Caenorhabditis elegans BUB-3 and SAN-1/MAD3 Spindle Assembly Checkpoint Components Are Required for Genome Stability in Response to Treatment with Ionizing Radiation.",
    "year": 2017,
    "pubtypes": [
     "Journal Article"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:29165669": {
+   "found": true,
+   "title": "ClinVar: improving access to variant interpretations and supporting evidence.",
+   "year": 2018,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Intramural"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:30500870": {
+   "found": true,
+   "title": "Growth Hormone's Links to Cancer.",
+   "year": 2019,
+   "pubtypes": [
+    "Journal Article",
+    "Review"
    ],
    "retracted": false,
    "via": "esummary:pubmed",
@@ -894,9 +1092,34 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:31659324": {
+   "found": true,
+   "title": "The impact of nonsense-mediated mRNA decay on genetic disease, gene editing and cancer immunotherapy.",
+   "year": 2019,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:31738183": {
    "found": true,
    "title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome.",
+   "year": 2020,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:32461654": {
+   "found": true,
+   "title": "The mutational constraint spectrum quantified from variation in 141,456 humans.",
    "year": 2020,
    "pubtypes": [
     "Journal Article",
@@ -921,6 +1144,42 @@
    "via": "esummary:pubmed",
    "resolved_at": "2026-10-12"
   },
+  "PMID:32738133": {
+   "found": true,
+   "title": "Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer.",
+   "year": 2020,
+   "pubtypes": [
+    "Journal Article"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:33207204": {
+   "found": true,
+   "title": "BUBR1 Pseudokinase Domain Promotes Kinetochore PP2A-B56 Recruitment, Spindle Checkpoint Silencing, and Chromosome Alignment.",
+   "year": 2020,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:33505027": {
+   "found": true,
+   "title": "Whole-genome doubling confers unique genetic vulnerabilities on tumour cells.",
+   "year": 2021,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
   "PMID:33505028": {
    "found": true,
    "title": "Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition.",
@@ -928,6 +1187,18 @@
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:34216545": {
+   "found": true,
+   "title": "Proteostasis failure and mitochondrial dysfunction leads to aneuploidy-induced senescence.",
+   "year": 2021,
+   "pubtypes": [
+    "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
    "retracted": false,
@@ -961,6 +1232,17 @@
    "found": true,
    "title": "Biallelic germline mutations in MAD1L1 induce a syndrome of aneuploidy with high tumor susceptibility.",
    "year": 2022,
+   "pubtypes": [
+    "Journal Article"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:37733863": {
+   "found": true,
+   "title": "Accurate proteome-wide missense variant effect prediction with AlphaMissense.",
+   "year": 2023,
    "pubtypes": [
     "Journal Article"
    ],
@@ -1072,6 +1354,19 @@
     "Comparative Study",
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-12"
+  },
+  "PMID:9644970": {
+   "found": true,
+   "title": "A rule for termination-codon position within intron-containing genes: when nonsense affects RNA abundance.",
+   "year": 1998,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, U.S. Gov't, P.H.S.",
+    "Review"
    ],
    "retracted": false,
    "via": "esummary:pubmed",
