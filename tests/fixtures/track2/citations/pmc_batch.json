@@ -1,0 +1,71 @@
+{
+ "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pmc&retmode=json&id=3785294,99999999",
+ "status": 200,
+ "recorded": "2026-10-12",
+ "response": {
+  "header": {
+   "type": "esummary",
+   "version": "0.3"
+  },
+  "result": {
+   "uids": [
+    "3785294",
+    "99999999"
+   ],
+   "3785294": {
+    "uid": "3785294",
+    "pubdate": "2013 Apr 25",
+    "epubdate": "2013 Apr 18",
+    "printpubdate": "2013 Apr 25",
+    "source": "Cell Rep",
+    "authors": [
+     {
+      "name": "Baker DJ",
+      "authtype": "Author"
+     },
+     {
+      "name": "Weaver RL",
+      "authtype": "Author"
+     },
+     {
+      "name": "van Deursen JM",
+      "authtype": "Author"
+     }
+    ],
+    "title": "p21 both attenuates and drives senescence and aging in BubR1 progeroid mice.",
+    "volume": "3",
+    "issue": "4",
+    "pages": "1164-74",
+    "articleids": [
+     {
+      "idtype": "pmid",
+      "value": "23602569"
+     },
+     {
+      "idtype": "MID",
+      "value": "NIHMS460178"
+     },
+     {
+      "idtype": "pmcid",
+      "value": "PMC3785294"
+     },
+     {
+      "idtype": "doi",
+      "value": "10.1016/j.celrep.2013.03.028"
+     },
+     {
+      "idtype": "pii",
+      "value": "S2211-1247(13)00135-6"
+     }
+    ],
+    "fulljournalname": "Cell reports",
+    "sortdate": "2013/04/25 00:00",
+    "pmclivedate": "2014/04/25"
+   },
+   "99999999": {
+    "uid": "99999999",
+    "error": "cannot get document summary"
+   }
+  }
+ }
+}

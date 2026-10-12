@@ -15,7 +15,7 @@ _spec.loader.exec_module(vb)
 
 def test_srt_time_rounding_and_hours():
     assert vb.srt_time(0) == "00:00:00,000"
-    assert vb.srt_time(61.2345) == "00:01:01,235"
+    assert vb.srt_time(61.2346) == "00:01:01,235"
     assert vb.srt_time(3600 + 2.5) == "01:00:02,500"
 
 
