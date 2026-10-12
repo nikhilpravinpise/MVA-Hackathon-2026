@@ -488,8 +488,14 @@ def _trigger_sentences(unit: str) -> list[str]:
             and not s.rstrip().endswith("?")    # a question asserts nothing
             and not _is_operational(s)]         # runtimes/sizes/costs are ours
     if (not hits and not clean.rstrip().endswith(("?", ".", "!"))
-            and (_NUM_UNIT.search(clean) or _MECH_VERBS.search(clean))):
-        hits = [clean]  # single-line fragment without terminal punctuation
+            and (_NUM_UNIT.search(clean) or _MECH_VERBS.search(clean))
+            and not _is_operational(clean)):
+        # OPERATIONAL_FRAGMENT rule: a single-line fragment without
+        # terminal punctuation (e.g. a table row, which ends in "|") is
+        # exempted by the same operational-measurement rule as full
+        # sentences - otherwise pure runtime/size/cost rows would be
+        # flagged while identical prose sentences are not.
+        hits = [clean]
     return hits
 
 

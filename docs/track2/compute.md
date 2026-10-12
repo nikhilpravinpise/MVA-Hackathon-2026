@@ -31,7 +31,8 @@ Raw downloads live outside git
 (`%USERPROFILE%\.claude\jobs\5356bf8a\tmp\prism_raw`); the small derived
 tables are committed under `tests/fixtures/track2/prism/derived/`
 (aneuploidy scores 997 lines, BUB1B expr/CN 1706 lines, PRISM cell lines
-588, Cohen-Sharir SuppTable5-PRISM 1448 drugs, SuppTable2 deps 327 rows).
+588, Cohen-Sharir SuppTable5-PRISM 1448 drugs, SuppTable2 deps 327 rows;
+counts verifiable in [repo:tests/fixtures/track2/prism/derived/]).
 
 **Model.** Per `broad_id`, `AUC ~ feature + C(primary_tissue)`, OLS with
 absorbed lineage fixed effects (Frisch-Waugh-Lovell; pure stdlib, tested
@@ -47,8 +48,8 @@ feature-high lines.
 
 **Results (all regenerated into `prism.json`; nothing hand-typed).**
 
-- 1,498 compounds tested (588 "Launched" broad_ids), ~457 lines median
-  per regression after screen collapse.
+- 1,498 compounds tested (588 "Launched" broad_ids) - [repo:docs/track2/evidence/prism.json],
+  ~457 lines median per regression after screen collapse.
 - **No launched drug reaches FDR q < 0.05 for aneuploidy-selectivity**
   (min launched q = 0.069). Top-of-list is hypothesis-generating only:
   ingenol-mebutate, lomefloxacin, lenalidomide, imatinib, dasatinib
@@ -144,7 +145,7 @@ $1/run; comfortably inside budget with the hard timeout as the cap.**
 | raw downloads | ~3 min | ~1.2 GB total |
 | `derive` (xlsx + 2-column scan of 969 MB CSVs) | ~2 min | openpyxl + csv |
 | `analyze` (264 MB scan + 3 regressions) | ~4 min | stdlib only |
-| ESM-2 150M, 1,319 variants, CPU batch 16 | ~48 min | GPU target: minutes |
+| ESM-2 150M, 1,319 variants, CPU batch 16 | ~48 min | GPU target: minutes; n = `scores` in [repo:docs/track2/evidence/esm.json] |
 
 ## 5. Limitations (for the report's honesty section)
 

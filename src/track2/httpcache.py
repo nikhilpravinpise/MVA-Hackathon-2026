@@ -235,20 +235,26 @@ def _trim_url(url: str, parsed):
         if not isinstance(res, list):
             return parsed
         keep = {"id", "set_id", "openfda", "pediatric_use", "boxed_warning",
-                "indications_and_usage", "effective_time"}
+                "indications_and_usage", "dosage_and_administration",
+                "effective_time"}
+        # L11: the pediatric flag also reads indications/dosage - keep them
+        # verbatim like every other evidence field; only pediatric_use is
+        # clipped (800, the bound the emitted pediatric_labeling field has
+        # always had).
+        clip_len = {"pediatric_use": 800}
 
-        def _clip(v):
+        def _clip(v, n):
             if isinstance(v, str):
-                return v[:800]
+                return v[:n]
             if isinstance(v, list):
-                return [x[:800] if isinstance(x, str) else x for x in v]
+                return [x[:n] if isinstance(x, str) else x for x in v]
             return v
 
         keep_of = {"generic_name", "brand_name", "substance_name",
                    "manufacturer_name", "product_type", "route"}
 
         def _proj(r):
-            o = {k: (_clip(v) if k == "pediatric_use" else v)
+            o = {k: (_clip(v, clip_len[k]) if k in clip_len else v)
                  for k, v in r.items() if k in keep}
             if isinstance(o.get("openfda"), dict):
                 o["openfda"] = {k: v for k, v in o["openfda"].items()

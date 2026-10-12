@@ -15,7 +15,7 @@ REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
-from src.track2 import engine, httpcache, proximity, scoring, t2config  # noqa: E402
+from src.track2 import engine, httpcache, proximity, scoring, sources, t2config  # noqa: E402
 
 
 # ------------------------------------------------------------- scoring ----
@@ -208,6 +208,144 @@ def test_trim_cache_shrinks(tmp_path):
     r = out["results"][0]
     assert r["pediatric_use"][0] == "T" * 800    # clipped
     assert "meta" not in r and r["openfda"]["generic_name"] == ["D"]
+
+
+# ------------------------------------------------ openFDA label matching --
+class _Scripted:
+    """get_json stub keyed on URL substrings - no network."""
+
+    def __init__(self, script):
+        self.script = script              # [(url_substring, (status, body))]
+        self.urls = []
+
+    def get_json(self, url):
+        self.urls.append(url)
+        for pat, ret in self.script:
+            if pat in url:
+                return ret
+        return 404, {"error": "no match"}
+
+
+_MISS = (404, {"error": "no match"})
+_ZITUVIMET = {"set_id": "z", "openfda": {
+    "generic_name": ["SITAGLIPTIN AND METFORMIN HYDROCHLORIDE"],
+    "substance_name": ["SITAGLIPTIN", "METFORMIN HYDROCHLORIDE"]}}
+_METFORMIN = {"set_id": "m", "openfda": {
+    "generic_name": ["METFORMIN HYDROCHLORIDE"],
+    "substance_name": ["METFORMIN HYDROCHLORIDE"]}}
+
+
+def test_openfda_name_variants():
+    assert sources.openfda_name_variants("dasatinib anhydrous") == \
+        ["dasatinib anhydrous", "dasatinib"]
+    assert sources.openfda_name_variants("metformin hydrochloride") == \
+        ["metformin hydrochloride", "metformin"]
+    assert sources.openfda_name_variants("dextran sulfate sodium") == \
+        ["dextran sulfate sodium", "dextran"]
+    assert sources.openfda_name_variants("sodium chloride") == \
+        ["sodium chloride"]          # leading word never stripped
+
+
+def test_openfda_combo_detection_and_pick():
+    assert sources.openfda_is_combo(_ZITUVIMET)
+    assert not sources.openfda_is_combo(_METFORMIN)
+    assert sources.openfda_pick_single(
+        [_ZITUVIMET, _METFORMIN], "metformin") is _METFORMIN
+    assert sources.openfda_pick_single([_ZITUVIMET], "metformin") is None
+    # a single-ingredient label for a DIFFERENT drug is not a pick
+    assert sources.openfda_pick_single(
+        [{"openfda": {"substance_name": ["INSULIN LISPRO"]}}],
+        "insulin glargine") is None
+
+
+def test_openfda_label_variant_retry():
+    """'dasatinib anhydrous' generic 404 -> 'dasatinib' variant hits."""
+    lab = {"set_id": "S", "openfda": {"generic_name": ["DASATINIB"]}}
+    http = _Scripted([
+        ("brand_name", _MISS),
+        ("%22DASATINIB%20ANHYDROUS%22", _MISS),
+        ("%22DASATINIB%22", (200, {"results": [lab]})),
+    ])
+    label, meta = sources.openfda_label(http, "ep", "dasatinib anhydrous")
+    assert label is lab
+    assert meta["combo"] is False
+    assert "on name variant 'dasatinib'" in meta["note"]
+
+
+def test_openfda_label_prefers_single_ingredient_over_combo():
+    """A combination first hit triggers the limit-5 refinement and the
+    single-ingredient label covering the drug wins."""
+    http = _Scripted([
+        ("brand_name", _MISS),
+        ("limit=5", (200, {"results": [_ZITUVIMET, _METFORMIN]})),
+        ("%22METFORMIN%20HYDROCHLORIDE%22",
+         (200, {"results": [_ZITUVIMET]})),
+    ])
+    label, meta = sources.openfda_label(http, "ep",
+                                        "metformin hydrochloride")
+    assert label is _METFORMIN
+    assert meta["combo"] is False
+    assert "single-ingredient label preferred" in meta["note"]
+
+
+def test_openfda_label_keeps_combo_when_no_single():
+    """No single-ingredient hit among the top hits -> keep the combo and
+    flag it."""
+    http = _Scripted([
+        ("brand_name", _MISS),
+        ("limit=5", (200, {"results": [_ZITUVIMET]})),
+        ("%22METFORMIN%20HYDROCHLORIDE%22",
+         (200, {"results": [_ZITUVIMET]})),
+    ])
+    label, meta = sources.openfda_label(http, "ep",
+                                        "metformin hydrochloride")
+    assert label is _ZITUVIMET
+    assert meta["combo"] is True
+    assert "combination label kept" in meta["note"]
+
+
+def test_openfda_label_brand_fallback():
+    """Generic miss on every variant -> brand_name hit is used."""
+    lab = {"set_id": "B", "openfda": {"generic_name": ["D"]}}
+    http = _Scripted([
+        ("generic_name", _MISS),
+        ("brand_name", (200, {"results": [lab]})),
+    ])
+    label, meta = sources.openfda_label(http, "ep", "dasatinib")
+    assert label is lab and "brand_name" in meta["note"]
+
+
+def test_openfda_label_no_hit():
+    http = _Scripted([])
+    label, meta = sources.openfda_label(http, "ep", "unicorn")
+    assert label == {} and meta["status"] == "no_hit"
+
+
+def test_resolve_chembl_merged_counter(monkeypatch):
+    """A name resolving to a ChEMBL id already held by another candidate
+    is union-merged into it and counted in stats['merged'] - the funnel
+    term that closes collected = gate outcomes + unresolved + merged."""
+    existing = {"chembl_id": "CHEMBL1", "names": {"aspirin"},
+                "module_hits": set(), "dgidb_pmids": set(),
+                "dgidb_sources": {"S"}, "dgidb_types": set(),
+                "ot_stage": "", "hit_types": {}}
+    merging = {"chembl_id": None, "names": {"acetylsalicylic acid"},
+               "module_hits": {"BUB1B"}, "dgidb_pmids": {"PMID:1"},
+               "dgidb_sources": {"S"}, "dgidb_types": {"inhibitor"},
+               "ot_stage": "", "hit_types": {}}
+    cand = {"CHEMBL1": existing, "name:acetylsalicylic acid": merging}
+    monkeypatch.setattr(
+        sources, "mychem_drugcentral",
+        lambda http, ep, name: (
+            {"chembl": {"molecule_chembl_id": "CHEMBL1"},
+             "drugcentral": {}}, {}))
+    cfg = {"endpoints": {"mychem": "e"},
+           "collection": {"chembl_name_lookup": True}, "workers": 1}
+    out, stats = engine.resolve_chembl(None, cfg, cand)
+    assert stats["merged"] == 1
+    assert out["CHEMBL1"]["names"] == {"aspirin", "acetylsalicylic acid"}
+    assert out["CHEMBL1"]["module_hits"] == {"BUB1B"}
+    assert "name:acetylsalicylic acid" not in out
 
 
 # -------------------------------------------------- committed evidence ----

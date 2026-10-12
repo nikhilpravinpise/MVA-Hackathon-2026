@@ -210,7 +210,7 @@ def resolve_chembl(http, cfg, cand):
     col = cfg.get("collection", {})
     workers = int(cfg.get("workers", 1))
     stats = {"name_lookups": 0, "code_names_skipped": 0,
-             "weak_names_skipped": 0}
+             "weak_names_skipped": 0, "merged": 0}
     pending = []
     out = {}
     for key in sorted(cand):
@@ -253,12 +253,18 @@ def resolve_chembl(http, cfg, cand):
         if cid:
             c["chembl_id"] = cid
             if cid in out and out[cid] is not c:
+                # union-merge: the looked-up name belongs to a ChEMBL id
+                # another candidate already holds, so its own entry is
+                # absorbed - counted so the funnel arithmetic closes
+                # (collected - dropped_over_cap = gate outcomes +
+                # unresolved + merged)
                 for f in ("names", "module_hits", "dgidb_pmids",
                           "dgidb_sources", "dgidb_types"):
                     out[cid][f] |= c[f]
                 for g, ts in c.get("hit_types", {}).items():
                     out[cid]["hit_types"].setdefault(g, set()).update(ts)
                 out[cid]["ot_stage"] = out[cid]["ot_stage"] or c["ot_stage"]
+                stats["merged"] += 1
             else:
                 out[cid] = c
         else:
@@ -304,6 +310,14 @@ def approval_gate(http, cfg, candidates):
     return approved, funnel
 
 
+def _label_text(label, field, clip):
+    """First text of a (list-or-string) label field, clipped."""
+    v = (label or {}).get(field)
+    t = (v[0] if isinstance(v, list) and v else
+         v if isinstance(v, str) else "")
+    return t[:clip]
+
+
 # --------------------------------------------------- per-drug evidence ----
 def drug_evidence(http, cfg, c):
     """Fill in label/MoA/warning detail for one approved candidate."""
@@ -313,20 +327,40 @@ def drug_evidence(http, cfg, c):
     mol = c.get("molecule") or {}
     ev = {"sources": ["chembl"]}
 
-    # openFDA label: FDA presence + pediatric text + boxed warning
-    label, _ = sources.openfda_label(http, ep["openfda"], name)
+    # openFDA label: FDA presence + pediatric text + boxed warning.
+    # L11: the pediatric flag reads three sections (pediatric_use,
+    # indications_and_usage, dosage_and_administration) - indications/
+    # dosage are classifier inputs only; `pediatric_labeling` still emits
+    # the verbatim 8.4 text and the winning sentence is quoted in
+    # `pediatric_flag_evidence` on the output record.
+    # L11: label the DRUG, not an arbitrary absorbed name - prefer the
+    # ChEMBL pref_name chain; collected names are fallbacks (a union-merged
+    # name like "dextran sulfate sodium" on CHEMBL692/glycerin must not
+    # attach a dextran label to the glycerin candidate).
+    label, lab_meta = {}, {}
+    pref = (mol.get("pref_name") or "").lower()
+    chains = [pref] if pref else []
+    for n in sorted(c["names"]):
+        if n not in chains:
+            chains.append(n)
+    for nm in chains[:3]:
+        label, lab_meta = sources.openfda_label(http, ep["openfda"], nm)
+        if label:
+            break
     fda = bool(label)
-    ped = ""
     if label:
-        pu = label.get("pediatric_use")
-        ped = (pu[0] if isinstance(pu, list) and pu else
-               pu if isinstance(pu, str) else "")[:800]
         ev["sources"].append("openfda")
     ev["fda"] = fda
     ev["boxed_warning"] = bool(label.get("boxed_warning")) or \
         bool(mol.get("black_box_warning"))
-    ev["pediatric_labeling"] = ped
+    ev["pediatric_labeling"] = _label_text(label, "pediatric_use", 800)
+    ev["label_indications"] = _label_text(
+        label, "indications_and_usage", 4000)
+    ev["label_dosage"] = _label_text(
+        label, "dosage_and_administration", 4000)
     ev["fda_set_id"] = label.get("set_id")
+    ev["fda_combo_label"] = bool(label) and lab_meta.get("combo", False)
+    ev["openfda_match"] = lab_meta.get("note")
 
     # DrugCentral via MyChem: approval agencies + id (reuse resolution hit)
     dc_hit = c.get("mychem")
@@ -563,7 +597,9 @@ def run_case(http, cfg, case):
             "hit_types": c.get("hit_types", {}),
         }
         d_dir, d_reasons = direction_mod.classify(cand_dir, rules)
-        ped_flag = direction_mod.pediatric_flag(ev["pediatric_labeling"])
+        ped_flag, ped_ev = direction_mod.classify_pediatric(
+            ev["pediatric_labeling"], ev["label_indications"],
+            ev["label_dosage"])
 
         out_cands.append({
             "drug": display,
@@ -576,6 +612,9 @@ def run_case(http, cfg, case):
                 "first_approval": mol.get("first_approval"),
                 "withdrawn": bool(mol.get("withdrawn_flag")),
                 "pediatric_labeling": ev["pediatric_labeling"],
+                "fda_set_id": ev["fda_set_id"],
+                "combination_label": ev["fda_combo_label"],
+                "openfda_match": ev["openfda_match"],
                 "evidence": ev["sources"],
             },
             "targets": targets,
@@ -591,6 +630,7 @@ def run_case(http, cfg, case):
             "direction": d_dir,
             "direction_reasons": d_reasons,
             "pediatric_flag": ped_flag,
+            "pediatric_flag_evidence": ped_ev,
             "evidence": {
                 "target_overlap": channels["target_overlap"],
                 "network_proximity_z": zinfo["z"],

@@ -252,6 +252,162 @@ def test_pediatric_flag_text_only_and_empty():
     assert direction_mod.pediatric_flag(None) == "none"
 
 
+# ---------------------------------------------------------------------------
+# L11 - pediatric classifier on REAL recorded openFDA label strings
+# (fetched 2026-10-13; set_ids noted per constant)
+# ---------------------------------------------------------------------------
+
+# dasatinib label set_id 02b04c6f-4ea5-4fcb-bf6d-2631d5ab31e4 (generic
+# DASATINIB): the pediatric age floor lives in INDICATIONS AND USAGE,
+# not in 8.4 - the old classifier never saw it.
+_DASATINIB_IND = (
+    "1 INDICATIONS AND USAGE Dasatinib tablets are indicated for the "
+    "treatment of adult patients with newly diagnosed Philadelphia "
+    "chromosome-positive (Ph+) chronic myeloid leukemia (CML) in chronic "
+    "phase. chronic, accelerated, or myeloid or lymphoid blast phase Ph+ "
+    "CML with resistance or intolerance to prior therapy including "
+    "imatinib. Philadelphia chromosome-positive acute lymphoblastic "
+    "leukemia (Ph+ ALL) with resistance or intolerance to prior therapy. "
+    "Dasatinib tablets are indicated for the treatment of pediatric "
+    "patients 1 year of age and older with Ph+ CML in chronic phase. "
+    "newly diagnosed Ph+ ALL in combination with chemotherapy.")
+
+# metformin hydrochloride tablets label set_id
+# 011de1a5-1ac0-4831-9e8d-26ec79ba2205 (single ingredient)
+_METFORMIN_PED = (
+    "8.4 Pediatric Use Metformin Hydrochloride Tablets The safety and "
+    "effectiveness of metformin hydrochloride tablets for the treatment "
+    "of type 2 diabetes mellitus have been established in pediatric "
+    "patients 10 to 16 years old. Safety and effectiveness of metformin "
+    "hydrochloride tablets have not been established in pediatric "
+    "patients less than 10 years old.")
+
+# ZITUVIMET (sitagliptin/metformin combo) label - the product the old
+# matcher returned for "metformin" and "metformin hydrochloride"
+_ZITUVIMET_PED = (
+    "8.4 Pediatric Use The safety and effectiveness of ZITUVIMET have "
+    "not been established in pediatric patients.")
+_ZITUVIMET_IND = (
+    "1 INDICATIONS AND USAGE ZITUVIMET is a combination of sitagliptin "
+    "and metformin hydrochloride indicated as an adjunct to diet and "
+    "exercise to improve glycemic control in adults with type 2 "
+    "diabetes mellitus.")
+
+# everolimus recorded dossier (docs/track2/evidence/dossiers/)
+_EVEROLIMUS_PED = (
+    "The safety and effectiveness of everolimus have been established "
+    "in pediatric patients age 1 year and older for TSC-associated "
+    "partial-onset seizures, TSC-associated SEGA requiring intervention, "
+    "and renal angiomyolipoma.")
+
+# NIACOR label set_id bf287412-160b-403f-8eb4-57f29a475902: negated only
+_NIACOR_PED = (
+    "Pediatric Use - Safety and effectiveness in children and "
+    "adolescents have not been established.")
+
+# hydroxychloroquine sulfate label: pediatric malaria use established,
+# RA/SLE pediatric use negated, weight floor excludes small children
+_HCQ_PED = (
+    "8.4 Pediatric Use The safety and effectiveness of "
+    "hydroxychloroquine sulfate have been established in pediatric "
+    "patients for the treatment of uncomplicated malaria due to P. "
+    "falciparum, P. malariae, P. vivax, and P. ovale, as well as for "
+    "the prophylaxis of malaria in geographic areas where chloroquine "
+    "resistance is not reported. However, this product cannot be "
+    "directly administered to pediatric patients weighing less than "
+    "31 kg because the film-coated tablets cannot be crushed or "
+    "divided. The safety and effectiveness of hydroxychloroquine "
+    "sulfate have not been established in pediatric patients for the "
+    "treatment of rheumatoid arthritis, chronic discoid lupus "
+    "erythematosus, or systemic lupus erythematosus.")
+_HCQ_DOS = (
+    "2 DOSAGE AND ADMINISTRATION Malaria in Adult and Pediatric "
+    "Patients (2.2): - Adults: 400 mg once a week - Pediatric "
+    "patients >= 31 kg: 6.5 mg/kg up to 400 mg, once a week")
+
+
+def test_pediatric_dasatinib_via_indications():
+    flag, ev = direction_mod.classify_pediatric("", _DASATINIB_IND, "")
+    assert flag == "labeled_pediatric_indication"
+    assert ev["section"] == "indications_and_usage"
+    assert "1 year of age and older" in ev["text"]
+
+
+def test_pediatric_metformin_positive_band():
+    flag, _ = direction_mod.classify_pediatric(_METFORMIN_PED, "", "")
+    assert flag == "labeled_pediatric_indication"
+
+
+def test_pediatric_zituvimet_combo_negative():
+    """Combination label: negated pediatric_use + adults-only indication
+    is 'none' - a combo must not donate pediatric status."""
+    flag, _ = direction_mod.classify_pediatric(
+        _ZITUVIMET_PED, _ZITUVIMET_IND, "")
+    assert flag == "none"
+
+
+def test_pediatric_everolimus_true_positive():
+    flag, _ = direction_mod.classify_pediatric(_EVEROLIMUS_PED, "", "")
+    assert flag == "labeled_pediatric_indication"
+
+
+def test_pediatric_niacin_true_negative():
+    flag, _ = direction_mod.classify_pediatric(_NIACOR_PED, "", "")
+    assert flag == "none"
+
+
+def test_pediatric_hydroxychloroquine_weight_threshold():
+    """A positive malaria indication in 8.4 wins even though another
+    sentence denies pediatric RA/SLE use and a weight floor excludes
+    small children."""
+    flag, ev = direction_mod.classify_pediatric(_HCQ_PED, "", _HCQ_DOS)
+    assert flag == "labeled_pediatric_indication"
+    assert ev["section"] == "pediatric_use"
+
+
+def test_pediatric_weight_threshold_dosage_channel():
+    """Dosage text naming a pediatric weight bound is itself a labeled
+    pediatric indication even with an empty 8.4."""
+    flag, ev = direction_mod.classify_pediatric(
+        "", "", "- Pediatric patients >= 31 kg: 6.5 mg/kg up to 400 mg")
+    assert flag == "labeled_pediatric_indication"
+    assert ev["section"] == "dosage_and_administration"
+
+
+def test_pediatric_negative_thresholds_not_positive():
+    """'less than'/'under' bounds and study-population age ranges are
+    not affirmative indications."""
+    for text in (
+            "cannot be directly administered to pediatric patients "
+            "weighing less than 31 kg.",
+            "The safety and effectiveness of hydroxychloroquine "
+            "sulfate have not been established in pediatric patients.",
+            "In an open-label trial, 25 pediatric patients (median "
+            "age 14 years, range 3-20 years) were randomized.",
+            "Twenty-eight female pediatric patients, aged 2 to 10 "
+            "years, were treated for up to 12 months."):
+        flag, _ = direction_mod.classify_pediatric(text, "", "")
+        assert flag != "labeled_pediatric_indication", text
+
+
+def test_pediatric_adult_age_floor_not_positive():
+    """An ADULT age floor in INDICATIONS must not count as pediatric."""
+    ind = ("1.2 Acute Myeloid Leukemia VENCLEXTA is indicated in "
+           "combination with azacitidine for the treatment of newly "
+           "diagnosed acute myeloid leukemia (AML) in adults 75 years "
+           "or older, or who have comorbidities.")
+    flag, _ = direction_mod.classify_pediatric("", ind, "")
+    assert flag == "none"
+
+
+def test_pediatric_positive_wins_over_negated_elsewhere():
+    """A positive indication survives a negated sentence elsewhere in
+    the label (task rule: positive wins)."""
+    flag, _ = direction_mod.classify_pediatric(
+        _ZITUVIMET_PED, _DASATINIB_IND, "")
+    assert flag == "labeled_pediatric_indication"
+
+
 # ---------------------------------------------------------------- PRISM ---
 
 def test_prism_overlay_join(tmp_path):

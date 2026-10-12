@@ -292,6 +292,23 @@ def test_coverage_detector(tmp_path):
     assert len(uncovered) == 3
 
 
+def test_coverage_operational_fragment(tmp_path):
+    """OPERATIONAL_FRAGMENT rule (L11): a fragment without terminal
+    punctuation - a markdown table row ends in "|", not "." - is exempt
+    when every numeric trigger is an operational measurement, exactly as
+    the equivalent full sentence is.  A fragment with a real scientific
+    number is still flagged."""
+    md = _write(tmp_path, "report.md",
+                "| step | wall time | memory |\n"
+                "|---|---|---|\n"
+                "| raw downloads | ~3 min | ~1.2 GB total |\n"
+                "| compounds tested | 1,498 compounds | n/a |\n")
+    uncovered = vc.coverage_scan(md, "report.md")
+    sents = [u["sentence"] for u in uncovered]
+    assert not any("1.2 GB" in s for s in sents)
+    assert any("1,498 compounds" in s for s in sents)
+
+
 def test_coverage_strict_flag(tmp_path):
     """Uncovered claims only fail the gate under --coverage-strict."""
     md = _write(tmp_path, "report.md",

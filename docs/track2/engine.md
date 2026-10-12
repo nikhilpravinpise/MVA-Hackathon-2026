@@ -94,7 +94,20 @@ module genes -> OT clinical rows + DGIdb interactions -> per-gene cap 50
 (OT-approved first, then DGIdb source count) -> code-name skip
 (`CC-115`, `AZD-8055`...) -> weak-name skip (single source, no type, no
 pmid) -> MyChem name resolution -> global cap 800 -> approval gate ->
-scored candidates.  Every stage's count lands in `funnel`.
+scored candidates.  Every stage's count lands in `funnel`, and the
+arithmetic closes explicitly:
+
+```
+collected - dropped_over_cap
+    == gated_in + gated_out_no_chembl + gated_out_phase
+     + gated_out_withdrawn + gated_out_unresolved + merged
+```
+
+`merged` (added 2026-10-13, lane L11) counts names whose MyChem lookup
+resolved to a ChEMBL id a *different* candidate already held - the name
+is union-merged into that candidate (its name set, module hits, DGIdb
+sources/types) rather than scoring twice.  13 names merged this way in
+the MVA run; without the counter the funnel sums left a silent gap.
 
 ## Scoring
 
@@ -114,11 +127,14 @@ Tiers: **T1** score>=0.45 and >=2 non-zero channels; **T2** score>=0.25;
 else **T3**.  Every channel value is emitted under `channels` plus a
 human-readable `rationale_keys` list.
 
-**Axis assignment** (config target->axis map): A = residual-BubR1 rescue
+**Axis assignment** (config target->axis map,
+[repo:config/track2.yaml]): A = residual-BubR1 rescue
 (SAC/kinetochore module), B = senescence/damage response, C = aneuploid
 vulnerability.  A drug gets the sorted set of axes of its
 module-overlapping targets; `none` when the overlap hits only
-axis-unannotated neighbours (e.g. TOP2A).
+axis-unannotated neighbours (e.g. TOP2A).  The axis is a *hypothesis
+bucket*, not evidence of benefit - it says which arm of the strategy a
+drug's target overlap nominates it for, nothing more (see Limitations).
 
 ## Mechanism-direction safety layer (added 2026-10-12, AFTER the L2 freeze)
 
@@ -209,22 +225,58 @@ residual non-oncology noise (excipients/chelators ranking by module
 proximity) is a scoring limitation, not a direction error - documented
 under Limitations; it is exactly the curation surface L3 works on.
 
-### Pediatric flag
+### Pediatric flag (hardened 2026-10-13, lane L11)
 
-`pediatric_flag` derives from the openFDA `pediatric_use` label text
-already collected (now kept at 800 chars):
-`labeled_pediatric_indication` (a positive established/indicated/approved
-statement exists - evaluated per-sentence so mixed labels like
-sirolimus "not established <13y ... established >=13y" read correctly),
-`pediatric_text_only` (text exists but only reports risk/studies), or
-`none` (no label text, or text says only "not established").  It is a
-coarse label-derived flag, not a pediatric-safety assessment.
+`pediatric_flag` derives from the matched openFDA label.  Two
+independent bugs were found in v1 ([repo:src/track2/direction.py],
+[repo:src/track2/sources.py]):
+
+- **Wrong section read.**  v1 scanned only the `pediatric_use` (8.4)
+  field; pediatric age floors often live in INDICATIONS AND USAGE or
+  DOSAGE AND ADMINISTRATION instead - dasatinib's "pediatric patients 1
+  year of age and older" sits in the indication bullets (verbatim
+  strings in [repo:tests/test_track2_direction.py]), and its candidate
+  name `dasatinib anhydrous` also never resolved a label at all.
+- **Wrong label selected.**  A `limit=1` generic-name query returns
+  whatever openFDA happens to rank first - for metformin that was
+  ZITUVIMET (sitagliptin/metformin), a combination label whose 8.4 says
+  "have not been established" for the COMBINATION.  The same bug also
+  produced a false POSITIVE: methylprednisolone matched a 6-ingredient
+  procedure-kit label and inherited bupivacaine's pediatric approval
+  sentence (and its boxed warning).
+
+Label resolution now retries trailing salt/hydrate/ester name variants
+(`dasatinib anhydrous` -> `dasatinib`), queries the ChEMBL `pref_name`
+first so a union-merged name cannot attach the wrong label, and when
+the first hit is a combination product issues one extra `limit=5`
+search preferring the first single-ingredient label covering the drug;
+a combination label is kept (and flagged `combination_label: true`)
+only when no single-ingredient label is among the top hits.  The match
+path is disclosed verbatim per candidate in `approval.openfda_match`.
+
+The classifier then scans all three sections
+([repo:src/track2/direction.py], real-label test corpus in
+[repo:tests/test_track2_direction.py]):
+`labeled_pediatric_indication` when a sentence asserts
+established/indicated/approved for a pediatric population, or - in
+INDICATIONS/DOSAGE text only, where an age or weight bound is an
+indication bound - names an affirmative pediatric threshold ("1 year of
+age and older", "pediatric patients >= 31 kg").  Age ranges inside 8.4
+are study populations, not indications ("25 pediatric patients, range
+3-20 years"), and adult age floors ("in adults 75 years or older")
+never count.  `pediatric_text_only` means the 8.4 field exists but
+holds no explicit positive statement; `none` means no label text, or
+every pediatric statement is negated.  The winning sentence is quoted
+verbatim in `pediatric_flag_evidence` `{section, text}`.
+It is a coarse label-derived flag, not a pediatric-safety assessment.
 
 ## PRISM aneuploidy overlay (added 2026-10-12, lane L2b)
 
 `evidence.prism_aneuploidy` per candidate is filled from
-`evidence/prism.json` (lane L5): PRISM Repurposing 19Q4 pooled screen,
-1498 compounds x ~500 cell lines; for each compound, OLS regression of
+`evidence/prism.json` (lane L5;
+[repo:docs/track2/evidence/prism.json]): PRISM Repurposing 19Q4 pooled
+screen, 1498 compounds x ~500 cell lines; for each compound, OLS
+regression of
 drug AUC on a per-line aneuploidy score with lineage fixed effects.
 beta < 0 = more-aneuploid lines are more sensitive; `q` = BH FDR over the
 screen; `n_lines` = lines used.  Candidates absent from the screen are
@@ -251,7 +303,8 @@ d_c(T, M) = (1/|T|) * sum_{t in T} min_{s in M} dist(t, s)
 ```
 
 - `unreachable_distance` = 6 assigned when a target is outside the routing
-  universe or disconnected (conservative bound).
+  universe or disconnected (conservative bound;
+  [repo:config/track2.yaml]).
 - z-score vs `n_random=200` degree-matched random target sets, `seed
   20261012` fixed (log2 degree bins; `random.Random` - fully
   deterministic).
@@ -339,7 +392,31 @@ track2-trim:       ; $(PY) tools/run_track2.py --trim-cache tests/fixtures/track
 - **Approved != safe in children.**  The gate checks licensure only.
   `pediatric_flag` is a coarse label-derived hint (labeled indication /
   text-only / none), not a pediatric-safety assessment; dosing,
-  contraindications and age floors are L3 dossier work.
+  contraindications and age floors are L3 dossier work.  The flag is
+  only as good as the label openFDA happens to serve: v1 missed the
+  pediatric indication entirely for dasatinib (name variant never
+  resolved) and read a combination-product label for metformin - both
+  fixed 2026-10-13 (see Pediatric flag), and the single-ingredient pick
+  still depends on openFDA's hit ordering within the top-5 refinement.
+- **Axis labels are a config hypothesis map, not evidence of benefit.**
+  A candidate's axis comes solely from `config/track2.yaml`'s
+  target->axis table.  Gefitinib sits on axis C because EGFR is a
+  module neighbour tagged to that axis - nothing in the axis label says
+  gefitinib benefits a BUB1B-hypomorph child; that question belongs to
+  the direction layer and the dossier lanes.
+- **`collected` names can merge onto another candidate's ChEMBL id.**
+  13 of 482 collected names in the MVA run resolved to a ChEMBL id a
+  different candidate already held; they union-merge into it and are
+  counted explicitly in `funnel.merged` so
+  `collected - dropped_over_cap = gate outcomes + merged` closes.
+- **The approved count double-counts salt/ester forms.**  The 96
+  approved records of the MVA run are 89 distinct actives: 7 records are
+  salt/ester/prodrug forms of an active already counted (metformin
+  hydrochloride, doxorubicin hydrochloride, daunorubicin
+  hydrochloride, etoposide phosphate, idarubicin hydrochloride,
+  mitoxantrone hydrochloride, dexrazoxane hydrochloride).  They are
+  distinct ChEMBL molecules, so the gate correctly treats each as
+  separately approved; portfolio reading should group them.
 - **Direction rules are mechanism-generic, not verdicts.**  An `opposed`
   label means "this mechanism class pushes the documented disease
   mechanism the wrong way given the cited evidence" - it is not a claim
@@ -368,9 +445,7 @@ track2-trim:       ; $(PY) tools/run_track2.py --trim-cache tests/fixtures/track
 - **Evidence heterogeneity.**  DGIdb sources range from curated ChEMBL to
   text-mined mentions; `interaction_evidence`/`literature` channels cap
   their contribution accordingly.
-- **Phasing unknown.**  The engine treats the genotype as a reduced-
-  function SAC phenotype (null + likely hypomorph); it does not model
-  allele-specific rescue and asserts nothing about cis/trans.
+- **Phasing unknown** [repo:config/track2.yaml] - the engine treats the genotype as a reduced-function SAC phenotype (null + likely hypomorph per `case.variants[].allele_role`); it does not model allele-specific rescue and asserts nothing about cis/trans.
 - **Not a rank of "best drugs"** - a rank of *evidence density* for
   module-targeted approved compounds.  Drugs acting downstream of the
   module (losartan-in-Marfan class) are structurally invisible here.

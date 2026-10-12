@@ -23,6 +23,7 @@ short provenance note for the output block.
 """
 from __future__ import annotations
 
+import re
 import urllib.parse
 
 
@@ -174,21 +175,136 @@ def string_network(http, base, symbols, score, chunk=180):
 
 
 # ------------------------------------------------------------- openFDA ----
-def openfda_label(http, base, name):
-    """First label hit for a drug name (generic/substance, then brand)."""
-    safe = name.replace('"', "").upper()
-    q = urllib.parse.quote(
-        f'openfda.generic_name:"{safe}" OR openfda.substance_name:"{safe}"')
-    url = f"{base}?search={q}&limit=1"
+# L11 (2026-10-13) label-resolution hardening:
+#  * ChEMBL-style pref_names carry form words openFDA never indexes
+#    ("dasatinib anhydrous", "metformin hydrochloride"): each miss retries
+#    the name with trailing salt/hydrate/form words stripped, repeatedly.
+#  * When the top hit is a COMBINATION product (metformin -> the
+#    sitagliptin+metformin ZITUVIMET label) a limit-5 refinement prefers
+#    the first single-ingredient label whose actives still cover the
+#    queried drug.  The combination hit is kept (and flagged) only when
+#    no single-ingredient label is among the top hits.
+#  * The primary request is unchanged (generic/substance, limit 1) so all
+#    recorded fixtures replay identically; refinements/variant retries
+#    are *additional* deterministic requests.
+_FORM_WORDS = re.compile(
+    r"\s+(?:anhydrous|hydrochloride|hydrobromide|sulfate|sulfide|sodium|"
+    r"potassium|calcium|magnesium|zinc|mesylate|maleate|tartrate|"
+    r"bitartrate|fumarate|succinate|mepesuccinate|phosphate|"
+    r"diphosphate|citrate|acetate|lactate|nitrate|palmitate|pamoate|"
+    r"propionate|cypionate|enanthate|decanoate|undecanoate|valerate|"
+    r"benzoate|dimesylate|esylate|"
+    r"besylate|besilate|tosylate|monohydrate|dihydrate|trihydrate|"
+    r"hemihydrate|hydrate|hcl)\b.*$", re.I)
+
+
+def openfda_name_variants(name):
+    """Search-order name variants: the raw name, then the same name with
+    trailing salt/hydrate/form words stripped (repeatedly).
+
+    "dasatinib anhydrous" -> ["dasatinib anhydrous", "dasatinib"];
+    "dextran sulfate sodium" -> [..., "dextran sulfate", "dextran"];
+    "sodium chloride" -> ["sodium chloride"] (leading word kept).
+    """
+    out, cur = [], re.sub(r"\s+", " ", (name or "").strip().lower())
+    while cur and cur not in out:
+        out.append(cur)
+        cur = _FORM_WORDS.sub("", cur).strip()
+    return out
+
+
+def _label_actives(label):
+    """Active-ingredient name list from a label's openfda block."""
+    of = (label or {}).get("openfda") or {}
+    actives = [s.upper() for s in of.get("substance_name") or []]
+    if not actives:
+        actives = [g.upper() for g in of.get("generic_name") or []]
+    return actives
+
+
+def openfda_is_combo(label):
+    """True when the label is a combination product: more than one active,
+    or a single active string joining ingredients ('X AND Y', 'X, Y, Z')."""
+    actives = _label_actives(label)
+    if len(actives) > 1:
+        return True
+    return any((" AND " in a) or a.count(",") >= 2 for a in actives)
+
+
+def openfda_pick_single(results, base):
+    """First single-ingredient label in ``results`` whose actives cover
+    ``base`` (the form-stripped drug name, compared uppercase)."""
+    base = (base or "").upper()
+    for r in results or []:
+        if openfda_is_combo(r):
+            continue
+        if any(base in a or a in base for a in _label_actives(r)):
+            return r
+    return None
+
+
+def _openfda_search(http, base, safe, limit=1, field=None):
+    """One label search; returns the results list ([] on miss)."""
+    if field:
+        q = urllib.parse.quote(f'openfda.{field}:"{safe}"')
+    else:
+        q = urllib.parse.quote(
+            f'openfda.generic_name:"{safe}" OR '
+            f'openfda.substance_name:"{safe}"')
+    url = f"{base}?search={q}&limit={limit}"
     status, d = http.get_json(url)
-    res = (d or {}).get("results", []) if isinstance(d, dict) else []
-    if not res:
-        q = urllib.parse.quote(f'openfda.brand_name:"{safe}"')
-        url = f"{base}?search={q}&limit=1"
-        status, d = http.get_json(url)
-        res = (d or {}).get("results", []) if isinstance(d, dict) else []
-    hit = res[0] if res else {}
-    return hit, _meta("openfda", "ok" if hit else "no_hit")
+    return (d or {}).get("results", []) if isinstance(d, dict) else []
+
+
+def _match_note(variant_index, variant, how):
+    note = f"matched via {how}"
+    if variant_index:
+        note += f" on name variant '{variant}'"
+    return note
+
+
+def openfda_label(http, base, name):
+    """Best label hit for a drug name.  Returns (label, meta).
+
+    Order per name variant: generic/substance (limit 1, unchanged request)
+    -> if that hit is a combination product, a limit-5 refinement
+    preferring the first single-ingredient label still covering the drug
+    -> brand_name (limit 1) -> next name variant (form words stripped).
+    ``meta.note`` records which variant/label won; ``meta.combo`` is True
+    when the label used is a combination product.
+    """
+    variants = openfda_name_variants(name)
+    for vi, variant in enumerate(variants):
+        safe = variant.replace('"', "").upper()
+        res = _openfda_search(http, base, safe)
+        if res:
+            hit = res[0]
+            if openfda_is_combo(hit):
+                pick = openfda_pick_single(
+                    _openfda_search(http, base, safe, limit=5),
+                    variants[-1])
+                if pick is not None:
+                    m = _meta("openfda", "ok", _match_note(
+                        vi, variant, "generic_name; single-ingredient "
+                        "label preferred over combination hit"))
+                    m["combo"] = False
+                    return pick, m
+                m = _meta("openfda", "ok", _match_note(
+                    vi, variant, "generic_name; combination label kept - "
+                    "no single-ingredient label in top hits"))
+                m["combo"] = True
+                return hit, m
+            m = _meta("openfda", "ok",
+                      _match_note(vi, variant, "generic_name"))
+            m["combo"] = False
+            return hit, m
+        res = _openfda_search(http, base, safe, field="brand_name")
+        if res:
+            m = _meta("openfda", "ok",
+                      _match_note(vi, variant, "brand_name"))
+            m["combo"] = openfda_is_combo(res[0])
+            return res[0], m
+    return {}, _meta("openfda", "no_hit")
 
 
 # ---------------------------------------------------- MyChem/DrugCentral --
