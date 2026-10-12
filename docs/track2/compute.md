@@ -108,13 +108,13 @@ ClinVar P/LP *missense* in BUB1B (n = 1: p.Gln467His - reported as a
 point estimate, no AUC claimed; BUB1B pathogenicity is overwhelmingly
 truncating, which is itself the MVA genotype rule); ClinVar P/LP
 *nonsense* scored as loss-of-wildtype via the 'X' token (proxy panel,
-n = 17 - ESM has no stop token, so this measures constraint at the
+n = 35 - ESM has no stop token, so this measures constraint at the
 mutated residue, not stop-specific evidence); gnomAD common missense
-AF >= 1e-4 (n = 27, benign-enriched) vs ultra-rare AC <= 2 (n = 1026
-after dedup, deleterious-enriched). Percentile background = all 1,273
-gnomAD-observed BUB1B missense (17 dropped: their hgvsp numbering is not
-MANE-consistent - pos ~87-94 cluster, logged in
-`esm.json.dropped_variants`).
+AF >= 1e-4 (n = 27, benign-enriched) vs ultra-rare AC <= 2 (n = 840
+scored after dedup, deleterious-enriched). Percentile background = all 1,273
+gnomAD-observed BUB1B missense (17 rows carry non-MANE hgvsp numbering,
+pos ~87-94 cluster: 16 explicitly dropped, one deduplicated against a
+MANE-consistent row - all logged in `esm.json.dropped_variants`).
 
 ## 3. Modal app (`tools/modal_track2.py`, prepared - not run by L5)
 
