@@ -1,8 +1,8 @@
 # Rescue, Remove, Intercept: a testable, approved-drug repurposing portfolio for BUB1B mosaic variegated aneuploidy - and the open engine that built it
 
-**Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
-**Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
-**Report generated:** {{GENERATED}} by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
+- **Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
+- **Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
+- **Report generated:** {{GENERATED}} by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
 
 > **This is a hypothesis-generation document for research follow-up, not medical advice.** Every candidate below is an existing approved medicine proposed for laboratory testing first; none should be given to any child on the strength of this report.
 

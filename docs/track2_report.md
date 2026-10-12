@@ -1,8 +1,8 @@
 # Rescue, Remove, Intercept: a testable, approved-drug repurposing portfolio for BUB1B mosaic variegated aneuploidy - and the open engine that built it
 
-**Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
-**Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
-**Report generated:** 2026-10-12 from commit `8726b3e` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
+- **Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
+- **Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
+- **Report generated:** 2026-10-13 from commit `d7bf37e` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
 
 > **This is a hypothesis-generation document for research follow-up, not medical advice.** Every candidate below is an existing approved medicine proposed for laboratory testing first; none should be given to any child on the strength of this report.
 
@@ -338,7 +338,7 @@ Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard 
 
 ## 9. Rigor and reproducibility
 
-- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 46 uncovered claim sentences** (exit 0, 0 network requests).
+- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 69 uncovered claim sentences** (exit 0, 0 network requests).
 - 132 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
 - Approval, pediatric-label and boxed-warning facts come from live ChEMBL and openFDA responses recorded in each dossier (`docs/track2/evidence/dossiers/`).
 - Decision freeze: benchmark truth and seed genes were committed in `config/track2.yaml` before the engine was run (git history).

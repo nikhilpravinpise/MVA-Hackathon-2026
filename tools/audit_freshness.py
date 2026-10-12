@@ -61,6 +61,26 @@ GT = frozenset([("chr15", 40209701, "T", "G"),
                 ("chr15", 40220612, "T", "G")])
 
 
+# The run outputs live under the gitignored results/ tree: present on the
+# machine that produced them, absent in a fresh clone or a worktree. The
+# checks that read them report WARN there instead of FAIL, matching the
+# skip the pytest wrappers apply (tests/test_freshness.py).
+PATIENT_TREE = REPO / "results" / "track1_patient_modal"
+
+
+def artifacts_present() -> bool:
+    return PATIENT_TREE.is_dir()
+
+
+def needs_artifacts(name: str, out) -> bool:
+    """True when the check should be skipped; records the WARN row."""
+    if artifacts_present():
+        return False
+    out.warn(name, "skipped: gitignored results/ tree absent here "
+                   "(run on the machine holding the artifacts)")
+    return True
+
+
 class Out:
     def __init__(self):
         self.rows = []
@@ -210,6 +230,8 @@ def check_emitted_claims(out: Out):
 def check_artifact_numbers(out: Out):
     """Stage counts, ablation ranks, Exomiser + mosdepth numbers cited in
     docs/report.md vs the JSON artifacts they were generated from."""
+    if needs_artifacts("artifact-numbers", out):
+        return
     rep = _read("docs/report.md")
     problems = []
     try:
@@ -247,6 +269,8 @@ def check_artifact_numbers(out: Out):
 def check_csv_identity(out: Out):
     """The three copies of the submitted CSV must be byte-identical, and
     every submissions/*.csv must oracle-score 100/1.0/rank-1."""
+    if needs_artifacts("csv-identity", out):
+        return
     import csv
     import io
     from src.submit import validate_submission_bytes
@@ -409,6 +433,8 @@ def check_line_refs(out: Out):
 def check_figures_deterministic(out: Out):
     """Regenerate docs/figures into a temp dir; bytes must match the
     committed copies (a stale figure = a report that lies)."""
+    if needs_artifacts("figures-deterministic", out):
+        return
     args = [PY, "tools/make_figures.py",
             "--sam", "results/track1_patient_modal/realign/region.sam",
             "--allele-balance", f"{ARMS}/allele_balance.json",
