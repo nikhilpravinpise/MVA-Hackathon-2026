@@ -50,3 +50,6 @@ htmlcov/
 # disk for reference but must never be committed to this repo
 docs/COMPUTE_INFRASTRUCTURE_2026-07-27.md
 .venv-t2/
+.venv-video/
+video/out/
+video/build/
