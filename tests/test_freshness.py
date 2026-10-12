@@ -42,9 +42,14 @@ def _no_fail(fn):
 
 
 @pytest.mark.gate
+@needs_artifacts
 def test_csv_identity_and_oracle():
     """Drift caught: any of the three CSV copies diverging in bytes, CRLF
-    creeping in, or a submissions/*.csv that doesn't oracle-verify."""
+    creeping in, or a submissions/*.csv that doesn't oracle-verify.
+
+    One of the three copies is the run-directory CSV under the gitignored
+    results/ tree, so this is a local property like the other
+    artifact-dependent checks."""
     _no_fail(af.check_csv_identity)
 
 

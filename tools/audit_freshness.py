@@ -303,6 +303,11 @@ PATH_DOCS = [d for d in LIVE_DOCS
              if d not in ("docs/status.md", "docs/report_map.md",
                           "docs/deletion_runbook.md")]
 
+# Trees that .gitignore keeps out of the repo: patient data, run outputs
+# and downloaded corpora. They exist on the machine that produced them,
+# never in a fresh clone or a worktree.
+GITIGNORED_ROOTS = ("results", "data", "env")
+
 
 def check_paths_exist(out: Out):
     """Artifact paths cited in live docs must exist on disk (results/ are
@@ -327,18 +332,31 @@ def check_paths_exist(out: Out):
                     if ".." in pat:  # 'results/.../x' placeholder syntax
                         continue
                     pats.append((rel, i, pat))
-    missing = []
+    missing, ungitted = [], []
     for rel, i, pat in pats:
         for ex in _brace_expand(pat.rstrip(".,;:")):
             ex = ex.rstrip("/")
             if "*" in ex:
-                if not globmod.glob(str(REPO / ex)):
-                    missing.append(f"{rel}:{i} {ex}")
-            elif not (REPO / ex).exists():
-                missing.append(f"{rel}:{i} {ex}")
+                gone = not globmod.glob(str(REPO / ex))
+            else:
+                gone = not (REPO / ex).exists()
+            if not gone:
+                continue
+            # results/, data/ and env/ are gitignored: absent in a fresh
+            # clone (and in a worktree), present on the run machine. A
+            # vanished tracked path is drift; a vanished gitignored one is
+            # only reportable where the artifacts live.
+            (ungitted if ex.split("/", 1)[0] in GITIGNORED_ROOTS
+             else missing).append(f"{rel}:{i} {ex}")
     if missing:
         out.fail("paths-exist",
                  f"{len(missing)} missing: " + "; ".join(missing[:8]))
+    elif ungitted:
+        out.warn("paths-exist",
+                 f"{len(pats)} path refs checked; {len(ungitted)} under "
+                 f"gitignored roots not present here (run on the machine "
+                 f"holding the artifacts to verify): "
+                 + "; ".join(ungitted[:4]))
     else:
         out.ok("paths-exist", f"{len(pats)} path refs resolve on disk")
 

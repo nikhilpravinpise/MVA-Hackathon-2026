@@ -11,6 +11,8 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
+from . import direction as direction_mod
+from . import prism as prism_mod
 from . import proximity, scoring, sources
 
 
@@ -99,7 +101,7 @@ _CODE_NAME = re.compile(r"^[A-Z]{1,6}[- ]?\d{2,8}([-.][A-Z0-9]{1,6})?$")
 
 def _new_cand(cid, name):
     return {"chembl_id": cid, "names": set([name.lower()]) if name else set(),
-            "module_hits": set(), "ot_stage": None,
+            "module_hits": set(), "hit_types": {}, "ot_stage": None,
             "dgidb_pmids": set(), "dgidb_sources": set(),
             "dgidb_types": set()}
 
@@ -186,6 +188,11 @@ def collect_candidates(http, cfg, module, ensembl_cache):
                     cur[f] |= c[f]
                 cur["ot_stage"] = cur["ot_stage"] or c["ot_stage"]
             cand[key]["module_hits"].add(g)
+            # per-edge DGIdb interaction types - the direction layer needs
+            # to know WHICH module gene carries an inhibitory edge, not
+            # just that some edge did (aggregate dgidb_types is too coarse)
+            cand[key]["hit_types"].setdefault(g, set()).update(
+                c["dgidb_types"])
     return cand, funnel
 
 
@@ -249,6 +256,8 @@ def resolve_chembl(http, cfg, cand):
                 for f in ("names", "module_hits", "dgidb_pmids",
                           "dgidb_sources", "dgidb_types"):
                     out[cid][f] |= c[f]
+                for g, ts in c.get("hit_types", {}).items():
+                    out[cid]["hit_types"].setdefault(g, set()).update(ts)
                 out[cid]["ot_stage"] = out[cid]["ot_stage"] or c["ot_stage"]
             else:
                 out[cid] = c
@@ -311,7 +320,7 @@ def drug_evidence(http, cfg, c):
     if label:
         pu = label.get("pediatric_use")
         ped = (pu[0] if isinstance(pu, list) and pu else
-               pu if isinstance(pu, str) else "")[:400]
+               pu if isinstance(pu, str) else "")[:800]
         ev["sources"].append("openfda")
     ev["fda"] = fda
     ev["boxed_warning"] = bool(label.get("boxed_warning")) or \
@@ -348,14 +357,21 @@ def drug_evidence(http, cfg, c):
     # Open Targets drug record: MoA targets, warnings, stage
     ot, _ = sources.ot_drug(http, ep["opentargets"], c["chembl_id"])
     moa, targets, warns = "", set(), []
+    action_types, moa_target_actions = set(), {}
     if ot:
         ev["sources"].append("opentargets")
         for r in ((ot.get("mechanismsOfAction") or {}).get("rows")) or []:
+            at = r.get("actionType")
+            if at:
+                action_types.add(at)
             if not moa:
                 moa = r.get("mechanismOfAction") or ""
             for t in r.get("targets") or []:
                 if t.get("approvedSymbol"):
                     targets.add(t["approvedSymbol"])
+                    if at:
+                        moa_target_actions.setdefault(
+                            t["approvedSymbol"], set()).add(at)
         warns = [{"type": w.get("warningType"),
                   "tox": w.get("toxicityClass")}
                  for w in ot.get("drugWarnings") or []]
@@ -364,9 +380,15 @@ def drug_evidence(http, cfg, c):
         mech, _ = sources.chembl_mechanism(http, ep["chembl"], c["chembl_id"])
         moa = "; ".join(sorted({m.get("mechanism_of_action")
                                 for m in mech if m.get("mechanism_of_action")}))
+        for m in mech:
+            if m.get("action_type"):
+                action_types.add(m["action_type"])
     ev["mechanism_of_action"] = moa
     ev["ot_warnings"] = warns
     ev["moa_targets"] = sorted(targets)
+    ev["action_types"] = sorted(action_types)
+    ev["moa_target_actions"] = {g: sorted(a)
+                              for g, a in sorted(moa_target_actions.items())}
     return ev
 
 
@@ -479,6 +501,8 @@ def run_case(http, cfg, case):
     w = cfg["scoring"]["weights"]
     prox = cfg["proximity"]
     workers = int(cfg.get("workers", 1))
+    rules = direction_mod.compile_rules(cfg)
+    prism_index, prism_meta = prism_mod.load_index(cfg)
     evidences = pmap(lambda c: drug_evidence(http, cfg, c), approved, workers)
     out_cands = []
     for c, ev in zip(approved, evidences):
@@ -527,6 +551,20 @@ def run_case(http, cfg, case):
         if c["dgidb_pmids"]:
             rationale.append(f"pmids:{len(c['dgidb_pmids'])}")
 
+        # mechanism-direction layer + pediatric flag + PRISM overlay
+        cand_dir = {
+            "drug": display,
+            "names": sorted(c["names"]) + [display],
+            "mechanism_of_action": ev["mechanism_of_action"],
+            "action_types": ev["action_types"],
+            "targets": targets,
+            "module_targets": module_targets,
+            "moa_target_actions": ev["moa_target_actions"],
+            "hit_types": c.get("hit_types", {}),
+        }
+        d_dir, d_reasons = direction_mod.classify(cand_dir, rules)
+        ped_flag = direction_mod.pediatric_flag(ev["pediatric_labeling"])
+
         out_cands.append({
             "drug": display,
             "chembl_id": c["chembl_id"],
@@ -542,8 +580,17 @@ def run_case(http, cfg, case):
             },
             "targets": targets,
             "module_targets": module_targets,
+            "moa_targets": ev["moa_targets"],
+            "action_types": ev["action_types"],
+            "moa_target_actions": ev["moa_target_actions"],
+            "hit_types": {g: sorted(t)
+                          for g, t in sorted(c.get("hit_types", {})
+                                             .items())},
             "axis": axis,
             "mechanism_of_action": ev["mechanism_of_action"],
+            "direction": d_dir,
+            "direction_reasons": d_reasons,
+            "pediatric_flag": ped_flag,
             "evidence": {
                 "target_overlap": channels["target_overlap"],
                 "network_proximity_z": zinfo["z"],
@@ -557,7 +604,8 @@ def run_case(http, cfg, case):
                      "cell_line": rev["cell_line"]}
                     if rev else {"score": 0.0, "signature": None,
                                  "source": "sigcom-lincs"}),
-                "prism_aneuploidy": {"beta": None, "q": None},
+                "prism_aneuploidy": prism_mod.annotate(
+                    prism_index, sorted(c["names"]) + [display]),
                 "literature": len(c["dgidb_pmids"]),
             },
             "channels": {k: round(v, 4) for k, v in channels.items()},
@@ -580,7 +628,35 @@ def run_case(http, cfg, case):
 
     out_cands.sort(key=lambda c: (-c["score"], c["drug"]))
     for i, c in enumerate(out_cands, 1):
+        c["rank_before_direction"] = i
+
+    # mechanism-direction split: opposed candidates leave the ranked list
+    # and keep their would-be rank + rule reasons for transparency
+    ranked = [c for c in out_cands if c["direction"] != "opposed"]
+    excluded = [c for c in out_cands if c["direction"] == "opposed"]
+    for i, c in enumerate(ranked, 1):
         c["rank"] = i
+    rules_fired = {}
+    for c in out_cands:
+        for r in c["direction_reasons"]:
+            rules_fired[r] = rules_fired.get(r, 0) + 1
+    direction_summary = {
+        "enabled": bool(rules),
+        "version": (cfg.get("direction") or {}).get("version"),
+        "added_after_freeze": (cfg.get("direction") or {}).get("added"),
+        "n_rules": len(rules),
+        "rules_fired": dict(sorted(rules_fired.items())),
+        "n_opposed_excluded": len(excluded),
+        "n_aligned": sum(1 for c in ranked if c["direction"] == "aligned"),
+        "n_neutral": sum(1 for c in ranked if c["direction"] == "neutral"),
+        "note": "opposed candidates are removed from `candidates` and kept "
+                "in `excluded_mechanism_opposed` with their would-be rank; "
+                "scoring is unchanged - this layer filters direction, it "
+                "does not re-weight evidence",
+    }
+    n_prism_matched = sum(
+        1 for c in out_cands
+        if c["evidence"]["prism_aneuploidy"].get("status") == "screened")
 
     return {
         "schema": "t2.candidates/1",
@@ -602,5 +678,11 @@ def run_case(http, cfg, case):
         # exact stage at which a known drug dropped out
         "collected_names": sorted({_norm(n) for c in kept
                                  for n in c["names"]}),
-        "candidates": out_cands,
+        "direction": direction_summary,
+        "prism": {**prism_meta,
+                  "n_candidates_screened": n_prism_matched,
+                  "n_candidates_not_in_screen":
+                      len(out_cands) - n_prism_matched},
+        "excluded_mechanism_opposed": excluded,
+        "candidates": ranked,
     }

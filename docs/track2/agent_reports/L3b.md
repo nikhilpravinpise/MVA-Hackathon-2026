@@ -77,9 +77,12 @@ mechanisms outside the disease module.
   5.2-5.4 now render the portfolio (shortlist table with engine
   placements looked up from candidates.json at render time, lead detail
   sections, adjunct list).
-- Citation gate after my work + live cache update: **138 distinct
-  citations, 136 ok, 2 unresolved, 0 retracted, 0 mismatches, 45
-  uncovered claim sentences** (advisory only; 0 in my files).
+- Citation gate after my work + live cache update: **136 distinct
+  citations, all ok, 0 unresolved, 0 retracted, 0 mismatches, 45
+  uncovered claim sentences** (advisory only; 0 in my files). Final
+  state: PASS, exit 0 - L4 concurrently patched `canonical_doi` to strip
+  the closing backtick on code-span DOIs, which cleared the two
+  unresolvable compute.md ids mid-session (see open issue 1).
 - Every PMID in each lead's `why`/`falsifier` verified to sit inside the
   matching dossier's `citations` map (scripted check: NONE missing);
   adjunct cites all resolve in the committed cache.
@@ -92,22 +95,25 @@ C:/Dev/MVA-Hackathon-2026/.venv/Scripts/python.exe tools/make_track2_report.py
 -> wrote docs/track2_report.md (10291 words); no PENDING anywhere.
 
 C:/Dev/MVA-Hackathon-2026/.venv/Scripts/python.exe -m pytest tests/test_t2_evidence.py tests/test_make_track2_report.py -q
--> 27 passed in 1.06s
+-> 27 passed in ~1s
 
-C:/Dev/MVA-Hackathon-2026/.venv/Scripts/python.exe tools/verify_citations.py
--> FAIL at exit 1, ONLY on the two backtick DOIs below (not fixable from this lane).
+C:/Dev/MVA-Hackathon-2026/.venv/Scripts/python.exe tools/verify_citations.py --offline
+-> PASS, exit 0: 136 distinct citations, all ok, 0 unresolved, 0 retracted,
+   0 mismatches, 45 uncovered claims (advisory only, 0 in my files).
 ```
 
 ## Open issues for the lead
 
-1. **2 unresolved citations block a fully green gate** (exit 1):
-   DOI:10.1038/s41586-020-03114-6 and DOI:10.6084/m9.figshare.11384241
-   in `docs/track2/compute.md` (L5) appear inside markdown backticks; the
-   gate's DOI pattern keeps the trailing backtick in the canonical id, so
-   Crossref/DataCite correctly return not-found and cache `found:false`.
-   Fix is one character, two possible owners: remove the backticks in
-   compute.md (L5) or add `` ` `` to the strip/exclusion set in
-   `verify_citations.py` (L4). Everything else resolves: 136/138 ok.
+1. **Resolved mid-session, recorded for the log**: earlier in this run the
+   gate reported 2 unresolved - `DOI:10.1038/s41586-020-03114-6` and
+   `DOI:10.6084/m9.figshare.11384241` appear inside backtick code spans in
+   `docs/track2/compute.md` (L5), and the DOI regex kept the closing
+   backtick in the canonical id so nothing could resolve them. While this
+   lane ran, L4 patched `canonical_doi` to strip `` ` `` (see the comment
+   it now carries), which cleared both - the gate is now fully green. Two
+   stale `found:false` entries for the backtick forms remain harmlessly in
+   `docs/track2/citation_cache.json`; they can no longer be produced by
+   the scanner and can be dropped on the next `--refresh`.
 2. **45 uncovered claim sentences** (advisory, fatal only under
    `--coverage-strict`): 22 in the rendered report (pediatric-label
    paragraphs, shortlist/testability table rows - generator-side

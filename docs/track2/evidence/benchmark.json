@@ -1,7 +1,7 @@
 {
   "schema": "t2.benchmark/1",
   "generated_by": "tools/run_track2.py --benchmark",
-  "generated_at": "2026-10-12T14:37:17+00:00",
+  "generated_at": "2026-10-12T15:10:43+00:00",
   "cases": [
     {
       "gene": "TSC2",
@@ -19,7 +19,8 @@
         }
       ],
       "module_genes": 61,
-      "n_candidates": 105,
+      "n_candidates": 90,
+      "n_excluded_mechanism_opposed": 15,
       "funnel": {
         "module_genes": 61,
         "ot_rows": 176,
@@ -42,16 +43,20 @@
           "found": true,
           "stage": "ranked",
           "rank": 3,
+          "rank_before_direction": 3,
           "score": 0.77,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         },
         {
           "drug": "sirolimus",
           "found": true,
           "stage": "ranked",
           "rank": 4,
+          "rank_before_direction": 4,
           "score": 0.77,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         }
       ],
       "rank_of_known": 3,
@@ -60,52 +65,62 @@
         {
           "drug": "fulvestrant",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "tamoxifen",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "everolimus",
           "score": 0.77,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         },
         {
           "drug": "sirolimus",
           "score": 0.77,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         },
         {
           "drug": "alpelisib",
           "score": 0.75,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         },
         {
           "drug": "temsirolimus",
           "score": 0.75,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         },
         {
           "drug": "enzalutamide",
           "score": 0.725,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "estradiol valerate",
           "score": 0.725,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "cantharidin",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "capivasertib",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     },
@@ -120,7 +135,8 @@
         }
       ],
       "module_genes": 61,
-      "n_candidates": 166,
+      "n_candidates": 145,
+      "n_excluded_mechanism_opposed": 21,
       "funnel": {
         "module_genes": 61,
         "ot_rows": 1026,
@@ -143,8 +159,10 @@
           "found": true,
           "stage": "ranked",
           "rank": 2,
+          "rank_before_direction": 2,
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         }
       ],
       "rank_of_known": 2,
@@ -153,52 +171,62 @@
         {
           "drug": "afatinib",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "alpelisib",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         },
         {
           "drug": "avapritinib",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "brigatinib",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "cabozantinib",
           "score": 0.8,
-          "tier": "T1"
-        },
-        {
-          "drug": "epirubicin",
-          "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "erlotinib",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "fulvestrant",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "gefitinib",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "ibrutinib",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
+        },
+        {
+          "drug": "neratinib",
+          "score": 0.8,
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     },
@@ -213,7 +241,8 @@
         }
       ],
       "module_genes": 47,
-      "n_candidates": 62,
+      "n_candidates": 51,
+      "n_excluded_mechanism_opposed": 11,
       "funnel": {
         "module_genes": 47,
         "ot_rows": 45,
@@ -236,8 +265,10 @@
           "found": false,
           "stage": "not_collected",
           "rank": null,
+          "rank_before_direction": null,
           "score": null,
-          "tier": null
+          "tier": null,
+          "direction": null
         }
       ],
       "rank_of_known": null,
@@ -246,52 +277,62 @@
         {
           "drug": "folic acid",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "amifostine",
           "score": 0.7636,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "hydrogen peroxide",
           "score": 0.7636,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "isopropyl alcohol",
           "score": 0.7505,
-          "tier": "T1"
-        },
-        {
-          "drug": "dacarbazine",
-          "score": 0.637,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "etidronic acid",
           "score": 0.637,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "cyclosporine",
           "score": 0.5965,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "hydrocortisone butyrate",
           "score": 0.5612,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "ramipril",
           "score": 0.5612,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
-          "drug": "cladribine",
+          "drug": "deferoxamine",
           "score": 0.56,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
+        },
+        {
+          "drug": "lamivudine",
+          "score": 0.56,
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     },
@@ -306,7 +347,8 @@
         }
       ],
       "module_genes": 26,
-      "n_candidates": 80,
+      "n_candidates": 71,
+      "n_excluded_mechanism_opposed": 9,
       "funnel": {
         "module_genes": 26,
         "ot_rows": 68,
@@ -328,63 +370,75 @@
           "drug": "glibenclamide",
           "found": true,
           "stage": "ranked",
-          "rank": 11,
+          "rank": 10,
+          "rank_before_direction": 11,
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         }
       ],
-      "rank_of_known": 11,
+      "rank_of_known": 10,
       "k": 25,
       "top10": [
         {
           "drug": "baclofen",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "repaglinide",
           "score": 0.8,
-          "tier": "T1"
-        },
-        {
-          "drug": "epirubicin",
-          "score": 0.7333,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "glimepiride",
           "score": 0.7333,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "acetohexamide",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "calcium oxybate",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "chlorpropamide",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "diazoxide",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "gliclazide",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "glipizide",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
+        },
+        {
+          "drug": "glyburide",
+          "score": 0.7,
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     },
@@ -399,7 +453,8 @@
         }
       ],
       "module_genes": 61,
-      "n_candidates": 96,
+      "n_candidates": 89,
+      "n_excluded_mechanism_opposed": 7,
       "funnel": {
         "module_genes": 61,
         "ot_rows": 80,
@@ -422,8 +477,10 @@
           "found": true,
           "stage": "ranked",
           "rank": 6,
+          "rank_before_direction": 6,
           "score": 0.699,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         }
       ],
       "rank_of_known": 6,
@@ -432,52 +489,62 @@
         {
           "drug": "riboflavin",
           "score": 0.7667,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "urea",
           "score": 0.7667,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "elexacaftor",
           "score": 0.7242,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "tezacaftor",
           "score": 0.7242,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "crofelemer",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "ivacaftor",
           "score": 0.699,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "cysteamine",
           "score": 0.6575,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "deferoxamine",
           "score": 0.6575,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "hydralazine",
           "score": 0.6575,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
-          "drug": "ifosfamide",
+          "drug": "ketanserin",
           "score": 0.6575,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     },
@@ -492,7 +559,8 @@
         }
       ],
       "module_genes": 46,
-      "n_candidates": 125,
+      "n_candidates": 122,
+      "n_excluded_mechanism_opposed": 3,
       "funnel": {
         "module_genes": 46,
         "ot_rows": 1025,
@@ -515,8 +583,10 @@
           "found": false,
           "stage": "not_collected",
           "rank": null,
+          "rank_before_direction": null,
           "score": null,
-          "tier": null
+          "tier": null,
+          "direction": null
         }
       ],
       "rank_of_known": null,
@@ -525,52 +595,62 @@
         {
           "drug": "bupivacaine",
           "score": 0.7333,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "articaine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "articaine hydrochloride",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "benoxinate",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "benoxinate hydrochloride",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "carbamazepine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "chloroprocaine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "cocaine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "cocaine hydrochloride",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "dibucaine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     },
@@ -585,7 +665,8 @@
         }
       ],
       "module_genes": 50,
-      "n_candidates": 49,
+      "n_candidates": 36,
+      "n_excluded_mechanism_opposed": 13,
       "funnel": {
         "module_genes": 50,
         "ot_rows": 38,
@@ -608,8 +689,10 @@
           "found": false,
           "stage": "not_collected",
           "rank": null,
+          "rank_before_direction": null,
           "score": null,
-          "tier": null
+          "tier": null,
+          "direction": null
         }
       ],
       "rank_of_known": null,
@@ -618,52 +701,62 @@
         {
           "drug": "dibotermin alfa",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "eptotermin alfa",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "amifostine",
           "score": 0.6753,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "folic acid",
           "score": 0.564,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "sirolimus",
           "score": 0.564,
-          "tier": "T1"
-        },
-        {
-          "drug": "cladribine",
-          "score": 0.5307,
-          "tier": "T1"
-        },
-        {
-          "drug": "cyclophosphamide anhydrous",
-          "score": 0.5307,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         },
         {
           "drug": "everolimus",
           "score": 0.5307,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "aligned"
         },
         {
           "drug": "hydrogen peroxide",
           "score": 0.5307,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
-          "drug": "idoxuridine",
+          "drug": "octocrylene",
           "score": 0.5307,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
+        },
+        {
+          "drug": "pirfenidone",
+          "score": 0.5307,
+          "tier": "T1",
+          "direction": "neutral"
+        },
+        {
+          "drug": "sotatercept",
+          "score": 0.5298,
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     },
@@ -683,7 +776,8 @@
         }
       ],
       "module_genes": 61,
-      "n_candidates": 100,
+      "n_candidates": 98,
+      "n_excluded_mechanism_opposed": 2,
       "funnel": {
         "module_genes": 61,
         "ot_rows": 513,
@@ -706,8 +800,10 @@
           "found": false,
           "stage": "not_collected",
           "rank": null,
+          "rank_before_direction": null,
           "score": null,
-          "tier": null
+          "tier": null,
+          "direction": null
         }
       ],
       "rank_of_known": null,
@@ -716,52 +812,62 @@
         {
           "drug": "amlodipine",
           "score": 0.8,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "nicardipine",
           "score": 0.7333,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "celecoxib",
           "score": 0.7146,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "clevidipine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "diltiazem",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "isradipine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "nifedipine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "nisoldipine",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "verapamil",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "amlodipine benzoate",
           "score": 0.6993,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     },
@@ -776,7 +882,8 @@
         }
       ],
       "module_genes": 39,
-      "n_candidates": 26,
+      "n_candidates": 23,
+      "n_excluded_mechanism_opposed": 3,
       "funnel": {
         "module_genes": 39,
         "ot_rows": 22,
@@ -799,8 +906,10 @@
           "found": true,
           "stage": "ranked",
           "rank": 2,
+          "rank_before_direction": 2,
           "score": 0.6669,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         }
       ],
       "rank_of_known": 2,
@@ -809,52 +918,62 @@
         {
           "drug": "voglibose",
           "score": 0.7,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "migalastat",
           "score": 0.6669,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "miglitol",
           "score": 0.6669,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "acarbose",
           "score": 0.6136,
-          "tier": "T1"
-        },
-        {
-          "drug": "pyrimethamine",
-          "score": 0.5634,
-          "tier": "T1"
-        },
-        {
-          "drug": "busulfan",
-          "score": 0.5611,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "oseltamivir",
           "score": 0.5579,
-          "tier": "T1"
-        },
-        {
-          "drug": "uracil mustard",
-          "score": 0.5277,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "avalglucosidase alfa",
           "score": 0.5246,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
         },
         {
           "drug": "atidarsagene autotemcel",
           "score": 0.4944,
-          "tier": "T1"
+          "tier": "T1",
+          "direction": "neutral"
+        },
+        {
+          "drug": "epalrestat",
+          "score": 0.4944,
+          "tier": "T1",
+          "direction": "neutral"
+        },
+        {
+          "drug": "migalastat hydrochloride",
+          "score": 0.4944,
+          "tier": "T1",
+          "direction": "neutral"
+        },
+        {
+          "drug": "pegunigalsidase alfa",
+          "score": 0.4944,
+          "tier": "T1",
+          "direction": "neutral"
         }
       ]
     }
@@ -863,11 +982,22 @@
   "n_known_recovered": 6,
   "recall_at_1": 0.0,
   "recall_at_5": 0.333,
-  "recall_at_10": 0.444,
+  "recall_at_10": 0.556,
   "recall_at_25": 0.556,
+  "v1_frozen": {
+    "recall_at_1": 0.0,
+    "recall_at_5": 0.333,
+    "recall_at_10": 0.444,
+    "recall_at_25": 0.556,
+    "run": "2026-10-12 v1 engine (pre-direction-layer)"
+  },
+  "direction": {
+    "enabled": true,
+    "note": "recall computed on the post-direction ranked list; known drugs must never classify as opposed (tested)"
+  },
   "notes": [
     "recall@k = fraction of cases whose best-ranked declared drug appears at rank <= k in the approved-candidate list",
     "a declared drug missing entirely means it never entered the candidate space (its targets are not module genes) or failed the approval gate - both reported via funnel counts"
   ],
-  "config_sha": "16a5ee589395c0ec9cd043d2ff3f846f3a5270d921a3b0392a1a0aa2971821cd"
+  "config_sha": "f4b0cca2092ba93edda59f054b51557e75ceef119151fa11565048346270528b"
 }

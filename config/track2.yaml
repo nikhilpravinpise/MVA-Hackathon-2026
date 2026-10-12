@@ -176,14 +176,181 @@ scoring:
     # everything else T3
   t1_min_channels: 2
 
+# ---------------------------------------------------------- direction -----
+# Mechanism-direction safety layer (src/track2/direction.py).
+#
+# ADDED 2026-10-12 AFTER the L2 decision freeze (same day, post-hoc patch;
+# logged in docs/track2/engine.md and docs/decisions.md).  The frozen v1
+# engine scored evidence density only; on the MVA case that surfaced
+# genotoxic/aneugenic oncology agents at the top of the table - the exact
+# wrong direction for a spindle-checkpoint-deficient child
+# (evidence/mechanism.json "contraindications", evidence/rejected.json).
+#
+# This is a DISEASE-AGNOSTIC, versioned rule set: each rule matches on
+# mechanism-of-action text / Open Targets + ChEMBL action_type / target
+# genes / collected names - never on a hand-picked drug list.  Opposed
+# candidates are removed from the ranked list into
+# `excluded_mechanism_opposed` with their would-be rank kept; scoring is
+# unchanged (this layer filters direction, it does not re-weight evidence).
+#
+# Matching semantics (see src/track2/direction.py docstring):
+#   moa_patterns      regex over MoA text + action_type strings
+#   name_patterns     regex over the drug's collected names (needed where
+#                     every source leaves the MoA text empty)
+#   target_genes      gene symbols; hits the drug's curated MoA targets
+#                     and/or module-gene interactions
+#   require_inhibitory  gene hits count only with inhibitory evidence
+#                     (per-edge DGIdb type or curated INHIBITOR action) -
+#                     this is what keeps e.g. dasatinib out of the
+#                     SAC-kinase rule: its AURKB edge carries no
+#                     inhibitory annotation
+#   activator_only    gene hits count only with activating evidence
+#
+# Every PMID was re-resolved live via NCBI efetch on 2026-10-12 and its
+# abstract read; each is already present in mechanism.json, rejected.json
+# or a dossier evidence file.  PARP inhibitors are intentionally NOT an
+# opposed rule: no citation in the evidence files directly supports the
+# genotoxic-in-MVA claim, so they remain ranked as neutral (documented
+# rather than asserted).
+direction:
+  enabled: true
+  version: 2
+  added: "2026-10-12 (post-freeze, lane L2b)"
+  rules:
+    # ---------------------------- opposed --------------------------------
+    - id: opp_topoisomerase_poison
+      direction: opposed
+      reason: "Topoisomerase poisons/catalytic inhibitors create DNA-strand lesions and are aneugenic in dividing cells; layered on a constitutionally weak checkpoint they add mis-segregation and cancer burden."
+      cites: ["PMID:15475955", "PMID:20516114", "PMID:33505028"]
+      moa_patterns: ['topoisomerase']
+      target_genes: [TOP1, TOP1MT, TOP2A, TOP2B]
+      name_patterns: ['rubicin\b', 'xantrone\b', 'topotecan', 'irinotecan', 'etoposide', 'teniposide', 'podofilox', 'podophyll']
+    - id: opp_dna_damaging
+      direction: opposed
+      reason: "Alkylating/crosslinking/intercalating and cytotoxic DNA-directed agents increase mutagenic and aneuploid load - the wrong direction in a constitutional-aneuploidy cancer-predisposition syndrome."
+      cites: ["PMID:15475955", "PMID:20516114", "PMID:39169218"]
+      moa_patterns: ['\bdna\b.{0,40}(inhibitor|damage|cross-link|alkylat|intercalat|adduct|synthesis)', 'alkylat', 'cross-linking agent', 'nitrosourea', 'platinum', 'intercalat']
+      name_patterns: ['phosphamide', 'mustine', 'nitrosourea', 'busulfan', 'thiotepa', 'treosulfan', 'bendamustine', 'dacarbazine', 'temozolomide', 'procarbazine', 'melphalan', 'chlorambucil', 'platin', 'mitomycin', 'dactinomycin', 'bleomycin', 'ifosfamide']
+    - id: opp_antimetabolite_dna_synthesis
+      direction: opposed
+      reason: "Antimetabolites that perturb DNA precursor pools / nucleotide balance (incl. ribonucleotide-reductase inhibitors such as hydroxyurea) are mutation- and aneuploidy-elevating: in the yeast record hydroxyurea raised mutation rates broadly with a particularly high occurrence of aneuploidy."
+      cites: ["PMID:37931001", "PMID:15475955"]
+      moa_patterns: ['thymidylate synthase', 'dihydrofolate', 'ribonucleo[st]ide.{0,30}reductase', 'dna polymerase', 'methyltransferase 3a', 'folate antagonist']
+      target_genes: [TYMS, DHFR, RRM1, RRM2]
+      name_patterns: ['hydroxyurea', 'fluorouracil', 'capecitabine', 'gemcitabine', 'pemetrexed', 'cytarabine', 'fludarabine', 'cladribine', 'nelarabine', 'clofarabine', 'azacitidine', 'decitabine', 'mercaptopurine', 'thioguanine', 'methotrexate']
+    - id: opp_antimitotic_tubulin
+      direction: opposed
+      reason: "Tubulin binders and spindle poisons (taxanes, vinca alkaloids, benzimidazoles) are aneugens that directly produce chromosome mis-segregation - pharmacologically recreating the MVA lesion itself."
+      cites: ["PMID:7739397", "PMID:33505028", "PMID:20516114"]
+      moa_patterns: ['tubulin', 'microtubule', 'spindle', 'mitotic']
+      target_genes: [TUBA1A, TUBA1B, TUBA1C, TUBA3C, TUBA3D, TUBA3E, TUBA4A, TUBB, TUBB1, TUBB2A, TUBB2B, TUBB3, TUBB4A, TUBB4B, TUBB6, TUBG1, TUBG2]
+      name_patterns: ['taxel', 'vinblastine', 'vincristine', 'vinorelbine', 'vindesine', 'vinflunine', 'bendazole', 'eribulin', 'ixabepilone', 'colchicine', 'griseofulvin']
+    - id: opp_sac_kinase
+      direction: opposed
+      require_inhibitory: true
+      reason: "Inhibiting residual spindle-checkpoint / mitotic kinases (MPS1-TTK, Aurora B, PLK1, CDK1, KIF18A, Eg5-KIF11) removes the checkpoint that limits NEW mis-segregation in normal mosaic cells; the same vulnerability is exploited to kill aneuploid TUMOUR cells, which is the opposite use."
+      cites: ["PMID:33505028", "PMID:33505027", "PMID:20516114"]
+      moa_patterns: ['aurora', 'polo-like', 'polo kinase', '\bmps1\b', '\bttk\b', 'kif18a', 'kinesin.{0,20}inhib', 'eg5\b', '\bcdk1\b', 'cyclin-dependent kinase 1']
+      target_genes: [TTK, AURKA, AURKB, AURKC, PLK1, KIF18A, KIF11, CDK1, BUB1]
+    - id: opp_pp2a_inhibitor
+      direction: opposed
+      require_inhibitory: true
+      reason: "PP2A-B56 is the phosphatase arm of BubR1-dependent error correction (KARD-domain recruitment to kinetochores); catalytic PP2A inhibition destabilises kinetochore-microtubule attachments."
+      cites: ["PMID:23079597", "PMID:23345399", "PMID:33207204"]
+      moa_patterns: ['protein phosphatase 2a', 'pp2a.{0,20}inhib', 'serine/threonine-protein phosphatase.{0,20}inhib']
+      target_genes: [PPP2CA, PPP2CB]
+    - id: opp_sirt2_inhibitor
+      direction: opposed
+      require_inhibitory: true
+      reason: "SIRT2 deacetylates and stabilises BubR1; SIRT2 inhibition (tool compound SirReal2) destabilises BubR1 protein - it would deplete the only functional allele product this genotype retains."
+      cites: ["PMID:25672491", "PMID:24825348", "PMID:38009412"]
+      moa_patterns: ['sirtuin.{0,15}inhib', '\bsirt2\b']
+      target_genes: [SIRT2]
+    - id: opp_p53_axis_suppression
+      direction: opposed
+      require_inhibitory: true
+      reason: "p53/p21 is the brake that limits propagation of aneuploid cells; suppressing it (MDM2-axis inhibition class) expands aneuploid clones in a syndrome whose cancers emerge from them."
+      cites: ["PMID:20123995", "PMID:23602569"]
+      moa_patterns: ['\bmdm2\b', '\bmdm4\b', 'p53.{0,20}(inhibitor|antagonist)', 'pifithrin']
+      target_genes: [MDM2, MDM4]
+    - id: opp_growth_axis
+      direction: opposed
+      reason: "GH/IGF-1 stimulation treats a symptom while accelerating clone expansion in a constitutional cancer-predisposition syndrome - precautionary rejection, with the counter-evidence (no significant second-neoplasm increase in the largest survivor cohort) on record."
+      cites: ["PMID:16822820", "PMID:32738133", "PMID:30500870", "PMID:15475955"]
+      moa_patterns: ['growth hormone.{0,30}(agonist|stimulat|releasing)', 'insulin-like growth factor.{0,20}agonist']
+      name_patterns: ['somatropin', 'mecasermin', 'sermorelin', 'tesamorelin']
+    # ---------------------------- aligned --------------------------------
+    - id: aln_mtorc1_inhibition
+      direction: aligned
+      require_inhibitory: true
+      reason: "mTORC1 inhibition is senomorphic (blunts the SASP at the translational level) and genotype-anchored: sarcopenia predisposition in monoallelic BubR1-mutant mice correlates with mTORC1 hyperactivity. Honest caveat on record: a yeast study saw marginal mutation-rate change but chromosome-XII amplifications under rapamycin."
+      cites: ["PMID:26147250", "PMID:26280535", "PMID:31738183", "PMID:37931001"]
+      moa_patterns: ['\bmtor\b', 'mammalian target of rapamycin', 'rapamycin']
+      target_genes: [MTOR]
+      name_patterns: ['sirolimus', 'everolimus', 'temsirolimus', 'zotarolimus', 'ridaforolimus', 'rapamycin']
+    - id: aln_senolytic_class
+      direction: aligned
+      require_inhibitory: true
+      reason: "Senolytic class anchored by the MVA-relevant result that clearing p16+ senescent cells delayed and attenuated disease in BubR1-hypomorph mice; pharmacologic approximations are SRC/ABL-family (dasatinib) and BCL-2-family inhibitors."
+      cites: ["PMID:22048312", "PMID:25754370", "PMID:31542391", "PMID:18516091"]
+      moa_patterns: ['\bbcl-?2\b.{0,20}inhib', 'bcl-xl', '\bsrc\b.{0,15}inhib', 'src inhibitor', '\babl\b.{0,15}inhib']
+      target_genes: [BCL2, BCL2L1, BCL2L2, SRC, ABL1, ABL2, FYN, LYN, HCK, YES1, LCK, FRK, SRMS]
+    - id: aln_ampk_energy_stress
+      direction: aligned
+      activator_only: true
+      reason: "Energy-stress/AMPK-axis engagement is aneuploid-selective (AICAR killed trisomic MEFs); metformin additionally suppresses the senescence-associated secretory phenotype via IKK/NF-kB."
+      cites: ["PMID:21315436", "PMID:23521863", "PMID:18516091"]
+      moa_patterns: ['\bampk\b.{0,20}(activat|agonist)', 'mitochondrial complex i']
+      target_genes: [PRKAA1, PRKAA2]
+      name_patterns: ['metformin', 'phenformin', 'aicar', 'acadesine']
+    - id: aln_nad_sirt2_axis
+      direction: aligned
+      reason: "NAD+ repletion / SIRT2 activation raises BubR1 abundance - the axis-A residual-allele rescue (SIRT2 maintains BubR1; high BubR1 expression is protective in mice; NAD+ supplementation helps related premature-ageing disorders)."
+      cites: ["PMID:24825348", "PMID:23242215", "PMID:38009412", "PMID:41436848"]
+      moa_patterns: ['\bniacin\b', 'nicotinamide', 'nicotinic', 'nad\+', 'sirtuin.{0,15}activat']
+      name_patterns: ['niacin', 'nicotinamide', 'nicotinic', 'niaspan']
+    - id: aln_autophagy_lysosomal
+      direction: aligned
+      reason: "Autophagy/lysosomal inhibition is aneuploid-selective (chloroquine in the founding aneuploidy screen) and an established sensitising strategy - the axis-C interception channel."
+      cites: ["PMID:21315436", "PMID:23461901", "PMID:39169218"]
+      moa_patterns: ['autophagy', 'lysosom']
+      name_patterns: ['chloroquine', 'hydroxychloroquine']
+    - id: aln_tetraploid_elimination
+      direction: aligned
+      reason: "Tetraploid-cell elimination as cancer interception (aspirin/salicylate in the phenotypic screen, CAPP2 clinical precedent) - adjunct-level aligned evidence only."
+      cites: ["PMID:24516128", "PMID:32534647"]
+      name_patterns: ['aspirin', 'acetylsalicyl']
+
+# ------------------------------------------------------------- PRISM ------
+# PRISM Repurposing 19Q4 aneuploidy pharmacogenomic overlay
+# (docs/track2/evidence/prism.json, lane L5).  Reported channel ONLY -
+# weight is exactly 0: the screen found no FDR-significant launched drug
+# against the aneuploidy-score association, so it must not drive ranking.
+# Keeping it visible per-candidate (beta/q/n_lines or not_in_screen) is
+# the honest way to show the channel was checked and was null.
+prism:
+  enabled: true
+  file: "docs/track2/evidence/prism.json"
+  weight: 0.0
+
 # ---------------------------------------------------------- benchmark -----
 # Retrospective truth, frozen blind: seed each case's disease gene ONLY
 # (module = gene + STRING neighbours); the declared approved drugs must
 # never be added as seeds.  Citations resolved live via NCBI eutils on
 # 2026-10-12; title + year recorded verbatim.
+#
+# v1_frozen preserves the recall numbers of the pre-direction-layer engine
+# (run 2026-10-12, committed benchmark.json before the L2b patch) so the
+# post-layer output can show whether the safety layer changed recall.
 benchmark:
   neighbor_limit: 60
   required_score: 700
+  v1_frozen:
+    recall_at_1: 0.0
+    recall_at_5: 0.333
+    recall_at_10: 0.444
+    recall_at_25: 0.556
+    run: "2026-10-12 v1 engine (pre-direction-layer)"
   cases:
     - gene: TSC2
       disease: "tuberous sclerosis complex / sporadic LAM"

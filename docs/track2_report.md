@@ -2,7 +2,7 @@
 
 **Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
 **Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
-**Report generated:** 2026-10-12 from commit `69a1305` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
+**Report generated:** 2026-10-12 from commit `8726b3e` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
 
 > **This is a hypothesis-generation document for research follow-up, not medical advice.** Every candidate below is an existing approved medicine proposed for laboratory testing first; none should be given to any child on the strength of this report.
 
@@ -87,43 +87,45 @@ Sources: Ensembl REST VEP + transcript model, UniProt O60566, AlphaFold DB v6, g
 
 The engine (`src/track2/`, `tools/run_track2.py`, frozen `config/track2.yaml`) is gene-agnostic: given a disease gene, its seed module and an axis map, it (1) expands the module on STRING, (2) pulls drug-target evidence from Open Targets, ChEMBL and DGIdb, (3) keeps only approved medicines (ChEMBL max_phase 4, not withdrawn, with an openFDA label), (4) scores network proximity between drug targets and the disease module against degree-matched random sets, (5) queries transcriptomic signature reversal on LINCS L1000 (SigCom LINCS), and (6) reports every evidence channel's contribution to a transparent weighted score and tier. Every API response is cached and replayed, so the ranking is byte-reproducible offline. Design details, source versions and limitations: [repo:docs/track2/engine.md].
 
-**Funnel (MVA run, config sha `16a5ee589395`).** Disease module: 71 genes (seeds + STRING neighbours of BUB1B at score >= 700). 108 Open Targets clinical rows and 1403 DGIdb interactions -> 482 distinct drug names -> approval gate: 96 approved, 115 not phase 4, 6 withdrawn, 252 unresolvable names (investigational codes or non-drug entities, counted rather than guessed). LINCS L1000 reversal: status `ok`, 100 reversers on `l1000_cp`.
+**Funnel (MVA run, config sha `f4b0cca2092b`).** Disease module: 71 genes (seeds + STRING neighbours of BUB1B at score >= 700). 108 Open Targets clinical rows and 1403 DGIdb interactions -> 482 distinct drug names -> approval gate: 96 approved, 115 not phase 4, 6 withdrawn, 252 unresolvable names (investigational codes or non-drug entities, counted rather than guessed). LINCS L1000 reversal: status `ok`, 100 reversers on `l1000_cp`. The mechanism-direction layer then removed **37 mechanism-opposed** approved drugs (genotoxic, aneugenic, antimitotic or checkpoint-weakening - section 3) from the ranking; they are listed, not hidden, in the evidence file.
 
 | Rank | Drug | Module targets | Axis | Direction | Tier | Score | Pediatric label |
 |---|---|---|---|---|---|---|---|
-| 1 | doxorubicin | BIRC5, TOP2A, TP53 | B | - | T1 | 0.800 | label text |
-| 2 | epirubicin | BIRC5, PPP2R5D, TOP2A, TP53 | A+B | - | T1 | 0.800 | label text |
-| 3 | temozolomide | BRCA2, CDKN2A, TP53 | B | - | T1 | 0.800 | label text |
-| 4 | cyclophosphamide anhydrous | PPP2R5D | A | - | T1 | 0.658 | - |
-| 5 | mitomycin | TP53 | B | - | T1 | 0.658 | label text |
-| 6 | pixantrone | TOP2A | none | - | T1 | 0.658 | - |
-| 7 | cantharidin | PPP2CA | none | - | T1 | 0.625 | label text |
-| 8 | daunorubicin | TOP2A | none | - | T1 | 0.625 | label text |
-| 9 | daunorubicin hydrochloride | TOP2A | none | - | T1 | 0.625 | label text |
-| 10 | doxorubicin hydrochloride | TOP2A | none | - | T1 | 0.625 | label text |
-| 11 | etoposide phosphate | TOP2A | none | - | T1 | 0.625 | - |
-| 12 | idarubicin | TOP2A | none | - | T1 | 0.625 | label text |
-| 13 | idarubicin hydrochloride | TOP2A | none | - | T1 | 0.625 | label text |
-| 14 | mitoxantrone | TOP2A | none | - | T1 | 0.625 | - |
-| 15 | mitoxantrone hydrochloride | TOP2A | none | - | T1 | 0.625 | - |
-| 16 | podofilox | TOP2A | none | - | T1 | 0.625 | label text |
-| 17 | valrubicin | TOP2A | none | - | T1 | 0.625 | label text |
-| 18 | palbociclib | CDKN2A, NEK2, PRKAA1 | B | - | T1 | 0.594 | label text |
-| 19 | irinotecan | BIRC5, CDKN1A | B | - | T1 | 0.548 | label text |
-| 20 | fluorouracil | BIRC5, CDKN1A, PPP2R5D, TP53 | A+B | - | T1 | 0.529 | label text |
+| 1 | palbociclib | CDKN2A, NEK2, PRKAA1 | B | neutral | T1 | 0.594 | none |
+| 2 | sirolimus | CDKN2A, MTOR, PRKAA1 | B | aligned | T1 | 0.505 | labeled pediatric indication |
+| 3 | glycerin | CDKN1A | B | neutral | T1 | 0.494 | none |
+| 4 | methenamine | CDKN1A | B | neutral | T1 | 0.494 | none |
+| 5 | octocrylene | BIRC5 | none | neutral | T1 | 0.494 | none |
+| 6 | omacetaxine mepesuccinate | BIRC5 | none | neutral | T1 | 0.494 | none |
+| 7 | pentetic acid | CDKN1A | B | neutral | T1 | 0.494 | labeled pediatric indication |
+| 8 | phenylbutanoic acid | CDKN1A | B | neutral | T1 | 0.494 | none |
+| 9 | abemaciclib | CDKN2A, TP53 | B | neutral | T1 | 0.489 | none |
+| 10 | gefitinib | SIRT2 | A | neutral | T1 | 0.469 | none |
+| 11 | clotrimazole | CDK1 | none | neutral | T1 | 0.452 | none |
+| 12 | everolimus | CDKN2A, MTOR | B | aligned | T1 | 0.450 | labeled pediatric indication |
+| 13 | flutamide | BIRC5, CDKN1A | B | neutral | T2 | 0.417 | none |
+| 14 | tamoxifen | CCNA2, TP53 | B | neutral | T2 | 0.417 | none |
+| 15 | celecoxib | CDKN1A | B | neutral | T2 | 0.411 | labeled pediatric indication |
+| 16 | lapatinib | BIRC5 | none | neutral | T2 | 0.355 | none |
+| 17 | levothyroxine | PRKAA1 | B | neutral | T2 | 0.353 | labeled pediatric indication |
+| 18 | erlotinib | BIRC5 | none | neutral | T2 | 0.329 | none |
+| 19 | dabrafenib | CDKN2A | B | neutral | T2 | 0.325 | labeled pediatric indication |
+| 20 | vemurafenib | CDKN2A | B | neutral | T2 | 0.325 | none |
+
+Top mechanism-opposed exclusions (would-be rank, rule): doxorubicin (#1, opp_dna_damaging, opp_topoisomerase_poison); epirubicin (#2, opp_topoisomerase_poison); temozolomide (#3, opp_dna_damaging); cyclophosphamide anhydrous (#4, opp_dna_damaging); mitomycin (#5, opp_dna_damaging); pixantrone (#6, opp_dna_damaging, opp_topoisomerase_poison); cantharidin (#7, opp_pp2a_inhibitor); daunorubicin (#8, opp_dna_damaging, opp_topoisomerase_poison).
 
 The engine ranks *evidence density*, not suitability for this child: databases over-represent oncology, so the curated layer (section 5) and the pediatric facts decide the portfolio. Full output incl. every evidence channel: [repo:docs/track2/evidence/candidates.json].
 
 ### 4.2 Does the engine find known answers? (retrospective benchmark)
 
-The identical pipeline, run blind on 9 genes whose approved repurposed or targeted drug is established (truth committed in `config/track2.yaml` before the run; the drug is never seeded). **recall@1 / @5 / @10 / @25 = 0.00 / 0.33 / 0.44 / 0.56** [repo:docs/track2/evidence/benchmark.json].
+The identical pipeline, run blind on 9 genes whose approved repurposed or targeted drug is established (truth committed in `config/track2.yaml` before the run; the drug is never seeded). **recall@1 / @5 / @10 / @25 = 0.00 / 0.33 / 0.56 / 0.56** (frozen pre-direction-layer run: 0.00 / 0.33 / 0.44 / 0.56) [repo:docs/track2/evidence/benchmark.json].
 
 | Disease gene | Disease | Known approved drug(s): rank in engine output | Evidence for the known pair |
 |---|---|---|---|
 | TSC2 | tuberous sclerosis complex / sporadic LAM | everolimus: #3; sirolimus: #4 | [PMID:21047224](https://pubmed.ncbi.nlm.nih.gov/21047224/); [PMID:21410393](https://pubmed.ncbi.nlm.nih.gov/21410393/) |
 | PIK3CA | PIK3CA-related overgrowth spectrum | alpelisib: #2 | [PMID:29899452](https://pubmed.ncbi.nlm.nih.gov/29899452/) |
 | FBN1 | Marfan syndrome | losartan: not collected | [PMID:25405392](https://pubmed.ncbi.nlm.nih.gov/25405392/) |
-| KCNJ11 | KCNJ11 neonatal diabetes | glibenclamide: #11 | [PMID:16885550](https://pubmed.ncbi.nlm.nih.gov/16885550/) |
+| KCNJ11 | KCNJ11 neonatal diabetes | glibenclamide: #10 | [PMID:16885550](https://pubmed.ncbi.nlm.nih.gov/16885550/) |
 | CFTR | cystic fibrosis (G551D) | ivacaftor: #6 | [PMID:22047557](https://pubmed.ncbi.nlm.nih.gov/22047557/) |
 | SCN1A | Dravet syndrome | fenfluramine: not collected | [PMID:31862249](https://pubmed.ncbi.nlm.nih.gov/31862249/) |
 | ACVR1 | fibrodysplasia ossificans progressiva | palovarotene: not collected | [PMID:36583535](https://pubmed.ncbi.nlm.nih.gov/36583535/) |
@@ -170,8 +172,8 @@ Masked-marginal log-likelihood ratios over 1319 scored variants (1273 gnomAD v4 
 
 | Rank | Candidate | Axis | Approval (checked by code) | Pediatric label | Evidence grade | Engine placement |
 |---|---|---|---|---|---|---|
-| 1 | **dasatinib + quercetin - senolytic clearance of p16+ cells** | B - senescence / damage mitigation | ChEMBL max_phase 4, first approval 2006; openFDA set_id `02b04c6f` | Pediatric patients 1 year of age and older: Ph+ CML in chronic phase; newly diagnosed Ph+ ALL in combination with chemotherapy (quoted label fact). | moderate+ | dasatinib anhydrous #75/96 |
-| 2 | **everolimus - senomorphic SASP dampening via mTORC1 inhibition** | B - senescence / damage mitigation | ChEMBL max_phase 4, first approval 2009; openFDA set_id `01f7b5fb` | TSC-associated SEGA requiring intervention: patients >=1 year. Adjunctive treatment of TSC-associated partial-onset seizures: >=2 years (oral suspension). (Quot | moderate | everolimus #36/96 |
+| 1 | **dasatinib + quercetin - senolytic clearance of p16+ cells** | B - senescence / damage mitigation | ChEMBL max_phase 4, first approval 2006; openFDA set_id `02b04c6f` | Pediatric patients 1 year of age and older: Ph+ CML in chronic phase; newly diagnosed Ph+ ALL in combination with chemotherapy (quoted label fact). | moderate+ | dasatinib anhydrous #43/59 |
+| 2 | **everolimus - senomorphic SASP dampening via mTORC1 inhibition** | B - senescence / damage mitigation | ChEMBL max_phase 4, first approval 2009; openFDA set_id `01f7b5fb` | TSC-associated SEGA requiring intervention: patients >=1 year. Adjunctive treatment of TSC-associated partial-onset seizures: >=2 years (oral suspension). (Quot | moderate | everolimus #12/59 |
 | 3 | **niacin / nicotinamide - NAD+/SIRT2 stabilisation of residual BubR1** | A - residual-BubR1 rescue | ChEMBL max_phase 4, first approval -; openFDA set_id `bf287412` | None. Label states verbatim: 'Pediatric Use - Safety and effectiveness in children and adolescents have not been established.' (quoted label fact) | moderate- | niacin: not in module; nicotinamide: not in module |
 | 4 | **hydroxychloroquine - aneuploidy-selective autophagy blockade, interception** | C - aneuploid-cell vulnerability / cancer interception | ChEMBL max_phase 4, first approval 1955; openFDA set_id `04139607` | Established in pediatric patients only for malaria treatment and prophylaxis, and only >=31 kg because tablets cannot be divided; NOT established for RA/discoid | low-moderate | hydroxychloroquine: not in module; chloroquine: not in module |
 
@@ -336,8 +338,8 @@ Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard 
 
 ## 9. Rigor and reproducibility
 
-- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 45 uncovered claim sentences** (exit 0, 0 network requests).
-- 102 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
+- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 46 uncovered claim sentences** (exit 0, 0 network requests).
+- 132 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
 - Approval, pediatric-label and boxed-warning facts come from live ChEMBL and openFDA responses recorded in each dossier (`docs/track2/evidence/dossiers/`).
 - Decision freeze: benchmark truth and seed genes were committed in `config/track2.yaml` before the engine was run (git history).
 - Rebuild this report: `python tools/make_track2_report.py --upload`.

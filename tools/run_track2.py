@@ -102,7 +102,11 @@ def main(argv=None) -> int:
         tiers[c["tier"]] = tiers.get(c["tier"], 0) + 1
     print(f"candidates: {len(res['candidates'])} approved | tiers {tiers} | "
           f"module {res['module']['n']} genes | "
-          f"lincs {res['lincs']['status']}")
+          f"lincs {res['lincs']['status']} | "
+          f"direction: {res['direction']['n_aligned']} aligned, "
+          f"{res['direction']['n_neutral']} neutral, "
+          f"{res['direction']['n_opposed_excluded']} mechanism-opposed "
+          f"excluded")
     return 0
 
 

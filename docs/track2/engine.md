@@ -42,6 +42,13 @@ safe, dosed, or appropriate for a child - see *Limitations*.
  score = SUM(w_i * c_i)  ->  tier T1/T2/T3 + axis A/B/C
         |
         v
+ DIRECTION LAYER (added post-freeze 2026-10-12, lane L2b)
+        |  rules classify each candidate opposed | aligned | neutral
+        |  opposed -> excluded_mechanism_opposed (kept w/ would-be rank)
+        |  aligned/neutral -> ranked list (score unchanged, re-ranked)
+        |  + pediatric_flag from openFDA pediatric_use text
+        |  + PRISM aneuploidy overlay (reported channel, weight 0)
+        v
  docs/track2/evidence/candidates.json   (schema t2.candidates/1)
  docs/track2/evidence/benchmark.json    (schema t2.benchmark/1)
 ```
@@ -113,6 +120,126 @@ vulnerability.  A drug gets the sorted set of axes of its
 module-overlapping targets; `none` when the overlap hits only
 axis-unannotated neighbours (e.g. TOP2A).
 
+## Mechanism-direction safety layer (added 2026-10-12, AFTER the L2 freeze)
+
+**This section documents a post-freeze patch** (lane L2b, same day).  The
+frozen v1 engine scored *evidence density only*; on the MVA case it ranked
+doxorubicin, epirubicin, temozolomide and other genotoxic/aneugenic
+agents at the top of the table - evidence-dense, and mechanistically the
+exact wrong direction for a spindle-checkpoint-deficient child
+(`evidence/mechanism.json` contraindications; `evidence/rejected.json`).
+
+`src/track2/direction.py` + the versioned `direction:` block in
+`config/track2.yaml` classify every approved candidate:
+
+| direction | meaning | rank effect |
+|---|---|---|
+| `opposed` | at least one opposed rule fired | removed from `candidates` into `excluded_mechanism_opposed`, keeping its would-be rank, score and reasons |
+| `aligned` | no opposed rule; >=1 aligned rule | stays ranked |
+| `neutral` | no rule fired | stays ranked |
+
+Every candidate also gets `direction_reasons` (fired rule ids - a drug
+matching both classes shows the conflict; opposed always wins) and
+`rank_before_direction`.  Scores, channels, tiers are untouched: the
+layer filters direction, it does not re-weight evidence.
+
+### Rule families (config-declared, citations resolved live + abstracts read)
+
+Opposed (9 rules): `opp_topoisomerase_poison` (TOP2A/TOP2B/TOP1 or MoA
+"topoisomerase" - PMID 15475955, 20516114, 33505028);
+`opp_dna_damaging` (alkylating/cross-linking/intercalating, ChEMBL
+action_type `CROSS-LINKING AGENT`, name classes incl. phosphamides -
+PMID 15475955, 20516114, 39169218);
+`opp_antimetabolite_dna_synthesis` (TYMS/DHFR/RRM1/RRM2, hydroxyurea and
+nucleoside-analogue names - PMID 37931001 showed hydroxyurea elevates
+mutation rates *including aneuploidy*; PMID 15475955);
+`opp_antimitotic_tubulin` (tubulin/microtubule/spindle MoA, TUB* genes,
+taxane/vinca/benzimidazole names - PMID 7739397 showed centromere-positive
+micronuclei from benzimidazoles at in-vivo plasma levels; 33505028;
+20516114); `opp_sac_kinase` (TTK/AURKA-C/PLK1/KIF18A/KIF11/CDK1/BUB1,
+inhibitory edge required - PMID 33505028, 33505027, 20516114);
+`opp_pp2a_inhibitor` (PPP2CA/B - PP2A-B56 is the BubR1 error-correction
+phosphatase - PMID 23079597, 23345399, 33207204);
+`opp_sirt2_inhibitor` (SIRT2 inhibitors destabilise BubR1 protein -
+PMID 25672491, 24825348, 38009412); `opp_p53_axis_suppression`
+(MDM2/MDM4/p53 inhibitors - PMID 20123995, 23602569);
+`opp_growth_axis` (GH/IGF-1 agonists - precautionary; PMID 16822820,
+32738133, 30500870).
+
+Aligned (6 rules): `aln_mtorc1_inhibition` (PMID 26147250, 26280535,
+31738183 - BubR1-mutant sarcopenia tracks mTORC1 hyperactivity - with the
+honest caveat 37931001 on record); `aln_senolytic_class` (SRC/ABL +
+BCL-2-family inhibitors - PMID 22048312, 25754370, 31542391, 18516091);
+`aln_ampk_energy_stress` (PRKAA activator edges / metformin class -
+PMID 21315436, 23521863, 18516091); `aln_nad_sirt2_axis` (NAD+/niacin -
+PMID 24825348, 23242215, 38009412, 41436848);
+`aln_autophagy_lysosomal` (PMID 21315436, 23461901, 39169218);
+`aln_tetraploid_elimination` (aspirin class - PMID 24516128, 32534647).
+
+### Matching semantics (why dasatinib is not excluded)
+
+Rules match on MoA text **and** on per-edge target evidence.  Target
+rules with `require_inhibitory` fire only when the (drug, gene) edge
+carries inhibitory evidence - a curated Open Targets MoA row with
+INHIBITOR action_type, or a DGIdb interaction typed
+inhibitor/antagonist.  Dasatinib's AURKB link is a loose DGIdb edge with
+no type; its *curated* mechanism targets are SRC-family/ABL kinases, so
+it stays and matches `aln_senolytic_class`.  Cantharidin (PPP2CA,
+typed `inhibitor`) and panobinostat (SIRT2, typed `inhibitor`) do fire.
+
+**PARP inhibitors are intentionally NOT opposed** - no citation in the
+evidence files supports a genotoxic-in-MVA claim, so they remain ranked
+as neutral (documented rather than asserted).
+
+### What it changed on the MVA run (2026-10-12, replayed)
+
+Pre-freeze top-20 was: doxorubicin, epirubicin, temozolomide,
+cyclophosphamide, mitomycin, pixantrone, cantharidin, daunorubicin,
+daunorubicin HCl, doxorubicin HCl, etoposide phosphate, idarubicin,
+idarubicin HCl, mitoxantrone, mitoxantrone HCl, podofilox, valrubicin,
+palbociclib, irinotecan, fluorouracil - **19 of 20 mechanism-opposed**
+(only palbociclib survived the filter).
+
+Post-layer: **37 of 96 approved candidates excluded** (all cytotoxic
+genotoxins + cantharidin + panobinostat); 59 ranked (10 aligned, 49
+neutral).  New top-10: palbociclib, **sirolimus** (aligned,
+pediatric-labeled), glycerin, methenamine, octocrylene, omacetaxine,
+pentetic acid, phenylbutanoic acid, abemaciclib, gefitinib.  The
+residual non-oncology noise (excipients/chelators ranking by module
+proximity) is a scoring limitation, not a direction error - documented
+under Limitations; it is exactly the curation surface L3 works on.
+
+### Pediatric flag
+
+`pediatric_flag` derives from the openFDA `pediatric_use` label text
+already collected (now kept at 800 chars):
+`labeled_pediatric_indication` (a positive established/indicated/approved
+statement exists - evaluated per-sentence so mixed labels like
+sirolimus "not established <13y ... established >=13y" read correctly),
+`pediatric_text_only` (text exists but only reports risk/studies), or
+`none` (no label text, or text says only "not established").  It is a
+coarse label-derived flag, not a pediatric-safety assessment.
+
+## PRISM aneuploidy overlay (added 2026-10-12, lane L2b)
+
+`evidence.prism_aneuploidy` per candidate is filled from
+`evidence/prism.json` (lane L5): PRISM Repurposing 19Q4 pooled screen,
+1498 compounds x ~500 cell lines; for each compound, OLS regression of
+drug AUC on a per-line aneuploidy score with lineage fixed effects.
+beta < 0 = more-aneuploid lines are more sensitive; `q` = BH FDR over the
+screen; `n_lines` = lines used.  Candidates absent from the screen are
+marked `not_in_screen` (never a fake zero); a missing file degrades to
+`unavailable`.
+
+**Weight is exactly 0** (`prism.weight`): the screen found no
+FDR-significant launched drug, so it must not drive ranking.  It stays
+visible because a checked-and-null channel is evidence: e.g. sirolimus
+beta +0.002 (q 0.45, n=422 lines) - aneuploidy did NOT predict
+sensitivity to our top aligned hit; dasatinib beta -0.0018 (q 0.63,
+n=458) trends selective but non-significant.  Caveats: cell-line
+aneuploidy is cancer-genome aneuploidy, not constitutional mosaic
+aneuploidy; AUC associations at n~450 lines are noisy for weak effects.
+
 ## Network proximity (Guney et al. 2016, PMID 26831545)
 
 *"Network-based in silico drug efficacy screening"* - abstract verified.
@@ -155,9 +282,22 @@ For each known drug we report `stage`: `ranked` (with rank), or
 `collected_not_approved`, or `not_collected` (target outside the module).
 recall@k = fraction of cases whose best-ranked declared drug is <= k.
 
-Results (2026-10-12 run): **recall@1 0.0, @5 0.333, @10 0.444, @25 0.556**
-(n=9).  Recovered: alpelisib#2 (PIK3CA), migalastat#2 (GLA), everolimus#3
-+ sirolimus#4 (TSC2), ivacaftor#6 (CFTR), glibenclamide#11 (KCNJ11).
+Results:
+
+| run | recall@1 | recall@5 | recall@10 | recall@25 |
+|---|---|---|---|---|
+| v1 frozen (pre-direction, 2026-10-12) - `v1_frozen` in benchmark.json | 0.0 | 0.333 | 0.444 | 0.556 |
+| post-direction layer (same replay) | 0.0 | 0.333 | **0.556** | 0.556 |
+
+The safety layer did not hurt recall - it **improved @10**: glibenclamide
+moved 11 -> 10 because an opposed drug ranked above it was excluded, and
+no declared benchmark drug is mechanism-opposed (everolimus, sirolimus
+and alpelisib are `aligned`; glibenclamide, ivacaftor, migalastat are
+`neutral`).  Known drugs found in the exclusion list would appear with
+stage `excluded_mechanism_opposed` (still `found: false`); none did.
+
+v1 recovered: alpelisib#2 (PIK3CA), migalastat#2 (GLA), everolimus#3
++ sirolimus#4 (TSC2), ivacaftor#6 (CFTR), glibenclamide#10 (KCNJ11).
 Missed: losartan (FBN1), fenfluramine (SCN1A), palovarotene (ACVR1),
 acetazolamide (CACNA1A) - all `not_collected`: their targets (AGTR1,
 5-HT receptors, RARG, carbonic anhydrases) are not STRING neighbours of
@@ -187,14 +327,30 @@ track2-trim:       ; $(PY) tools/run_track2.py --trim-cache tests/fixtures/track
 
 ## Limitations (read before using the output)
 
-- **Oncology bias.**  Interaction and indication databases are densest for
-  cancer; module neighbours in a checkpoint/cell-cycle disease pull
-  cytotoxics and kinase inhibitors to the top.  This is why the top of the
-  MVA list is oncology-heavy - expected, documented, and exactly what the
-  axis labels are for (L3 curates, engine reports).
+- **Oncology bias - mitigated, not solved.**  Interaction and indication
+  databases are densest for cancer; module neighbours in a checkpoint/
+  cell-cycle disease pull cytotoxics and kinase inhibitors to the top.
+  The direction layer removes the *wrong-direction* share (genotoxic/
+  aneugenic agents) but cannot judge remaining noise: palbociclib,
+  glycerin, methenamine, pentetic acid etc. are neutral (not opposed)
+  and stay evidence-dense at the top.  Non-genotoxic oncology agents
+  (CDK4/6, EGFR, BRAF inhibitors) remain by design - the list is a
+  curation surface for L3, not a recommendation.
 - **Approved != safe in children.**  The gate checks licensure only.
-  Pediatric label text is extracted verbatim but not interpreted; dosing,
+  `pediatric_flag` is a coarse label-derived hint (labeled indication /
+  text-only / none), not a pediatric-safety assessment; dosing,
   contraindications and age floors are L3 dossier work.
+- **Direction rules are mechanism-generic, not verdicts.**  An `opposed`
+  label means "this mechanism class pushes the documented disease
+  mechanism the wrong way given the cited evidence" - it is not a claim
+  that the drug is always harmful in any disease, and `aligned` is not
+  a claim of benefit.  Rules fire on recorded evidence (MoA text,
+  action types, typed interactions); drugs with no recorded mechanism
+  can only be caught by name-class patterns, so a genotoxic drug whose
+  sources are silent on both may slip through as neutral.
+- **PRISM is reported, not scored** (weight 0): the screen had no
+  FDR-significant launched hit; cell-line aneuploidy != constitutional
+  mosaic aneuploidy.
 - **Proximity assumptions.**  STRING combines evidence types; a
   score>=700 edge is not necessarily a physical interaction.  The routing
   universe is truncated (cap 450) so distances are upper bounds;
