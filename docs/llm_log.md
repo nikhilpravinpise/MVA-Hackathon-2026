@@ -46,10 +46,16 @@ that work it will cite the same rule.
   by default Cognition may use customer data for model training; a paid
   account can opt out on the Data Controls settings page, after which data
   is not used for training and zero data retention is enabled with model
-  providers. The account's opt-out state is operator-managed and is NOT
-  asserted in this ledger - rows state the default. This is why the
-  no-patient-data-in-prompts rule exists: it is the load-bearing control,
-  not the plan's training terms.
+  providers. **Operator confirmed 2026-10-12: the Data Controls training
+  opt-out was ON for the account across all sessions** (rows dated before
+  2026-10-12 state the default because the opt-out was not yet asserted in
+  writing; the 2026-10-12 confirmation supersedes that wording). The
+  no-patient-data-in-prompts rule remains the load-bearing control.
+- **Claude Code (Anthropic), Claude Pro/Max consumer plan:** operator
+  confirmed 2026-10-12 that model-training opt-out is ON and no feedback
+  (thumbs up/down) was ever given, matching the organizers' 2026-09-28
+  guidance (discussion #2). Used in the post-submission close-out/audit
+  phase.
 - **Gate:** before ANY prompt could touch patient-derived data (should never
   happen by design), the specific plan's no-training clause must be verified
   and cited here.
@@ -58,3 +64,5 @@ that work it will cite the same rule.
 | 2026-10-04 | Cognition Devin CLI | Devin Pro (operator-stated plan) | SWE-2 Max | same verified-terms wording as row above | ZERO patient data - compliance/community docs only: verbatim HF gated-access attestation archived from public API cardData (docs/attestation_hf_gated_access.md), family-facing MVA explainer (docs/FAMILY_EXPLAINER.md), reusable answer-blind protocol template (docs/ANSWER_BLIND_PROTOCOL.md), deletion-runbook mailbox reconciliation, status.md blocker 3 closed. No patient data touched; artifacts are public-source text + repo methodology |
 | 2026-10-05 | Cognition Devin CLI | Devin Pro (operator-stated plan) | SWE-2 Max | same verified-terms wording as above | Post-submission hardening tooling only: tools/make_figures.py (SVG+ASCII figures from results/ artifacts), report_template.md/make_report.py embeds, tools/make_arm_a_csv.py + submissions/ candidates, docs sync. No proband VCF/BAM content in prompts. Incidental disclosure, recorded per the ledger's own doctrine: during figure-tool inspection, ~20 lines of results/track1_patient_modal/realign/region.sam read records (BUB1B-locus 150-bp reads) were echoed to the terminal/context; locus-scoped, no clinical identifiers; the file itself never left disk |
 | 2026-10-05 | Cognition Devin CLI | Devin Pro (operator-stated plan) | SWE-2 Max | same verified-terms wording as above | Freshness/close-out tooling: tools/audit_freshness.py + tests/test_freshness.py pins, public_release_check.py + check_discussions.py (runtime-derived token scans - no identifiers in source), resolution banners on 4 dated docs, track1_closeout.md, deletion_email_draft.md, sweep fixes (README/checklist/RETENTION/plan.md). No proband VCF/BAM content in prompts; release-checker previews are sha-truncated by design |
+| 2026-10-12 | Anthropic Claude Code | Claude Pro/Max consumer plan (operator-stated; training opt-out ON, no feedback given) | Claude Sonnet 5.5 | Organizer guidance 2026-09-28 (discussion #2): consumer tier permitted with training opt-out + no feedback | FINDINGS-SCALE ONLY - Track-1 final audit: freshness/test/discussion checks, live leaderboard read-back, compliance review. Individual genotype/QC record strings for the two causal sites and a few other VCF records appeared in tool output during a PGT/PID verification (disclosed in report section 10); no bulk genotype blocks, BAM or FASTQ content |
+| 2026-10-12 | Cognition Devin CLI | Devin Pro (operator-confirmed Data Controls training opt-out ON) | SWE-2 Max | Opt-out ON per operator 2026-10-12: no training, zero data retention | Supersedes the "opt-out not asserted" wording on all earlier Devin rows; no new session |

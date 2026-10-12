@@ -114,3 +114,10 @@ def test_figures_deterministic():
     make_figures.py emits from the same artifacts (figure edited by hand,
     or artifact regenerated but figure stale)."""
     _no_fail(af.check_figures_deterministic)
+
+
+@pytest.mark.gate
+def test_truth_claims():
+    """Drift caught: the false 'VCF carries no PGT/PID' wording returning,
+    or the GenAI disclosure losing a provider / its opt-out assertion."""
+    _no_fail(af.check_truth_claims)

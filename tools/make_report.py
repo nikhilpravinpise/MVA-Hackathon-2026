@@ -1334,18 +1334,25 @@ def main(argv=None) -> int:
         "RUNTIME_SECTION": runtime_section(runlog, prov,
                                            run_where=args.run_where),
         "GENAI_LINE": (
-            "Cognition **Devin Pro** (model SWE-2 Max), paid commercial "
-            "tier. Data-handling terms as published for the Pro plan "
-            "(docs.devin.ai/admin/security): by default Cognition may use "
-            "customer data for model training unless the account opts out "
-            "via Data Controls (opt-out also enables zero data retention "
-            "with model providers); the account's opt-out state is not "
-            "asserted here, so we state the default. Regardless of "
-            "account terms, **no proband VCF/BAM content, genotypes, or "
-            "variant blocks ever enter a prompt** - patient data stayed "
-            "gitignored on disk and only findings-scale named variants "
-            "were ever discussed (per data/RETENTION.md section 2.3). "
-            "Per-session usage is ledgered in docs/llm_log.md."),
+            "Two commercial GenAI products were used (operator-stated "
+            "settings, confirmed 2026-10-12): (1) **Cognition Devin Pro**, "
+            "model SWE-2 Max, with the Data Controls training opt-out "
+            "enabled (no training, zero data retention with model "
+            "providers; docs.devin.ai/admin/security) - the main "
+            "build/audit agent; (2) **Anthropic Claude Code, Claude "
+            "Pro/Max consumer plan** (Claude Sonnet 5.5), model-training "
+            "opt-out enabled, no feedback (thumbs up/down) ever given - "
+            "used in the post-submission close-out/audit phase. Both "
+            "settings follow the organizers' 2026-09-28 guidance "
+            "(discussion #2). Patient-data exposure to these tools was "
+            "findings-scale only: named causal-variant coordinates/HGVS, "
+            "aggregate QC statistics and, in a few tool outputs, "
+            "individual genotype/QC record strings for the two causal "
+            "sites and a handful of other records; no proband VCF/BAM "
+            "files, bulk genotype blocks or FASTQ content were ever pasted "
+            "into a prompt - patient-scale compute stayed on local disk or "
+            "the (now deleted) Modal volumes. Per-session usage is "
+            "ledgered in docs/llm_log.md."),
         "PROVENANCE_SECTION": (
             "- VCF: `" + str(prov.get("vcf")) + "`"
             + (f" (sha256 `{prov['vcf_sha256'][:12]}`)"
