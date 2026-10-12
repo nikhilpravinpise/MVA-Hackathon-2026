@@ -11,7 +11,9 @@ verified against the vendored Space source (`hackathon-app/tabs/submit_track2.py
 
 | Constraint | Source | Consequence |
 |---|---|---|
-| Submissions close **2026-10-24 23:59 UTC** | `about.py` timeline | 12 days from today |
+| Submissions close **2026-10-24 23:59 UTC** | `about.py` timeline | 12 days from today. Judging now runs to Dec 17, winners Dec 18 (discussion #26, live `about.py` diff; `docs/track2/rules_refresh.md`) |
+| Organizers will not disclose phase before close | discussion #24 | Phase-unknown framing is required, not optional |
+| ~8 competitors have public T2 work converging on readthrough / NAD+-SIRT2 / proteostasis / mTOR / senolytics / autophagy | `docs/track2/landscape.md` | Candidate names alone will not differentiate; the measured benchmark, approval-by-code, citation gate, testability matrix and pediatric label filter must carry the Innovation score |
 | Max 3 submissions, **only the latest is reviewed** | `submit_track2.py:22-24`, FAQ | Insurance v1 on **Oct 20**, final on **Oct 23** (one slot kept spare for a deadline-day fix). Supersedes plan.md Phase 7 "submit once, last": a Space outage on deadline day is the bigger risk |
 | Required fields: GitHub URL (`https://github.com/` prefix), **pitch video URL** (hard reject if empty), report `.pdf` or `.md` | `submit_track2.py:85-101` | Video is a hard gate, not a nice-to-have |
 | Report filename carries the username | `INSTRUCTIONS_MD` | `nikhilpise_track2_report.md` (+ `.pdf`) |
