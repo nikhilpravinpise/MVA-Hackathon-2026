@@ -4,7 +4,7 @@ One page that answers "is Track 1 actually, provably done?" - every
 plan.md Phase 0-6 item mapped to its evidence, every remaining action
 listed with its prep state. Verified server-side, not self-reported:
 
-- **Leaderboard:** row 139, `nikhilpise (@T0X1N)`, `model1_nikhilpise_answer-blind-funnel.csv`,
+- **Leaderboard:** row 139 on 2026-10-04 (row 138 on the 2026-10-12 re-read; the index drifts as ties are re-ordered, the entry and score do not), `nikhilpise (@T0X1N)`, `model1_nikhilpise_answer-blind-funnel.csv`,
   **rank_points 100.0 / F-max 1.000 / full match at rank 1**,
   submitted 2026-10-04 07:30 UTC (public `leaderboard_df` read-back).
 - **Submitted bytes:** `nikhilpise_answer-blind-funnel.csv` ==

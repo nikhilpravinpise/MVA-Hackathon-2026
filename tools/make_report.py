@@ -807,7 +807,16 @@ def form_answers_section() -> str:
     lines = []
     for n, i in enumerate(idx, 1):
         prompt = strings[i].strip()
-        ans = _FORM_ANSWERS.get(prompt, "(answered inline above)")
+        ans = _FORM_ANSWERS.get(prompt)
+        if ans is None:
+            # the xlsx prompt text can run longer than its dict key -
+            # Q12's key is "Model number" but the form prompt continues
+            # "(fill out this form once per model/approach submitted; up
+            # to 6)". Fall back to a contains match on the existing keys,
+            # longest matching key wins.
+            cands = [k for k in _FORM_ANSWERS if k in prompt]
+            ans = (_FORM_ANSWERS[max(cands, key=len)] if cands
+                   else "(answered inline above)")
         lines.append(f"**{n}. {prompt}**  \n{ans}\n")
     return "\n".join(lines)
 

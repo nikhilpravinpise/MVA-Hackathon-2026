@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-12 12:10 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-12 12:19 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses.
 
@@ -477,7 +477,7 @@ Section 9 + docs/runtime_log.md.
 Sections 12 + 13.
 
 **12. Model number (fill out this form once per model/approach submitted; up to 6)**  
-(answered inline above)
+See report header (`model1`); this form covers that one model.
 
 **13. (required) If commercially-available Generative AI was used, record the provider, the plan or tier, and the relevant setting in your methods description. A line is enough, for example, "Anthropic API, Claude Sonnet, commercial terms, no training on customer content."**  
 Section 10 + docs/llm_log.md.
