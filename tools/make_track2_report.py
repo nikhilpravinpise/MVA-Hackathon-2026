@@ -210,65 +210,145 @@ def pathway_table(m: dict | None, refs: Refs) -> str:
 
 # ---------------------------------------------------------------- engine
 
+def _ped(x: dict) -> str:
+    flag = x.get("pediatric_flag")
+    if flag:
+        return {"labeled_pediatric_indication": "labeled pediatric indication",
+                "pediatric_text_only": "pediatric text only", "none": "none"}.get(flag, flag)
+    return "label text" if (x.get("approval") or {}).get("pediatric_labeling") else "-"
+
+
 def engine_section(c: dict | None, refs: Refs) -> str:
     if not c:
         return PENDING
+    f = c.get("funnel") or {}
     cands = c.get("candidates") or []
-    approved = [x for x in cands if (x.get("approval") or {}).get("max_phase") == 4]
-    head = (f"The engine (`tools/run_track2.py`, config sha `{str(c.get('config_sha', ''))[:12]}`) "
-            f"seeded {len(c.get('seed_genes') or [])} genes and scored "
-            f"{len(cands)} drug-target hypotheses; {len(approved)} pass the approved-only "
-            f"filter (ChEMBL max_phase 4, not withdrawn, openFDA label present). Top 15:\n")
-    rows = ["| Rank | Drug | Targets | Axis | Tier | Score | Evidence channels |",
-            "|---|---|---|---|---|---|---|"]
-    ranked = sorted(approved, key=lambda x: -(x.get("score") or 0))[:15]
-    for i, x in enumerate(ranked, 1):
-        ev = x.get("evidence") or {}
-        ch = ", ".join(f"{k}" for k, v in ev.items() if v not in (None, 0, 0.0, {}, []))
-        rows.append(f"| {i} | {md_cell(x['drug'])} | {md_cell(', '.join(x.get('targets') or []))} | "
-                    f"{md_cell(x.get('axis'))} | {md_cell(x.get('tier'))} | "
-                    f"{(x.get('score') or 0):.3f} | {md_cell(ch)} |")
-    return head + "\n".join(rows) + "\n\nFull ranking: [repo:docs/track2/evidence/candidates.json]."
+    opposed = c.get("excluded_mechanism_opposed") or []
+    lincs = c.get("lincs") or {}
+    head = (f"**Funnel (MVA run, config sha `{str(c.get('config_sha', ''))[:12]}`).** Disease module: "
+            f"{f.get('module_genes')} genes (seeds + STRING neighbours of BUB1B at score >= 700). "
+            f"{f.get('ot_rows')} Open Targets clinical rows and {f.get('dgidb_interactions')} DGIdb "
+            f"interactions -> {f.get('collected')} distinct drug names -> approval gate: "
+            f"{f.get('gated_in')} approved, {f.get('gated_out_phase')} not phase 4, "
+            f"{f.get('gated_out_withdrawn')} withdrawn, {f.get('gated_out_unresolved')} unresolvable "
+            f"names (investigational codes or non-drug entities, counted rather than guessed). "
+            f"LINCS L1000 reversal: status `{lincs.get('status')}`, {lincs.get('n_reversers')} reversers "
+            f"on `{lincs.get('library')}`.")
+    if opposed:
+        head += (f" The mechanism-direction layer then removed **{len(opposed)} mechanism-opposed** "
+                 f"approved drugs (genotoxic, aneugenic, antimitotic or checkpoint-weakening - section 3) "
+                 f"from the ranking; they are listed, not hidden, in the evidence file.")
+    rows = ["| Rank | Drug | Module targets | Axis | Direction | Tier | Score | Pediatric label |",
+            "|---|---|---|---|---|---|---|---|"]
+    for i, x in enumerate(cands[:20], 1):
+        tg = ", ".join(x.get("module_targets") or x.get("targets") or [])
+        rows.append(f"| {i} | {md_cell(x['drug'])} | {md_cell(tg)} | "
+                    f"{md_cell(x.get('axis'))} | {md_cell(x.get('direction', '-'))} | {md_cell(x.get('tier'))} | "
+                    f"{(x.get('score') or 0):.3f} | {_ped(x)} |")
+    tail = ""
+    if opposed:
+        tail = ("\n\nTop mechanism-opposed exclusions (would-be rank, rule): " + "; ".join(
+            f"{md_cell(x['drug'])} (#{x.get('rank_before_direction', '?')}, "
+            f"{md_cell(', '.join(x.get('direction_reasons') or []))})" for x in opposed[:8]) + ".")
+    return (head + "\n\n" + "\n".join(rows) + tail +
+            "\n\nThe engine ranks *evidence density*, not suitability for this child: databases "
+            "over-represent oncology, so the curated layer (section 5) and the pediatric facts decide "
+            "the portfolio. Full output incl. every evidence channel: "
+            "[repo:docs/track2/evidence/candidates.json].")
+
+
+RECALL_KEYS = ("recall_at_1", "recall_at_5", "recall_at_10", "recall_at_25")
 
 
 def benchmark_section(b: dict | None, refs: Refs) -> str:
     if not b:
         return PENDING
-    rows = ["| Gene | Known approved drug(s) | Rank of known drug | Source |", "|---|---|---|---|"]
+    rows = ["| Disease gene | Disease | Known approved drug(s): rank in engine output | Evidence for the known pair |",
+            "|---|---|---|---|"]
     for case in b.get("cases") or []:
-        r = case.get("rank_of_known")
-        rows.append(f"| {md_cell(case.get('gene'))} | {md_cell(', '.join(case.get('known_drugs') or []))} | "
-                    f"{r if r is not None else 'not retrieved'} | "
-                    f"{refs.bare(case.get('cites')) or md_cell(case.get('source'))} |")
-    rec = {k: v for k, v in b.items() if k.startswith("recall_at")}
-    summary = ", ".join(f"{k.replace('recall_at_', 'recall@')} = {v:.2f}" for k, v in sorted(rec.items())
-                        if isinstance(v, (int, float)))
-    return (f"Retrospective benchmark on {len(b.get('cases') or [])} independent gene -> "
-            f"approved-repurposed-drug pairs declared in `config/track2.yaml` before the run: "
-            f"**{summary}** [repo:docs/track2/evidence/benchmark.json].\n\n" + "\n".join(rows))
+        kd = []
+        for k in case.get("known_drugs") or []:
+            if k.get("found") and k.get("rank"):
+                kd.append(f"{k['drug']}: #{k['rank']}")
+            else:
+                kd.append(f"{k['drug']}: {str(k.get('stage', 'not found')).replace('_', ' ')}")
+        ids = [f"PMID:{c['pmid']}" for c in case.get("citations") or [] if c.get("pmid")]
+        rows.append(f"| {md_cell(case.get('gene'))} | {md_cell(case.get('disease'))} | "
+                    f"{md_cell('; '.join(kd))} | {refs.bare(ids)} |")
+    rec = " / ".join(f"{b[k]:.2f}" for k in RECALL_KEYS if isinstance(b.get(k), (int, float)))
+    v1 = b.get("v1_frozen")
+    v1s = ""
+    if isinstance(v1, dict):
+        v1s = (" (frozen pre-direction-layer run: "
+               + " / ".join(f"{v1[k]:.2f}" for k in RECALL_KEYS if k in v1) + ")")
+    return (f"The identical pipeline, run blind on {b.get('n_cases')} genes whose approved repurposed or "
+            f"targeted drug is established (truth committed in `config/track2.yaml` before the run; the "
+            f"drug is never seeded). **recall@1 / @5 / @10 / @25 = {rec}**{v1s} "
+            f"[repo:docs/track2/evidence/benchmark.json].\n\n" + "\n".join(rows) +
+            "\n\n**Reading it honestly.** Every miss is structural: the known drug acts on a target "
+            "outside the disease gene's interaction module (for example losartan acts on the angiotensin "
+            "receptor, not on FBN1's partners), so a target-overlap engine never collects it. Recall is "
+            "therefore a floor on what network-seeded repurposing can do, and it is why this report pairs "
+            "the engine with a mechanism-led literature layer rather than trusting either alone.")
 
 
 def prism_section(p: dict | None, refs: Refs) -> str:
     if not p:
         return PENDING
-    top = p.get("top_aneuploid_selective") or p.get("top") or []
-    rows = ["| Drug | MOA | beta (sensitivity ~ aneuploidy) | q (BH) | n lines |", "|---|---|---|---|---|"]
-    for x in top[:12]:
-        rows.append(f"| {md_cell(x.get('name') or x.get('drug'))} | {md_cell(x.get('moa'))} | "
-                    f"{x.get('beta', float('nan')):.3f} | {x.get('q', float('nan')):.2g} | {x.get('n', '')} |")
-    note = md_cell(p.get("summary") or "")
-    return (f"{refs.linkify(note)}\n\n" if note else "") + "\n".join(rows) + \
-        "\n\nFull table and positive controls: [repo:docs/track2/evidence/prism.json]."
+    a = p["aneuploidy"]
+    cs = (p.get("positive_controls") or {}).get("cohensharir_supptable5_concordance") or {}
+    top = a.get("top_aneuploid_selective_launched") or []
+    qs = [x["q"] for x in (a.get("all_results") or top)
+          if x.get("phase") == "Launched" and isinstance(x.get("q"), (int, float))]
+    min_q = f"{min(qs):.3f}" if qs else "n/a"
+    rows = ["| Launched drug (Broad annotation) | MOA | beta (AUC ~ aneuploidy, lineage-adjusted) | p | q (BH) | lines |",
+            "|---|---|---|---|---|---|"]
+    for x in top[:8]:
+        rows.append(f"| {md_cell(x['name'])} | {md_cell(x.get('moa'))} | {x['beta']:.4f} | {x['p']:.2g} | "
+                    f"{x['q']:.2f} | {x['n_lines']} |")
+    ids = [f"DOI:{p['references']['prism']['doi']}", f"DOI:{p['references']['aneuploidy']['doi']}"]
+    return (f"Model: {md_cell(p.get('model'))}. {a.get('n_launched_tested')} launched compounds tested "
+            f"(of {a.get('n_compounds_tested')}){refs.cites(ids)}. **Validation:** our per-drug "
+            f"statistics reproduce the published PRISM-aneuploidy analysis (Spearman rho = "
+            f"{cs.get('spearman_rho', float('nan')):.2f}, sign concordance {cs.get('sign_concordance', 0):.0%}, "
+            f"n = {cs.get('n_matched')} drugs). **Result:** no launched drug is aneuploidy-selective after "
+            f"FDR correction (minimum q = {min_q}); the top directional hits are listed only as "
+            f"hypothesis-generating:\n\n" + "\n".join(rows) +
+            "\n\nTwo findings shape the portfolio: mitotic/checkpoint drugs are mostly *aneuploid-resistant* "
+            "in this short-exposure screen (supporting their place in the rejected table), and metformin, "
+            "chloroquine and hydroxychloroquine are absent from the screen, so no PRISM claim is made for "
+            "them. Full results and controls: [repo:docs/track2/evidence/prism.json].")
 
 
-def esm_section(e: dict | None, refs: Refs) -> str:
+def esm_section(e: dict | None, refs: Refs, small: dict | None = None) -> str:
+    """Headline model (esm.json) side by side with the smaller model run
+    (esm_150m.json) on identical inputs - the model-size disagreement is
+    reported, not hidden."""
     if not e:
         return PENDING
-    keys = [(k, e[k]) for k in ("llr", "llr_n1002k", "percentile", "auc", "model", "n_background")
-            if k in e]
-    body = ", ".join(f"{k} = {v}" for k, v in keys)
-    return (f"{body} [repo:docs/track2/evidence/esm.json]. "
-            f"{refs.linkify(md_cell(e.get('summary') or ''))}")
+    runs = [(e, "esm.json")] + ([(small, "esm_150m.json")] if small else [])
+    rows = ["| Model (run) | LLR p.Asn1002Lys | More damaging than ... of gnomAD BUB1B missense | "
+            "... of benign panel | AUC common vs ultra-rare gnomAD | AUC benign vs nonsense proxy |",
+            "|---|---|---|---|---|---|"]
+    for d, fname in runs:
+        q, c = d["query"], d["calibration"]
+        where = (d.get("compute") or {}).get("gpu") or d["model"].get("device")
+        rows.append(f"| {d['model']['model'].split('/')[-1]} ({where}, [repo:docs/track2/evidence/{fname}]) | "
+                    f"{q['llr']:.2f} | {q['deleteriousness_percentile_vs_gnomad_missense']:.0f}% | "
+                    f"{q['deleteriousness_percentile_vs_benign_panel']:.0f}% | "
+                    f"{c['auc_gnomad_common_vs_ultrarare']:.2f} | {c['auc_clinvar_benign_vs_nonsense_proxy']:.2f} |")
+    c = e["calibration"]
+    n_bg = e["inputs"]["gnomad"]["n_missense"]
+    return ("\n".join(rows) + "\n\n"
+            f"Masked-marginal log-likelihood ratios over {c['n_scored']} scored variants "
+            f"({n_bg} gnomAD v4 BUB1B missense as background; the query itself, seen once in gnomAD, "
+            f"is excluded from it). Only {c['clinvar_pathogenic_missense']['n']} classified pathogenic "
+            f"BUB1B missense exists in ClinVar, so a missense-only pathogenicity AUC cannot be estimated. "
+            "The larger model places p.Asn1002Lys among the most constrained substitutions in the "
+            "protein while the smaller one scores it mid-distribution; we cite the larger model, which "
+            "also separates the gnomAD frequency classes better, and report both. A conservation "
+            "score does not measure residual function: a strongly constrained residue is compatible "
+            "with a hypomorphic, partially functional product.")
 
 
 # ---------------------------------------------------------------- portfolio
@@ -278,10 +358,34 @@ def dossier(drug_key: str) -> dict | None:
     return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else None
 
 
-def shortlist_table(port: dict | None, refs: Refs) -> str:
+def engine_rank(drugs: list[str], cands: dict | None) -> str:
+    """Where the engine placed each of a lead's drugs - looked up at render
+    time so the table can never disagree with candidates.json."""
+    if not cands:
+        return "-"
+    def same(name: str, k: str) -> bool:      # "dasatinib anhydrous" is dasatinib
+        name = name.lower()
+        return name == k or name.startswith(k + " ")
+
+    ranked = [x["drug"] for x in cands.get("candidates") or []]
+    opposed = [x["drug"] for x in cands.get("excluded_mechanism_opposed") or []]
+    out = []
+    for d in drugs:
+        k = d.lower()
+        hit = next((i for i, n in enumerate(ranked) if same(n, k)), None)
+        if hit is not None:
+            out.append(f"{d} #{hit + 1}/{len(ranked)}")
+        elif any(same(n, k) for n in opposed):
+            out.append(f"{d}: excluded (opposed)")
+        else:
+            out.append(f"{d}: not in module")
+    return "; ".join(out)
+
+
+def shortlist_table(port: dict | None, refs: Refs, cands: dict | None = None) -> str:
     if not port:
         return PENDING
-    rows = ["| Rank | Candidate | Axis | Approval (checked by code) | Pediatric label | Evidence grade | Engine rank |",
+    rows = ["| Rank | Candidate | Axis | Approval (checked by code) | Pediatric label | Evidence grade | Engine placement |",
             "|---|---|---|---|---|---|---|"]
     for item in port["ranked"]:
         d = dossier(item["dossier"]) or {}
@@ -291,7 +395,7 @@ def shortlist_table(port: dict | None, refs: Refs) -> str:
             f"| {item['rank']} | **{md_cell(item['label'])}** | {md_cell(AXIS_NAME.get(d.get('axis'), d.get('axis')))} | "
             f"ChEMBL max_phase {ap.get('chembl_max_phase')}, first approval {ap.get('chembl_first_approval', '-')}; "
             f"openFDA set_id `{str(ap.get('openfda_label_set_id', ''))[:8]}` | {md_cell(ped)[:160]} | "
-            f"{md_cell(item.get('grade'))} | {md_cell(item.get('engine_rank', '-'))} |")
+            f"{md_cell(item.get('grade'))} | {md_cell(engine_rank(item.get('engine_drugs') or [], cands))} |")
     return "\n".join(rows)
 
 
@@ -480,9 +584,9 @@ def build() -> str:
         "ENGINE_SECTION": engine_section(load("candidates.json"), refs),
         "BENCHMARK_SECTION": benchmark_section(load("benchmark.json"), refs),
         "PRISM_SECTION": prism_section(load("prism.json"), refs),
-        "ESM_SECTION": esm_section(load("esm.json"), refs),
+        "ESM_SECTION": esm_section(load("esm.json"), refs, load("esm_150m.json")),
         "SCREEN_SECTION": screen_section(port),
-        "SHORTLIST_TABLE": shortlist_table(port, refs),
+        "SHORTLIST_TABLE": shortlist_table(port, refs, load("candidates.json")),
         "LEAD_SECTIONS": lead_sections(port, refs),
         "ADJUNCTS": adjunct_list(port, refs),
         "REJECTED_TABLE": rejected_table(load("rejected.json"), refs),
