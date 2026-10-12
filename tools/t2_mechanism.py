@@ -712,7 +712,7 @@ def build_claims(a1: dict, a2: dict, ctx: dict) -> list[dict]:
     c.append({"id": "c23",
               "text": ("Growth-hormone treatment in chromosomal-breakage / "
                        "DNA-repair-disorder children is flagged for careful "
-                       "evaluation owing to malignancy risk; the largest "
+                       "evaluation owing to malignancy risk; a large French "
                        "childhood-cancer-survivor cohort found no "
                        "significant increase in second neoplasms on GH, so "
                        "the contraindication is precautionary, not proven"),

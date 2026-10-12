@@ -204,9 +204,12 @@ def test_mva_replay_matches_committed_evidence():
                 if drug in old_by:
                     assert drug in changed, \
                         f"expected flag diff for {drug} did not occur"
-    # funnel: the only added key is `merged`, which must close the counts
+    # funnel: the only added key is `merged`, which must close the counts.
+    # Stale committed evidence lacks it; regenerated evidence carries the
+    # same value the engine emits, so pop both sides before comparing.
     fun_new, fun_old = dict(new["funnel"]), dict(old["funnel"])
     merged = fun_new.pop("merged")
+    assert fun_old.pop("merged", merged) == merged
     assert fun_new == fun_old
     tot = sum(fun_new[k] for k in (
         "gated_in", "gated_out_no_chembl", "gated_out_phase",
@@ -250,6 +253,6 @@ def test_benchmark_replay_matches_committed_evidence():
             "gated_in", "gated_out_no_chembl", "gated_out_phase",
             "gated_out_withdrawn", "gated_out_unresolved"))
         assert f["collected"] - f["dropped_over_cap"] == tot + merged
-    for case in committed["cases"]:
+    for case in old["cases"]:
         case["funnel"].pop("merged", None)
     assert out == old

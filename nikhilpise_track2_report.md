@@ -2,7 +2,7 @@
 
 - **Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
 - **Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
-- **Report generated:** 2026-10-13 from commit `1dd8a38` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
+- **Report generated:** 2026-10-13 from commit `01d0809` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
 
 > **This is a hypothesis-generation document for research follow-up, not medical advice.** Every candidate below is an existing approved medicine proposed for laboratory testing first; none should be given to any child on the strength of this report.
 
@@ -94,7 +94,7 @@ The engine (`src/track2/`, `tools/run_track2.py`, frozen `config/track2.yaml`) i
 | 1 | palbociclib | CDKN2A, NEK2, PRKAA1 | B | neutral | T1 | 0.594 | none |
 | 2 | sirolimus | CDKN2A, MTOR, PRKAA1 | B | aligned | T1 | 0.505 | labeled pediatric indication |
 | 3 | glycerin | CDKN1A | B | neutral | T1 | 0.494 | none |
-| 4 | methenamine | CDKN1A | B | neutral | T1 | 0.494 | none |
+| 4 | methenamine | CDKN1A | B | neutral | T1 | 0.494 | labeled pediatric indication |
 | 5 | octocrylene | BIRC5 | none | neutral | T1 | 0.494 | none |
 | 6 | omacetaxine mepesuccinate | BIRC5 | none | neutral | T1 | 0.494 | none |
 | 7 | pentetic acid | CDKN1A | B | neutral | T1 | 0.494 | labeled pediatric indication |
@@ -338,10 +338,10 @@ Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard 
 
 ## 9. Rigor and reproducibility
 
-- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 13 uncovered claim sentences** (exit 0, 0 network requests).
-- 132 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
+- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 0 uncovered claim sentences** (exit 0, 0 network requests).
+- 151 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
 - Approval, pediatric-label and boxed-warning facts come from live ChEMBL and openFDA responses recorded in each dossier (`docs/track2/evidence/dossiers/`).
-- Decision freeze: benchmark truth and seed genes were committed in `config/track2.yaml` before the engine was run (git history).
+- Decision freeze: the benchmark truth list and seed genes are declared in `config/track2.yaml`, which the engine reads at run time and whose hash it records in the output.
 - Rebuild this report: `python tools/make_track2_report.py --upload`.
 
 ## 10. Limitations

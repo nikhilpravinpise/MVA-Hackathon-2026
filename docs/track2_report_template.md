@@ -112,7 +112,7 @@ The four programs and what each can measure are taken verbatim from the Society'
 - {{CITATION_GATE}}
 - {{TEST_COUNT}}; run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
 - Approval, pediatric-label and boxed-warning facts come from live ChEMBL and openFDA responses recorded in each dossier (`docs/track2/evidence/dossiers/`).
-- Decision freeze: benchmark truth and seed genes were committed in `config/track2.yaml` before the engine was run (git history).
+- Decision freeze: the benchmark truth list and seed genes are declared in `config/track2.yaml`, which the engine reads at run time and whose hash it records in the output.
 - Rebuild this report: `python tools/make_track2_report.py --upload`.
 
 ## 10. Limitations

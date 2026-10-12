@@ -198,14 +198,17 @@ cheap whole-organism confirmation; scRNA-seq quantifies signature reversal.
 5. The worm model species/assay is inferred, not confirmed (see
    mva_programs.json).
 6. Cost tiers are order-of-magnitude estimates for planning, not quotes.
-7. The engine's `pediatric_flag` in candidates.json is a coarse lookup
-   artifact with known false negatives: it reads only the openFDA
-   `pediatric_use` field of whatever label record the drug name resolved
-   to, so 'dasatinib anhydrous' shows `none` (the >=1y indication sits in
-   Indications and Usage, not pediatric_use) and 'metformin' shows `none`
-   (name resolved to the ZITUVIMET combination label). The dossier
-   pediatric blocks above, each tied to a recorded set_id, are
-   authoritative.
+7. The engine's `pediatric_flag` in candidates.json is a label-derived
+   lookup hint, not a clinical assessment: it scans the matched
+   single-ingredient label's `pediatric_use`, indications and dosage
+   sections for an affirmative pediatric age/weight statement, keeping
+   the winning sentence in `pediatric_flag_evidence`. A previous engine
+   version read only `pediatric_use` of whichever record a name resolved
+   to and showed false `none` for 'dasatinib anhydrous' (the >=1y
+   indication sits in Indications and Usage) and 'metformin' (the name
+   resolved to the ZITUVIMET combination label); the regenerated file
+   shows `labeled_pediatric_indication` for both. The dossier pediatric
+   blocks above, each tied to a recorded set_id, are authoritative.
 
 ## Citations
 

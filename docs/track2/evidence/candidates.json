@@ -1,7 +1,7 @@
 {
   "schema": "t2.candidates/1",
   "generated_by": "tools/run_track2.py",
-  "generated_at": "2026-10-12T15:10:26+00:00",
+  "generated_at": "2026-10-12T22:48:01+00:00",
   "case": {
     "name": "mva_bub1b",
     "disease": "Mosaic variegated aneuploidy syndrome 1 (MVA1, OMIM:257300)",
@@ -261,6 +261,7 @@
     "name_lookups": 259,
     "code_names_skipped": 55,
     "weak_names_skipped": 41,
+    "merged": 13,
     "unresolved_names": 252,
     "gated_in": 96,
     "gated_out_no_chembl": 0,
@@ -779,6 +780,9 @@
         "first_approval": 1974,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Based on postmarketing reports, pediatric patients treated with doxorubicin hydrochloride are at risk for developing late cardiovascular dysfunction. Risk factors include young age at treatment (especially < 5 years), high cumulative doses and receipt of combined modality therapy. Long-term periodic cardiovascular monitoring is recommended for all pediatric patients who have received doxorubicin hydrochloride. Doxorubicin hydrochloride, as a component of intensive chemotherapy regimens administered to pediatric patients, may contribute to prepubertal growth failure and may also contribute to gonadal impairment, which is usually temporary. There are no recommended dose adjustments based on age. Doxorubicin clearance was increased in patients aged 2 years to 20 years as com",
+        "fda_set_id": "00634b2b-4e48-4178-8877-28582af894ad",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -822,6 +826,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "pediatric_text_only",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.8547,
@@ -930,6 +935,9 @@
         "first_approval": 1999,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of ELLENCE have not been established in pediatric patients. Pediatric patients may be at greater risk for anthracycline-induced acute manifestations of cardiotoxicity or late cardiovascular dysfunction. The pharmacokinetics of epirubicin in pediatric patients have not been evaluated.",
+        "fda_set_id": "0a03c798-a652-4895-b29c-3b521a89ba42",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -965,6 +973,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -4.0613,
@@ -1055,6 +1064,9 @@
         "first_approval": 1999,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of TEMOZOLOMIDE have not been established in pediatric patients. Safety and effectiveness of TEMOZOLOMIDE capsules were assessed, but not established, in 2 open-label studies in pediatric patients aged 3 to 18 years. In one study, 29 patients with recurrent brain stem glioma and 34 patients with recurrent high-grade astrocytoma were enrolled. In a second study conducted by the Children’s Oncology Group (COG), 122 patients were enrolled, including patients with medulloblastoma/PNET (29), high grade astrocytoma (23), low grade astrocytoma (22), brain stem glioma (16), ependymoma (14), other CNS tumors (9), and non-CNS tumors (9). The adverse reaction profile in pediatric patients was similar to adults.",
+        "fda_set_id": "021b97cc-a76f-44b6-b7be-670d2ae83690",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -1089,6 +1101,7 @@
         "opp_dna_damaging"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.2011,
@@ -1168,6 +1181,9 @@
         "first_approval": 1959,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "0afd2cc7-09e6-481a-afea-9d2e3742da46",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -1193,7 +1209,11 @@
       "direction_reasons": [
         "opp_dna_damaging"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "indications_and_usage",
+        "text": "1 INDICATIONS AND USAGE Cyclophosphamide is an alkylating drug indicated for treatment of adults and pediatric patients with: Malignant Diseases: malignant lymphomas: Hodgkin's disease, lymphocytic lymphoma, mixed-cell type lymphoma, histio"
+      },
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.3128,
@@ -1264,6 +1284,9 @@
         "first_approval": 1981,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+        "fda_set_id": "0171a1c8-c474-4ec1-a11d-6b93a21ca460",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -1292,6 +1315,7 @@
         "opp_dna_damaging"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.6726,
@@ -1372,6 +1396,9 @@
         "first_approval": 2012,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -1400,6 +1427,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -1468,6 +1496,9 @@
         "first_approval": 2023,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Risk Summary The safety and effectiveness of YCANTH for the treatment of molluscum contagiosum have been established in pediatric patients aged 2 years and older. The use of YCANTH in pediatric patients is supported by results from adequate and well-controlled trials in patients 2 years of age and older; although the safety and efficacy of drug use for longer than 12 weeks has not been established [see Clinical Studies (14) ]. The safety and efficacy in pediatric patients below the age of 2 years have not been established .",
+        "fda_set_id": "7c9bdeaa-9822-4c69-a719-ea4a8643f59c",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -1496,6 +1527,10 @@
         "opp_pp2a_inhibitor"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use Risk Summary The safety and effectiveness of YCANTH for the treatment of molluscum contagiosum have been established in pediatric patients aged 2 years and older."
+      },
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -1564,6 +1599,9 @@
         "first_approval": 1979,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Patients Although appropriate studies with daunorubicin hydrochloride have not been performed in the pediatric population, cardiotoxicity may be more frequent and occur at lower cumulative doses in children.",
+        "fda_set_id": "227784a8-ce68-4dd4-8ac5-a65265969677",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -1598,7 +1636,11 @@
         "opp_dna_damaging",
         "opp_topoisomerase_poison"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "indications_and_usage",
+        "text": "INDICATIONS AND USAGE Daunorubicin hydrochloride in combination with other approved anticancer drugs is indicated for remission induction in acute nonlymphocytic leukemia (myelogenous, monocytic, erythroid) of adults and for remission induc"
+      },
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -1679,6 +1721,9 @@
         "first_approval": 1979,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Patients Although appropriate studies with daunorubicin hydrochloride have not been performed in the pediatric population, cardiotoxicity may be more frequent and occur at lower cumulative doses in children.",
+        "fda_set_id": "227784a8-ce68-4dd4-8ac5-a65265969677",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -1715,7 +1760,11 @@
         "opp_dna_damaging",
         "opp_topoisomerase_poison"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "indications_and_usage",
+        "text": "INDICATIONS AND USAGE Daunorubicin hydrochloride in combination with other approved anticancer drugs is indicated for remission induction in acute nonlymphocytic leukemia (myelogenous, monocytic, erythroid) of adults and for remission induc"
+      },
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -1796,6 +1845,9 @@
         "first_approval": 1974,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Based on postmarketing reports, pediatric patients treated with doxorubicin hydrochloride are at risk for developing late cardiovascular dysfunction. Risk factors include young age at treatment (especially < 5 years), high cumulative doses and receipt of combined modality therapy. Long-term periodic cardiovascular monitoring is recommended for all pediatric patients who have received doxorubicin hydrochloride. Doxorubicin hydrochloride, as a component of intensive chemotherapy regimens administered to pediatric patients, may contribute to prepubertal growth failure and may also contribute to gonadal impairment, which is usually temporary. There are no recommended dose adjustments based on age. Doxorubicin clearance was increased in patients aged 2 years to 20 years as com",
+        "fda_set_id": "00634b2b-4e48-4178-8877-28582af894ad",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -1831,6 +1883,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "pediatric_text_only",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -1920,6 +1973,9 @@
         "first_approval": 1996,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "7499fc35-fae8-44ad-bbab-9a1a589bf3ee",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -1957,6 +2013,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -2028,6 +2085,9 @@
         "first_approval": 1990,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of IDAMYCIN PFS in pediatric patients have not been established. Pediatric patients may be at greater risk for anthracycline-induced acute manifestations of cardiotoxicity or late cardiovascular dysfunction. The safety and effectiveness of idarubicin hydrochloride were assessed but not established in two open label clinical studies in pediatric patients aged 1 to <17 years with leukemia and solid tumors. The pharmacokinetics of idarubicin hydrochloride in these pediatric patients were within range of that observed in adult patients given a similar dose based on body surface area. Idarubicin hydrochloride and idarubicinol were detected in CSF samples obtained in these patients; the clinical relevance of these findings is unknown.",
+        "fda_set_id": "0a5a6d93-cc1e-4d7f-8da1-446c134503b3",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2063,6 +2123,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -2142,6 +2203,9 @@
         "first_approval": 1990,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of IDAMYCIN PFS in pediatric patients have not been established. Pediatric patients may be at greater risk for anthracycline-induced acute manifestations of cardiotoxicity or late cardiovascular dysfunction. The safety and effectiveness of idarubicin hydrochloride were assessed but not established in two open label clinical studies in pediatric patients aged 1 to <17 years with leukemia and solid tumors. The pharmacokinetics of idarubicin hydrochloride in these pediatric patients were within range of that observed in adult patients given a similar dose based on body surface area. Idarubicin hydrochloride and idarubicinol were detected in CSF samples obtained in these patients; the clinical relevance of these findings is unknown.",
+        "fda_set_id": "0a5a6d93-cc1e-4d7f-8da1-446c134503b3",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2179,6 +2243,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -2258,6 +2323,9 @@
         "first_approval": 1987,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "1634528a-30c5-4309-acc8-4c0293ae14ae",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2295,6 +2363,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -2381,6 +2450,9 @@
         "first_approval": 1987,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "1634528a-30c5-4309-acc8-4c0293ae14ae",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2418,6 +2490,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -2501,6 +2574,9 @@
         "first_approval": 1990,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+        "fda_set_id": "032e4bcb-b1ed-4029-b2a6-e92f3bf5cc37",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2527,6 +2603,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -2595,6 +2672,9 @@
         "first_approval": 1998,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+        "fda_set_id": "8739ae02-e4c5-0fa2-e053-2a91aa0a1b74",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2632,6 +2712,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -2.1793,
@@ -2705,6 +2786,9 @@
         "first_approval": 1996,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The effectiveness of irinotecan in pediatric patients has not been established. Results from two open-label, single arm studies were evaluated. One hundred and seventy children with refractory solid tumors were enrolled in one phase 2 trial in which 50 mg/m 2 of irinotecan was infused for 5 consecutive days every 3 weeks. Grade 3-4 neutropenia was experienced by 54 (31.8%) patients. Neutropenia was complicated by fever in 15 (8.8%) patients. Grade 3-4 diarrhea was observed in 35 (20.6%) patients. This adverse event profile was comparable to that observed in adults. In the second phase 2 trial of 21 children with previously untreated rhabdomyosarcoma, 20 mg/m 2 of irinotecan was infused for 5 consecutive days on weeks 0, 1, 3 and 4. This single agent therapy was followed b",
+        "fda_set_id": "4f98e9ed-f7b1-5346-af72-fccb0abf3f4b",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2744,6 +2828,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.6666666666666666,
         "network_proximity_z": -1.0476,
@@ -2824,6 +2909,9 @@
         "first_approval": 1962,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Use Safety and effectiveness in children have not been established.",
+        "fda_set_id": "06475bd8-66d9-4f88-90e4-b367480dab39",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2868,6 +2956,7 @@
         "opp_antimetabolite_dna_synthesis"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.8,
         "network_proximity_z": -0.3144,
@@ -2943,6 +3032,9 @@
         "first_approval": 1993,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness in pediatric patients (below 18 years of age) have not been established. Use of cladribine is not recommended in pediatric patients because of the risk of malignancies [ see Warnings and Precautions (5.1) ].",
+        "fda_set_id": "407c52d5-6498-7da5-da35-acc9ca73ced3",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -2972,6 +3064,7 @@
         "opp_dna_damaging"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -3050,6 +3143,9 @@
         "first_approval": 1964,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of dactinomycin have been established in pediatric patients with Wilms tumor, rhabdomyosarcoma, Ewing sarcoma, and metastatic nonseminomatous testicular cancer. The safety and effectiveness of dactinomycin have been established in post-menarchal pediatric patients with gestational trophoblastic neoplasia. The safety and effectiveness of dactinomycin have not been established in pediatric patients undergoing regional perfusion for locally recurrent or locoregional solid malignancies.",
+        "fda_set_id": "2aaca42a-3b79-4151-a727-83253556a540",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -3078,6 +3174,10 @@
         "opp_dna_damaging"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use The safety and effectiveness of dactinomycin have been established in pediatric patients with Wilms tumor, rhabdomyosarcoma, Ewing sarcoma, and metastatic nonseminomatous testicular cancer."
+      },
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -3145,6 +3245,9 @@
         "first_approval": 1964,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Use The safety and effectiveness in pediatric patients have not been established.",
+        "fda_set_id": "2254450e-4803-b947-e063-6394a90a4624",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -3173,6 +3276,7 @@
         "opp_dna_damaging"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -3271,6 +3375,9 @@
         "first_approval": 1983,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established. Etoposide injection contains polysorbate 80. In premature infants, a life-threatening syndrome consisting of liver and renal failure, pulmonary deterioration, thrombocytopenia, and ascites has been associated with an injectable vitamin E product containing polysorbate 80. Anaphylactic reactions have been reported in pediatric patients (see WARNINGS section).",
+        "fda_set_id": "0dddbe44-b4f4-431f-9011-8a54abbd4cbf",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -3316,6 +3423,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.6666666666666666,
         "network_proximity_z": -0.0571,
@@ -3410,6 +3518,9 @@
         "first_approval": 1987,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -3454,6 +3565,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.6666666666666666,
         "network_proximity_z": -0.0422,
@@ -3530,6 +3642,9 @@
         "first_approval": 1953,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of methotrexate in pediatric patients have been established for the treatment of ALL as part of the combination chemotherapy maintenance regimen and the treatment of pJIA [see Indications and Usage (1), Dosage and Administration (2)] . No new safety signals have been observed in pediatric patients in clinical studies [see Adverse Reactions (6.1)] . The safety and effectiveness of methotrexate have not been established in pediatric patients for the other indications [see Indications and Usage (1)] .",
+        "fda_set_id": "04a95db9-a124-4b97-bd71-1c37a6b3b0c8",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -3568,6 +3683,10 @@
         "opp_antimetabolite_dna_synthesis"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use The safety and effectiveness of methotrexate in pediatric patients have been established for the treatment of ALL as part of the combination chemotherapy maintenance regimen and the treatment of pJIA [see Indications and U"
+      },
       "evidence": {
         "target_overlap": 0.6666666666666666,
         "network_proximity_z": 0.2784,
@@ -3723,7 +3842,10 @@
         "ema_only": false,
         "first_approval": 1992,
         "withdrawn": false,
-        "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients have not been established. Pharmacokinetics, safety, and antitumor activity of paclitaxel protein-bound particles for injectable suspension (albumin-bound) were assessed in an open-label, dose escalation, dose expansion study (NCT01962103) in 96 pediatric patients aged 1.4 to < 17 years with recurrent or refractory pediatric solid tumors. The maximum tolerated dose (MTD) normalized for body surface area (BSA) was lower in pediatric patients compared to adults. No new safety signals were observed in pediatric patients across these studies. Paclitaxel protein-bound exposures normalized by dose were higher in 96 pediatric patients (aged 1.4 to < 17 years) as compared to those in adults.",
+        "pediatric_labeling": "Pediatric Use The safety and effectiveness of paclitaxel in pediatric patients have not been established. There have been reports of central nervous system (CNS) toxicity (rarely associated with death) in a clinical trial in pediatric patients in which paclitaxel was infused intravenously over 3 hours at doses ranging from 350 mg/m 2 to 420 mg/m 2 . The toxicity is most likely attributable to the high dose of the ethanol component of the paclitaxel vehicle given over a short infusion time. The use of concomitant antihistamines may intensify this effect. Although a direct effect of the paclitaxel itself cannot be discounted, the high doses used in this study (over twice the recommended adult dosage) must be considered in assessing the safety of paclitaxel for use in this population.",
+        "fda_set_id": "0c12c77c-5fd4-48dc-a318-e96892233992",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -3841,6 +3963,7 @@
         "opp_antimitotic_tubulin"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.25,
         "network_proximity_z": 2.9039,
@@ -3897,8 +4020,8 @@
           }
         ]
       },
-      "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients have not been established. Pharmacokinetics, safety, and antitumor activity of paclitaxel protein-bound particles for injectable suspension (albumin-bound) were assessed in an open-label, dose escalation, dose expansion study (NCT01962103) in 96 pediatric patients aged 1.4 to < 17 years with recurrent or refractory pediatric solid tumors. The maximum tolerated dose (MTD) normalized for body surface area (BSA) was lower in pediatric patients compared to adults. No new safety signals were observed in pediatric patients across these studies. Paclitaxel protein-bound exposures normalized by dose were higher in 96 pediatric patients (aged 1.4 to < 17 years) as compared to those in adults.",
-      "fda_set_id": "135502ff-002c-4a29-ba93-60855cf44f31",
+      "pediatric_labeling": "Pediatric Use The safety and effectiveness of paclitaxel in pediatric patients have not been established. There have been reports of central nervous system (CNS) toxicity (rarely associated with death) in a clinical trial in pediatric patients in which paclitaxel was infused intravenously over 3 hours at doses ranging from 350 mg/m 2 to 420 mg/m 2 . The toxicity is most likely attributable to the high dose of the ethanol component of the paclitaxel vehicle given over a short infusion time. The use of concomitant antihistamines may intensify this effect. Although a direct effect of the paclitaxel itself cannot be discounted, the high doses used in this study (over twice the recommended adult dosage) must be considered in assessing the safety of paclitaxel for use in this population.",
+      "fda_set_id": "0c12c77c-5fd4-48dc-a318-e96892233992",
       "dgidb": {
         "module_hits": [
           "BIRC5",
@@ -3937,6 +4060,9 @@
         "first_approval": 1996,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of gemcitabine have not been established in pediatric patients. The safety and pharmacokinetics of gemcitabine were evaluated in a trial in pediatric patients with refractory leukemia. The maximum tolerated dose was 10 mg/m 2 /min for 360 minutes weekly for three weeks followed by a one-week rest period. The safety and activity of gemcitabine were evaluated in a trial of pediatric patients with relapsed acute lymphoblastic leukemia (22 patients) and acute myelogenous leukemia (10 patients) at a dose of 10 mg/m 2 /min administered over 360 minutes weekly for three weeks followed by a one-week rest period. Patients with M1 or M2 bone marrow on Day 28 who did not experience unacceptable toxicity were eligible to receive a maximum of one additiona",
+        "fda_set_id": "06dd9d40-74fc-4409-93b1-a46be7126331",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -4043,6 +4169,7 @@
         "opp_antimetabolite_dna_synthesis"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.17647058823529413,
         "network_proximity_z": 2.867,
@@ -4117,6 +4244,9 @@
         "first_approval": 1998,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of capecitabine tablets in pediatric patients have not been established. Safety and effectiveness were assessed, but not established in two single arm studies in 56 pediatric patients aged 3 months to <17 years with newly diagnosed gliomas. In both trials, pediatric patients received an investigational pediatric formulation of capecitabine concomitantly with and following completion of radiation therapy (total dose of 5580 cGy in 180 cGy fractions). The relative bioavailability of the investigational formulation to capecitabine tablets was similar. The adverse reaction profile was consistent with that of adults, with the exception of laboratory abnormalities which occurred more commonly in pediatric patients. The most frequently reported labor",
+        "fda_set_id": "007e3432-c8aa-2a76-52ba-c346924c08a7",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -4152,6 +4282,7 @@
         "opp_antimetabolite_dna_synthesis"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5183,
@@ -4229,6 +4360,9 @@
         "first_approval": 1995,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of dexrazoxane in pediatric patients have not been established [see Warnings and Precautions (5.4)] .",
+        "fda_set_id": "68089182-d4a2-4053-8d0d-fc97a901515d",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -4271,6 +4405,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.4666,
@@ -4344,6 +4479,9 @@
         "first_approval": 1992,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -4385,6 +4523,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.4666,
@@ -4469,6 +4608,9 @@
         "first_approval": 1995,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The alcohol content of Docetaxel Injection should be taken into account when given to pediatric patients [ see Warnings and Precautions (5.13) ]. The efficacy of docetaxel in pediatric patients as monotherapy or in combination has not been established. The overall safety profile of docetaxel in pediatric patients receiving monotherapy or TCF was consistent with the known safety profile in adults. Docetaxel has been studied in a total of 289 pediatric patients: 239 in 2 trials with monotherapy and 50 in combination treatment with cisplatin and 5-fluorouracil (TCF). Docetaxel Monotherapy Docetaxel monotherapy was evaluated in a dose-finding phase 1 trial in 61 pediatric patients (median age 12.5 years, range 1–22 years) with a variety of refractory solid tumors. The recomme",
+        "fda_set_id": "00c61d11-d6b7-4618-b6f6-2592dbcc8af7",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -4593,6 +4735,7 @@
         "opp_antimitotic_tubulin"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.11764705882352941,
         "network_proximity_z": 3.1047,
@@ -4695,6 +4838,9 @@
         "first_approval": 1995,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of dexrazoxane in pediatric patients have not been established [see Warnings and Precautions (5.4)] .",
+        "fda_set_id": "68089182-d4a2-4053-8d0d-fc97a901515d",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -4737,6 +4883,7 @@
         "opp_topoisomerase_poison"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.4666,
@@ -4807,6 +4954,9 @@
         "first_approval": 2004,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of azacitidine in pediatric patients with MDS have not been established. Pediatric use information is approved for Celgene Corporation's Vidaza (azacitidine for injection). However, due to Celgene Corporation's marketing exclusivity rights, this drug product is not labeled with that information.",
+        "fda_set_id": "0095c67b-42f3-47e6-92db-f77843727bca",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -4848,6 +4998,10 @@
         "opp_dna_damaging"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "Pediatric use information is approved for Celgene Corporation's Vidaza (azacitidine for injection)."
+      },
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.9166,
@@ -4921,6 +5075,9 @@
         "first_approval": 2006,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of Decitabine for Injection in pediatric patients have not been established.",
+        "fda_set_id": "00caa305-fef4-471b-b9c3-4bcf5fe7b244",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -4962,6 +5119,7 @@
         "opp_dna_damaging"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.9166,
@@ -5031,6 +5189,9 @@
         "first_approval": 1969,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric use See INDICATIONS AND USAGE .",
+        "fda_set_id": "1be2668b-d76f-4c65-aea9-86c5c40889a2",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -5116,7 +5277,11 @@
         "opp_antimetabolite_dna_synthesis",
         "opp_dna_damaging"
       ],
-      "pediatric_flag": "pediatric_text_only",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "indications_and_usage",
+        "text": "INDICATIONS AND USAGE Cytarabine Injection in combination with other approved anticancer drugs is indicated for remission induction in acute non-lymphocytic leukemia of adults and children."
+      },
       "evidence": {
         "target_overlap": 0.08333333333333333,
         "network_proximity_z": 2.7127,
@@ -5201,6 +5366,9 @@
         "first_approval": 1965,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Use The dosage schedule for pediatric patients is indicated under DOSAGE AND ADMINISTRATION .",
+        "fda_set_id": "f073b58e-56d6-4c8d-a2ce-b37719402d77",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -5306,6 +5474,10 @@
         "opp_antimitotic_tubulin"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "Pediatric Use The dosage schedule for pediatric patients is indicated under DOSAGE AND ADMINISTRATION ."
+      },
       "evidence": {
         "target_overlap": 0.0625,
         "network_proximity_z": 3.0913,
@@ -5375,6 +5547,9 @@
         "first_approval": 2015,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -5461,6 +5636,7 @@
         "opp_sirt2_inhibitor"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.08333333333333333,
         "network_proximity_z": 2.1454,
@@ -5543,6 +5719,9 @@
         "first_approval": 2015,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of IBRANCE in pediatric patients have not been established. The safety and effectiveness of IBRANCE were assessed but not established in three trials: one open-label trial [A5481092, (NCT03709680)] that included 98 pediatric patients 2 to <17 years of age who received IBRANCE in combination with chemotherapy for recurrent or refractory solid tumors and two open-label trials that included 42 pediatric patients 4 to <17 years of age who received IBRANCE as a single agent for recurrent or refractory solid tumors [APEC1621I, (NCT03526250)] or primary central nervous system (CNS) tumors [PBTC-042, (NCT02255461)]. No new safety signals were observed in these trials. Palbociclib exposures in pediatric patients who received IBRANCE as a single agent o",
+        "fda_set_id": "89a142d5-7e61-48bf-9e77-e2cd124c4792",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -5592,6 +5771,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": -1.5516,
@@ -5671,6 +5851,9 @@
         "first_approval": 1999,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Renal Transplant The safety and efficacy of sirolimus in pediatric patients < 13 years have not been established. The safety and efficacy of sirolimus oral solution and sirolimus tablets have been established for prophylaxis of organ rejection in renal transplantation in children ≥ 13 years judged to be at low- to moderate-immunologic risk. Use of sirolimus oral solution and sirolimus tablets in this subpopulation of children ≥ 13 years is supported by evidence from adequate and well-controlled trials of sirolimus oral solution in adults with additional pharmacokinetic data in pediatric renal transplantation patients [ see Clinical Pharmacology ( 12.3 ) ]. Safety and efficacy information from a controlled clinical trial in pediatric and adolescent (< 18 years of age) rena",
+        "fda_set_id": "09f24e7a-0bea-4e02-b557-c60eb842d41a",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -5714,6 +5897,10 @@
         "aln_mtorc1_inhibition"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "The safety and efficacy of sirolimus oral solution and sirolimus tablets have been established for prophylaxis of organ rejection in renal transplantation in children ≥ 13 years judged to be at low- to moderate-immunologic risk."
+      },
       "evidence": {
         "target_overlap": 0.75,
         "network_proximity_z": -0.2395,
@@ -5816,8 +6003,12 @@
         "first_approval": 1982,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "00071697-4ac6-4962-8eee-388b8b52bd40",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
+          "openfda",
           "drugcentral",
           "opentargets"
         ]
@@ -5839,6 +6030,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -5877,7 +6069,7 @@
         "ot_warnings": []
       },
       "pediatric_labeling": "",
-      "fda_set_id": null,
+      "fda_set_id": "00071697-4ac6-4962-8eee-388b8b52bd40",
       "dgidb": {
         "module_hits": [
           "CDKN1A"
@@ -5907,6 +6099,9 @@
         "first_approval": 1967,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "131a1322-0182-7a4e-e063-6394a90accbf",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name; single-ingredient label preferred over combination hit",
         "evidence": [
           "chembl",
           "openfda",
@@ -5930,7 +6125,11 @@
       "mechanism_of_action": "",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "dosage_and_administration",
+        "text": "1/2 to 1 tablet (0.5 to 1.0 g) twice daily (morning and night) for pediatric patients 6 to 12 years of age."
+      },
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -5969,7 +6168,7 @@
         "ot_warnings": []
       },
       "pediatric_labeling": "",
-      "fda_set_id": "02af5576-d75c-4553-9431-9c482997c8bb",
+      "fda_set_id": "131a1322-0182-7a4e-e063-6394a90accbf",
       "dgidb": {
         "module_hits": [
           "CDKN1A"
@@ -5999,6 +6198,9 @@
         "first_approval": 2006,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "00280745-908b-468f-e063-6294a90aa12f",
+        "combination_label": true,
+        "openfda_match": "matched via generic_name; combination label kept - no single-ingredient label in top hits",
         "evidence": [
           "chembl",
           "openfda",
@@ -6023,6 +6225,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -6061,7 +6264,7 @@
         "ot_warnings": []
       },
       "pediatric_labeling": "",
-      "fda_set_id": "0200a00f-2b57-454d-933d-a7d48644be6e",
+      "fda_set_id": "00280745-908b-468f-e063-6294a90aa12f",
       "dgidb": {
         "module_hits": [
           "BIRC5"
@@ -6091,6 +6294,9 @@
         "first_approval": 2009,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -6114,6 +6320,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -6182,6 +6389,9 @@
         "first_approval": 2004,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Technetium Tc 99m pentetate is indicated for lung ventilation and evaluation of pulmonary embolism when paired with perfusion imaging and for renal visualization, assessment of renal perfusion, and estimation of glomerular filtration rate in pediatric patients ages birth to less than 17 years of age. Pediatric use is supported by evidence from controlled studies in adults and dosing and safety are based on clinical experience. The radiation risk of Technetium Tc 99m pentetate is greater in pediatric patients than adults [ See Warnings and Precautions, ( 5.3 ) ] .",
+        "fda_set_id": "59b3b7d5-ff69-4642-971e-99026d9dce89",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -6206,6 +6416,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use Technetium Tc 99m pentetate is indicated for lung ventilation and evaluation of pulmonary embolism when paired with perfusion imaging and for renal visualization, assessment of renal perfusion, and estimation of glomerular"
+      },
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -6287,6 +6501,9 @@
         "first_approval": 1996,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -6310,6 +6527,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.686,
@@ -6380,6 +6598,9 @@
         "first_approval": 2017,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -6420,6 +6641,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": -0.715,
@@ -6496,6 +6718,9 @@
         "first_approval": 2003,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of gefitinib tablets in pediatric patients have not been established.",
+        "fda_set_id": "0afc12dd-12f8-4def-9027-f38412a862b9",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -6529,6 +6754,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": -1.6835,
@@ -6599,6 +6825,9 @@
         "first_approval": 1975,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "0052992a-819c-4c55-bd88-201a09a3573a",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -6625,6 +6854,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.3516,
@@ -6695,6 +6925,9 @@
         "first_approval": 2009,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use TSC-Associated SEGA The safety and effectiveness of everolimus tablets/everolimus tablets for oral suspension have been established in pediatric patients age 1 year and older with TSC-associated SEGA that requires therapeutic intervention but cannot be curatively resected. Use of everolimus tablets/everolimus tablets for oral suspension for this indication is supported by evidence from a randomized, double-blind, placebo-controlled trial in adult and pediatric patients (EXIST-1); an open-label, single-arm trial in adult and pediatric patients (Study 2485); and additional pharmacokinetic data in pediatric patients [see Adverse Reactions (6.1) , Clinical Pharmacology (12.3) , Clinical Studies (14.5) ] . The safety and effectiveness of everolimus tablets/everolimus tablets f",
+        "fda_set_id": "01f7b5fb-be0d-4adf-acd2-6899018de966",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -6735,6 +6968,10 @@
         "aln_mtorc1_inhibition"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use TSC-Associated SEGA The safety and effectiveness of everolimus tablets/everolimus tablets for oral suspension have been established in pediatric patients age 1 year and older with TSC-associated SEGA that requires therapeu"
+      },
       "evidence": {
         "target_overlap": 0.6666666666666666,
         "network_proximity_z": 0.2784,
@@ -6856,6 +7093,9 @@
         "first_approval": 1989,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "0a905e25-42b6-4937-a689-f01a8f22e644",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -6892,6 +7132,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.6666666666666666,
         "network_proximity_z": 0.5341,
@@ -6984,6 +7225,9 @@
         "first_approval": 1977,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of SOLTAMOX in pediatric patients have not been established. Tamoxifen Use in McCune-Albright Syndrome The safety and effectiveness of SOLTAMOX for the treatment of girls with McCune-Albright syndrome, including long-term effects, have not been established. A single, uncontrolled multicenter trial of tamoxifen 20 mg once a day was conducted in a heterogeneous group of girls with McCune-Albright syndrome and precocious puberty manifested by physical signs of pubertal development, episodes of vaginal bleeding, and/or advanced bone age (bone age of at least 12 months beyond chronological age). Twenty-eight female pediatric patients, aged 2 to 10 years, were treated for up to 12 months. Effect of treatment on frequency of vaginal bleeding, bone ag",
+        "fda_set_id": "1e6ff055-590c-41e6-9530-1fdf04cdbd02",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -7020,6 +7264,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.6666666666666666,
         "network_proximity_z": 0.3309,
@@ -7114,6 +7359,9 @@
         "first_approval": 1998,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Celecoxib is approved for relief of the signs and symptoms of Juvenile Rheumatoid Arthritis in patients 2 years and older. Safety and efficacy have not been studied beyond six months in children. The long-term cardiovascular toxicity in children exposed to celecoxib has not been evaluated and it is unknown if long-term risks may be similar to that seen in adults exposed to celecoxib or other COX-2 selective and non- selective NSAIDs [see Boxed Warning, Warnings and Precautions (5.5) , and Clinical Studies (14.3) ]. The use of celecoxib in patients 2 years to 17 years of age with pauciarticular, polyarticular course JRA or in patients with systemic onset JRA was studied in a 12-week, double-blind, active controlled, pharmacokinetic, safety and efficacy study, with a 12-wee",
+        "fda_set_id": "00e67d5e-df6f-4dfd-8c2d-a001c8a99af0",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -7147,6 +7395,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use Celecoxib is approved for relief of the signs and symptoms of Juvenile Rheumatoid Arthritis in patients 2 years and older."
+      },
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.794,
@@ -7232,6 +7484,9 @@
         "first_approval": 2007,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of lapatinib in pediatric patients have not been established.",
+        "fda_set_id": "302a4346-a68d-af3e-e063-6294a90a4a6f",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -7270,6 +7525,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.6187,
@@ -7354,6 +7610,9 @@
         "first_approval": 1982,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Levothyroxine sodium is indicated in patients from birth to less than 17 years of age: As a replacement therapy in primary (thyroidal), secondary (pituitary), and tertiary (hypothalamic) congenital or acquired hypothyroidism. As an adjunct to surgery and radioiodine therapy in the management of thyrotropin-dependent well-differentiated thyroid cancer. Rapid restoration of normal serum T4 concentrations is essential for preventing the adverse effects of congenital hypothyroidism on cognitive development as well as on overall physical growth and maturation. Therefore, initiate levothyroxine sodium therapy immediately upon diagnosis. Levothyroxine is generally continued for life in these patients [see Warnings and Precautions (5.1) ]. Closely monitor infants during the first",
+        "fda_set_id": "008de8fd-150f-4022-8ccb-c8bfa94875c7",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -7392,6 +7651,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use Levothyroxine sodium is indicated in patients from birth to less than 17 years of age: As a replacement therapy in primary (thyroidal), secondary (pituitary), and tertiary (hypothalamic) congenital or acquired hypothyroidi"
+      },
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.7577,
@@ -7470,6 +7733,9 @@
         "first_approval": 2004,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of erlotinib tablets in pediatric patients have not been established. In an open-label, multicenter trial, 25 pediatric patients (median age 14 years, range 3-20 years) with recurrent or refractory ependymoma were randomized (1:1) to erlotinib tablets or etoposide. Thirteen patients received erlotinib tablets at a dose of 85 mg/m 2 /day orally until disease progression, death, patient request, investigator decision to discontinue study drug, or intolerable toxicity. Four patients randomized to etoposide also received erlotinib tablets following disease progression. The trial was terminated prematurely for lack of efﬁcacy; there were no objective responses observed in these 17 erlotinib tablets -treated patients. No new adverse events were iden",
+        "fda_set_id": "2c4c7353-b81c-4651-8aac-6d15e88145af",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -7503,6 +7769,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": -0.5625,
@@ -7574,6 +7841,9 @@
         "first_approval": 2013,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use BRAF V600E Mutation-Positive Unresectable or Metastatic Solid Tumors and LGG The safety and effectiveness of TAFINLAR in combination with trametinib have been established in pediatric patients 1 year of age and older with unresectable or metastatic solid tumors with BRAF V600E mutation who have progressed following prior treatment and have no satisfactory alternative treatment options; or with LGG with BRAF V600E mutation who require systemic therapy. Use of TAFINLAR in combination with trametinib for these indications is supported by evidence from studies X2101 and G2201 that enrolled 171 patients (1 to < 18 years of age) with BRAF V600 mutation-positive advanced solid tumors, of which 4 (2.3%) patients were 1 to < 2 years of age, 39 (23%) patients were 2 to < 6 years of",
+        "fda_set_id": "fee1e6b1-e1a5-4254-9f2e-a70e0f8dbdea",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -7607,6 +7877,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "Use of TAFINLAR in combination with trametinib for these indications is supported by evidence from studies X2101 and G2201 that enrolled 171 patients (1 to < 18 years of age) with BRAF V600 mutation-positive advanced solid tumors, of which "
+      },
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.7935,
@@ -7680,6 +7954,9 @@
         "first_approval": 2011,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ZELBORAF in pediatric patients have not been established. Vemurafenib was studied in 6 adolescent patients 15 to 17 years of age with unresectable or metastatic melanoma with BRAF V600 mutation. A maximum tolerated dose was not reached with doses up to vemurafenib 960 mg twice daily. No new safety signals were observed. Vemurafenib steady-state exposure in these 6 adolescent patients was generally similar to that in adults.",
+        "fda_set_id": "38eea320-7e0c-485a-bc30-98c3c45e2763",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -7713,6 +7990,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.7935,
@@ -7784,6 +8062,9 @@
         "first_approval": 2019,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -7816,6 +8097,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5361,
@@ -7886,6 +8168,9 @@
         "first_approval": 2018,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of TALZENNA have not been established in pediatric patients.",
+        "fda_set_id": "13839d4f-6acf-4ffb-a128-79df59319273",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -7924,6 +8209,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.698,
@@ -7998,6 +8284,9 @@
         "first_approval": 2013,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use BRAF V600E Mutation-Positive Unresectable or Metastatic Solid Tumors and LGG The safety and effectiveness of MEKINIST in combination with dabrafenib have been established in pediatric patients 1 year of age and older with unresectable or metastatic solid tumors with BRAF V600E mutation who have progressed following prior treatment and have no satisfactory alternative treatment options; or with LGG with BRAF V600E mutation who require systemic therapy. Use of MEKINIST in combination with dabrafenib for these indications is supported by evidence from studies X2101 and G2201 that enrolled 171 patients (1 to < 18 years of age) with BRAF V600 mutation-positive advanced solid tumors, of which 4 (2.3%) patients were 1 to < 2 years of age, 39 (23%) patients were 2 to < 6 years of",
+        "fda_set_id": "0002ad27-779d-42ab-83b5-bc65453412a1",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -8036,6 +8325,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "Use of MEKINIST in combination with dabrafenib for these indications is supported by evidence from studies X2101 and G2201 that enrolled 171 patients (1 to < 18 years of age) with BRAF V600 mutation-positive advanced solid tumors, of which "
+      },
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 1.0478,
@@ -8108,6 +8401,9 @@
         "first_approval": 2017,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and efficacy of CALQUENCE in pediatric patients have not been established.",
+        "fda_set_id": "b1409184-3267-4d8c-8f17-4e01f69828b1",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -8141,6 +8437,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5361,
@@ -8212,6 +8509,9 @@
         "first_approval": 1983,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients below the age of 18 years have not been established.",
+        "fda_set_id": "0a60fccf-7e1b-44fe-e063-6394a90aadd5",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -8245,6 +8545,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.794,
@@ -8338,6 +8639,9 @@
         "first_approval": 1958,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Use The efficacy and safety of corticosteroids in the pediatric population are based on the we l -established course of effect of corticosteroids, which is similar in pediatric and adult populations. Published studies provide evidence of efficacy and safety in pediatric patients for the treatment of nephrotic syndrome (patients >2 years of age), and aggressive lymphomas and leukemias (patients >1 month of age). Other indications for pediatric use of corticosteroids, e.g., severe asthma and wheezing, are based on adequate and we l -controlled trials conducted in adults, on the premises that the course of the diseases and their pathophysiology are considered to be substantially similar in both populations. The adverse effects of corticosteroids in pediatric patients are similar to ",
+        "fda_set_id": "01cfaa3e-5e30-18fa-e063-6394a90a084e",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -8371,6 +8675,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "Pediatric Use The efficacy and safety of corticosteroids in the pediatric population are based on the we l -established course of effect of corticosteroids, which is similar in pediatric and adult populations."
+      },
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.794,
@@ -8443,6 +8751,9 @@
         "first_approval": 1944,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -8475,6 +8786,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.794,
@@ -8543,6 +8855,9 @@
         "first_approval": 2012,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of XTANDI in pediatric patients have not been established.",
+        "fda_set_id": "b129fdc9-1d8e-425c-a5a9-8a2ed36dfbdf",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -8576,6 +8891,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.7935,
@@ -8647,6 +8963,9 @@
         "first_approval": 1982,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and efficacy of levonorgestrel and ethinyl estradiol tablets have been established in women of reproductive age. Efficacy is expected to be the same for postpubertal adolescents under the age of 18 as for users 18 years and older. Use of levonorgestrel and ethinyl estradiol tablets before menarche is not indicated.",
+        "fda_set_id": "00657f4e-9df8-4f58-91a0-eff5a467f988",
+        "combination_label": true,
+        "openfda_match": "matched via generic_name; combination label kept - no single-ingredient label in top hits",
         "evidence": [
           "chembl",
           "openfda",
@@ -8680,6 +8999,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use Safety and efficacy of levonorgestrel and ethinyl estradiol tablets have been established in women of reproductive age."
+      },
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.8068,
@@ -8749,6 +9072,9 @@
         "first_approval": 1997,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness in pediatric patients have not been established. Letrozole administration to young (postnatal day 7) rats for 12 weeks duration at 0.003, 0.03, 0.3 mg/kg/day by oral gavage resulted in adverse skeletal/growth effects (bone maturation, bone mineral density) and neuroendocrine and reproductive developmental perturbations of the hypothalamic-pituitary axis. Administration of 0.3 mg/kg/day resulted in AUC values that were similar to the AUC in adult patients receiving the recommended dose of 2.5 mg/day. Decreased fertility was accompanied by hypertrophy of the hypophysis and testicular changes that included degeneration of the seminiferous tubular epithelium and atrophy of the female reproductive tract. Young rats in this study were allowed to rec",
+        "fda_set_id": "065cc89f-3a3f-4d78-b9f6-1c32a77ceb1c",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -8782,6 +9108,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.794,
@@ -8852,7 +9179,10 @@
         "ema_only": false,
         "first_approval": 1957,
         "withdrawn": false,
-        "pediatric_labeling": "8.4 Pediatric Use Bupivacaine Hydrochloride Injection/Bupivacaine Hydrochloride and Epinephrine Injection is approved for use in adults. Administration of Bupivacaine Hydrochloride Injection/Bupivacaine Hydrochloride and Epinephrine Injection in pediatric patients younger than 12 years is not recommended. Continuous infusions of bupivacaine in pediatric patients have been reported to result in high systemic levels of bupivacaine and seizures; high plasma levels may also be associated with cardiovascular abnormalities.",
+        "pediatric_labeling": "",
+        "fda_set_id": "01f0126c-da22-4ac0-8755-3bc589602e6a",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name; single-ingredient label preferred over combination hit",
         "evidence": [
           "chembl",
           "openfda",
@@ -8885,7 +9215,8 @@
       "mechanism_of_action": "Glucocorticoid receptor agonist",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5361,
@@ -8921,12 +9252,12 @@
         "pmids:1"
       ],
       "warnings": {
-        "black_box": true,
-        "openfda_boxed": true,
+        "black_box": false,
+        "openfda_boxed": false,
         "ot_warnings": []
       },
-      "pediatric_labeling": "8.4 Pediatric Use Bupivacaine Hydrochloride Injection/Bupivacaine Hydrochloride and Epinephrine Injection is approved for use in adults. Administration of Bupivacaine Hydrochloride Injection/Bupivacaine Hydrochloride and Epinephrine Injection in pediatric patients younger than 12 years is not recommended. Continuous infusions of bupivacaine in pediatric patients have been reported to result in high systemic levels of bupivacaine and seizures; high plasma levels may also be associated with cardiovascular abnormalities.",
-      "fda_set_id": "01ca16de-ab2e-4e19-e063-6394a90a0510",
+      "pediatric_labeling": "",
+      "fda_set_id": "01f0126c-da22-4ac0-8755-3bc589602e6a",
       "dgidb": {
         "module_hits": [
           "TP53"
@@ -8957,6 +9288,9 @@
         "first_approval": 1991,
         "withdrawn": false,
         "pediatric_labeling": "Pediatric Use Safety and effectiveness in children or adolescents have not been established.",
+        "fda_set_id": "674e0e6d-46ed-4868-9196-04019d667716",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -8990,6 +9324,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.3628,
@@ -9065,6 +9400,9 @@
         "first_approval": 1978,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Experience has indicated that pediatric patients under the age of two years are at a considerably increased risk of developing fatal hepatotoxicity, especially those with the aforementioned conditions [see Boxed Warning] . When valproic acid is used in this patient group, it should be used with extreme caution and as a sole agent. The benefits of therapy should be weighed against the risks. Above the age of 2 years, experience in epilepsy has indicated that the incidence of fatal hepatotoxicity decreases considerably in progressively older patient groups. Younger children, especially those receiving enzyme-inducing drugs, will require larger maintenance doses to attain targeted total and unbound valproate concentrations. Pediatric patients (i.e., between 3 months and 10 y",
+        "fda_set_id": "1286ab49-fa34-488e-e063-6394a90ad582",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -9097,7 +9435,11 @@
       "mechanism_of_action": "Succinate semialdehyde dehydrogenase inhibitor",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "pediatric_text_only",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "dosage_and_administration",
+        "text": "Valproic acid is indicated as monotherapy and adjunctive therapy in complex partial seizures in adults and pediatric patients down to the age of 10 years, and in simple and complex absence seizures."
+      },
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.1793,
@@ -9203,6 +9545,9 @@
         "first_approval": 2016,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of VENCLEXTA have not been established in pediatric patients. Juvenile Animal Toxicity Data In a juvenile toxicology study, mice were administered venetoclax at 10, 30, or 100 mg/kg/day by oral gavage from 7 to 60 days of age. Clinical signs of toxicity included decreased activity, dehydration, skin pallor, and hunched posture at ≥30 mg/kg/day. In addition, mortality and body weight effects occurred at 100 mg/kg/day. Other venetoclax-related effects were reversible decreases in lymphocytes at ≥10 mg/kg/day; a dose of 10 mg/kg/day is approximately 0.06 times the clinical dose of 400 mg on a mg/m 2 basis for a 20 kg child.",
+        "fda_set_id": "b118a40d-6b56-cee3-10f6-ded821a97018",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -9238,6 +9583,7 @@
         "aln_senolytic_class"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5361,
@@ -9312,6 +9658,9 @@
         "first_approval": 2014,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of Lynparza have not been established in pediatric patients.",
+        "fda_set_id": "741ff3e3-dc1a-45a6-84e5-2481b27131aa",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -9355,6 +9704,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.25,
         "network_proximity_z": 1.033,
@@ -9431,6 +9781,9 @@
         "first_approval": 2016,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of Rubraca in pediatric patients have not been established.",
+        "fda_set_id": "0295d202-1cfe-7659-e063-6294a90a476e",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -9474,6 +9827,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.25,
         "network_proximity_z": 1.033,
@@ -9547,6 +9901,9 @@
         "first_approval": 2017,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of KISQALI in pediatric patients have not been established. The safety and efficacy of KISQALI in combination with chemotherapy was assessed but not established in an open-label, dose-finding multicenter study (Study CLEE011Q12101; NCT05429502) in 12 patients, including 9 pediatric patients aged 4 to <17 years with relapsed or refractory neuroblastoma and other solid tumors. The study was terminated early due to dose-limiting toxicities (DLTs) preventing the identification of a safe dosing regimen for the investigational combination. DLTs included neutropenia, anemia, thrombocytopenia, ventricular tachycardia, respiratory failure, and infection. Ribociclib exposures in pediatric patients aged 1 to < 17 years were within the range of values pre",
+        "fda_set_id": "aaeaef94-f3f5-4367-8ea2-b181d7be2da8",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -9585,6 +9942,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.4961,
@@ -9658,6 +10016,9 @@
         "first_approval": 2020,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness have been established in pediatric patients 1 year of age and older with NF1 who have inoperable PN and the information on this use is discussed throughout the labeling. The safety and effectiveness of KOSELUGO have not been established in pediatric patients younger than 1 year of age. Animal Toxicity Data In 3-month general toxicology studies, male rats receiving selumetinib at doses ≥ 10 mg/kg daily (~60-times the human exposure based on AUC at the clinical dose of 25 mg/m 2 twice daily) showed growth plate dysplasia.",
+        "fda_set_id": "7d042c61-f28f-4ab5-ab10-d7558c0d49ff",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -9696,6 +10057,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use The safety and effectiveness have been established in pediatric patients 1 year of age and older with NF1 who have inoperable PN and the information on this use is discussed throughout the labeling."
+      },
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.9166,
@@ -9768,7 +10133,10 @@
         "ema_only": false,
         "first_approval": 1995,
         "withdrawn": false,
-        "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ZITUVIMET have not been established in pediatric patients. Pediatric information describing clinical studies in which efficacy was not demonstrated is approved for Merck Sharp and Dohme's JANUMET (sitagliptin and metformin hydrochloride) tablets. However, due to Merck Sharp and Dohme's marketing exclusivity rights, this drug product is not labeled with that information.",
+        "pediatric_labeling": "8.4 Pediatric Use Metformin Hydrochloride Tablets The safety and effectiveness of metformin hydrochloride tablets for the treatment of type 2 diabetes mellitus have been established in pediatric patients 10 to 16 years old. Safety and effectiveness of metformin hydrochloride tablets have not been established in pediatric patients less than 10 years old. Use of metformin hydrochloride tablets in pediatric patients 10 to 16 years old for the treatment of type 2 diabetes mellitus is supported by evidence from adequate and well-controlled studies of metformin hydrochloride tablets in adults with additional data from a controlled clinical study in pediatric patients 10 to 16 years old with type 2 diabetes mellitus, which demonstrated a similar response in glycemic control to that seen in adults",
+        "fda_set_id": "011de1a5-1ac0-4831-9e8d-26ec79ba2205",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name; single-ingredient label preferred over combination hit",
         "evidence": [
           "chembl",
           "openfda",
@@ -10060,7 +10428,11 @@
       "direction_reasons": [
         "aln_ampk_energy_stress"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use Metformin Hydrochloride Tablets The safety and effectiveness of metformin hydrochloride tablets for the treatment of type 2 diabetes mellitus have been established in pediatric patients 10 to 16 years old."
+      },
       "evidence": {
         "target_overlap": 0.03773584905660377,
         "network_proximity_z": 6.1583,
@@ -10115,8 +10487,8 @@
           }
         ]
       },
-      "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ZITUVIMET have not been established in pediatric patients. Pediatric information describing clinical studies in which efficacy was not demonstrated is approved for Merck Sharp and Dohme's JANUMET (sitagliptin and metformin hydrochloride) tablets. However, due to Merck Sharp and Dohme's marketing exclusivity rights, this drug product is not labeled with that information.",
-      "fda_set_id": "0098dec4-f0e5-45d5-8aa4-5d0faf9ab142",
+      "pediatric_labeling": "8.4 Pediatric Use Metformin Hydrochloride Tablets The safety and effectiveness of metformin hydrochloride tablets for the treatment of type 2 diabetes mellitus have been established in pediatric patients 10 to 16 years old. Safety and effectiveness of metformin hydrochloride tablets have not been established in pediatric patients less than 10 years old. Use of metformin hydrochloride tablets in pediatric patients 10 to 16 years old for the treatment of type 2 diabetes mellitus is supported by evidence from adequate and well-controlled studies of metformin hydrochloride tablets in adults with additional data from a controlled clinical study in pediatric patients 10 to 16 years old with type 2 diabetes mellitus, which demonstrated a similar response in glycemic control to that seen in adults",
+      "fda_set_id": "011de1a5-1ac0-4831-9e8d-26ec79ba2205",
       "dgidb": {
         "module_hits": [
           "PRKAA1",
@@ -10153,6 +10525,9 @@
         "first_approval": 2019,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of VIJOICE have been established in pediatric patients 2 to less than 18 years of age with PROS based on results from a single-arm clinical study of VIJOICE (EPIK-P1) that enrolled 39 pediatric patients: 11 patients aged 2 to 5 years, 12 patients aged 6 to 11 years, and 16 patients aged 12 to less than 18 years of age [see Adverse Reactions (6.1) and Clinical Studies (14)] . The safety and effectiveness of VIJOICE in pediatric patients below the age of 2 years have not been established. Although there were no new safety signals observed in pediatric patients, there is insufficient data to determine whether VIJOICE has an adverse impact on growth and development in pediatric patients with PROS. Based on the animal toxicity data (described below",
+        "fda_set_id": "638069a4-aee0-46c9-9e21-54ad449c163c",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -10190,6 +10565,10 @@
         "aln_mtorc1_inhibition"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use The safety and effectiveness of VIJOICE have been established in pediatric patients 2 to less than 18 years of age with PROS based on results from a single-arm clinical study of VIJOICE (EPIK-P1) that enrolled 39 pediatric"
+      },
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5183,
@@ -10262,6 +10641,9 @@
         "first_approval": 2023,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of JAYPIRCA have not been established in pediatric patients.",
+        "fda_set_id": "bd551845-0878-49a4-860f-839b83f6b801",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -10295,6 +10677,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5361,
@@ -10363,6 +10746,9 @@
         "first_approval": 2007,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Limited data are available on the use of temsirolimus in pediatric patients. The effectiveness of temsirolimus in pediatric patients with advanced recurrent/refractory solid tumors has not been established. Temsirolimus injection was studied in 71 patients (59 patients ages 1 to 17 years and 12 patients ages 18 to 21 years) with relapsed/refractory solid tumors in a phase 1-2 safety and exploratory pharmacodynamic study. In phase 1, 19 pediatric patients with advanced recurrent/refractory solid tumors received Temsirolimus injection at doses ranging from 10 mg/m 2 to 150 mg/m 2 as a 60-minute intravenous infusion once weekly in three-week cycles. In phase 2, 52 pediatric patients with recurrent/relapsed neuroblastoma, rhabdomyosarcoma, or high grade glioma received Temsir",
+        "fda_set_id": "1c207bed-10e3-46f0-ad2c-69d5e5c97736",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -10400,6 +10786,7 @@
         "aln_mtorc1_inhibition"
       ],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5361,
@@ -10480,8 +10867,12 @@
         "first_approval": 2006,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "02b04c6f-4ea5-4fcb-bf6d-2631d5ab31e4",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name on name variant 'dasatinib'",
         "evidence": [
           "chembl",
+          "openfda",
           "drugcentral",
           "opentargets"
         ]
@@ -10586,7 +10977,11 @@
       "direction_reasons": [
         "aln_senolytic_class"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "indications_and_usage",
+        "text": "Dasatinib tablets are indicated for the treatment of pediatric patients 1 year of age and older with Ph+ CML in chronic phase."
+      },
       "evidence": {
         "target_overlap": 0.11764705882352941,
         "network_proximity_z": 3.2242,
@@ -10627,7 +11022,7 @@
         "ot_warnings": []
       },
       "pediatric_labeling": "",
-      "fda_set_id": null,
+      "fda_set_id": "02b04c6f-4ea5-4fcb-bf6d-2631d5ab31e4",
       "dgidb": {
         "module_hits": [
           "AURKB",
@@ -10660,6 +11055,9 @@
         "first_approval": 1989,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of clozapine in pediatric patients have not been established.",
+        "fda_set_id": "09231d80-6343-4a34-bd5b-100c547fd3c9",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -10698,6 +11096,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.6435,
@@ -10787,6 +11186,9 @@
         "first_approval": 2015,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of COTELLIC have not been established in pediatric patients. The safety and effectiveness of COTELLIC were assessed, but not established, in a multi-center, open-label, dose-escalation study in 55 pediatric patients aged 2 to 17 years with solid tumors [NCT02639546]. No new safety events were observed in pediatric patients in this trial. Exposure in pediatric patients who received COTELLIC at the maximum tolerated dosage were lower than those previously observed in adults who received the approved recommended dosage. Juvenile Animal Data In a 4-week juvenile rat toxicology study, daily oral doses of 3 mg/kg (approximately 0.13–0.5 times the adult human AUC at the recommended dose of 60 mg) between postnatal Days 10–17 (approximately equivalent",
+        "fda_set_id": "c387579e-cee0-4334-bd1e-73f93ac1bde6",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -10825,6 +11227,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 1.0478,
@@ -10896,6 +11299,9 @@
         "first_approval": 2017,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -10933,6 +11339,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 1.0478,
@@ -11001,6 +11408,9 @@
         "first_approval": 1965,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients 14 years of age and younger has not been established. Indomethacin capsules should not be prescribed for pediatric patients 14 years of age and younger unless toxicity or lack of efficacy associated with other drugs warrants the risk. In experience with more than 900 pediatric patients reported in the literature or to the manufacturer who were treated with indomethacin capsules, side effects in pediatric patients were comparable to those reported in adults. Experience in pediatric patients has been confined to the use of indomethacin capsules. If a decision is made to use indomethacin for pediatric patients two years of age or older, such patients should be monitored closely and periodic assessment of liver function is recomm",
+        "fda_set_id": "009097a5-2c1e-4f5d-8054-896cf896cb3d",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -11039,6 +11449,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 1.0478,
@@ -11120,6 +11531,9 @@
         "first_approval": 2020,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ZOKINVY for the treatment of HGPS and processing-deficient Progeroid Laminopathies (with either heterozygous LMNA mutation with progerin-like protein accumulation or homozygous or compound heterozygous ZMPSTE24 mutations) have been established in pediatric patients 12 months of age and older. Use of ZOKINVY for these indications is supported by adequate and well-controlled studies in pediatric patients 2 years of age and older [see Clinical Studies (14 ) ] . The safety and effectiveness of ZOKINVY in pediatric patients less than 12 months of age have not been established.",
+        "fda_set_id": "97391d0c-943e-4c5a-8423-68e163aa7f50",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -11158,6 +11572,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use The safety and effectiveness of ZOKINVY for the treatment of HGPS and processing-deficient Progeroid Laminopathies (with either heterozygous LMNA mutation with progerin-like protein accumulation or homozygous or compound h"
+      },
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 1.0478,
@@ -11228,7 +11646,10 @@
         "ema_only": false,
         "first_approval": 2004,
         "withdrawn": false,
-        "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness have been established in pediatric patients 3 months and older for the prophylaxis of organ rejection of allogenic kidney, heart or liver transplants. Kidney Transplant Use of mycophenolate mofetil in this population is supported by evidence from adequate and well-controlled studies of mycophenolate mofetil in adults with additional data from one open-label, pharmacokinetic and safety study of mycophenolate mofetil in pediatric patients after receiving allogeneic kidney transplant (100 patients, 3 months to 18 years of age) [see Dosage and Administration (2.2) , Adverse Reactions (6.1) , Clinical Pharmacology (12.3) , Clinical Studies (14.1) ]. Heart Transplant and Liver Transplant Use of mycophenolate mofetil in pediatric heart transplant and liv",
+        "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of mycophenolic acid delayed-release tablets have been established in pediatric kidney transplant patients 5 to 16 years of age who were initiated on mycophenolic acid delayed-release tablets at least 6 months post-transplant. Use of mycophenolic acid delayed-release tablets in this age group is supported by evidence from adequate and well-controlled studies of mycophenolic acid delayed-release tablets in a similar population of adult kidney transplant patients with additional pharmacokinetic data in pediatric kidney transplant patients [see Dosage and Administration (2.2 , 2.3) , Clinical Pharmacology (12.3) ] . Pediatric doses for patients with BSA < 1.19 m 2 cannot be accurately administered using currently available formulations of mycophe",
+        "fda_set_id": "26b31126-4262-4a15-8a16-234c86763176",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -11267,6 +11688,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use The safety and effectiveness of mycophenolic acid delayed-release tablets have been established in pediatric kidney transplant patients 5 to 16 years of age who were initiated on mycophenolic acid delayed-release tablets a"
+      },
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 1.0478,
@@ -11347,8 +11772,8 @@
           }
         ]
       },
-      "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness have been established in pediatric patients 3 months and older for the prophylaxis of organ rejection of allogenic kidney, heart or liver transplants. Kidney Transplant Use of mycophenolate mofetil in this population is supported by evidence from adequate and well-controlled studies of mycophenolate mofetil in adults with additional data from one open-label, pharmacokinetic and safety study of mycophenolate mofetil in pediatric patients after receiving allogeneic kidney transplant (100 patients, 3 months to 18 years of age) [see Dosage and Administration (2.2) , Adverse Reactions (6.1) , Clinical Pharmacology (12.3) , Clinical Studies (14.1) ]. Heart Transplant and Liver Transplant Use of mycophenolate mofetil in pediatric heart transplant and liv",
-      "fda_set_id": "0f1704e2-a66a-4be5-8127-ebb5947c7b64",
+      "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of mycophenolic acid delayed-release tablets have been established in pediatric kidney transplant patients 5 to 16 years of age who were initiated on mycophenolic acid delayed-release tablets at least 6 months post-transplant. Use of mycophenolic acid delayed-release tablets in this age group is supported by evidence from adequate and well-controlled studies of mycophenolic acid delayed-release tablets in a similar population of adult kidney transplant patients with additional pharmacokinetic data in pediatric kidney transplant patients [see Dosage and Administration (2.2 , 2.3) , Clinical Pharmacology (12.3) ] . Pediatric doses for patients with BSA < 1.19 m 2 cannot be accurately administered using currently available formulations of mycophe",
+      "fda_set_id": "26b31126-4262-4a15-8a16-234c86763176",
       "dgidb": {
         "module_hits": [
           "BIRC5"
@@ -11378,6 +11803,9 @@
         "first_approval": 1984,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "003b863c-06b0-715d-ccc2-b7da4deac621",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -11416,6 +11844,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 1.0478,
@@ -11485,7 +11914,10 @@
         "ema_only": false,
         "first_approval": 2017,
         "withdrawn": false,
-        "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of AKEEGA in pediatric patients have not been established.",
+        "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ZEJULA have not been established in pediatric patients.",
+        "fda_set_id": "b7f675e2-159c-490c-b6f4-3f16d9492b7d",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name; single-ingredient label preferred over combination hit",
         "evidence": [
           "chembl",
           "openfda",
@@ -11524,6 +11956,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
         "network_proximity_z": 0.698,
@@ -11562,8 +11995,8 @@
         "openfda_boxed": false,
         "ot_warnings": []
       },
-      "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness of AKEEGA in pediatric patients have not been established.",
-      "fda_set_id": "8245a990-3268-4613-b5c5-9537858a1eb9",
+      "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ZEJULA have not been established in pediatric patients.",
+      "fda_set_id": "b7f675e2-159c-490c-b6f4-3f16d9492b7d",
       "dgidb": {
         "module_hits": [
           "BRCA2"
@@ -11597,6 +12030,9 @@
         "first_approval": 1968,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": "0005aafa-08f8-4990-a54d-cc097195708f",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -11646,6 +12082,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.2,
         "network_proximity_z": 1.4856,
@@ -11732,6 +12169,9 @@
         "first_approval": 2001,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of imatinib mesylate tablets have been demonstrated in pediatric patients with newly diagnosed Ph+ chronic phase CML and Ph+ ALL [see Clinical Studies ( 14.2, 14.4 )] . There are no data in children under 1 year of age.",
+        "fda_set_id": "0291eca5-7a1d-4a79-30be-252224d96509",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -11782,6 +12222,10 @@
         "aln_senolytic_class"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use The safety and effectiveness of imatinib mesylate tablets have been demonstrated in pediatric patients with newly diagnosed Ph+ chronic phase CML and Ph+ ALL [see Clinical Studies ( 14.2, 14.4 )] ."
+      },
       "evidence": {
         "target_overlap": 0.2,
         "network_proximity_z": 1.5399,
@@ -11853,6 +12297,9 @@
         "first_approval": 2012,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of bosutinib tablets in pediatric patients younger than 1 year of age with newly diagnosed CP Ph+ CML, pediatric patients younger than 1 year of age with CP Ph+ CML that is resistant or intolerant to prior therapy, and pediatric patients with AP Ph+ CML or BP Ph+ CML have not been established. Pediatric use information is approved for PF PRISM CV’s BOSULIF® (bosutinib) tablets. However, due to PF PRISM CV’s marketing exclusivity rights, this drug product is not labeled with that information.",
+        "fda_set_id": "2ea1617f-41d3-479a-87d5-177013d39193",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -11908,6 +12355,10 @@
         "aln_senolytic_class"
       ],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "Pediatric use information is approved for PF PRISM CV’s BOSULIF® (bosutinib) tablets."
+      },
       "evidence": {
         "target_overlap": 0.16666666666666666,
         "network_proximity_z": 1.8286,
@@ -11979,6 +12430,9 @@
         "first_approval": null,
         "withdrawn": false,
         "pediatric_labeling": "",
+        "fda_set_id": null,
+        "combination_label": false,
+        "openfda_match": "",
         "evidence": [
           "chembl",
           "drugcentral",
@@ -12032,6 +12486,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.16666666666666666,
         "network_proximity_z": 1.8653,
@@ -12098,6 +12553,9 @@
         "first_approval": 1996,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of oral olanzapine in the treatment of schizophrenia and manic or mixed episodes associated with bipolar I disorder were established in short-term studies in adolescents (ages 13 to 17 years). Use of olanzapine in adolescents is supported by evidence from adequate and well-controlled studies of olanzapine in which 268 adolescents received olanzapine in a range of 2.5 mg/day to 20 mg/day [see Clinical Studies ( 14.1 , 14.2 )] . Recommended starting dose for adolescents is lower than that for adults [see Dosage and Administration ( 2.1 , 2.2 )] . Compared to patients from adult clinical trials, adolescents were likely to gain more weight, experience increased sedation, and have greater increases in total cholesterol, triglycerides, LDL cholester",
+        "fda_set_id": "002dd00f-7946-ea4f-e063-6294a90a5916",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -12151,6 +12609,10 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use The safety and effectiveness of oral olanzapine in the treatment of schizophrenia and manic or mixed episodes associated with bipolar I disorder were established in short-term studies in adolescents (ages 13 to 17 years)."
+      },
       "evidence": {
         "target_overlap": 0.16666666666666666,
         "network_proximity_z": 1.4949,
@@ -12228,7 +12690,10 @@
         "ema_only": false,
         "first_approval": 2001,
         "withdrawn": false,
-        "pediatric_labeling": "",
+        "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+        "fda_set_id": "aedf70e4-1949-44bc-bf1b-0f282c4f0705",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name; single-ingredient label preferred over combination hit",
         "evidence": [
           "chembl",
           "openfda",
@@ -12272,6 +12737,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.25,
         "network_proximity_z": 1.4406,
@@ -12308,8 +12774,8 @@
         "openfda_boxed": false,
         "ot_warnings": []
       },
-      "pediatric_labeling": "",
-      "fda_set_id": "444c1f4c-dd0c-4525-bb65-c0c211c9487f",
+      "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+      "fda_set_id": "aedf70e4-1949-44bc-bf1b-0f282c4f0705",
       "dgidb": {
         "module_hits": [
           "PLK1"
@@ -12339,6 +12805,9 @@
         "first_approval": 2009,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ISTODAX in pediatric patients have not been established.",
+        "fda_set_id": "03b39d40-90fe-11df-9de6-0002a5d5c51b",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name",
         "evidence": [
           "chembl",
           "openfda",
@@ -12422,6 +12891,7 @@
       "direction": "neutral",
       "direction_reasons": [],
       "pediatric_flag": "none",
+      "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.08333333333333333,
         "network_proximity_z": 2.766,
@@ -12492,7 +12962,10 @@
         "ema_only": false,
         "first_approval": 1995,
         "withdrawn": false,
-        "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ZITUVIMET have not been established in pediatric patients. Pediatric information describing clinical studies in which efficacy was not demonstrated is approved for Merck Sharp and Dohme's JANUMET (sitagliptin and metformin hydrochloride) tablets. However, due to Merck Sharp and Dohme's marketing exclusivity rights, this drug product is not labeled with that information.",
+        "pediatric_labeling": "8.4 Pediatric Use Metformin Hydrochloride Tablets The safety and effectiveness of metformin hydrochloride tablets for the treatment of type 2 diabetes mellitus have been established in pediatric patients 10 to 16 years old. Safety and effectiveness of metformin hydrochloride tablets have not been established in pediatric patients less than 10 years old. Use of metformin hydrochloride tablets in pediatric patients 10 to 16 years old for the treatment of type 2 diabetes mellitus is supported by evidence from adequate and well-controlled studies of metformin hydrochloride tablets in adults with additional data from a controlled clinical study in pediatric patients 10 to 16 years old with type 2 diabetes mellitus, which demonstrated a similar response in glycemic control to that seen in adults",
+        "fda_set_id": "011de1a5-1ac0-4831-9e8d-26ec79ba2205",
+        "combination_label": false,
+        "openfda_match": "matched via generic_name; single-ingredient label preferred over combination hit",
         "evidence": [
           "chembl",
           "openfda",
@@ -12777,7 +13250,11 @@
       "direction_reasons": [
         "aln_ampk_energy_stress"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use Metformin Hydrochloride Tablets The safety and effectiveness of metformin hydrochloride tablets for the treatment of type 2 diabetes mellitus have been established in pediatric patients 10 to 16 years old."
+      },
       "evidence": {
         "target_overlap": 0.019230769230769232,
         "network_proximity_z": 6.567,
@@ -12832,8 +13309,8 @@
           }
         ]
       },
-      "pediatric_labeling": "8.4 Pediatric Use The safety and effectiveness of ZITUVIMET have not been established in pediatric patients. Pediatric information describing clinical studies in which efficacy was not demonstrated is approved for Merck Sharp and Dohme's JANUMET (sitagliptin and metformin hydrochloride) tablets. However, due to Merck Sharp and Dohme's marketing exclusivity rights, this drug product is not labeled with that information.",
-      "fda_set_id": "0098dec4-f0e5-45d5-8aa4-5d0faf9ab142",
+      "pediatric_labeling": "8.4 Pediatric Use Metformin Hydrochloride Tablets The safety and effectiveness of metformin hydrochloride tablets for the treatment of type 2 diabetes mellitus have been established in pediatric patients 10 to 16 years old. Safety and effectiveness of metformin hydrochloride tablets have not been established in pediatric patients less than 10 years old. Use of metformin hydrochloride tablets in pediatric patients 10 to 16 years old for the treatment of type 2 diabetes mellitus is supported by evidence from adequate and well-controlled studies of metformin hydrochloride tablets in adults with additional data from a controlled clinical study in pediatric patients 10 to 16 years old with type 2 diabetes mellitus, which demonstrated a similar response in glycemic control to that seen in adults",
+      "fda_set_id": "011de1a5-1ac0-4831-9e8d-26ec79ba2205",
       "dgidb": {
         "module_hits": [
           "PRKAA2"
