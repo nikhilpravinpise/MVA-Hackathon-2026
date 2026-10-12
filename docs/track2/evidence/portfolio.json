@@ -1,0 +1,71 @@
+{
+ "schema": "t2.portfolio/1",
+ "decided": "2026-10-12",
+ "decided_by": "lane L3b reconciled the engine ranking (evidence/candidates.json), the curated literature layer (evidence/dossiers/*.json + candidates.md screen log and evidence-grade table), the PRISM 19Q4 aneuploidy/low-BUB1B pharmacogenomics re-analysis (evidence/prism.json), the ESM-2 650M and 150M variant-effect runs (evidence/esm.json, esm_150m.json), and the falsification matrix (evidence/testability.json) against the stated rule",
+ "ranking_rule": "Rank by (1) shortest distance from the supporting evidence to a BubR1-insufficient human system - evidence generated in the BubR1-hypomorph model or in humans outranks evidence in unrelated cells or database co-occurrence; (2) pediatric feasibility - labeled pediatric use plus the phenotype-specific risks already recorded in each dossier; and (3) how cheaply and decisively the lead can be falsified - the cost tier and go/no-go clarity of its patient-fibroblast experiment in testability.json. Engine placement is reported for transparency rather than used as input, because the engine scores evidence density across public drug-target databases - a space dominated by oncology cytotoxics and structurally blind to candidates whose targets sit outside the disease module (NAD precursors, lysosomal agents, supplement-containing pairs) - while this ranking asks which hypothesis deserves the first patient-cell experiment.",
+ "screen": null,
+ "ranked": [
+  {
+   "rank": 1,
+   "label": "dasatinib + quercetin - senolytic clearance of p16+ cells",
+   "dossier": "dasatinib",
+   "grade": "moderate+",
+   "engine_drugs": ["dasatinib anhydrous"],
+   "why": "BubR1 insufficiency drives p16Ink4a-positive senescence in muscle and fat, and clearing p16-positive senescent cells in the BubR1-hypomorph mouse both delayed and attenuated the progeroid phenotype - the only anchor experiment run in the literal disease model (PMID:18516091, PMID:22048312). Dasatinib + quercetin is the canonical pharmacologic senolytic pair, with dasatinib clearing senescent human fat-cell progenitors and quercetin clearing senescent endothelial cells in preclinical work (PMID:25754370). It is also the only candidate class with human evidence of senescent-burden reduction, from a 9-patient diabetic-kidney-disease pilot of a 3-day intermittent course (PMID:31542391), with feasibility-level data from a 14-patient IPF pilot (PMID:30616998). The MVA genotype-to-phenotype chain runs through exactly this senescent compartment (PMID:39169218, PMID:31738183). In our PRISM 19Q4 re-analysis dasatinib showed a directional, non-significant association toward preferential activity in low-BUB1B and more-aneuploid lines - hypothesis-level corroboration only, not a rank driver [repo:docs/track2/evidence/prism.json]. The counter-consideration is real: senescence is also tumour-suppressive and aneuploid-cell proliferation is p53-limited, so clearing the compartment could free protective arrested cells as well as harmful ones (PMID:20123995). Dasatinib's pediatric label (>=1y Ph+ CML/ALL) carries a growth-retardation and osteopenia warning that sits badly on a child with short stature and failure to thrive, which is why this is a test-first lead and not a treatment suggestion.",
+   "falsifier": "We are wrong if the BubR1-hypomorph rescue depended on the INK-ATTAC genetic circuit rather than on senescent-cell removal per se, or if this child's senescent compartment is protective - holding aneuploid clones arrested - so clearing it accelerates neoplasia (PMID:22048312, PMID:20123995). Decisive experiment (T1, 2-4 weeks): intermittent D+Q exposure of patient fibroblasts; GO on >=50% reduction of the senescent-marker fraction with no rise in aneuploidy rate or euploid cytotoxicity, NO-GO on nonselective toxicity or aneuploid expansion after clearance (testability.json)."
+  },
+  {
+   "rank": 2,
+   "label": "everolimus - senomorphic SASP dampening via mTORC1 inhibition",
+   "dossier": "everolimus",
+   "grade": "moderate",
+   "engine_drugs": ["everolimus"],
+   "why": "mTORC1 inhibition is senomorphic rather than senolytic: it blunts the senescence-associated secretory phenotype at the translational level through IL1A and MAPKAPK2, dampening senescent-cell paracrine damage without killing the cells (PMID:26147250, PMID:26280535). The genotype-specific hook is direct: in monoallelic BubR1-mutant mice modelling MVA, predisposition to sarcopenia tracked mTORC1 hyperactivity (PMID:31738183). Everolimus carries the strongest pediatric regulatory footing of any candidate - approved for TSC-associated SEGA from age 1 and TSC-associated seizures from age 2 inside a tumour-predisposition syndrome - with label-reported absence of growth and pubertal harm over a median 4.1 years of pediatric exposure (PMID:23158522). The same label reports markedly higher infection rates under age 6, and class-level immunosuppression is a real concern in a cancer-predisposed child (PMID:23158522). Our PRISM re-analysis found no aneuploidy-selective signal for everolimus, which is coherent rather than damning: it is proposed as a senomorphic, not as an aneuploid-cell-selective agent [repo:docs/track2/evidence/prism.json]. It is preferred over sirolimus - the engine's top non-cytotoxic hit - on pediatric feasibility alone: sirolimus has no pediatric approval under 13 and a malignancy boxed warning, where everolimus has labeled pediatric indications in a cancer-predisposition syndrome.",
+   "falsifier": "We are wrong if the mTORC1 hyperactivity seen in the MVA-mouse model is downstream noise rather than driver - the association is correlational (PMID:31738183) - or if SASP suppression frees aneuploid clones from their secretory neighbourhood-watch while immunosuppression raises net cancer risk faster than senescence control lowers it. Decisive experiment (T1, 2-4 weeks): everolimus on patient fibroblasts; GO on >=30% SASP reduction with stable aneuploidy and <20% proliferation slowdown, NO-GO on cytostasis or any aneuploidy rise (testability.json)."
+  },
+  {
+   "rank": 3,
+   "label": "niacin / nicotinamide - NAD+/SIRT2 stabilisation of residual BubR1",
+   "dossier": "nicotinamide",
+   "grade": "moderate-",
+   "engine_drugs": ["niacin", "nicotinamide"],
+   "why": "This is the only Axis-A candidate: it aims to raise output of the residual hypomorphic allele rather than manage downstream damage - mechanistically the most disease-modifying idea, because raising BubR1 abundance in mice preserves genomic integrity, corrects checkpoint and attachment defects, reduces tumorigenesis and extends healthy lifespan (PMID:23242215). The anchor: NAD+/SIRT2 maintains BubR1, and NMN or SIRT2 overexpression raised BubR1 abundance in vivo, with SIRT2 overexpression extending lifespan specifically in BubR1-hypomorphic animals (PMID:24825348) - a benefit independently shown to be conditional on low BubR1 rather than a general-longevity effect (PMID:38009412). The direction is sharpened from both sides: selective SIRT2 inhibition destabilises BubR1 protein in cells (PMID:25672491). The 650M ESM-2 masked-marginal run scores the child's p.Asn1002Lys at the 88th percentile of deleteriousness among gnomAD BUB1B missense - consistent with a constrained, function-impaired residual allele worth rescuing - but the 150M run scores it mid-distribution, so this is supporting rather than deciding evidence [repo:docs/track2/evidence/esm.json] [repo:docs/track2/evidence/esm_150m.json]. The honest pharmacology caveat: nicotinamide is both an NAD+ precursor and a sirtuin end-product inhibitor, so the wrong form could blunt the axis it is meant to fuel, while niacin raises NAD+ without that product inhibition (PMID:12297502, PMID:24825348). SIRT2 regulation of BubR1 is also site- and context-specific - K250 deacetylation promotes timely BubR1 degradation at mitotic exit - so 'more SIRT2 activity' is not linearly 'more BubR1' (PMID:25285631). Approved forms exist (niacin, niacinamide) but neither has a pediatric indication, and the anchor experiment used NMN - a supplement - so the approved-form evidence is extrapolated (PMID:41436848).",
+   "falsifier": "We are wrong if the NAD+/SIRT2 deacetylation axis does not reach this particular hypomorph - Asn1002Lys may destabilise BubR1 by a route NAD+ cannot touch - or if approved-form pharmacology differs materially from NMN, since nicotinamide itself inhibits sirtuins (PMID:12297502, PMID:24825348). Decisive experiment (T1, 2-4 weeks): niacin versus nicotinamide head-to-head on patient fibroblasts; GO on >=1.3-fold BubR1 protein rise with no aneuploidy increase - the same readout resolves the form question (testability.json)."
+  },
+  {
+   "rank": 4,
+   "label": "hydroxychloroquine - aneuploidy-selective autophagy blockade, interception",
+   "dossier": "hydroxychloroquine",
+   "grade": "low-moderate",
+   "engine_drugs": ["hydroxychloroquine", "chloroquine"],
+   "why": "This is the only candidate with direct aneuploidy-selective antiproliferative evidence: a phenotypic screen identified chloroquine - alongside AICAR and 17-AAG - as selectively antiproliferative to aneuploid versus euploid cells, the proposed mechanism being exploitation of the proteotoxic and metabolic stress state aneuploid cells depend on (PMID:21315436). Autophagy inhibition is an active cancer strategy more broadly: chloroquine-class agents sensitise tumours to cytotoxic and antiangiogenic therapy, and combined MAPK-plus-autophagy blockade is in clinical translation (PMID:23461901, PMID:34830283). The MVA hypothesis is interception: lifelong production of new aneuploid cells is the cancer substrate, so preferentially impairing aneuploid-cell proliferation could trim the compartment that seeds the predisposition (PMID:39169218). Chloroquine and hydroxychloroquine are absent from the PRISM 19Q4 screen, so no pharmacogenomic claim can be made for them in either direction [repo:docs/track2/evidence/prism.json]. The counter-considerations are serious: the selectivity data are cell-line and short-term; aneuploid cancer cells show complex, time-dependent responses to checkpoint perturbation rather than simple vulnerability (PMID:33505028); and chronic autophagy blockade touches every tissue that needs proteostasis. Its pediatric label covers only malaria above 31 kg, and irreversible retinal toxicity accumulates with the chronic exposure an interception strategy would require - label facts that cap the rank despite this portfolio's cleanest falsifier.",
+   "falsifier": "We are wrong if the aneuploidy selectivity is a cell-line artefact - the founding screen used engineered trisomic backgrounds, not mosaic SAC-defective cells (PMID:21315436) - or if chronic autophagy blockade harms quality-control-dependent tissues more than it trims aneuploid clones (PMID:33505028). Decisive experiment (T1-T2, 3-6 weeks): CQ/HCQ on the patient's mosaic fibroblasts, which carry an internal euploid control; GO on >=2-fold preferential depletion of the aneuploid fraction, NO-GO on equal euploid and aneuploid toxicity (testability.json)."
+  }
+ ],
+ "adjuncts": [
+  {
+   "label": "sirolimus (backup mTOR senomorphic)",
+   "why": "Same senomorphic mechanism and the same MVA-mouse mTORC1 hook as everolimus (PMID:26147250, PMID:26280535, PMID:31738183), and the engine's highest-placed non-cytotoxic candidate at #21 of 96 approved drugs [repo:docs/track2/evidence/candidates.json]. It sits behind everolimus on pediatric feasibility alone: its boxed warning names infection and malignancy, and it has no pediatric approval under 13."
+  },
+  {
+   "label": "metformin (senomorphic fallback)",
+   "why": "Fallback if mTOR immunosuppression is disqualifying: it blunts the SASP through IKK/NF-kB (PMID:23521863) and has a pediatric type-2-diabetes label from age 10, but its aneuploidy angle is AICAR analogy only (PMID:21315436) and millimolar-range exposure can itself deregulate BUBR1/MAD2 and induce micronuclei (PMID:35568294). The lactic-acidosis boxed warning makes renal function (nephrocalcinosis) the gating safety check; it is absent from the PRISM screen, so no pharmacogenomic claim [repo:docs/track2/evidence/prism.json]."
+  },
+  {
+   "label": "aspirin (long-horizon interception adjunct)",
+   "why": "Aspirin selectively eliminated tetraploid cells - the metastable precursor state to aneuploidy - in a chemoprevention screen (PMID:24516128), and CAPP2 provides RCT-grade precedent for chemoprevention in a hereditary syndrome, though the benefit was colorectal-cancer-specific in Lynch syndrome (PMID:32534647). Chronic pediatric use collides with the label's Reye's-syndrome warning, so it remains a research question carried by the fibroblast tetraploid-pruning assay, not a recommendation."
+  },
+  {
+   "label": "quercetin (only within D+Q)",
+   "why": "The senolytic pair's second half: dasatinib and quercetin clear complementary senescent-cell types (PMID:25754370), and the human senescent-burden evidence is for the combination (PMID:31542391). It is a supplement, not an approved drug, so it cannot anchor a candidate alone under the approved-only rule."
+  },
+  {
+   "label": "NR / NMN (Axis-A supplement adjuncts)",
+   "why": "NMN is the actual NAD+ precursor that raised BubR1 abundance and extended lifespan in BubR1-hypomorphic mice (PMID:24825348), with supportive review-level evidence for NAD supplementation in premature-aging and DNA-repair disease (PMID:41436848). Neither form is a market-approved drug, so they belong to the MVA Society supplements program rather than the drug leads."
+  },
+  {
+   "label": "structured cancer surveillance (non-drug)",
+   "why": "The most defensible intervention today is not a drug at all: mechanism-guided surveillance for the embryonal tumour spectrum of BUB1B-MVA, following the AACR workshop recommendations for children with genomic-instability disorders (PMID:39264246). This recommendation stands independently of every drug hypothesis in the portfolio."
+  }
+ ]
+}

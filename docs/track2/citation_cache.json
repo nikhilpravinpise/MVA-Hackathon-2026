@@ -1,778 +1,857 @@
 {
- "schema": "t2.citation_cache/1",
- "note": "resolved-citation cache for tools/verify_citations.py; rebuilt with --refresh, replayed with --offline",
  "entries": {
   "DOI:10.1016/j.bbrc.2014.09.128": {
    "found": true,
-   "title": "Deacetylation of the mitotic checkpoint protein BubR1 at lysine 250 by SIRT2 and subsequent effects on BubR1 degradation during the prometaphase/anaphase transition",
-   "year": 2014,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Deacetylation of the mitotic checkpoint protein BubR1 at lysine 250 by SIRT2 and subsequent effects on BubR1 degradation during the prometaphase/anaphase transition",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2014
   },
   "DOI:10.1016/j.cell.2011.01.017": {
    "found": true,
-   "title": "Identification of Aneuploidy-Selective Antiproliferation Compounds",
-   "year": 2011,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Identification of Aneuploidy-Selective Antiproliferation Compounds",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2011
   },
   "DOI:10.1016/j.ebiom.2018.12.052": {
    "found": true,
-   "title": "Senolytics in idiopathic pulmonary fibrosis: Results from a first-in-human, open-label, pilot study",
-   "year": 2019,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Senolytics in idiopathic pulmonary fibrosis: Results from a first-in-human, open-label, pilot study",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "DOI:10.1016/j.ebiom.2019.08.069": {
    "found": true,
-   "title": "Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease",
-   "year": 2019,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "DOI:10.1016/j.fct.2022.113129": {
    "found": true,
-   "title": "High-dose metformin induces a low-glucose dependent genotoxic stress",
-   "year": 2022,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "High-dose metformin induces a low-glucose dependent genotoxic stress",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2022
   },
   "DOI:10.1016/s0140-6736(12)61134-9": {
    "found": true,
-   "title": "Efficacy and safety of everolimus for subependymal giant cell astrocytomas associated with tuberous sclerosis complex (EXIST-1): a multicentre, randomised, placebo-controlled phase 3 trial",
-   "year": 2013,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Efficacy and safety of everolimus for subependymal giant cell astrocytomas associated with tuberous sclerosis complex (EXIST-1): a multicentre, randomised, placebo-controlled phase 3 trial",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "DOI:10.1016/s0140-6736(20)30366-4": {
    "found": true,
-   "title": "Cancer prevention with aspirin in hereditary colorectal cancer (Lynch syndrome), 10-year follow-up and registry-based 20-year data in the CAPP2 study: a double-blind, randomised, placebo-controlled trial",
-   "year": 2020,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Cancer prevention with aspirin in hereditary colorectal cancer (Lynch syndrome), 10-year follow-up and registry-based 20-year data in the CAPP2 study: a double-blind, randomised, placebo-controlled trial",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2020
   },
   "DOI:10.1038/nature10600": {
    "found": true,
-   "title": "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders",
-   "year": 2011,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2011
   },
   "DOI:10.1038/ncb1744": {
    "found": true,
-   "title": "Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency",
-   "year": 2008,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2008
   },
   "DOI:10.1038/ncb2643": {
    "found": true,
-   "title": "Increased expression of BubR1 protects against aneuploidy and cancer and extends healthy lifespan",
-   "year": 2012,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Increased expression of BubR1 protects against aneuploidy and cancer and extends healthy lifespan",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2012
   },
   "DOI:10.1038/ncb3195": {
    "found": true,
-   "title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation",
-   "year": 2015,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2015
   },
   "DOI:10.1038/ncb3225": {
    "found": true,
-   "title": "mTOR regulates MAPKAPK2 translation to control the senescence-associated secretory phenotype",
-   "year": 2015,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "mTOR regulates MAPKAPK2 translation to control the senescence-associated secretory phenotype",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2015
   },
   "DOI:10.1038/nchembio.801": {
    "found": true,
-   "title": "An APC/C inhibitor stabilizes cyclin B1 by prematurely terminating ubiquitination",
-   "year": 2012,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "An APC/C inhibitor stabilizes cyclin B1 by prematurely terminating ubiquitination",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2012
   },
   "DOI:10.1038/ncomms7263": {
    "found": true,
-   "title": "Selective Sirt2 inhibition by ligand-induced rearrangement of the active site",
-   "year": 2015,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Selective Sirt2 inhibition by ligand-induced rearrangement of the active site",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2015
   },
   "DOI:10.1038/s41576-024-00762-6": {
    "found": true,
-   "title": "Mosaic variegated aneuploidy in development, ageing and cancer",
-   "year": 2024,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Mosaic variegated aneuploidy in development, ageing and cancer",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2024
   },
   "DOI:10.1038/s41586-020-03114-6": {
    "found": true,
-   "title": "Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition",
-   "year": 2021,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2021
   },
   "DOI:10.1038/s43018-019-0018-6": {
    "found": true,
-   "title": "Discovering the anticancer potential of non-oncology drugs by systematic viability profiling",
-   "year": 2020,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Discovering the anticancer potential of non-oncology drugs by systematic viability profiling",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2020
   },
   "DOI:10.1073/pnas.1318440111": {
    "found": true,
-   "title": "Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention",
-   "year": 2014,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2014
   },
   "DOI:10.1074/jbc.m205670200": {
    "found": true,
-   "title": "Inhibition of Silencing and Accelerated Aging by Nicotinamide, a Putative Negative Regulator of Yeast Sir2 and Human SIRT1",
-   "year": 2002,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Inhibition of Silencing and Accelerated Aging by Nicotinamide, a Putative Negative Regulator of Yeast Sir2 and Human SIRT1",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2002
   },
   "DOI:10.1083/jcb.200805185": {
    "found": true,
-   "title": "SPDL-1 functions as a kinetochore receptor for MDF-1 in <i>Caenorhabditis elegans </i>",
-   "year": 2008,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "SPDL-1 functions as a kinetochore receptor for MDF-1 in <i>Caenorhabditis elegans </i>",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2008
   },
   "DOI:10.1083/jcb.200905057": {
    "found": true,
-   "title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism",
-   "year": 2010,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2010
   },
   "DOI:10.1091/mbc.e08-10-1047": {
    "found": true,
-   "title": "Systematic Analysis in\n                    <i>Caenorhabditis elegans</i>\n                    Reveals that the Spindle Checkpoint Is Composed of Two Largely Independent Branches",
-   "year": 2009,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Systematic Analysis in\n                    <i>Caenorhabditis elegans</i>\n                    Reveals that the Spindle Checkpoint Is Composed of Two Largely Independent Branches",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2009
   },
   "DOI:10.1093/mutage/10.1.23": {
    "found": true,
-   "title": "Clastogenic and aneugenic effects of three benzimidazole derivatives in the <i>in vitro</i> micronucleus test using human lymphocytes",
-   "year": 1995,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Clastogenic and aneugenic effects of three benzimidazole derivatives in the <i>in vitro</i> micronucleus test using human lymphocytes",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 1995
   },
   "DOI:10.1093/nar/gkab1049": {
    "found": true,
-   "title": "Ensembl 2022",
-   "year": 2021,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Ensembl 2022",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2021
   },
   "DOI:10.1093/nar/gkad1011": {
    "found": true,
-   "title": "AlphaFold Protein Structure Database in 2024: providing structure coverage for over 214 million protein sequences",
-   "year": 2023,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "AlphaFold Protein Structure Database in 2024: providing structure coverage for over 214 million protein sequences",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2023
   },
   "DOI:10.1093/nar/gkae1010": {
    "found": true,
-   "title": "UniProt: the Universal Protein Knowledgebase in 2025",
-   "year": 2024,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "UniProt: the Universal Protein Knowledgebase in 2025",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2024
+  },
+  "DOI:10.1101/2021.07.09.450648": {
+   "found": true,
+   "pubtypes": [
+    "posted-content"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Language models enable zero-shot prediction of the effects of mutations on protein function",
+   "via": "crossref",
+   "year": 2021
   },
   "DOI:10.1111/acel.12075": {
    "found": true,
-   "title": "Metformin inhibits the senescence\u2010associated secretory phenotype by interfering with <scp>IKK</scp>/<scp>NF</scp>\u2010\u03ba<scp>B</scp> activation",
-   "year": 2013,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Metformin inhibits the senescence\u2010associated secretory phenotype by interfering with <scp>IKK</scp>/<scp>NF</scp>\u2010\u03ba<scp>B</scp> activation",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "DOI:10.1111/acel.12344": {
    "found": true,
-   "title": "The Achilles\u2019 heel of senescent cells: from transcriptome to senolytic drugs",
-   "year": 2015,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "The Achilles\u2019 heel of senescent cells: from transcriptome to senolytic drugs",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2015
   },
   "DOI:10.1111/acel.14027": {
    "found": true,
-   "title": "<scp>SIRT2</scp> transgenic over\u2010expression does not impact lifespan in mice",
-   "year": 2023,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "<scp>SIRT2</scp> transgenic over\u2010expression does not impact lifespan in mice",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2023
   },
   "DOI:10.1111/acel.70319": {
    "found": true,
-   "title": "Promising Results With\n                    <scp>NAD</scp>\n                    Supplementation in Rare Diseases With Premature Aging and\n                    <scp>DNA</scp>\n                    Damage",
-   "year": 2025,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Promising Results With\n                    <scp>NAD</scp>\n                    Supplementation in Rare Diseases With Premature Aging and\n                    <scp>DNA</scp>\n                    Damage",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2025
   },
   "DOI:10.1158/1078-0432.ccr-12-1542": {
    "found": true,
-   "title": "Autophagy Inhibition Sensitizes Colon Cancer Cells to Antiangiogenic and Cytotoxic Therapy",
-   "year": 2013,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Autophagy Inhibition Sensitizes Colon Cancer Cells to Antiangiogenic and Cytotoxic Therapy",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "DOI:10.1172/jci126863": {
    "found": true,
-   "title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome",
-   "year": 2019,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "DOI:10.1186/1747-1028-3-6": {
    "found": true,
-   "title": "Genetic analysis of the spindle checkpoint genes san-1, mdf-2, bub-3 and the CENP-F homologues hcp-1 and hcp-2 in Caenorhabditis elegans",
-   "year": 2008,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Genetic analysis of the spindle checkpoint genes san-1, mdf-2, bub-3 and the CENP-F homologues hcp-1 and hcp-2 in Caenorhabditis elegans",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2008
   },
   "DOI:10.1186/s12915-025-02368-8": {
    "found": true,
-   "title": "High-throughput behavioural phenotyping of 25 C. elegans disease models including patient-specific mutations",
-   "year": 2025,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "High-throughput behavioural phenotyping of 25 C. elegans disease models including patient-specific mutations",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2025
   },
   "DOI:10.1186/s13023-019-1073-x": {
    "found": true,
-   "title": "Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome",
-   "year": 2019,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "DOI:10.1186/s13059-016-0974-4": {
    "found": true,
-   "title": "The Ensembl Variant Effect Predictor",
-   "year": 2016,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "The Ensembl Variant Effect Predictor",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2016
   },
   "DOI:10.1210/jc.2006-0656": {
    "found": true,
-   "title": "Growth Hormone Treatment and Risk of Second Neoplasms in the Childhood Cancer Survivor",
-   "year": 2006,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Growth Hormone Treatment and Risk of Second Neoplasms in the Childhood Cancer Survivor",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2006
   },
   "DOI:10.1371/journal.pgen.1011012": {
    "found": true,
-   "title": "Genome instability footprint under rapamycin and hydroxyurea treatments",
-   "year": 2023,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Genome instability footprint under rapamycin and hydroxyurea treatments",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2023
   },
   "DOI:10.15252/embj.201386907": {
    "found": true,
-   "title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan",
-   "year": 2014,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2014
   },
   "DOI:10.1530/eje-20-0369": {
    "found": true,
-   "title": "Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer",
-   "year": 2020,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2020
   },
   "DOI:10.1534/g3.117.1122": {
    "found": true,
-   "title": "<i>Caenorhabditis elegans</i> BUB-3 and SAN-1/MAD3 Spindle Assembly Checkpoint Components Are Required for Genome Stability in Response to Treatment with Ionizing Radiation",
-   "year": 2017,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "<i>Caenorhabditis elegans</i> BUB-3 and SAN-1/MAD3 Spindle Assembly Checkpoint Components Are Required for Genome Stability in Response to Treatment with Ionizing Radiation",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2017
   },
   "DOI:10.2165/00002018-200427060-00002": {
    "found": true,
-   "title": "Cancer Risk Following Growth Hormone Use in Childhood",
-   "year": 2004,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Cancer Risk Following Growth Hormone Use in Childhood",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2004
   },
   "DOI:10.3390/ijms222212402": {
    "found": true,
-   "title": "Clinical Translation of Combined MAPK and Autophagy Inhibition in RAS Mutant Cancer",
-   "year": 2021,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Clinical Translation of Combined MAPK and Autophagy Inhibition in RAS Mutant Cancer",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2021
   },
   "DOI:10.4161/auto.8.1.18331": {
    "found": true,
-   "title": "Rapamycin activates autophagy in Hutchinson-Gilford progeria syndrome",
-   "year": 2012,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Rapamycin activates autophagy in Hutchinson-Gilford progeria syndrome",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2012
   },
   "DOI:10.6084/m9.figshare.11384241": {
    "found": true,
-   "title": "DepMap 19Q4 Public",
-   "year": 2020,
    "pubtypes": [
     "Dataset"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "DepMap 19Q4 Public",
    "via": "datacite",
-   "resolved_at": "2026-10-12"
+   "year": 2020
   },
   "DOI:10.7554/elife.92491": {
    "found": true,
-   "title": "High-throughput tracking enables systematic phenotyping and drug repurposing in C. elegans disease models",
-   "year": 2025,
    "pubtypes": [
     "journal-article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "High-throughput tracking enables systematic phenotyping and drug repurposing in C. elegans disease models",
    "via": "crossref",
-   "resolved_at": "2026-10-12"
+   "year": 2025
   },
   "PMID:11746029": {
    "found": true,
-   "title": "Cancer-prone syndrome of mosaic variegated aneuploidy and total premature chromatid separation: report of five infants.",
-   "year": 2001,
    "pubtypes": [
     "Case Reports",
     "Journal Article",
     "Research Support, Non-U.S. Gov't",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Cancer-prone syndrome of mosaic variegated aneuploidy and total premature chromatid separation: report of five infants.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2001
   },
   "PMID:12297502": {
    "found": true,
-   "title": "Inhibition of silencing and accelerated aging by nicotinamide, a putative negative regulator of yeast sir2 and human SIRT1.",
-   "year": 2002,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't",
     "Research Support, U.S. Gov't, P.H.S."
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Inhibition of silencing and accelerated aging by nicotinamide, a putative negative regulator of yeast sir2 and human SIRT1.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2002
   },
   "PMID:15144231": {
    "found": true,
-   "title": "Cancer risk following growth hormone use in childhood: implications for current practice.",
-   "year": 2004,
    "pubtypes": [
     "Journal Article",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Cancer risk following growth hormone use in childhood: implications for current practice.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2004
   },
   "PMID:15208629": {
    "found": true,
-   "title": "BubR1 insufficiency causes early onset of aging-associated phenotypes and infertility in mice.",
-   "year": 2004,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "BubR1 insufficiency causes early onset of aging-associated phenotypes and infertility in mice.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2004
   },
   "PMID:15475955": {
    "found": true,
-   "title": "Constitutional aneuploidy and cancer predisposition caused by biallelic mutations in BUB1B.",
-   "year": 2004,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Constitutional aneuploidy and cancer predisposition caused by biallelic mutations in BUB1B.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2004
   },
   "PMID:16411201": {
    "found": true,
-   "title": "Monoallelic BUB1B mutations and defective mitotic-spindle checkpoint in seven families with premature chromatid separation (PCS) syndrome.",
-   "year": 2006,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Monoallelic BUB1B mutations and defective mitotic-spindle checkpoint in seven families with premature chromatid separation (PCS) syndrome.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2006
   },
   "PMID:16822820": {
    "found": true,
-   "title": "Growth hormone treatment and risk of second neoplasms in the childhood cancer survivor.",
-   "year": 2006,
    "pubtypes": [
     "Journal Article",
     "Multicenter Study",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Growth hormone treatment and risk of second neoplasms in the childhood cancer survivor.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2006
+  },
+  "PMID:16885550": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Switching from insulin to oral sulfonylureas in patients with diabetes due to Kir6.2 mutations.",
+   "via": "esummary:pubmed",
+   "year": 2006
   },
   "PMID:18248670": {
    "found": true,
-   "title": "Genetic analysis of the spindle checkpoint genes san-1, mdf-2, bub-3 and the CENP-F homologues hcp-1 and hcp-2 in Caenorhabditis elegans.",
-   "year": 2008,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Genetic analysis of the spindle checkpoint genes san-1, mdf-2, bub-3 and the CENP-F homologues hcp-1 and hcp-2 in Caenorhabditis elegans.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2008
   },
   "PMID:18516091": {
    "found": true,
-   "title": "Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency.",
-   "year": 2008,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2008
   },
   "PMID:18936247": {
    "found": true,
-   "title": "SPDL-1 functions as a kinetochore receptor for MDF-1 in Caenorhabditis elegans.",
-   "year": 2008,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "SPDL-1 functions as a kinetochore receptor for MDF-1 in Caenorhabditis elegans.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2008
   },
   "PMID:19109417": {
    "found": true,
-   "title": "Systematic analysis in Caenorhabditis elegans reveals that the spindle checkpoint is composed of two largely independent branches.",
-   "year": 2009,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Systematic analysis in Caenorhabditis elegans reveals that the spindle checkpoint is composed of two largely independent branches.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2009
   },
   "PMID:19407811": {
    "found": true,
-   "title": "BubR1 acetylation at prometaphase is required for modulating APC/C activity and timing of mitosis.",
-   "year": 2009,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "BubR1 acetylation at prometaphase is required for modulating APC/C activity and timing of mitosis.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2009
   },
   "PMID:20123995": {
    "found": true,
-   "title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism.",
-   "year": 2010,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2010
   },
   "PMID:20516114": {
    "found": true,
-   "title": "Molecular causes for BUBR1 dysfunction in the human cancer predisposition syndrome mosaic variegated aneuploidy.",
-   "year": 2010,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Molecular causes for BUBR1 dysfunction in the human cancer predisposition syndrome mosaic variegated aneuploidy.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2010
+  },
+  "PMID:21047224": {
+   "found": true,
+   "pubtypes": [
+    "Clinical Trial, Phase I",
+    "Clinical Trial, Phase II",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Everolimus for subependymal giant-cell astrocytomas in tuberous sclerosis.",
+   "via": "esummary:pubmed",
+   "year": 2010
   },
   "PMID:21190457": {
    "found": true,
-   "title": "Homozygous BUB1B mutation and susceptibility to gastrointestinal neoplasia.",
-   "year": 2010,
    "pubtypes": [
     "Case Reports",
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Homozygous BUB1B mutation and susceptibility to gastrointestinal neoplasia.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2010
   },
   "PMID:21315436": {
    "found": true,
-   "title": "Identification of aneuploidy-selective antiproliferation compounds.",
-   "year": 2011,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Identification of aneuploidy-selective antiproliferation compounds.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2011
+  },
+  "PMID:21410393": {
+   "found": true,
+   "pubtypes": [
+    "Comparative Study",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, N.I.H., Intramural",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, P.H.S."
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Efficacy and safety of sirolimus in lymphangioleiomyomatosis.",
+   "via": "esummary:pubmed",
+   "year": 2011
+  },
+  "PMID:22047557": {
+   "found": true,
+   "pubtypes": [
+    "Clinical Trial, Phase III",
+    "Journal Article",
+    "Multicenter Study",
+    "Randomized Controlled Trial",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "A CFTR potentiator in patients with cystic fibrosis and the G551D mutation.",
+   "via": "esummary:pubmed",
+   "year": 2011
   },
   "PMID:22048312": {
    "found": true,
-   "title": "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders.",
-   "year": 2011,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2011
+  },
+  "PMID:22158718": {
+   "found": true,
+   "pubtypes": [
+    "Case Reports",
+    "Journal Article",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Use of acetazolamide in sulfonamide-allergic patients with neurologic channelopathies.",
+   "via": "esummary:pubmed",
+   "year": 2012
   },
   "PMID:22170152": {
    "found": true,
-   "title": "Rapamycin activates autophagy in Hutchinson-Gilford progeria syndrome: implications for normal aging and age-dependent neurodegenerative disorders.",
-   "year": 2012,
    "pubtypes": [
     "Journal Article",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Rapamycin activates autophagy in Hutchinson-Gilford progeria syndrome: implications for normal aging and age-dependent neurodegenerative disorders.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2012
   },
   "PMID:22366722": {
    "found": true,
-   "title": "An APC/C inhibitor stabilizes cyclin B1 by prematurely terminating ubiquitination.",
-   "year": 2012,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "An APC/C inhibitor stabilizes cyclin B1 by prematurely terminating ubiquitination.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2012
   },
   "PMID:22698286": {
    "found": true,
-   "title": "The vertebrate mitotic checkpoint protein BUBR1 is an unusual pseudokinase.",
-   "year": 2012,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "The vertebrate mitotic checkpoint protein BUBR1 is an unusual pseudokinase.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2012
   },
   "PMID:23079597": {
    "found": true,
-   "title": "Integration of kinase and phosphatase activities by BUBR1 ensures formation of stable kinetochore-microtubule attachments.",
-   "year": 2012,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Integration of kinase and phosphatase activities by BUBR1 ensures formation of stable kinetochore-microtubule attachments.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2012
   },
   "PMID:23158522": {
    "found": true,
-   "title": "Efficacy and safety of everolimus for subependymal giant cell astrocytomas associated with tuberous sclerosis complex (EXIST-1): a multicentre, randomised, placebo-controlled phase 3 trial.",
-   "year": 2013,
    "pubtypes": [
     "Clinical Trial, Phase III",
     "Journal Article",
@@ -780,597 +859,777 @@
     "Randomized Controlled Trial",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Efficacy and safety of everolimus for subependymal giant cell astrocytomas associated with tuberous sclerosis complex (EXIST-1): a multicentre, randomised, placebo-controlled phase 3 trial.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "PMID:23242215": {
    "found": true,
-   "title": "Increased expression of BubR1 protects against aneuploidy and cancer and extends healthy lifespan.",
-   "year": 2013,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Increased expression of BubR1 protects against aneuploidy and cancer and extends healthy lifespan.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "PMID:23300461": {
    "found": true,
-   "title": "Reduced life- and healthspan in mice carrying a mono-allelic BubR1 MVA mutation.",
-   "year": 2012,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Reduced life- and healthspan in mice carrying a mono-allelic BubR1 MVA mutation.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2012
   },
   "PMID:23345399": {
    "found": true,
-   "title": "Direct binding between BubR1 and B56-PP2A phosphatase complexes regulate mitotic progression.",
-   "year": 2013,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Direct binding between BubR1 and B56-PP2A phosphatase complexes regulate mitotic progression.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "PMID:23461901": {
    "found": true,
-   "title": "Autophagy inhibition sensitizes colon cancer cells to antiangiogenic and cytotoxic therapy.",
-   "year": 2013,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Autophagy inhibition sensitizes colon cancer cells to antiangiogenic and cytotoxic therapy.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "PMID:23521863": {
    "found": true,
-   "title": "Metformin inhibits the senescence-associated secretory phenotype by interfering with IKK/NF-\u03baB activation.",
-   "year": 2013,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Metformin inhibits the senescence-associated secretory phenotype by interfering with IKK/NF-\u03baB activation.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "PMID:23602569": {
    "found": true,
-   "title": "p21 both attenuates and drives senescence and aging in BubR1 progeroid mice.",
-   "year": 2013,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "p21 both attenuates and drives senescence and aging in BubR1 progeroid mice.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2013
   },
   "PMID:24516128": {
    "found": true,
-   "title": "Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention.",
-   "year": 2014,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2014
   },
   "PMID:24825348": {
    "found": true,
-   "title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan.",
-   "year": 2014,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2014
   },
   "PMID:25285631": {
    "found": true,
-   "title": "Deacetylation of the mitotic checkpoint protein BubR1 at lysine 250 by SIRT2 and subsequent effects on BubR1 degradation during the prometaphase/anaphase transition.",
-   "year": 2014,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Deacetylation of the mitotic checkpoint protein BubR1 at lysine 250 by SIRT2 and subsequent effects on BubR1 degradation during the prometaphase/anaphase transition.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2014
+  },
+  "PMID:25405392": {
+   "found": true,
+   "pubtypes": [
+    "Comparative Study",
+    "Journal Article",
+    "Multicenter Study",
+    "Randomized Controlled Trial",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, P.H.S."
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Atenolol versus losartan in children and young adults with Marfan's syndrome.",
+   "via": "esummary:pubmed",
+   "year": 2014
   },
   "PMID:25672491": {
    "found": true,
-   "title": "Selective Sirt2 inhibition by ligand-induced rearrangement of the active site.",
-   "year": 2015,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Selective Sirt2 inhibition by ligand-induced rearrangement of the active site.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2015
   },
   "PMID:25754370": {
    "found": true,
-   "title": "The Achilles' heel of senescent cells: from transcriptome to senolytic drugs.",
-   "year": 2015,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "The Achilles' heel of senescent cells: from transcriptome to senolytic drugs.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2015
   },
   "PMID:25964054": {
    "found": true,
-   "title": "BubR1 kinase: protection against aneuploidy and premature aging.",
-   "year": 2015,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "BubR1 kinase: protection against aneuploidy and premature aging.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2015
   },
   "PMID:26147250": {
    "found": true,
-   "title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation.",
-   "year": 2015,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't",
     "Research Support, U.S. Gov't, Non-P.H.S."
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2015
   },
   "PMID:26280535": {
    "found": true,
-   "title": "mTOR regulates MAPKAPK2 translation to control the senescence-associated secretory phenotype.",
-   "year": 2015,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "mTOR regulates MAPKAPK2 translation to control the senescence-associated secretory phenotype.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2015
+  },
+  "PMID:26644398": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "OpenFDA: an innovative platform providing access to a wealth of FDA's publicly available data.",
+   "via": "esummary:pubmed",
+   "year": 2016
+  },
+  "PMID:26831545": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Network-based in silico drug efficacy screening.",
+   "via": "esummary:pubmed",
+   "year": 2016
+  },
+  "PMID:27154141": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "High-performance web services for querying gene and variant annotation.",
+   "via": "esummary:pubmed",
+   "year": 2016
   },
   "PMID:27618451": {
    "found": true,
-   "title": "The rules and impact of nonsense-mediated mRNA decay in human cancers.",
-   "year": 2016,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "The rules and impact of nonsense-mediated mRNA decay in human cancers.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2016
+  },
+  "PMID:27834756": {
+   "found": true,
+   "pubtypes": [
+    "Clinical Trial, Phase III",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Oral pharmacological chaperone migalastat compared with enzyme replacement therapy in Fabry disease: 18-month results from the randomised phase III ATTRACT study.",
+   "via": "esummary:pubmed",
+   "year": 2017
   },
   "PMID:28553959": {
    "found": true,
-   "title": "Biallelic TRIP13 mutations predispose to Wilms tumor and chromosome missegregation.",
-   "year": 2017,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Biallelic TRIP13 mutations predispose to Wilms tumor and chromosome missegregation.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2017
   },
   "PMID:28633018": {
    "found": true,
-   "title": "Chromosome Mis-segregation Generates Cell-Cycle-Arrested Cells with Complex Karyotypes that Are Eliminated by the Immune System.",
-   "year": 2017,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't",
     "Research Support, N.I.H., Extramural"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Chromosome Mis-segregation Generates Cell-Cycle-Arrested Cells with Complex Karyotypes that Are Eliminated by the Immune System.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2017
   },
   "PMID:29046436": {
    "found": true,
-   "title": "Caenorhabditis elegans BUB-3 and SAN-1/MAD3 Spindle Assembly Checkpoint Components Are Required for Genome Stability in Response to Treatment with Ionizing Radiation.",
-   "year": 2017,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Caenorhabditis elegans BUB-3 and SAN-1/MAD3 Spindle Assembly Checkpoint Components Are Required for Genome Stability in Response to Treatment with Ionizing Radiation.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2017
   },
   "PMID:29165669": {
    "found": true,
-   "title": "ClinVar: improving access to variant interpretations and supporting evidence.",
-   "year": 2018,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Intramural"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "ClinVar: improving access to variant interpretations and supporting evidence.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2018
+  },
+  "PMID:29899452": {
+   "found": true,
+   "pubtypes": [
+    "Case Reports",
+    "Clinical Trial",
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Targeted therapy in patients with PIK3CA-related overgrowth syndrome.",
+   "via": "esummary:pubmed",
+   "year": 2018
   },
   "PMID:30500870": {
    "found": true,
-   "title": "Growth Hormone's Links to Cancer.",
-   "year": 2019,
    "pubtypes": [
     "Journal Article",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Growth Hormone's Links to Cancer.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "PMID:30616998": {
    "found": true,
-   "title": "Senolytics in idiopathic pulmonary fibrosis: Results from a first-in-human, open-label, pilot study.",
-   "year": 2019,
    "pubtypes": [
     "Clinical Trial",
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Senolytics in idiopathic pulmonary fibrosis: Results from a first-in-human, open-label, pilot study.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "PMID:31053147": {
    "found": true,
-   "title": "Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome.",
-   "year": 2019,
    "pubtypes": [
     "Case Reports",
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "PMID:31081598": {
    "found": true,
-   "title": "Long-term remission of bilateral Wilms tumors that developed from premature separation of chromatids/mosaic variegated aneuploidy syndrome due to bilateral nephrectomy and peritoneal dialysis.",
-   "year": 2019,
    "pubtypes": [
     "Case Reports",
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Long-term remission of bilateral Wilms tumors that developed from premature separation of chromatids/mosaic variegated aneuploidy syndrome due to bilateral nephrectomy and peritoneal dialysis.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "PMID:31184400": {
    "found": true,
-   "title": "Rhabdomyosarcoma with premature chromatid separation-mosaic variegated aneuploidy syndrome: Reduced-intensity chemotherapy.",
-   "year": 2019,
    "pubtypes": [
     "Case Reports",
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Rhabdomyosarcoma with premature chromatid separation-mosaic variegated aneuploidy syndrome: Reduced-intensity chemotherapy.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "PMID:31542391": {
    "found": true,
-   "title": "Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease.",
-   "year": 2019,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "PMID:31659324": {
    "found": true,
-   "title": "The impact of nonsense-mediated mRNA decay on genetic disease, gene editing and cancer immunotherapy.",
-   "year": 2019,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "The impact of nonsense-mediated mRNA decay on genetic disease, gene editing and cancer immunotherapy.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2019
   },
   "PMID:31738183": {
    "found": true,
-   "title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome.",
-   "year": 2020,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2020
+  },
+  "PMID:31862249": {
+   "found": true,
+   "pubtypes": [
+    "Comparative Study",
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Fenfluramine hydrochloride for the treatment of seizures in Dravet syndrome: a randomised, double-blind, placebo-controlled trial.",
+   "via": "esummary:pubmed",
+   "year": 2019
   },
   "PMID:32461654": {
    "found": true,
-   "title": "The mutational constraint spectrum quantified from variation in 141,456 humans.",
-   "year": 2020,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "The mutational constraint spectrum quantified from variation in 141,456 humans.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2020
   },
   "PMID:32534647": {
    "found": true,
-   "title": "Cancer prevention with aspirin in hereditary colorectal cancer (Lynch syndrome), 10-year follow-up and registry-based 20-year data in the CAPP2 study: a double-blind, randomised, placebo-controlled trial.",
-   "year": 2020,
    "pubtypes": [
     "Journal Article",
     "Multicenter Study",
     "Randomized Controlled Trial",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Cancer prevention with aspirin in hereditary colorectal cancer (Lynch syndrome), 10-year follow-up and registry-based 20-year data in the CAPP2 study: a double-blind, randomised, placebo-controlled trial.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2020
   },
   "PMID:32738133": {
    "found": true,
-   "title": "Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer.",
-   "year": 2020,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2020
   },
   "PMID:33207204": {
    "found": true,
-   "title": "BUBR1 Pseudokinase Domain Promotes Kinetochore PP2A-B56 Recruitment, Spindle Checkpoint Silencing, and Chromosome Alignment.",
-   "year": 2020,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "BUBR1 Pseudokinase Domain Promotes Kinetochore PP2A-B56 Recruitment, Spindle Checkpoint Silencing, and Chromosome Alignment.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2020
+  },
+  "PMID:33237278": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Integration of the Drug-Gene Interaction Database (DGIdb 4.0) with open crowdsource efforts.",
+   "via": "esummary:pubmed",
+   "year": 2021
   },
   "PMID:33505027": {
    "found": true,
-   "title": "Whole-genome doubling confers unique genetic vulnerabilities on tumour cells.",
-   "year": 2021,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Whole-genome doubling confers unique genetic vulnerabilities on tumour cells.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2021
   },
   "PMID:33505028": {
    "found": true,
-   "title": "Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition.",
-   "year": 2021,
    "pubtypes": [
     "Journal Article",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2021
   },
   "PMID:34216545": {
    "found": true,
-   "title": "Proteostasis failure and mitochondrial dysfunction leads to aneuploidy-induced senescence.",
-   "year": 2021,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Proteostasis failure and mitochondrial dysfunction leads to aneuploidy-induced senescence.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2021
   },
   "PMID:34830283": {
    "found": true,
-   "title": "Clinical Translation of Combined MAPK and Autophagy Inhibition in RAS Mutant Cancer.",
-   "year": 2021,
    "pubtypes": [
     "Journal Article",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Clinical Translation of Combined MAPK and Autophagy Inhibition in RAS Mutant Cancer.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2021
+  },
+  "PMID:35524556": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "SigCom LINCS: data and metadata search engine for a million gene expression signatures.",
+   "via": "esummary:pubmed",
+   "year": 2022
   },
   "PMID:35568294": {
    "found": true,
-   "title": "High-dose metformin induces a low-glucose dependent genotoxic stress.",
-   "year": 2022,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "High-dose metformin induces a low-glucose dependent genotoxic stress.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2022
   },
   "PMID:36322655": {
    "found": true,
-   "title": "Biallelic germline mutations in MAD1L1 induce a syndrome of aneuploidy with high tumor susceptibility.",
-   "year": 2022,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Biallelic germline mutations in MAD1L1 induce a syndrome of aneuploidy with high tumor susceptibility.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2022
+  },
+  "PMID:36399499": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "The next-generation Open Targets Platform: reimagined, redesigned, rebuilt.",
+   "via": "esummary:pubmed",
+   "year": 2023
+  },
+  "PMID:36583535": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "Reduction of New Heterotopic Ossification (HO) in the Open-Label, Phase 3 MOVE Trial of Palovarotene for Fibrodysplasia Ossificans Progressiva (FOP).",
+   "via": "esummary:pubmed",
+   "year": 2023
   },
   "PMID:37733863": {
    "found": true,
-   "title": "Accurate proteome-wide missense variant effect prediction with AlphaMissense.",
-   "year": 2023,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Accurate proteome-wide missense variant effect prediction with AlphaMissense.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2023
   },
   "PMID:37931001": {
    "found": true,
-   "title": "Genome instability footprint under rapamycin and hydroxyurea treatments.",
-   "year": 2023,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Genome instability footprint under rapamycin and hydroxyurea treatments.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2023
+  },
+  "PMID:37933841": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods.",
+   "via": "esummary:pubmed",
+   "year": 2024
   },
   "PMID:38009412": {
    "found": true,
-   "title": "SIRT2 transgenic over-expression does not impact lifespan in mice.",
-   "year": 2023,
    "pubtypes": [
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "SIRT2 transgenic over-expression does not impact lifespan in mice.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2023
   },
   "PMID:39169218": {
    "found": true,
-   "title": "Mosaic variegated aneuploidy in development, ageing and cancer.",
-   "year": 2024,
    "pubtypes": [
     "Journal Article",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Mosaic variegated aneuploidy in development, ageing and cancer.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2024
+  },
+  "PMID:39174244": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article",
+    "Review"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "The episodic ataxias.",
+   "via": "esummary:pubmed",
+   "year": 2024
   },
   "PMID:39264246": {
    "found": true,
-   "title": "Update on Recommendations for Cancer Screening and Surveillance in Children with Genomic Instability Disorders.",
-   "year": 2024,
    "pubtypes": [
     "Journal Article",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Update on Recommendations for Cancer Screening and Surveillance in Children with Genomic Instability Disorders.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2024
   },
   "PMID:39490401": {
    "found": true,
-   "title": "BubR1 and SIRT2: Insights into aneuploidy, aging, and cancer.",
-   "year": 2024,
    "pubtypes": [
     "Journal Article",
     "Review",
     "Research Support, N.I.H., Extramural",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "BubR1 and SIRT2: Insights into aneuploidy, aging, and cancer.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2024
+  },
+  "PMID:39558183": {
+   "found": true,
+   "pubtypes": [
+    "Journal Article"
+   ],
+   "resolved_at": "2026-10-12",
+   "retracted": false,
+   "title": "The STRING database in 2025: protein networks with directionality of regulation.",
+   "via": "esummary:pubmed",
+   "year": 2025
   },
   "PMID:39773880": {
    "found": true,
-   "title": "High-throughput tracking enables systematic phenotyping and drug repurposing in C. elegans disease models.",
-   "year": 2025,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "High-throughput tracking enables systematic phenotyping and drug repurposing in C. elegans disease models.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2025
   },
   "PMID:41013606": {
    "found": true,
-   "title": "High-throughput behavioural phenotyping of 25 C. elegans disease models including patient-specific mutations.",
-   "year": 2025,
    "pubtypes": [
     "Journal Article"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "High-throughput behavioural phenotyping of 25 C. elegans disease models including patient-specific mutations.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2025
   },
   "PMID:41436848": {
    "found": true,
-   "title": "Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage.",
-   "year": 2026,
    "pubtypes": [
     "Journal Article",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 2026
   },
   "PMID:7739397": {
    "found": true,
-   "title": "Clastogenic and aneugenic effects of three benzimidazole derivatives in the in vitro micronucleus test using human lymphocytes.",
-   "year": 1995,
    "pubtypes": [
     "Comparative Study",
     "Journal Article",
     "Research Support, Non-U.S. Gov't"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "Clastogenic and aneugenic effects of three benzimidazole derivatives in the in vitro micronucleus test using human lymphocytes.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 1995
   },
   "PMID:9644970": {
    "found": true,
-   "title": "A rule for termination-codon position within intron-containing genes: when nonsense affects RNA abundance.",
-   "year": 1998,
    "pubtypes": [
     "Journal Article",
     "Research Support, U.S. Gov't, P.H.S.",
     "Review"
    ],
+   "resolved_at": "2026-10-12",
    "retracted": false,
+   "title": "A rule for termination-codon position within intron-containing genes: when nonsense affects RNA abundance.",
    "via": "esummary:pubmed",
-   "resolved_at": "2026-10-12"
+   "year": 1998
   }
- }
+ },
+ "note": "resolved-citation cache for tools/verify_citations.py; rebuilt with --refresh, replayed with --offline",
+ "schema": "t2.citation_cache/1"
 }

@@ -2,7 +2,7 @@
 
 **Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
 **Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
-**Report generated:** 2026-10-12 from commit `cf35f2d` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
+**Report generated:** 2026-10-12 from commit `69a1305` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
 
 > **This is a hypothesis-generation document for research follow-up, not medical advice.** Every candidate below is an existing approved medicine proposed for laboratory testing first; none should be given to any child on the strength of this report.
 
@@ -87,24 +87,78 @@ Sources: Ensembl REST VEP + transcript model, UniProt O60566, AlphaFold DB v6, g
 
 The engine (`src/track2/`, `tools/run_track2.py`, frozen `config/track2.yaml`) is gene-agnostic: given a disease gene, its seed module and an axis map, it (1) expands the module on STRING, (2) pulls drug-target evidence from Open Targets, ChEMBL and DGIdb, (3) keeps only approved medicines (ChEMBL max_phase 4, not withdrawn, with an openFDA label), (4) scores network proximity between drug targets and the disease module against degree-matched random sets, (5) queries transcriptomic signature reversal on LINCS L1000 (SigCom LINCS), and (6) reports every evidence channel's contribution to a transparent weighted score and tier. Every API response is cached and replayed, so the ranking is byte-reproducible offline. Design details, source versions and limitations: [repo:docs/track2/engine.md].
 
-> *PENDING - input artifact not yet produced; this section fills on regeneration.*
+**Funnel (MVA run, config sha `16a5ee589395`).** Disease module: 71 genes (seeds + STRING neighbours of BUB1B at score >= 700). 108 Open Targets clinical rows and 1403 DGIdb interactions -> 482 distinct drug names -> approval gate: 96 approved, 115 not phase 4, 6 withdrawn, 252 unresolvable names (investigational codes or non-drug entities, counted rather than guessed). LINCS L1000 reversal: status `ok`, 100 reversers on `l1000_cp`.
+
+| Rank | Drug | Module targets | Axis | Direction | Tier | Score | Pediatric label |
+|---|---|---|---|---|---|---|---|
+| 1 | doxorubicin | BIRC5, TOP2A, TP53 | B | - | T1 | 0.800 | label text |
+| 2 | epirubicin | BIRC5, PPP2R5D, TOP2A, TP53 | A+B | - | T1 | 0.800 | label text |
+| 3 | temozolomide | BRCA2, CDKN2A, TP53 | B | - | T1 | 0.800 | label text |
+| 4 | cyclophosphamide anhydrous | PPP2R5D | A | - | T1 | 0.658 | - |
+| 5 | mitomycin | TP53 | B | - | T1 | 0.658 | label text |
+| 6 | pixantrone | TOP2A | none | - | T1 | 0.658 | - |
+| 7 | cantharidin | PPP2CA | none | - | T1 | 0.625 | label text |
+| 8 | daunorubicin | TOP2A | none | - | T1 | 0.625 | label text |
+| 9 | daunorubicin hydrochloride | TOP2A | none | - | T1 | 0.625 | label text |
+| 10 | doxorubicin hydrochloride | TOP2A | none | - | T1 | 0.625 | label text |
+| 11 | etoposide phosphate | TOP2A | none | - | T1 | 0.625 | - |
+| 12 | idarubicin | TOP2A | none | - | T1 | 0.625 | label text |
+| 13 | idarubicin hydrochloride | TOP2A | none | - | T1 | 0.625 | label text |
+| 14 | mitoxantrone | TOP2A | none | - | T1 | 0.625 | - |
+| 15 | mitoxantrone hydrochloride | TOP2A | none | - | T1 | 0.625 | - |
+| 16 | podofilox | TOP2A | none | - | T1 | 0.625 | label text |
+| 17 | valrubicin | TOP2A | none | - | T1 | 0.625 | label text |
+| 18 | palbociclib | CDKN2A, NEK2, PRKAA1 | B | - | T1 | 0.594 | label text |
+| 19 | irinotecan | BIRC5, CDKN1A | B | - | T1 | 0.548 | label text |
+| 20 | fluorouracil | BIRC5, CDKN1A, PPP2R5D, TP53 | A+B | - | T1 | 0.529 | label text |
+
+The engine ranks *evidence density*, not suitability for this child: databases over-represent oncology, so the curated layer (section 5) and the pediatric facts decide the portfolio. Full output incl. every evidence channel: [repo:docs/track2/evidence/candidates.json].
 
 ### 4.2 Does the engine find known answers? (retrospective benchmark)
 
-> *PENDING - input artifact not yet produced; this section fills on regeneration.*
+The identical pipeline, run blind on 9 genes whose approved repurposed or targeted drug is established (truth committed in `config/track2.yaml` before the run; the drug is never seeded). **recall@1 / @5 / @10 / @25 = 0.00 / 0.33 / 0.44 / 0.56** [repo:docs/track2/evidence/benchmark.json].
+
+| Disease gene | Disease | Known approved drug(s): rank in engine output | Evidence for the known pair |
+|---|---|---|---|
+| TSC2 | tuberous sclerosis complex / sporadic LAM | everolimus: #3; sirolimus: #4 | [PMID:21047224](https://pubmed.ncbi.nlm.nih.gov/21047224/); [PMID:21410393](https://pubmed.ncbi.nlm.nih.gov/21410393/) |
+| PIK3CA | PIK3CA-related overgrowth spectrum | alpelisib: #2 | [PMID:29899452](https://pubmed.ncbi.nlm.nih.gov/29899452/) |
+| FBN1 | Marfan syndrome | losartan: not collected | [PMID:25405392](https://pubmed.ncbi.nlm.nih.gov/25405392/) |
+| KCNJ11 | KCNJ11 neonatal diabetes | glibenclamide: #11 | [PMID:16885550](https://pubmed.ncbi.nlm.nih.gov/16885550/) |
+| CFTR | cystic fibrosis (G551D) | ivacaftor: #6 | [PMID:22047557](https://pubmed.ncbi.nlm.nih.gov/22047557/) |
+| SCN1A | Dravet syndrome | fenfluramine: not collected | [PMID:31862249](https://pubmed.ncbi.nlm.nih.gov/31862249/) |
+| ACVR1 | fibrodysplasia ossificans progressiva | palovarotene: not collected | [PMID:36583535](https://pubmed.ncbi.nlm.nih.gov/36583535/) |
+| CACNA1A | episodic ataxia type 2 | acetazolamide: not collected | [PMID:22158718](https://pubmed.ncbi.nlm.nih.gov/22158718/); [PMID:39174244](https://pubmed.ncbi.nlm.nih.gov/39174244/) |
+| GLA | Fabry disease | migalastat: #2 | [PMID:27834756](https://pubmed.ncbi.nlm.nih.gov/27834756/) |
+
+**Reading it honestly.** Every miss is structural: the known drug acts on a target outside the disease gene's interaction module (for example losartan acts on the angiotensin receptor, not on FBN1's partners), so a target-overlap engine never collects it. Recall is therefore a floor on what network-seeded repurposing can do, and it is why this report pairs the engine with a mechanism-led literature layer rather than trusting either alone.
 
 ### 4.3 Independent computational evidence
 
 **Aneuploidy pharmacogenomics (PRISM repurposing screen x cell-line aneuploidy).** Highly aneuploid cancer cells have distinct drug vulnerabilities ([PMID:33505028](https://pubmed.ncbi.nlm.nih.gov/33505028/)); we asked which *approved* drugs preferentially inhibit more-aneuploid cell lines, controlling for lineage.
 
-| Drug | MOA | beta (sensitivity ~ aneuploidy) | q (BH) | n lines |
-|---|---|---|---|---|
+Model: AUC ~ feature + C(primary_tissue), OLS with absorbed lineage fixed effects (FWL); beta < 0 = cell lines with more of the feature are more sensitive to the drug; q = Benjamini-Hochberg over tested compounds. 588 launched compounds tested (of 1498) ([DOI:10.1038/s43018-019-0018-6](https://doi.org/10.1038/s43018-019-0018-6); [DOI:10.1038/s41586-020-03114-6](https://doi.org/10.1038/s41586-020-03114-6)). **Validation:** our per-drug statistics reproduce the published PRISM-aneuploidy analysis (Spearman rho = 0.72, sign concordance 80%, n = 1442 drugs). **Result:** no launched drug is aneuploidy-selective after FDR correction (minimum q = 0.069); the top directional hits are listed only as hypothesis-generating:
 
-Full table and positive controls: [repo:docs/track2/evidence/prism.json].
+| Launched drug (Broad annotation) | MOA | beta (AUC ~ aneuploidy, lineage-adjusted) | p | q (BH) | lines |
+|---|---|---|---|---|---|
+| ingenol-mebutate | PKC activator | -0.0041 | 0.1 | 0.59 | 436 |
+| lomefloxacin | bacterial DNA gyrase inhibitor | -0.0031 | 0.0029 | 0.21 | 236 |
+| alogliptin | dipeptidyl peptidase inhibitor | -0.0031 | 0.044 | 0.48 | 356 |
+| sufentanil | opioid receptor modulator | -0.0030 | 0.015 | 0.36 | 378 |
+| methscopolamine | acetylcholine receptor antagonist | -0.0029 | 0.073 | 0.54 | 415 |
+| tiludronate | bone resorption inhibitor, osteoclast inhibitor | -0.0026 | 0.08 | 0.55 | 389 |
+| tropisetron | serotonin receptor antagonist | -0.0025 | 0.066 | 0.52 | 400 |
+| leucovorin | folate receptor ligand | -0.0025 | 0.12 | 0.63 | 376 |
+
+Two findings shape the portfolio: mitotic/checkpoint drugs are mostly *aneuploid-resistant* in this short-exposure screen (supporting their place in the rejected table), and metformin, chloroquine and hydroxychloroquine are absent from the screen, so no PRISM claim is made for them. Full results and controls: [repo:docs/track2/evidence/prism.json].
 
 **Protein language-model effect of p.Asn1002Lys (ESM-2 masked-marginal score, calibrated on BUB1B ClinVar/gnomAD missense).**
 
-> *PENDING - input artifact not yet produced; this section fills on regeneration.*
+| Model (run) | LLR p.Asn1002Lys | More damaging than ... of gnomAD BUB1B missense | ... of benign panel | AUC common vs ultra-rare gnomAD | AUC benign vs nonsense proxy |
+|---|---|---|---|---|---|
+| esm2_t33_650M_UR50D (L4, [repo:docs/track2/evidence/esm.json]) | -5.81 | 88% | 97% | 0.59 | 1.00 |
+| esm2_t30_150M_UR50D (cpu, [repo:docs/track2/evidence/esm_150m.json]) | -0.37 | 48% | 61% | 0.50 | 1.00 |
+
+Masked-marginal log-likelihood ratios over 1319 scored variants (1273 gnomAD v4 BUB1B missense as background; the query itself, seen once in gnomAD, is excluded from it). Only 1 classified pathogenic BUB1B missense exists in ClinVar, so a missense-only pathogenicity AUC cannot be estimated. The larger model places p.Asn1002Lys among the most constrained substitutions in the protein while the smaller one scores it mid-distribution; we cite the larger model, which also separates the gnomAD frequency classes better, and report both. A conservation score does not measure residual function: a strongly constrained residue is compatible with a hypomorphic, partially functional product.
 
 ## 5. The candidate portfolio
 
@@ -114,17 +168,118 @@ Full table and positive controls: [repo:docs/track2/evidence/prism.json].
 
 ### 5.2 Ranked shortlist
 
-> *PENDING - input artifact not yet produced; this section fills on regeneration.*
+| Rank | Candidate | Axis | Approval (checked by code) | Pediatric label | Evidence grade | Engine placement |
+|---|---|---|---|---|---|---|
+| 1 | **dasatinib + quercetin - senolytic clearance of p16+ cells** | B - senescence / damage mitigation | ChEMBL max_phase 4, first approval 2006; openFDA set_id `02b04c6f` | Pediatric patients 1 year of age and older: Ph+ CML in chronic phase; newly diagnosed Ph+ ALL in combination with chemotherapy (quoted label fact). | moderate+ | dasatinib anhydrous #75/96 |
+| 2 | **everolimus - senomorphic SASP dampening via mTORC1 inhibition** | B - senescence / damage mitigation | ChEMBL max_phase 4, first approval 2009; openFDA set_id `01f7b5fb` | TSC-associated SEGA requiring intervention: patients >=1 year. Adjunctive treatment of TSC-associated partial-onset seizures: >=2 years (oral suspension). (Quot | moderate | everolimus #36/96 |
+| 3 | **niacin / nicotinamide - NAD+/SIRT2 stabilisation of residual BubR1** | A - residual-BubR1 rescue | ChEMBL max_phase 4, first approval -; openFDA set_id `bf287412` | None. Label states verbatim: 'Pediatric Use - Safety and effectiveness in children and adolescents have not been established.' (quoted label fact) | moderate- | niacin: not in module; nicotinamide: not in module |
+| 4 | **hydroxychloroquine - aneuploidy-selective autophagy blockade, interception** | C - aneuploid-cell vulnerability / cancer interception | ChEMBL max_phase 4, first approval 1955; openFDA set_id `04139607` | Established in pediatric patients only for malaria treatment and prophylaxis, and only >=31 kg because tablets cannot be divided; NOT established for RA/discoid | low-moderate | hydroxychloroquine: not in module; chloroquine: not in module |
 
 "Evidence grade" is an honesty label for the distance between the evidence and this child's use case, not clinical readiness: no MVA-specific drug-treatment study exists, so nothing is graded higher than moderate.
 
 ### 5.3 Lead candidates in detail
 
-> *PENDING - input artifact not yet produced; this section fills on regeneration.*
+### 1. dasatinib + quercetin - senolytic clearance of p16+ cells
+
+*Why it is here:* BubR1 insufficiency drives p16Ink4a-positive senescence in muscle and fat, and clearing p16-positive senescent cells in the BubR1-hypomorph mouse both delayed and attenuated the progeroid phenotype - the only anchor experiment run in the literal disease model ([PMID:18516091](https://pubmed.ncbi.nlm.nih.gov/18516091/), [PMID:22048312](https://pubmed.ncbi.nlm.nih.gov/22048312/)). Dasatinib + quercetin is the canonical pharmacologic senolytic pair, with dasatinib clearing senescent human fat-cell progenitors and quercetin clearing senescent endothelial cells in preclinical work ([PMID:25754370](https://pubmed.ncbi.nlm.nih.gov/25754370/)). It is also the only candidate class with human evidence of senescent-burden reduction, from a 9-patient diabetic-kidney-disease pilot of a 3-day intermittent course ([PMID:31542391](https://pubmed.ncbi.nlm.nih.gov/31542391/)), with feasibility-level data from a 14-patient IPF pilot ([PMID:30616998](https://pubmed.ncbi.nlm.nih.gov/30616998/)). The MVA genotype-to-phenotype chain runs through exactly this senescent compartment ([PMID:39169218](https://pubmed.ncbi.nlm.nih.gov/39169218/), [PMID:31738183](https://pubmed.ncbi.nlm.nih.gov/31738183/)). In our PRISM 19Q4 re-analysis dasatinib showed a directional, non-significant association toward preferential activity in low-BUB1B and more-aneuploid lines - hypothesis-level corroboration only, not a rank driver [repo:docs/track2/evidence/prism.json]. The counter-consideration is real: senescence is also tumour-suppressive and aneuploid-cell proliferation is p53-limited, so clearing the compartment could free protective arrested cells as well as harmful ones ([PMID:20123995](https://pubmed.ncbi.nlm.nih.gov/20123995/)). Dasatinib's pediatric label (>=1y Ph+ CML/ALL) carries a growth-retardation and osteopenia warning that sits badly on a child with short stature and failure to thrive, which is why this is a test-first lead and not a treatment suggestion.
+
+*Evidence:*
+
+- [mechanism, direct] BubR1 insufficiency drives p16Ink4a-positive cellular senescence in skeletal muscle and adipose tissue; genetic p16Ink4a inactivation attenuates senescence and premature ageing in BubR1-insufficient mice. ([PMID:18516091](https://pubmed.ncbi.nlm.nih.gov/18516091/))
+- [preclinical, direct] In BubR1-hypomorphic progeroid mice, drug-inducible clearance of p16Ink4a-positive senescent cells delayed onset of age-related pathology in adipose tissue, skeletal muscle and eye, and attenuated established disease when started late in life - the direct causal evidence that senolysis modifies the BubR1-insufficiency phenotype. ([PMID:22048312](https://pubmed.ncbi.nlm.nih.gov/22048312/))
+- [preclinical, direct] Dasatinib + quercetin is the canonical senolytic pair: dasatinib clears senescent human fat-cell progenitors, quercetin clears senescent endothelial cells, and the combination reduced senescent-cell burden and extended healthspan in aged, irradiated and progeroid (Ercc1-/delta) mice. ([PMID:25754370](https://pubmed.ncbi.nlm.nih.gov/25754370/))
+- [clinical, direct] First human evidence that D+Q lowers senescent-cell burden: in a 9-patient open-label diabetic-kidney-disease pilot, 3 days of D 100 mg + Q 1000 mg reduced adipose p16/p21-expressing cells, SA-beta-gal activity and circulating SASP factors (IL-1a, IL-6, MMP-9/12) within 11 days. ([PMID:31542391](https://pubmed.ncbi.nlm.nih.gov/31542391/))
+- [clinical, indirect] In a first-in-human open-label pilot in idiopathic pulmonary fibrosis (n=14), intermittent D+Q was feasible and improved physical-function measures; pulmonary function and reported health were unchanged - feasibility-level evidence, not efficacy proof. ([PMID:30616998](https://pubmed.ncbi.nlm.nih.gov/30616998/))
+- [mechanism, indirect] MVA1 disease mechanism is chronic chromosome missegregation producing mosaic aneuploidy; aneuploid and damaged cells enter p53/p21- and p16-driven senescence, linking the BubR1 genotype to the senescent-cell burden that D+Q targets (MVA review; genotype-phenotype chain). ([PMID:39169218](https://pubmed.ncbi.nlm.nih.gov/39169218/); [PMID:31738183](https://pubmed.ncbi.nlm.nih.gov/31738183/))
+- [safety, indirect] Counter-consideration: senescence is also a tumour-suppressive response, and aneuploid-cell proliferation is limited by a p53-dependent mechanism; indiscriminate removal of the senescent compartment in a cancer-predisposition syndrome could remove both harmful and protective arrested cells. Net direction in this genotype is untested. ([PMID:20123995](https://pubmed.ncbi.nlm.nih.gov/20123995/); [PMID:22048312](https://pubmed.ncbi.nlm.nih.gov/22048312/))
+
+*Pediatric label facts* (openFDA drug/label set_id 02b04c6f-4ea5-4fcb-bf6d-2631d5ab31e4 (effective 2026-03-05); dasatinib tablets): Pediatric patients 1 year of age and older: Ph+ CML in chronic phase; newly diagnosed Ph+ ALL in combination with chemotherapy (quoted label fact). Boxed warning: None on this label.
+
+*Risks specific to this child's phenotype:*
+
+- Label section 5.10 'Effects on Growth and Development in Pediatric Patients': epiphyses delayed fusion, osteopenia, growth retardation and gynecomastia reported; label advises monitoring bone growth and development. Directly relevant to a child with short stature and failure to thrive.
+- Myelosuppression (severe thrombocytopenia, neutropenia, anaemia) and bleeding; dasatinib also inhibits platelet function - additive bleeding risk with any antiplatelet adjunct.
+- Fluid retention incl. pleural effusions; pulmonary arterial hypertension; QT prolongation; severe dermatologic reactions; tumour lysis syndrome; embryo-fetal toxicity.
+- Hypothesis framing: senolytic regimens are intermittent 'hit-and-run' (3-day cycles in the human pilots), which limits total exposure relative to continuous oncology dosing - but no pediatric senolytic dosing exists; any use here is untested.
+
+*What would make us wrong:* We are wrong if the BubR1-hypomorph rescue depended on the INK-ATTAC genetic circuit rather than on senescent-cell removal per se, or if this child's senescent compartment is protective - holding aneuploid clones arrested - so clearing it accelerates neoplasia ([PMID:22048312](https://pubmed.ncbi.nlm.nih.gov/22048312/), [PMID:20123995](https://pubmed.ncbi.nlm.nih.gov/20123995/)). Decisive experiment (T1, 2-4 weeks): intermittent D+Q exposure of patient fibroblasts; GO on >=50% reduction of the senescent-marker fraction with no rise in aneuploidy rate or euploid cytotoxicity, NO-GO on nonselective toxicity or aneuploid expansion after clearance (testability.json).
+
+### 2. everolimus - senomorphic SASP dampening via mTORC1 inhibition
+
+*Why it is here:* mTORC1 inhibition is senomorphic rather than senolytic: it blunts the senescence-associated secretory phenotype at the translational level through IL1A and MAPKAPK2, dampening senescent-cell paracrine damage without killing the cells ([PMID:26147250](https://pubmed.ncbi.nlm.nih.gov/26147250/), [PMID:26280535](https://pubmed.ncbi.nlm.nih.gov/26280535/)). The genotype-specific hook is direct: in monoallelic BubR1-mutant mice modelling MVA, predisposition to sarcopenia tracked mTORC1 hyperactivity ([PMID:31738183](https://pubmed.ncbi.nlm.nih.gov/31738183/)). Everolimus carries the strongest pediatric regulatory footing of any candidate - approved for TSC-associated SEGA from age 1 and TSC-associated seizures from age 2 inside a tumour-predisposition syndrome - with label-reported absence of growth and pubertal harm over a median 4.1 years of pediatric exposure ([PMID:23158522](https://pubmed.ncbi.nlm.nih.gov/23158522/)). The same label reports markedly higher infection rates under age 6, and class-level immunosuppression is a real concern in a cancer-predisposed child ([PMID:23158522](https://pubmed.ncbi.nlm.nih.gov/23158522/)). Our PRISM re-analysis found no aneuploidy-selective signal for everolimus, which is coherent rather than damning: it is proposed as a senomorphic, not as an aneuploid-cell-selective agent [repo:docs/track2/evidence/prism.json]. It is preferred over sirolimus - the engine's top non-cytotoxic hit - on pediatric feasibility alone: sirolimus has no pediatric approval under 13 and a malignancy boxed warning, where everolimus has labeled pediatric indications in a cancer-predisposition syndrome.
+
+*Evidence:*
+
+- [mechanism, indirect] Same senomorphic mechanism as sirolimus: mTORC1 inhibition blunts the pro-inflammatory SASP via translational control of IL1A and MAPKAPK2, dampening senescent-cell paracrine damage without killing the cells. ([PMID:26147250](https://pubmed.ncbi.nlm.nih.gov/26147250/); [PMID:26280535](https://pubmed.ncbi.nlm.nih.gov/26280535/))
+- [clinical, analogy] Pediatric tumour-predisposition precedent: in the phase 3 EXIST-1 trial, everolimus produced significant SEGA volume reductions versus placebo in children/adults with tuberous sclerosis complex - proof that chronic mTOR inhibition is tolerated and effective in a paediatric cancer-predisposition population. ([PMID:23158522](https://pubmed.ncbi.nlm.nih.gov/23158522/))
+- [clinical, analogy] Label-reported pediatric tolerability: in EXIST-1/Study 2485 open-label follow-up (115 pediatric patients, median 4.1 years exposure), everolimus did not appear to adversely impact growth and pubertal development - the key reassurance for use in a growth-restricted child, tempered by higher infection rates in patients <6 years (96% any infection, 35% serious infection). ([PMID:23158522](https://pubmed.ncbi.nlm.nih.gov/23158522/))
+- [preclinical, direct] Genotype-specific hook shared with sirolimus: mTORC1 hyperactivity correlates with sarcopenia predisposition in monoallelic BubR1-mutant MVA mice. ([PMID:31738183](https://pubmed.ncbi.nlm.nih.gov/31738183/))
+- [safety, indirect] Counter-consideration: as with all mTOR inhibitors, immunosuppression reduces tumour immune surveillance; everolimus additionally carries renal-failure and metabolic warnings relevant to a child with nephrocalcinosis, and label advises completing childhood vaccinations before starting treatment. ([PMID:26147250](https://pubmed.ncbi.nlm.nih.gov/26147250/))
+
+*Pediatric label facts* (openFDA drug/label set_id 01f7b5fb-be0d-4adf-acd2-6899018de966 (effective 2025-09-05); everolimus tablets and tablets for oral suspension): TSC-associated SEGA requiring intervention: patients >=1 year. Adjunctive treatment of TSC-associated partial-onset seizures: >=2 years (oral suspension). (Quoted label facts.) Boxed warning: None on this label.
+
+*Risks specific to this child's phenotype:*
+
+- Infections, including serious infections, at higher frequency under age 6 (label: 96% any infection vs 67% in >=6y; 35% serious vs 7%) - immunosuppression concern in a cancer-predisposed child.
+- Non-infectious pneumonitis, stomatitis, renal failure (monitor renal function - nephrocalcinosis phenotype), hyperglycaemia/hyperlipidaemia, myelosuppression, impaired wound healing, radiation sensitisation, embryo-fetal toxicity, live-vaccine avoidance.
+- No boxed warning on this oncology label, unlike sirolimus's transplant boxed warning - but the same class-level immunosuppression applies.
+
+*What would make us wrong:* We are wrong if the mTORC1 hyperactivity seen in the MVA-mouse model is downstream noise rather than driver - the association is correlational ([PMID:31738183](https://pubmed.ncbi.nlm.nih.gov/31738183/)) - or if SASP suppression frees aneuploid clones from their secretory neighbourhood-watch while immunosuppression raises net cancer risk faster than senescence control lowers it. Decisive experiment (T1, 2-4 weeks): everolimus on patient fibroblasts; GO on >=30% SASP reduction with stable aneuploidy and <20% proliferation slowdown, NO-GO on cytostasis or any aneuploidy rise (testability.json).
+
+### 3. niacin / nicotinamide - NAD+/SIRT2 stabilisation of residual BubR1
+
+*Why it is here:* This is the only Axis-A candidate: it aims to raise output of the residual hypomorphic allele rather than manage downstream damage - mechanistically the most disease-modifying idea, because raising BubR1 abundance in mice preserves genomic integrity, corrects checkpoint and attachment defects, reduces tumorigenesis and extends healthy lifespan ([PMID:23242215](https://pubmed.ncbi.nlm.nih.gov/23242215/)). The anchor: NAD+/SIRT2 maintains BubR1, and NMN or SIRT2 overexpression raised BubR1 abundance in vivo, with SIRT2 overexpression extending lifespan specifically in BubR1-hypomorphic animals ([PMID:24825348](https://pubmed.ncbi.nlm.nih.gov/24825348/)) - a benefit independently shown to be conditional on low BubR1 rather than a general-longevity effect ([PMID:38009412](https://pubmed.ncbi.nlm.nih.gov/38009412/)). The direction is sharpened from both sides: selective SIRT2 inhibition destabilises BubR1 protein in cells ([PMID:25672491](https://pubmed.ncbi.nlm.nih.gov/25672491/)). The 650M ESM-2 masked-marginal run scores the child's p.Asn1002Lys at the 88th percentile of deleteriousness among gnomAD BUB1B missense - consistent with a constrained, function-impaired residual allele worth rescuing - but the 150M run scores it mid-distribution, so this is supporting rather than deciding evidence [repo:docs/track2/evidence/esm.json] [repo:docs/track2/evidence/esm_150m.json]. The honest pharmacology caveat: nicotinamide is both an NAD+ precursor and a sirtuin end-product inhibitor, so the wrong form could blunt the axis it is meant to fuel, while niacin raises NAD+ without that product inhibition ([PMID:12297502](https://pubmed.ncbi.nlm.nih.gov/12297502/), [PMID:24825348](https://pubmed.ncbi.nlm.nih.gov/24825348/)). SIRT2 regulation of BubR1 is also site- and context-specific - K250 deacetylation promotes timely BubR1 degradation at mitotic exit - so 'more SIRT2 activity' is not linearly 'more BubR1' ([PMID:25285631](https://pubmed.ncbi.nlm.nih.gov/25285631/)). Approved forms exist (niacin, niacinamide) but neither has a pediatric indication, and the anchor experiment used NMN - a supplement - so the approved-form evidence is extrapolated ([PMID:41436848](https://pubmed.ncbi.nlm.nih.gov/41436848/)).
+
+*Evidence:*
+
+- [mechanism, direct] Axis-A anchor: the age-related decline of BubR1 protein is driven by declining NAD+ and loss of SIRT2-mediated deacetylation of BubR1 lysine-668 (opposed by CBP acetylation); in mice, SIRT2 overexpression OR treatment with the NAD+ precursor NMN increased BubR1 abundance in vivo, and SIRT2 overexpression extended median lifespan specifically in BubR1-hypomorphic (H/H) animals. ([PMID:24825348](https://pubmed.ncbi.nlm.nih.gov/24825348/); [PMID:25672491](https://pubmed.ncbi.nlm.nih.gov/25672491/))
+- [preclinical, direct] Raising BubR1 abundance is itself disease-modifying in models: sustained high BubR1 expression in mice preserves genomic integrity, corrects checkpoint and microtubule-kinetochore attachment defects, reduces tumorigenesis even with oncogenic Ras, and extends healthy lifespan - the proof that increasing residual BubR1 output compensates a defective checkpoint. ([PMID:23242215](https://pubmed.ncbi.nlm.nih.gov/23242215/))
+- [preclinical, direct] Independent lab confirmation with honest bound: SIRT2 overexpression rescues health and lifespan in the BubR1-hypomorph model via improved BubR1 protein stability, but the same overexpression in wild-type mice had NO effect on health or lifespan - i.e. the SIRT2 benefit appears conditional on BubR1 under-expression, which is exactly the MVA1 situation (null + hypomorph alleles) but offers no general-longevity claim. ([PMID:38009412](https://pubmed.ncbi.nlm.nih.gov/38009412/))
+- [clinical, analogy] Class-level clinical plausibility: NAD+ supplementation shows benefit in several premature-ageing and DNA-repair-deficiency diseases where PARP hyperactivation depletes NAD+, with a favourable safety profile - a review-level support for NAD restoration in rare progeroid/genome-instability disease, though MVA itself was not studied. ([PMID:41436848](https://pubmed.ncbi.nlm.nih.gov/41436848/))
+- [mechanism, direct] Critical pharmacology caveat: nicotinamide is BOTH an NAD+ precursor AND an end-product inhibitor of sirtuin deacetylases (established for yeast Sir2 and human SIRT1) - so high-dose nicotinamide could theoretically inhibit the very SIRT2-BubR1 axis it is meant to fuel. Nicotinic acid (niacin) raises NAD+ via the Preiss-Handler pathway without product inhibition of sirtuins; the choice of form is therefore mechanistically non-trivial. ([PMID:12297502](https://pubmed.ncbi.nlm.nih.gov/12297502/); [PMID:24825348](https://pubmed.ncbi.nlm.nih.gov/24825348/))
+- [mechanism, indirect] Mechanistic nuance: SIRT2 also deacetylates BubR1 at K250 during prometaphase, where deacetylation promotes timely APC/C-mediated BubR1 degradation at mitotic exit; SIRT2 regulation of BubR1 is site- and context-specific, so 'more SIRT2 activity' does not linearly equal 'more BubR1'. ([PMID:25285631](https://pubmed.ncbi.nlm.nih.gov/25285631/))
+
+*Pediatric label facts* (openFDA drug/label set_id bf287412-160b-403f-8eb4-57f29a475902 (effective 2021-12-23); NIACOR (nicotinic acid)): None. Label states verbatim: 'Pediatric Use - Safety and effectiveness in children and adolescents have not been established.' (quoted label fact) Boxed warning: None.
+
+*Risks specific to this child's phenotype:*
+
+- Niacin at lipid-lowering doses: flushing, hepatotoxicity (label contraindicates significant/unexplained hepatic dysfunction), hyperglycaemia, hyperuricaemia, GI/peptic-ulcer caution - the approved-dose adverse profile is adult-derived.
+- Nutritional-dose nicotinamide/niacin (vitamin-level) has a wide safety margin in children, but the NAD-restoration hypothesis may require pharmacologic doses - an open question.
+- Form-choice risk (claim c5): pharmacologic nicotinamide could inhibit sirtuins; the safe-form question is unresolved, not a detail.
+- No reproductive-age considerations for the child directly; family context includes recurrent spontaneous abortion - niacin pregnancy safety is not established at pharmacologic doses.
+
+*What would make us wrong:* We are wrong if the NAD+/SIRT2 deacetylation axis does not reach this particular hypomorph - Asn1002Lys may destabilise BubR1 by a route NAD+ cannot touch - or if approved-form pharmacology differs materially from NMN, since nicotinamide itself inhibits sirtuins ([PMID:12297502](https://pubmed.ncbi.nlm.nih.gov/12297502/), [PMID:24825348](https://pubmed.ncbi.nlm.nih.gov/24825348/)). Decisive experiment (T1, 2-4 weeks): niacin versus nicotinamide head-to-head on patient fibroblasts; GO on >=1.3-fold BubR1 protein rise with no aneuploidy increase - the same readout resolves the form question (testability.json).
+
+### 4. hydroxychloroquine - aneuploidy-selective autophagy blockade, interception
+
+*Why it is here:* This is the only candidate with direct aneuploidy-selective antiproliferative evidence: a phenotypic screen identified chloroquine - alongside AICAR and 17-AAG - as selectively antiproliferative to aneuploid versus euploid cells, the proposed mechanism being exploitation of the proteotoxic and metabolic stress state aneuploid cells depend on ([PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/)). Autophagy inhibition is an active cancer strategy more broadly: chloroquine-class agents sensitise tumours to cytotoxic and antiangiogenic therapy, and combined MAPK-plus-autophagy blockade is in clinical translation ([PMID:23461901](https://pubmed.ncbi.nlm.nih.gov/23461901/), [PMID:34830283](https://pubmed.ncbi.nlm.nih.gov/34830283/)). The MVA hypothesis is interception: lifelong production of new aneuploid cells is the cancer substrate, so preferentially impairing aneuploid-cell proliferation could trim the compartment that seeds the predisposition ([PMID:39169218](https://pubmed.ncbi.nlm.nih.gov/39169218/)). Chloroquine and hydroxychloroquine are absent from the PRISM 19Q4 screen, so no pharmacogenomic claim can be made for them in either direction [repo:docs/track2/evidence/prism.json]. The counter-considerations are serious: the selectivity data are cell-line and short-term; aneuploid cancer cells show complex, time-dependent responses to checkpoint perturbation rather than simple vulnerability ([PMID:33505028](https://pubmed.ncbi.nlm.nih.gov/33505028/)); and chronic autophagy blockade touches every tissue that needs proteostasis. Its pediatric label covers only malaria above 31 kg, and irreversible retinal toxicity accumulates with the chronic exposure an interception strategy would require - label facts that cap the rank despite this portfolio's cleanest falsifier.
+
+*Evidence:*
+
+- [preclinical, direct] Direct aneuploidy-selective evidence: a phenotypic screen identified chloroquine - alongside AICAR and 17-AAG - as selectively antiproliferative to aneuploid versus euploid cells; autophagy inhibition is proposed to exploit the proteotoxic/metabolic stress state that aneuploid cells depend on. ([PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/))
+- [preclinical, indirect] Autophagy inhibition is an active cancer-therapy strategy: chloroquine-class agents sensitise tumour cells to cytotoxic and antiangiogenic therapy, and combined MAPK + autophagy blockade is under clinical translation in RAS-mutant cancers - supporting plausibility of the autophagy-dependence angle in aneuploid clones. ([PMID:23461901](https://pubmed.ncbi.nlm.nih.gov/23461901/); [PMID:34830283](https://pubmed.ncbi.nlm.nih.gov/34830283/))
+- [mechanism, indirect] Disease link: MVA1 mosaicism means a lifelong stream of new aneuploid cells; a drug class that preferentially impairs aneuploid-cell proliferation could, in principle, trim the aneuploid compartment that seeds the cancer-predisposition phenotype. This is the Axis-C interception hypothesis - plausible, untested in MVA. ([PMID:39169218](https://pubmed.ncbi.nlm.nih.gov/39169218/); [PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/))
+- [safety, indirect] Counter-considerations: (i) the selective-kill data are cell-line/short-term; chronic systemic autophagy inhibition affects all tissues including those needing autophagy for quality control in a checkpoint-defective child; (ii) aneuploid cancer cells show complex, time-dependent responses to checkpoint/stress perturbation - not simple vulnerability; (iii) no study has tested CQ/HCQ in a BubR1/MVA model. ([PMID:33505028](https://pubmed.ncbi.nlm.nih.gov/33505028/); [PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/))
+
+*Pediatric label facts* (openFDA drug/label set_id 04139607-f7c0-4fe1-a210-ffa5af347d56 (effective 2025-10-09); hydroxychloroquine sulfate tablets): Established in pediatric patients only for malaria treatment and prophylaxis, and only >=31 kg because tablets cannot be divided; NOT established for RA/discoid lupus/SLE in children (quoted label fact). Chloroquine label (set_id 06c69e2b-211b-4746-9f3a-f86d36520570) provides weight-based pediatric malaria dosing. Boxed warning: None on this label.
+
+*Risks specific to this child's phenotype:*
+
+- Retinal toxicity: label warns of irreversible retinal damage related to CUMULATIVE dose and duration, recommending baseline and ongoing retinal exams - the dominant concern for any chronic chemopreventive use in a young child.
+- Cardiomyopathy and ventricular arrhythmias incl. QT prolongation (fatal cases reported); serious skin reactions (SJS/TEN/DRESS); hematologic toxicity (myelosuppression); renal toxicity/phospholipidosis - relevant given nephrocalcinosis phenotype.
+- Chronic daily dosing for interception would exceed the cumulative exposure pattern the retinal-toxicity warning is anchored to; any use would need ophthalmologic surveillance from baseline.
+
+*What would make us wrong:* We are wrong if the aneuploidy selectivity is a cell-line artefact - the founding screen used engineered trisomic backgrounds, not mosaic SAC-defective cells ([PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/)) - or if chronic autophagy blockade harms quality-control-dependent tissues more than it trims aneuploid clones ([PMID:33505028](https://pubmed.ncbi.nlm.nih.gov/33505028/)). Decisive experiment (T1-T2, 3-6 weeks): CQ/HCQ on the patient's mosaic fibroblasts, which carry an internal euploid control; GO on >=2-fold preferential depletion of the aneuploid fraction, NO-GO on equal euploid and aneuploid toxicity (testability.json).
+
 
 ### 5.4 Adjuncts and the non-drug recommendation
 
-> *PENDING - input artifact not yet produced; this section fills on regeneration.*
+- **sirolimus (backup mTOR senomorphic)** - Same senomorphic mechanism and the same MVA-mouse mTORC1 hook as everolimus ([PMID:26147250](https://pubmed.ncbi.nlm.nih.gov/26147250/), [PMID:26280535](https://pubmed.ncbi.nlm.nih.gov/26280535/), [PMID:31738183](https://pubmed.ncbi.nlm.nih.gov/31738183/)), and the engine's highest-placed non-cytotoxic candidate at #21 of 96 approved drugs [repo:docs/track2/evidence/candidates.json]. It sits behind everolimus on pediatric feasibility alone: its boxed warning names infection and malignancy, and it has no pediatric approval under 13.
+- **metformin (senomorphic fallback)** - Fallback if mTOR immunosuppression is disqualifying: it blunts the SASP through IKK/NF-kB ([PMID:23521863](https://pubmed.ncbi.nlm.nih.gov/23521863/)) and has a pediatric type-2-diabetes label from age 10, but its aneuploidy angle is AICAR analogy only ([PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/)) and millimolar-range exposure can itself deregulate BUBR1/MAD2 and induce micronuclei ([PMID:35568294](https://pubmed.ncbi.nlm.nih.gov/35568294/)). The lactic-acidosis boxed warning makes renal function (nephrocalcinosis) the gating safety check; it is absent from the PRISM screen, so no pharmacogenomic claim [repo:docs/track2/evidence/prism.json].
+- **aspirin (long-horizon interception adjunct)** - Aspirin selectively eliminated tetraploid cells - the metastable precursor state to aneuploidy - in a chemoprevention screen ([PMID:24516128](https://pubmed.ncbi.nlm.nih.gov/24516128/)), and CAPP2 provides RCT-grade precedent for chemoprevention in a hereditary syndrome, though the benefit was colorectal-cancer-specific in Lynch syndrome ([PMID:32534647](https://pubmed.ncbi.nlm.nih.gov/32534647/)). Chronic pediatric use collides with the label's Reye's-syndrome warning, so it remains a research question carried by the fibroblast tetraploid-pruning assay, not a recommendation.
+- **quercetin (only within D+Q)** - The senolytic pair's second half: dasatinib and quercetin clear complementary senescent-cell types ([PMID:25754370](https://pubmed.ncbi.nlm.nih.gov/25754370/)), and the human senescent-burden evidence is for the combination ([PMID:31542391](https://pubmed.ncbi.nlm.nih.gov/31542391/)). It is a supplement, not an approved drug, so it cannot anchor a candidate alone under the approved-only rule.
+- **NR / NMN (Axis-A supplement adjuncts)** - NMN is the actual NAD+ precursor that raised BubR1 abundance and extended lifespan in BubR1-hypomorphic mice ([PMID:24825348](https://pubmed.ncbi.nlm.nih.gov/24825348/)), with supportive review-level evidence for NAD supplementation in premature-aging and DNA-repair disease ([PMID:41436848](https://pubmed.ncbi.nlm.nih.gov/41436848/)). Neither form is a market-approved drug, so they belong to the MVA Society supplements program rather than the drug leads.
+- **structured cancer surveillance (non-drug)** - The most defensible intervention today is not a drug at all: mechanism-guided surveillance for the embryonal tumour spectrum of BUB1B-MVA, following the AACR workshop recommendations for children with genomic-instability disorders ([PMID:39264246](https://pubmed.ncbi.nlm.nih.gov/39264246/)). This recommendation stands independently of every drug hypothesis in the portfolio.
 
 ## 6. Considered and rejected
 
@@ -181,8 +336,8 @@ Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard 
 
 ## 9. Rigor and reproducibility
 
-- `tools/verify_citations.py --offline` over the whole Track 2 tree: **116 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 18 uncovered claim sentences** (exit 0, 0 network requests).
-- 79 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
+- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 45 uncovered claim sentences** (exit 0, 0 network requests).
+- 102 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
 - Approval, pediatric-label and boxed-warning facts come from live ChEMBL and openFDA responses recorded in each dossier (`docs/track2/evidence/dossiers/`).
 - Decision freeze: benchmark truth and seed genes were committed in `config/track2.yaml` before the engine was run (git history).
 - Rebuild this report: `python tools/make_track2_report.py --upload`.
@@ -256,19 +411,43 @@ Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard 
 | 26 | [PMID:33505027](https://pubmed.ncbi.nlm.nih.gov/33505027/) | Whole-genome doubling confers unique genetic vulnerabilities on tumour cells. | 2021 |
 | 27 | [PMID:30500870](https://pubmed.ncbi.nlm.nih.gov/30500870/) | Growth Hormone's Links to Cancer. | 2019 |
 | 28 | [PMID:32738133](https://pubmed.ncbi.nlm.nih.gov/32738133/) | Influence of growth hormone therapy on the occurrence of a second neoplasm in survivors of childhood cancer. | 2020 |
-| 29 | [PMID:15144231](https://pubmed.ncbi.nlm.nih.gov/15144231/) | Cancer risk following growth hormone use in childhood: implications for current practice. | 2004 |
-| 30 | [PMID:16822820](https://pubmed.ncbi.nlm.nih.gov/16822820/) | Growth hormone treatment and risk of second neoplasms in the childhood cancer survivor. | 2006 |
-| 31 | [PMID:39169218](https://pubmed.ncbi.nlm.nih.gov/39169218/) | Mosaic variegated aneuploidy in development, ageing and cancer. | 2024 |
-| 32 | [PMID:25754370](https://pubmed.ncbi.nlm.nih.gov/25754370/) | The Achilles' heel of senescent cells: from transcriptome to senolytic drugs. | 2015 |
-| 33 | [PMID:31542391](https://pubmed.ncbi.nlm.nih.gov/31542391/) | Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease. | 2019 |
-| 34 | [PMID:41436848](https://pubmed.ncbi.nlm.nih.gov/41436848/) | Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage. | 2026 |
-| 35 | [PMID:24516128](https://pubmed.ncbi.nlm.nih.gov/24516128/) | Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention. | 2014 |
-| 36 | [PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/) | Identification of aneuploidy-selective antiproliferation compounds. | 2011 |
-| 37 | [PMID:7739397](https://pubmed.ncbi.nlm.nih.gov/7739397/) | Clastogenic and aneugenic effects of three benzimidazole derivatives in the in vitro micronucleus test using human lymphocytes. | 1995 |
-| 38 | [PMID:22366722](https://pubmed.ncbi.nlm.nih.gov/22366722/) | An APC/C inhibitor stabilizes cyclin B1 by prematurely terminating ubiquitination. | 2012 |
-| 39 | [PMID:25672491](https://pubmed.ncbi.nlm.nih.gov/25672491/) | Selective Sirt2 inhibition by ligand-induced rearrangement of the active site. | 2015 |
-| 40 | [PMID:38009412](https://pubmed.ncbi.nlm.nih.gov/38009412/) | SIRT2 transgenic over-expression does not impact lifespan in mice. | 2023 |
-| 41 | [PMID:37931001](https://pubmed.ncbi.nlm.nih.gov/37931001/) | Genome instability footprint under rapamycin and hydroxyurea treatments. | 2023 |
-| 42 | [PMID:31053147](https://pubmed.ncbi.nlm.nih.gov/31053147/) | Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome. | 2019 |
-| 43 | [PMID:23521863](https://pubmed.ncbi.nlm.nih.gov/23521863/) | Metformin inhibits the senescence-associated secretory phenotype by interfering with IKK/NF-κB activation. | 2013 |
-| 44 | [PMID:35568294](https://pubmed.ncbi.nlm.nih.gov/35568294/) | High-dose metformin induces a low-glucose dependent genotoxic stress. | 2022 |
+| 29 | [PMID:21047224](https://pubmed.ncbi.nlm.nih.gov/21047224/) | Everolimus for subependymal giant-cell astrocytomas in tuberous sclerosis. | 2010 |
+| 30 | [PMID:21410393](https://pubmed.ncbi.nlm.nih.gov/21410393/) | Efficacy and safety of sirolimus in lymphangioleiomyomatosis. | 2011 |
+| 31 | [PMID:29899452](https://pubmed.ncbi.nlm.nih.gov/29899452/) | Targeted therapy in patients with PIK3CA-related overgrowth syndrome. | 2018 |
+| 32 | [PMID:25405392](https://pubmed.ncbi.nlm.nih.gov/25405392/) | Atenolol versus losartan in children and young adults with Marfan's syndrome. | 2014 |
+| 33 | [PMID:16885550](https://pubmed.ncbi.nlm.nih.gov/16885550/) | Switching from insulin to oral sulfonylureas in patients with diabetes due to Kir6.2 mutations. | 2006 |
+| 34 | [PMID:22047557](https://pubmed.ncbi.nlm.nih.gov/22047557/) | A CFTR potentiator in patients with cystic fibrosis and the G551D mutation. | 2011 |
+| 35 | [PMID:31862249](https://pubmed.ncbi.nlm.nih.gov/31862249/) | Fenfluramine hydrochloride for the treatment of seizures in Dravet syndrome: a randomised, double-blind, placebo-controlled trial. | 2019 |
+| 36 | [PMID:36583535](https://pubmed.ncbi.nlm.nih.gov/36583535/) | Reduction of New Heterotopic Ossification (HO) in the Open-Label, Phase 3 MOVE Trial of Palovarotene for Fibrodysplasia Ossificans Progressiva (FOP). | 2023 |
+| 37 | [PMID:22158718](https://pubmed.ncbi.nlm.nih.gov/22158718/) | Use of acetazolamide in sulfonamide-allergic patients with neurologic channelopathies. | 2012 |
+| 38 | [PMID:39174244](https://pubmed.ncbi.nlm.nih.gov/39174244/) | The episodic ataxias. | 2024 |
+| 39 | [PMID:27834756](https://pubmed.ncbi.nlm.nih.gov/27834756/) | Oral pharmacological chaperone migalastat compared with enzyme replacement therapy in Fabry disease: 18-month results from the randomised phase III ATTRACT study. | 2017 |
+| 40 | [DOI:10.1038/s43018-019-0018-6](https://doi.org/10.1038/s43018-019-0018-6) | Discovering the anticancer potential of non-oncology drugs by systematic viability profiling | 2020 |
+| 41 | [DOI:10.1038/s41586-020-03114-6](https://doi.org/10.1038/s41586-020-03114-6) | Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition | 2021 |
+| 42 | [PMID:25754370](https://pubmed.ncbi.nlm.nih.gov/25754370/) | The Achilles' heel of senescent cells: from transcriptome to senolytic drugs. | 2015 |
+| 43 | [PMID:31542391](https://pubmed.ncbi.nlm.nih.gov/31542391/) | Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease. | 2019 |
+| 44 | [PMID:30616998](https://pubmed.ncbi.nlm.nih.gov/30616998/) | Senolytics in idiopathic pulmonary fibrosis: Results from a first-in-human, open-label, pilot study. | 2019 |
+| 45 | [PMID:39169218](https://pubmed.ncbi.nlm.nih.gov/39169218/) | Mosaic variegated aneuploidy in development, ageing and cancer. | 2024 |
+| 46 | [PMID:31738183](https://pubmed.ncbi.nlm.nih.gov/31738183/) | BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome. | 2020 |
+| 47 | [PMID:26147250](https://pubmed.ncbi.nlm.nih.gov/26147250/) | MTOR regulates the pro-tumorigenic senescence-associated secretory phenotype by promoting IL1A translation. | 2015 |
+| 48 | [PMID:26280535](https://pubmed.ncbi.nlm.nih.gov/26280535/) | mTOR regulates MAPKAPK2 translation to control the senescence-associated secretory phenotype. | 2015 |
+| 49 | [PMID:23158522](https://pubmed.ncbi.nlm.nih.gov/23158522/) | Efficacy and safety of everolimus for subependymal giant cell astrocytomas associated with tuberous sclerosis complex (EXIST-1): a multicentre, randomised, placebo-controlled phase 3 trial. | 2013 |
+| 50 | [PMID:38009412](https://pubmed.ncbi.nlm.nih.gov/38009412/) | SIRT2 transgenic over-expression does not impact lifespan in mice. | 2023 |
+| 51 | [PMID:25672491](https://pubmed.ncbi.nlm.nih.gov/25672491/) | Selective Sirt2 inhibition by ligand-induced rearrangement of the active site. | 2015 |
+| 52 | [PMID:12297502](https://pubmed.ncbi.nlm.nih.gov/12297502/) | Inhibition of silencing and accelerated aging by nicotinamide, a putative negative regulator of yeast sir2 and human SIRT1. | 2002 |
+| 53 | [PMID:25285631](https://pubmed.ncbi.nlm.nih.gov/25285631/) | Deacetylation of the mitotic checkpoint protein BubR1 at lysine 250 by SIRT2 and subsequent effects on BubR1 degradation during the prometaphase/anaphase transition. | 2014 |
+| 54 | [PMID:41436848](https://pubmed.ncbi.nlm.nih.gov/41436848/) | Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage. | 2026 |
+| 55 | [PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/) | Identification of aneuploidy-selective antiproliferation compounds. | 2011 |
+| 56 | [PMID:23461901](https://pubmed.ncbi.nlm.nih.gov/23461901/) | Autophagy inhibition sensitizes colon cancer cells to antiangiogenic and cytotoxic therapy. | 2013 |
+| 57 | [PMID:34830283](https://pubmed.ncbi.nlm.nih.gov/34830283/) | Clinical Translation of Combined MAPK and Autophagy Inhibition in RAS Mutant Cancer. | 2021 |
+| 58 | [PMID:23521863](https://pubmed.ncbi.nlm.nih.gov/23521863/) | Metformin inhibits the senescence-associated secretory phenotype by interfering with IKK/NF-κB activation. | 2013 |
+| 59 | [PMID:35568294](https://pubmed.ncbi.nlm.nih.gov/35568294/) | High-dose metformin induces a low-glucose dependent genotoxic stress. | 2022 |
+| 60 | [PMID:24516128](https://pubmed.ncbi.nlm.nih.gov/24516128/) | Resveratrol and aspirin eliminate tetraploid cells for anticancer chemoprevention. | 2014 |
+| 61 | [PMID:32534647](https://pubmed.ncbi.nlm.nih.gov/32534647/) | Cancer prevention with aspirin in hereditary colorectal cancer (Lynch syndrome), 10-year follow-up and registry-based 20-year data in the CAPP2 study: a double-blind, randomised, placebo-controlled trial. | 2020 |
+| 62 | [PMID:39264246](https://pubmed.ncbi.nlm.nih.gov/39264246/) | Update on Recommendations for Cancer Screening and Surveillance in Children with Genomic Instability Disorders. | 2024 |
+| 63 | [PMID:15144231](https://pubmed.ncbi.nlm.nih.gov/15144231/) | Cancer risk following growth hormone use in childhood: implications for current practice. | 2004 |
+| 64 | [PMID:16822820](https://pubmed.ncbi.nlm.nih.gov/16822820/) | Growth hormone treatment and risk of second neoplasms in the childhood cancer survivor. | 2006 |
+| 65 | [PMID:7739397](https://pubmed.ncbi.nlm.nih.gov/7739397/) | Clastogenic and aneugenic effects of three benzimidazole derivatives in the in vitro micronucleus test using human lymphocytes. | 1995 |
+| 66 | [PMID:22366722](https://pubmed.ncbi.nlm.nih.gov/22366722/) | An APC/C inhibitor stabilizes cyclin B1 by prematurely terminating ubiquitination. | 2012 |
+| 67 | [PMID:37931001](https://pubmed.ncbi.nlm.nih.gov/37931001/) | Genome instability footprint under rapamycin and hydroxyurea treatments. | 2023 |
+| 68 | [PMID:31053147](https://pubmed.ncbi.nlm.nih.gov/31053147/) | Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome. | 2019 |

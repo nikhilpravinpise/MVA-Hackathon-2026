@@ -125,6 +125,16 @@ def test_doi_trailing_punct_stripped():
     assert all(")" not in c for c in canons if c.startswith("DOI:"))
 
 
+def test_doi_in_markdown_code_span_drops_backtick():
+    """`DOI:10.x/y` inside a code span is a real DOI, not a 404: the
+    closing backtick must not survive into the canonical id."""
+    canons = {r.canon for r in vc.scan_text_for_citations(
+        "source: `DOI:10.1038/s41586-020-03114-6` and `10.6084/m9.figshare.11384241`",
+        "compute.md")}
+    assert canons == {"DOI:10.1038/s41586-020-03114-6",
+                      "DOI:10.6084/m9.figshare.11384241"}
+
+
 # ---------------------------------------------------------------------------
 # resolution against fixtures
 # ---------------------------------------------------------------------------
