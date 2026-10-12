@@ -10,13 +10,14 @@
 
 {{SUBMISSION_SUMMARY}}
 
-### 0a. Prior submission iteration
+### 0a. Prior pipeline iteration (CSV generated, never submitted)
 
 {{PRIOR_CSV}}
 
 ## 1. Approach in detail
 
-A genome-wide, case-agnostic prioritization funnel for an N-of-1 recessive
+A case-agnostic prioritization funnel (genome-wide by design; run here on
+the exon-slice VCF, limitation 7) for an N-of-1 recessive
 diagnosis - an Exomiser-class design implemented as a transparent,
 deterministic, auditable ranking pipeline rather than a trained black box.
 Two independent arms were specified a priori:
@@ -46,9 +47,11 @@ annotated VCF (VEP CSQ)
 Every threshold is frozen pre-analysis in `config/pipeline.yaml`
 (sha256 `{{CONFIG_SHA}}`) - the decision freeze. No variant identity, gene
 name, or leaked-space value enters any scoring parameter; the pipeline
-output is the submission. Two post-freeze config additions were made
-after the first run and are disclosed rather than hidden: the
-extended-MHC artifact-locus mask and the BUB1B LoF-mechanism allowlist.
+output is the submission. Post-freeze config additions are disclosed rather than hidden. Three
+(the BUB1B LoF-mechanism allowlist, which gates only the ACMG PVS1
+narrative; the epcr decay map; the singleton emit floor) were committed
+2026-09-26, before the patient data was fetched. Only the extended-MHC
+artifact-locus mask postdates the first patient run.
 One post-freeze code fix also landed: the VEP-indel CSQ allele matcher
 (`src/vcf.py::vep_allele`, limitation 10), under which the funnel was
 re-run - every funnel/ablation number below is from the fixed run. Each
@@ -122,14 +125,21 @@ The funnel was validated *blind* before the proband call:
 The submission CSV is the **automated output** of the pipeline
 (`src/submit.py` builds bytes that are oracle-validated locally before any
 upload), with **one disclosed post-observation manual curation step**: the
-extended-MHC artifact-locus mask. The trigger was human review - every
-emitted run-2 row was an HLA-DRB1/MHC hypothesis, a well-known artifact
-class, and the motivation honestly included the score impact
+extended-MHC artifact-locus mask. The trigger was human review - 3 of
+the 4 emitted run-2 rows were HLA-DRB1/MHC hypotheses outranking the true
+pair (BUB1B was row 4 of 4), a well-known artifact class, and the motivation honestly included the score impact
 (decisions.md). The mask adds no evidence and raises no *score*, but it
-does change *ranks* (it removed 6,353 artifact-locus candidates, so the
+does change *ranks* (it removed 6,353 artifact-locus candidates in the masked run, 7,331 after
+the indel fix, so the
 BUB1B pair's rank - and therefore its epcr - improved vs the unmasked
 run-2 CSV shown in section 0a). We call it "removal of a declared
-artifact class", not "direction-neutral". Separately, downstream manual
+artifact class", not "direction-neutral". **Counterfactual, stated plainly:**
+re-scoring the unmasked run-2 CSV on the vendored oracle gives rank_points
+25.0 / F-max 0.571 (full match at row 4), against 100.0 / 1.000 for the
+submitted file - the BUB1B pair was emitted in both runs, but the headline
+score depends on this disclosed step. The score also depends on the
+singleton emit floor: the nearest suppressed singleton (MDM2, hom_alt,
+0.778) sits 0.022 under the 0.80 floor. Separately, downstream manual
 review was limited to: (a) reading the top hypothesis' evidence fields,
 (b) confirming the phasing report, (c) the secondary-findings disclosure
 decision described in section 7. No variant was added, removed, or

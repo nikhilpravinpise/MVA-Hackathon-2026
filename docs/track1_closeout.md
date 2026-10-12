@@ -39,7 +39,7 @@ listed with its prep state. Verified server-side, not self-reported:
 | bcftools-stats equivalent | DONE | `results/eda_patient/eda_report.json` (5,012,204 records, Ti/Tv 1.94) |
 | variant-count sanity vs expectation | DONE | same - inside the 4-5M WGS band |
 | fastp/fastqc on 8 FASTQs | DONE | `track1_final/fastq_qc/` (expectation deviation investigated + dispositioned in decisions.md) |
-| contamination/sex check | DONE | X-het 7.3%, 13.8k Y calls - ambiguous, consistent with mosaicism |
+| contamination/sex check | DONE | X-het 7.3%, 13.8k Y calls - ambiguous - not evidence of mosaicism |
 | EDA in report | DONE | report section 2 + `docs/data_audit_2026-10-03.md` |
 
 ### Phase 2 - the prioritization model
@@ -135,6 +135,28 @@ live Space, organizer threads), not against this repo's own claims.
 4. **Discussions**: thread #25 (FASTQ lane/library provenance) was updated
    2026-10-11 by a participant; nothing in it changes our submission.
 5. **Do not** upload model2 (A9).
+
+### Model-quality audit (2026-10-12, three SWE-2 Max agents + own spot-checks)
+
+Question: is the prediction good, and derived for the right reasons, rather
+than hallucinated or leaked? Reports were reviewed and the decision-relevant
+claims re-verified independently (agent reports stay untracked; findings below).
+
+| # | Finding | Verdict |
+|---|---|---|
+| Q1 | Both variants are real, balanced hets from the raw VCF (VAF 0.54 / 0.46, MAPQ 60), re-called by DeepVariant and seen in the realigned reads; REF bases, HGVS, exon positions and NMD geometry re-derived independently and agree; ClinVar P/LP for the stop (VCV533901), missense honestly absent. | PASS |
+| Q2 | No better competing explanation: other MVA genes carry only intronic/UTR variation; the only other LoF P/LP (LZTR1) has no second allele. Exomiser (independent engine) ranks BUB1B_AR first (0.9819). | PASS |
+| Q3 | No answer constants in the scoring path; production inputs are VCF + 8 HPO codes + public corpora; the clinical docx names no gene. `acmg.lof_mechanism_genes: [BUB1B]` is the only place the gene name sits in config; it gates the ACMG narrative only and was committed 2026-09-26, before data fetch. | PASS (disclosed) |
+| Q4 | **The 100.0 score depends on the post-observation MHC mask**: the unmasked run-2 CSV re-scores 25.0 / 0.571 (re-verified by me on the vendored oracle). The BUB1B call itself was emitted in both runs. Also depends on the singleton emit floor (nearest suppressed singleton 0.778 vs floor 0.80). | CONCERN, now stated plainly in report section 5 |
+| Q5 | Phase unresolvable (0 spanning reads, no PGT/PID at the sites, WhatsHap blocks do not reach them): a cis pair cannot be excluded. Reported as `unknown`. | CONCERN (data-inherent, disclosed) |
+| Q6 | Rarity gate cleared by 0.18% (popmax 9.98e-5 vs af_max 1e-4). | CONCERN (disclosed; now computed, not hand-typed) |
+| Q7 | Report fixes applied: run-2 description corrected, post-freeze timeline corrected, "never submitted" heading, "genome-wide" qualified, rank-12 example dropped, "distinct genes" unit, margin derived from data, README "answer-blind" -> "leak-firewalled", "consistent with mosaicism" -> "ambiguous". | FIXED |
+| Q8 | Run-2 artifact directory records two scoring states (BUB1B 0.5944 unemitted vs 0.7159 emitted) for the same VCF hash. Unexplained; logged as a correction row in decisions.md. Artifacts left untouched as evidence. | OPEN (disclosed) |
+| Q9 | Minor, left as ledger notes: runtime_log "~3.2 h" vs runlog "~4-6 h" for the gnomAD ablation; cost "<$5 total" is really two "<$5" batch rows; `data_audit` says 9 gnomAD populations (CSQ has 10). | NOTE |
+
+Bottom line: the call is real and well supported; "the score proves a blind
+pipeline" would overstate it. The accurate claim is "genuine call, disclosed
+curation".
 
 ## Remaining actions - operator-side, all prepped
 

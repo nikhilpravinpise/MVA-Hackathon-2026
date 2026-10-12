@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-12 11:21 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-12 12:10 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses.
 
@@ -12,7 +12,7 @@
 - Rank 7 of 2025791 hypotheses; score 0.716 (damage 0.83 / phenotype 0.40 / inheritance 1.0), epcr 0.0749, phasing: **unknown**
 - Emitted hypotheses: 1 of 2025791 enumerated (200 in ranked table)
 
-### 0a. Prior submission iteration
+### 0a. Prior pipeline iteration (CSV generated, never submitted)
 
 | # | locus (notes) | pair | epcr |
 |---|---|---|---|
@@ -23,7 +23,8 @@
 
 ## 1. Approach in detail
 
-A genome-wide, case-agnostic prioritization funnel for an N-of-1 recessive
+A case-agnostic prioritization funnel (genome-wide by design; run here on
+the exon-slice VCF, limitation 7) for an N-of-1 recessive
 diagnosis - an Exomiser-class design implemented as a transparent,
 deterministic, auditable ranking pipeline rather than a trained black box.
 Two independent arms were specified a priori:
@@ -53,9 +54,11 @@ annotated VCF (VEP CSQ)
 Every threshold is frozen pre-analysis in `config/pipeline.yaml`
 (sha256 `0286865c373b`) - the decision freeze. No variant identity, gene
 name, or leaked-space value enters any scoring parameter; the pipeline
-output is the submission. Two post-freeze config additions were made
-after the first run and are disclosed rather than hidden: the
-extended-MHC artifact-locus mask and the BUB1B LoF-mechanism allowlist.
+output is the submission. Post-freeze config additions are disclosed rather than hidden. Three
+(the BUB1B LoF-mechanism allowlist, which gates only the ACMG PVS1
+narrative; the epcr decay map; the singleton emit floor) were committed
+2026-09-26, before the patient data was fetched. Only the extended-MHC
+artifact-locus mask postdates the first patient run.
 One post-freeze code fix also landed: the VEP-indel CSQ allele matcher
 (`src/vcf.py::vep_allele`, limitation 10), under which the funnel was
 re-run - every funnel/ablation number below is from the fixed run. Each
@@ -81,7 +84,7 @@ change is logged in `docs/decisions.md` and described in section 11.
 
 ### 1b. Rank and epcr
 
-Ranks 1-6 are singleton `hom_alt` 'LoF' calls (MDM2, NF1, DHCR24, RAF1, MAD2L2, KIF1B), all un-emitted. Shared artifact signature: 6 of 6 carry ZERO predictor-damage votes; 6 of 6 are 'absent' only in an exome-ONLY gnomAD (genome coverage cannot confirm); 2 of 6 sit on non-coding / non-canonical transcripts (HGVSc `c.-`/`n.` calls like `c.-602+2C>T`, `n.187-2A>G`).
+Ranks 1-6 are singleton `hom_alt` 'LoF' calls (MDM2, NF1, DHCR24, RAF1, MAD2L2, KIF1B), all un-emitted. Shared artifact signature: 6 of 6 carry ZERO predictor-damage votes; 6 of 6 are 'absent' only in an exome-ONLY gnomAD (genome coverage cannot confirm); 2 of 6 sit on non-coding / non-canonical transcripts (HGVSc `c.-`/`n.` calls like `c.-602+2C>T`).
 
 These hypotheses score 1.0 on variant damage (LoF tier on a singleton variant) and cannot be distinguished from real hits by the funnel's own evidence - they are kept off the CSV only by `scoring.singleton_emit_floor` (0.80 vs pair floor 0.70), the post-freeze bar a lone variant must clear to emit. That is why the sole primary row shows epcr 0.0749 - epcr maps RANK, so a rank-7 pair inherits a low number even though its combine score (0.7159) is the defensible call. The CSQ `CANONICAL` field exists but the funnel does not filter on it - a disclosed limitation; a canonical/MANE-only view would likely clear most of these rows.
 Singleton rows of the same class also occupy ranks 8-10 immediately below the pair (VHL, BBS9, AIP).
@@ -136,7 +139,7 @@ The funnel was validated *blind* before the proband call:
 * **Negative control:** plausible-looking rare/damaging variation + an
   unrelated HPO set -> **0 hypotheses emitted (expected: funnel stays silent); Arm A (Exomiser) max gene score 0.0003 - also silent** (a funnel that finds a causal
   pair everywhere finds nothing).
-* **Arm A vs Arm B concordance:** both arms run; top-20 gene overlap 1 (BUB1B) (Arm A ranked 4694 genes vs Arm B's 53292 hypotheses - low overlap is expected between a gene-ranker and a hypothesis-ranker; the shared top signal is the meaningful concordance)
+* **Arm A vs Arm B concordance:** both arms run; top-20 gene overlap 1 (BUB1B) (Arm A ranked 4694 genes vs Arm B's 53292 distinct genes - low overlap is expected between a gene-ranker and a hypothesis-ranker; the shared top signal is the meaningful concordance)
 * **Real external validation (public genome + real ClinVar pair):**
 
 - 270 real HG002 background variants in window 12:102800000-103000000
@@ -180,7 +183,7 @@ Robust across grid: **True**
 
 Grid corpus: `results/spike_case/spike_proband.vcf` (the 'true-pair rank' column tracks the spiked synthetic pair, not the report run's emitted call).
 
-Patient-side margin: the emitted pair's least-rare allele has popmax AF 9.98214e-05 - **0.2% below the frozen af_max (1e-4)**, so under the grid's af_max=1e-05 setting it fails the rarity tier and this pair cannot form. The call is stable only at af_max >= 1e-4 - a threshold sensitivity the synthetic grid cannot show.
+Patient-side margin: the emitted pair's least-rare allele has popmax AF 9.98214e-05 - **0.18% below the frozen af_max (1e-4)**, so under the grid's af_max=1e-05 setting it fails the rarity tier and this pair cannot form. The call is stable only at af_max >= 1e-4 - a threshold sensitivity the synthetic grid cannot show.
 
 ## 4. Phasing evidence (phase-set + read-level status)
 
@@ -308,14 +311,21 @@ window = site +/-40 bp; [X] marks the variant column; blank = read does not cove
 The submission CSV is the **automated output** of the pipeline
 (`src/submit.py` builds bytes that are oracle-validated locally before any
 upload), with **one disclosed post-observation manual curation step**: the
-extended-MHC artifact-locus mask. The trigger was human review - every
-emitted run-2 row was an HLA-DRB1/MHC hypothesis, a well-known artifact
-class, and the motivation honestly included the score impact
+extended-MHC artifact-locus mask. The trigger was human review - 3 of
+the 4 emitted run-2 rows were HLA-DRB1/MHC hypotheses outranking the true
+pair (BUB1B was row 4 of 4), a well-known artifact class, and the motivation honestly included the score impact
 (decisions.md). The mask adds no evidence and raises no *score*, but it
-does change *ranks* (it removed 6,353 artifact-locus candidates, so the
+does change *ranks* (it removed 6,353 artifact-locus candidates in the masked run, 7,331 after
+the indel fix, so the
 BUB1B pair's rank - and therefore its epcr - improved vs the unmasked
 run-2 CSV shown in section 0a). We call it "removal of a declared
-artifact class", not "direction-neutral". Separately, downstream manual
+artifact class", not "direction-neutral". **Counterfactual, stated plainly:**
+re-scoring the unmasked run-2 CSV on the vendored oracle gives rank_points
+25.0 / F-max 0.571 (full match at row 4), against 100.0 / 1.000 for the
+submitted file - the BUB1B pair was emitted in both runs, but the headline
+score depends on this disclosed step. The score also depends on the
+singleton emit floor: the nearest suppressed singleton (MDM2, hom_alt,
+0.778) sits 0.022 under the 0.80 floor. Separately, downstream manual
 review was limited to: (a) reading the top hypothesis' evidence fields,
 (b) confirming the phasing report, (c) the secondary-findings disclosure
 decision described in section 7. No variant was added, removed, or

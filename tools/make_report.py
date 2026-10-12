@@ -180,7 +180,7 @@ def sensitivity_table(sens: dict | None,
         if need > lo:
             lines.append(
                 f"\nPatient-side margin: the emitted pair's least-rare "
-                f"allele has popmax AF {need:g} - **0.2% below the frozen "
+                f"allele has popmax AF {need:g} - **{(1e-4 - need) / 1e-4 * 100:.2f}% below the frozen "
                 f"af_max (1e-4)**, so under the grid's af_max={lo:g} setting "
                 "it fails the rarity tier and this pair cannot form. The "
                 "call is stable only at af_max >= 1e-4 - a threshold "
@@ -592,7 +592,7 @@ def rank_note_section(result: dict) -> str:
     if n_nc:
         traits.append(f"{n_nc} of {len(above)} sit on non-coding / "
                       "non-canonical transcripts (HGVSc `c.-`/`n.` calls "
-                      "like `c.-602+2C>T`, `n.187-2A>G`)")
+                      "like `c.-602+2C>T`)")
     models = sorted({h["model"] for h in above})
     lines = [
         f"Ranks 1-{top['rank'] - 1} are singleton `{ '/'.join(models) }` "
@@ -1132,7 +1132,7 @@ def main(argv=None) -> int:
         na, nb = armc.get("n_arm_a_genes"), armc.get("n_arm_b_genes")
         if na is not None and nb is not None:
             armc_line += (f" (Arm A ranked {na} genes vs Arm B's "
-                          f"{nb} hypotheses - low overlap is expected "
+                          f"{nb} distinct genes - low overlap is expected "
                           "between a gene-ranker and a hypothesis-ranker; "
                           "the shared top signal is the meaningful "
                           "concordance)")

@@ -40,7 +40,7 @@ Dataset access + VCF on disk: DONE (granted + downloaded 2026-10-01).
 | `bcftools stats` equivalent | DONE | patient EDA: 5,012,204 records, Ti/Tv 1.94, het 3.11M / hom 1.90M (runtime_log 2026-10-01) |
 | Variant-count sanity vs 4-5M WGS | DONE | 5.01M records inside the WGS expectation band |
 | fastp/fastqc on 8 FASTQs | DONE | Modal `run_fastp`: 4 lane-pair JSONs on `track1_final/fastq_qc/`; aggregated via `tools/run_fastqc.py` - Q30 90.3%, GC 41.2%, dup 6.9% pass; read_pairs 535.9M (+32.6%) and coverage 51.5x exceed the leaked expectation consistently (deeper actual delivery, documented in decisions.md) |
-| Contamination/sex-check | DONE | patient: X-het 7.3%, 13.8k Y calls -> ambiguous class (runtime_log; consistent with mosaicism expectation) |
+| Contamination/sex-check | DONE | patient: X-het 7.3%, 13.8k Y calls -> ambiguous class (runtime_log; ambiguous - not evidence of mosaicism) |
 | EDA outputs -> `results/eda/` | DONE | patient EDA produced; `docs/data_audit_2026-10-03.md` is the full audit; `track1_final/eda_report.json` |
 
 **GATE 1:** `tests/test_data_integrity.py` - all named assertions
