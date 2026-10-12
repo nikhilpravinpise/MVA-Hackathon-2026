@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-05 13:05 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-12 11:21 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses.
 
@@ -417,7 +417,7 @@ Cloud jobs (VEP/realign/funnel/evidence arms) run on Modal, billed per-second - 
 
 ## 10. GenAI disclosure (required)
 
-Cognition **Devin Pro** (model SWE-2 Max), paid commercial tier. Data-handling terms as published for the Pro plan (docs.devin.ai/admin/security): by default Cognition may use customer data for model training unless the account opts out via Data Controls (opt-out also enables zero data retention with model providers); the account's opt-out state is not asserted here, so we state the default. Regardless of account terms, **no proband VCF/BAM content, genotypes, or variant blocks ever enter a prompt** - patient data stayed gitignored on disk and only findings-scale named variants were ever discussed (per data/RETENTION.md section 2.3). Per-session usage is ledgered in docs/llm_log.md.
+Two commercial GenAI products were used (operator-stated settings, confirmed 2026-10-12): (1) **Cognition Devin Pro**, model SWE-2 Max, with the Data Controls training opt-out enabled (no training, zero data retention with model providers; docs.devin.ai/admin/security) - the main build/audit agent; (2) **Anthropic Claude Code, Claude Pro/Max consumer plan** (Claude Sonnet 5.5), model-training opt-out enabled, no feedback (thumbs up/down) ever given - used in the post-submission close-out/audit phase. Both settings follow the organizers' 2026-09-28 guidance (discussion #2). Patient-data exposure to these tools was findings-scale only: named causal-variant coordinates/HGVS, aggregate QC statistics and, in a few tool outputs, individual genotype/QC record strings for the two causal sites and a handful of other records; no proband VCF/BAM files, bulk genotype blocks or FASTQ content were ever pasted into a prompt - patient-scale compute stayed on local disk or the (now deleted) Modal volumes. Per-session usage is ledgered in docs/llm_log.md.
 
 ## 11. Provenance, firewall, and compliance
 

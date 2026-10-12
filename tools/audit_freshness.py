@@ -24,12 +24,13 @@ import re
 import subprocess
 import sys
 import tempfile
+from datetime import date
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
-TODAY = "2026-10-05"
+TODAY = date.today().isoformat()
 PY = sys.executable
 
 # Docs whose claims describe CURRENT state (staleness-checked). Dated
@@ -534,6 +535,33 @@ def check_banner_presence(out: Out):
                                   "both report copies")
 
 
+def check_truth_claims(out: Out):
+    """Absolute-negative claims that were once wrong: (1) the patient VCF
+    does declare PGT/PID and 770k records carry them - only the two BUB1B
+    sites lack them, so live docs must not say the VCF/file 'carries no
+    PGT/PID'; (2) the GenAI disclosure must name every provider in the
+    ledger and assert the training opt-out (organizer guidance, thread #2)."""
+    problems = []
+    bad = re.compile(r"(?i)(vcf|file)\s+carries\s+no\s+PGT")
+    for rel in ("docs/status.md", "docs/track1_closeout.md", "README.md",
+                "docs/report.md", "nikhilpise_track1_report.md"):
+        if bad.search(_read(rel)):
+            problems.append(f"{rel}: whole-VCF 'no PGT/PID' claim (false)")
+    for rel in ("docs/report.md", "nikhilpise_track1_report.md"):
+        sec = _read(rel).split("## 10. GenAI disclosure", 1)[-1][:3500]
+        for need in ("Devin", "Claude", "opt-out"):
+            if need not in sec:
+                problems.append(f"{rel}: section 10 lacks '{need}'")
+    log = _read("docs/llm_log.md")
+    if "Anthropic Claude Code" not in log:
+        problems.append("llm_log.md: no Claude Code row")
+    if problems:
+        out.fail("truth-claims", "; ".join(problems))
+    else:
+        out.ok("truth-claims", "PGT/PID wording + two-provider GenAI "
+                               "disclosure with opt-out assertions")
+
+
 # ---------------------------------------------------------------------
 
 CHECKS = [
@@ -549,6 +577,7 @@ CHECKS = [
     check_hygiene,
     check_markers,
     check_banner_presence,
+    check_truth_claims,
 ]
 
 
