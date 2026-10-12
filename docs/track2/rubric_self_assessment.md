@@ -1,62 +1,75 @@
-# Track 2 rubric self-assessment (L9, hostile review)
+# Track 2 rubric self-assessment (L13, second hostile review)
 
-Date: 2026-10-13. Reviewed version: `docs/track2_report.md` generated
-from commit `9a2083d` (committed `97ea2b7`). Official weights:
+Date: 2026-10-13. Reviewed version: HEAD `4041b35`
+(`docs/track2_report.md` generated from commit `01d0809`, regenerates
+byte-identical at HEAD modulo the stamp - verified). Official weights:
 **Scientific Rigor 35%, Potential Impact 25%, Innovation 25%,
 Scalability 15%**. Gate 7 (docs/track2_plan.md section 3) requires
-self-score >= 85% per criterion with justification - stated plainly
-below where we are below that.
+self-score >= 85% per criterion - stated plainly below where we are
+below that.
 
-Self-scores are deliberately harsh: each is what a skeptical judge who
-verified the claims would defend, not what the authors hope for.
+This supersedes the L9 assessment (84/86/85/87, weighted 85.2). Since
+then both MAJORs closed and verified against primary sources, all MINOR
+closures checked, and one new MAJOR found in this review (R1, the
+openFDA-label clause in the gate description - one-clause fix, three
+surfaces). Scores are what a skeptical judge who verified the claims
+would defend.
 
 ---
 
-## Scientific Rigor - weight 35% - **84/100** - BELOW GATE 7
+## Scientific Rigor - weight 35% - **86/100** - meets gate, thin margin
 
 ### Evidence for the score
 
-- Every number in the submission is generated from committed evidence
-  files (report header line 5; `portfolio.json`, `candidates.json`,
-  `mechanism.json`, `prism.json`, `esm.json`, `benchmark.json`) and
-  every one I re-derived matches - funnel, ranks, recall, PRISM, ESM,
-  screen flow, citation count (redteam.md "checked clean" ledger).
-- Citation gate: 136/136 resolve, retraction-checked, offline
-  (`tools/verify_citations.py`, report line 341). Every load-bearing
-  abstract I read supports its claim (redteam.md).
-- Uncertainty is carried, not smoothed: phase unknown (lines 23, 65,
-  349), NMD as prediction (line 67), REVEL 0.472 flagged (line 68),
-  ESM model disagreement reported (lines 160-163), PRISM null result
-  published (line 141), benchmark misses named with cause (line 135).
-- Approval status machine-verified; supplements never presented as
-  approved; pediatric label facts quoted verbatim, never converted to
-  dosing advice.
-- Counter-evidence is in-line, not buried: the D+Q tumor-suppression
-  risk (line 196), metformin's own genotoxicity (line 280),
-  nicotinamide's sirtuin paradox (line 241), the GH mixed-evidence
-  framing (line 290).
+- Every number in the submission re-derives from committed evidence:
+  funnel sums exactly (482 = 96+115+6+252+13, `candidates.json`
+  `funnel`), ranks match (`sirolimus` #2/59 post / #21/96 pre),
+  "19 of raw top 20 mechanism-opposed" verifies exactly, recall
+  0.00/0.33/0.56/0.56 matches `benchmark.json`, config sha
+  `f4b0cca2092b` recomputed independently (redteam2.md).
+- Citation gate: 136/136 resolve, retraction-checked, 0 uncovered under
+  `--coverage-strict`, 0 HTTP requests - verified by re-running
+  `tools/verify_citations.py --offline` (exit 0). The line in the
+  report is generated live, not typed.
+- The two prior MAJORs are properly closed: "top mechanism-aligned"
+  replaces the false superlative, and the everolimus 4.1y/growth/
+  infection facts were re-sourced to the openFDA label - I pulled
+  set_id 01f7b5fb live and every quoted number is verbatim in it.
+- Counter-evidence stays in-line: D+Q's tumour-suppression risk
+  (report:196), metformin genotoxicity (:280), nicotinamide's sirtuin
+  paradox (:241), GH mixed evidence (:81/:290), PRISM null result
+  published (:141), model disagreement reported (:163).
+- Pediatric flags: all 30 `labeled` flags quote genuine label text
+  (independently checked 5 untested ones - methenamine, pentetic acid,
+  celecoxib, levothyroxine, ethinyl estradiol); no false positive
+  found. Dossier approvals verified live on ChEMBL (7/7 max_phase 4,
+  not withdrawn, first-approval years match).
+- Uncertainty carried honestly: phase unknown stated at :11, :65,
+  :349 and now in the family doc; NMD labeled a prediction; REVEL
+  0.472 flagged; "no MVA drug-treatment study exists" repeated.
 
 ### Strongest argument against
 
-The rigor machinery is excellent but the review still found **two
-factual errors in the submission text** - the false sirolimus
-"non-cytotoxic" superlative (M1) and the everolimus 4.1-year data cited
-to a PMID that does not contain it (M2) - plus a funnel sentence that
-cannot be summed from printed numbers (m2), 7 undisclosed salt-form
-duplicates inside "96 approved" (m3), an abstract/report version
-mismatch on the headline recall figure (m1), and a "committed before
-the run" claim contradicted by git timestamps (m4). A panel judge who
-spot-checks either MAJOR finds a claim the artifacts do not support -
-which is precisely what the "no number hand-typed" promise says cannot
-happen.
+The package still prints a method claim its own evidence disproves: the
+gate is described as requiring "an openFDA label" (report:88,
+abstract:15, scenes.yaml:62) while 11 of 96 gated records have
+`fda_set_id: null` - three of them in the printed top-20 table (R1).
+Add: one literature misattribution the gate cannot see (NMN credited
+with the H/H lifespan result that belongs to SIRT2-OE - r1), a
+demonstrated hole where percent claims never trigger the coverage
+detector that reports "0 uncovered" (r2), a replay test that pins
+scores but not the audit fields (`pediatric_flag_evidence`,
+`approval.*`, all top-level metadata) the honesty claims rest on (r3),
+and a published `none` flag on acetaminophen that openFDA's own corpus
+contradicts (r4). The machinery is real; the claim "no number
+hand-typed / every claim checked by code" still asks the artifacts to
+be stricter than the checks actually are.
 
 ### Highest-impact improvement
 
-Fix M1 and M2 (both one-line changes) and reconcile the abstract's
-recall numbers with the report's (m1). The submission's rigor claim is
-self-referential - the machinery proves the numbers are generated - so
-every remaining hand-typed claim must be checked with the same
-severity.
+Fix R1 (one clause in template + abstract + scenes.yaml). It is the
+only finding a judge can disprove in under a minute; deleting it
+realigns the printed method with the correct one in engine.md:83.
 
 ---
 
@@ -64,90 +77,76 @@ severity.
 
 ### Evidence for the score
 
-- Every lead and adjunct maps to a concrete assay inside the MVA
-  Society's four funded programs with explicit GO/NO-GO thresholds,
-  cost tier and time-to-result (report lines 311-330;
-  `testability.json`): the fibroblast aneuploidy panel is cheap (T1),
-  decisive and carries an internal euploid control - the strongest
-  possible impact artifact without running an experiment.
-- A non-drug recommendation that is actionable today: mechanism-guided
-  cancer surveillance per the AACR genomic-instability workshop
-  (lines 284, 75) - the one line in the document that could change
-  care now.
-- The axis framing generalizes: same three axes apply to other BUB1B
-  null+hypomorph genotypes and to CEP57/TRIP13 disease (config seeds
-  already named).
-- The rejected table (lines 288-305) is itself impact-relevant - it
-  answers the questions families and clinicians will actually ask
-  (growth hormone, HSCT, mebendazole) and answers them honestly with
-  mixed-evidence framing.
+- The testability matrix (report:307-330, `testability.json`) maps
+  every lead and adjunct onto the MVA Society's four funded programs
+  with assay, GO/NO-GO threshold, cost tier and time - and the
+  universal no-go rule (any aneuploidy rise) is stated as the
+  override. The fibroblast panel is now foregrounded as "the decisive
+  tier" (:330) - the L9 presentation fix.
+- A non-drug recommendation stands independently of every drug
+  hypothesis: mechanism-guided cancer surveillance per AACR workshop
+  (:284, :75) - actionable today.
+- The rejected table (:288-305) answers the questions families actually
+  ask (growth hormone, HSCT, mebendazole) with mixed-evidence framing.
+- FAMILY_SUMMARY.md translates the whole thing honestly - disclaimer
+  first, phase caveat inline, "sixteen ideas we rejected" matches
+  rejected.json.
+- Axis framing generalizes to other MVA genes (CEP57/TRIP13/MAD1L1
+  seeded in config).
 
 ### Strongest argument against
 
-There is no MVA-specific drug-treatment study in existence - every
-candidate is mechanistic extrapolation and the report says so. The
-four-lead portfolio rests on a mouse senolytic result (BubR1
-hypomorph), a correlational mTORC1-sarcopenia observation, an NAD+/SIRT2
-axis never tested in MVA tissue, and a chloroquine screen in engineered
-trisomic MEFs - respectively one, two and three model-systems away from
-the child. Nothing proposed can be given to anyone today (correctly),
-so "potential" is entirely contingent on unran experiments. The
-portfolio also converges substantially on the same candidates other
-teams found (landscape.md), so impact novelty is limited.
+No MVA drug-treatment study exists - every lead is mechanistic
+extrapolation at one-to-three model-systems remove (BubR1-hypomorph
+mouse senolysis; a correlational mTORC1-sarcopenia link; an NAD+/SIRT2
+axis never tested in MVA tissue; a chloroquine screen in engineered
+trisomic MEFs). "Potential" is entirely contingent on unran
+experiments, and the candidate list converges on what competitors also
+proposed (landscape.md) - the delta is testability, not novelty of
+molecule.
 
 ### Highest-impact improvement
 
-Nothing the report can write changes the evidence distance - the
-improvement is presentational: lead section 7 with the ONE decisive
-experiment (fibroblast aneuploidy-rate panel) rather than the full
-matrix, and say in one sentence what a positive result would unlock.
-Right now the decisive path is findable but not foregrounded.
+Unchanged from L9 and partially done: the decisive first experiment
+(fibroblast aneuploidy panel) is named at :330 - one more sentence
+saying what a positive unlocks (which lead graduates to the Society's
+animal-model program) would complete it.
 
 ---
 
-## Innovation - weight 25% - **85/100** - AT GATE 7
+## Innovation - weight 25% - **86/100** - meets gate
 
 ### Evidence for the score
 
-- Per `landscape.md` (~30 repos, ~8 substantive T2 efforts): no
-  competitor has a frozen retrospective recall@k benchmark, an
-  approval-by-code gate, a citation-resolution+retraction gate, a
-  pediatric-label filter, or a program-mapped testability matrix. These
-  are real, demonstrated differentiators - not asserted ones.
-- The mechanism-direction layer is genuinely novel among the field:
-  it removes 37 mechanism-opposed approved drugs and *publishes their
-  would-be ranks* (line 115) instead of hiding them - adversarial
-  honesty nobody else shows.
-- "Residual-allele rescue" as an axis for a null+hypomorph genotype is
-  a mechanistically distinctive frame (report line 72).
-- The rejected-candidates table turns the weakest part of every
-  competitor's submission (unjustified exclusions) into auditable
-  evidence.
-- Reproducibility infrastructure: byte-exact offline replay of every
-  API response; a generator that cannot emit an unverified number.
+- Per landscape.md (~30 repos, ~8 substantive T2 efforts), still true
+  after this review: no competitor shows a frozen retrospective
+  recall@k benchmark, approval-by-code, a citation-resolution +
+  retraction gate, a pediatric-label classifier, or a program-mapped
+  testability matrix.
+- The direction layer remains the field's most original move: 37
+  mechanism-opposed drugs excluded *and published with would-be ranks*
+  (:115) - adversarial honesty as infrastructure.
+- The L9 suggestion is implemented: report:117 now argues explicitly
+  what the engine proved (independent mTOR corroboration + the
+  exclusion receipt a hand-written shortlist cannot show).
+- Byte-exact offline replay of every API response; the generator
+  refuses unfilled placeholders and em dashes.
 
 ### Strongest argument against
 
-The drug list itself is not novel: senolytics, mTOR inhibition, NAD+
-and autophagy are exactly the convergence points landscape.md reports
-across competitors. The engine's algorithmic core (target overlap +
-STRING proximity + LINCS reversal) is conventional repurposing
-machinery - the innovation is in the *rigor wrapper*, not the search
-method. And the engine only independently surfaces 2 of the 4 leads
-(dasatinib #43, everolimus #12); the other two were never collected,
-making the portfolio largely a literature-curated artifact dressed in
-engine clothing. A judge who scores "novel candidate identification"
-rather than "novel verification pipeline" will see a conventional
-shortlist.
+The algorithmic core is conventional (target overlap + STRING proximity
++ LINCS reversal); the innovation is the rigor wrapper, not the search.
+Only 2 of 4 leads appear in engine output at all (dasatinib #43,
+everolimus #12); niacin and HCQ were never collected - disclosed at
+:117, but a judge weighting "novel candidate identification" over
+"verification pipeline" sees a literature-curated shortlist in engine
+clothing. The new gate-prose error (R1) slightly undercuts the "the
+code is the claim" positioning.
 
 ### Highest-impact improvement
 
-Say explicitly what the engine *proved* rather than what it found: it
-independently corroborates mTOR (sirolimus #2, everolimus #12) and
-dasatinib (#43) without being told the mechanism, and it demonstrates
-why the field's default answer (top-ranked = cytotoxics) is unsafe -
-that argument exists in the materials but is not made anywhere as a
-claim.
+None new needed. The made-explicit argument at :117 is the right one;
+R1's fix protects it.
 
 ---
 
@@ -155,38 +154,30 @@ claim.
 
 ### Evidence for the score
 
-- Gene-agnostic engine, one command, config-driven
-  (`config/track2.yaml`, engine.md "How to run on another gene");
-  nothing BUB1B-specific in `src/track2/`.
-- The benchmark is the measured receipt: the same pipeline runs blind
-  on 9 unrelated diseases and reports honest recall including the
-  structural misses - the strongest possible scalability evidence for
-  a hackathon.
-- Offline replay: every external response recorded to fixtures; the
-  full pipeline reruns with zero network; the citation gate is a
-  drop-in tool usable by any team.
-- Other MVA genes (CEP57, TRIP13, MAD1L1) are already seeded in the
-  config.
+- Gene-agnostic engine, config-driven (`config/track2.yaml`,
+  engine.md); nothing BUB1B-specific in `src/track2/` - verified by
+  reading it.
+- The benchmark is the measured receipt: identical pipeline, 9
+  unrelated genes, honest recall incl. structural misses.
+- Verified end-to-end offline: report regenerates byte-identical,
+  citation gate runs on committed cache with 0 requests, 531 tests pass
+  on fixtures, upload copy byte-identical.
+- The citation gate is a drop-in tool other teams can reuse.
 
 ### Strongest argument against
 
-The ceiling is 0.56 recall@10 - the engine structurally misses drugs
-acting outside the disease module (4 of 9 benchmark cases), so
-"scalable" means "scalably finds module-adjacent drugs", which
-underdelivers for diseases whose real repurposings act downstream. The
-name-resolution tail is messy in ways a new-gene run will hit too:
-252 unresolvable names, 7 salt duplicates, pediatric-flag false
-negatives (dasatinib, metformin classes). And "reruns offline" means
-replay of THIS run - a new gene still needs the full live API pass.
-The benchmark is honest about all of this, but the honest number is
-the honest number.
+recall@10 = 0.56 is the honest ceiling - the engine structurally misses
+drugs acting outside the module (4 of 9 cases), so "scalable" means
+"scalably finds module-adjacent drugs". The label-resolution tail still
+produces flag false negatives on first-hit empty labels (r4), and a
+fresh clone cannot discover the Track 2 rebuild path from README (r6)
+- the capability works but the signpost does not. "Replays offline"
+also means replay of THIS run; a new gene still needs the live pass.
 
 ### Highest-impact improvement
 
-None required to stay above gate; the credible ceiling-raiser is
-widening the module (neighbour_limit or phenotype-driven seeds) and
-re-running the benchmark to show recall improvement - engine.md
-already names this lever.
+README Track 2 block (r6) - it converts the demonstrated
+reproducibility into something a judge can find.
 
 ---
 
@@ -194,59 +185,44 @@ already names this lever.
 
 | Criterion | Weight | Score | Weighted |
 |---|---|---|---|
-| Scientific Rigor | 35% | 84 | 29.4 |
+| Scientific Rigor | 35% | 86 | 30.1 |
 | Potential Impact | 25% | 86 | 21.5 |
-| Innovation | 25% | 85 | 21.25 |
+| Innovation | 25% | 86 | 21.5 |
 | Scalability | 15% | 87 | 13.05 |
-| **Total** | | | **85.2** |
+| **Total** | | | **86.15** |
 
-**Gate 7 status: 2 of 4 criteria below/at the 85 line** (Rigor 84,
-Innovation 85). The fix list below clears the Rigor deficit in an
-afternoon; Innovation is at threshold and depends on framing, not new
-work.
+**Gate 7 status: all four criteria at/above 85** - but Rigor sits at 86
+on the strength that the *implemented* gate is correct; if a panel
+weights the printed method claim (R1) as heavily as L9 weighted the
+sirolimus superlative, Rigor is 84-85 until the clause is deleted. The
+weighted number masks how thin the Rigor margin is: one unfixed MAJOR
+costs ~1-2 points on the 35% criterion.
 
----
+## Prioritised remaining fix list
 
-## Prioritised fix list (what raises the score most per hour of work)
-
-1. **M1** - s/"non-cytotoxic"/"mechanism-aligned"/ in report lines 211,
-   279 and both `portfolio.json` rows. Removes the only false statement
-   in the submission.
-2. **M2** - re-source the everolimus 4.1y/growth/<6y-infection facts to
-   `[repo:openFDA label 01f7b5fb]` (already recorded) and/or add the
-   correct extension-study citation.
-3. **m1** - print identical labeled recall pairs in abstract.md and the
-   report ("0.44 frozen / 0.56 post-direction").
-4. **m2+m3** - one funnel sentence that sums: add the 13 merged names
-   and the salt-duplicate disclosure ("96 approved entities, 89
-   distinct ingredients").
-5. **m4** - "truth declared in config before the run" (not "committed").
-6. **m6** - fix the mid-word truncated table cells.
-7. **m5** - one phase-caveat clause in FAMILY_SUMMARY and the report's
-   plain-language paragraph.
-8. **m7** - "a large French survivor cohort" in mechanism.md.
-9. **m8** - name the pediatric-flag false-negative pattern in
-   engine.md limitations.
-10. **N1-N4** - regenerate to refresh stale counters (22 uncovered,
-    510 tests); fill niacin first-approval; fix L3/L4 lane-doc drift.
-11. **Framing** - one sentence in section 4 making explicit what the
-    engine proved (independent mTOR/dasatinib corroboration + the
-    excluded-cytotoxic argument) and foregrounding the single decisive
-    fibroblast experiment in section 7.
+1. **R1 (MAJOR)** - drop the openFDA-label clause: template:55 ->
+   report:88, abstract.md:15, scenes.yaml:62. Regenerate report + video.
+2. **r5** - scenes.yaml staleness in the same pass: 508 -> 531,
+   "committed before the run" -> the corrected wording, drop STRING
+   from drug-name sources.
+3. **r1** - NMN/SIRT2 clause in `portfolio.json` adjunct text
+   (propagates to report:283).
+4. **r4** - engine.md: name the empty-label first-hit false-negative
+   mode (acetaminophen example); optionally retry limit=5 on all-empty
+   labels.
+5. **r6** - README Track 2 reproduction block.
+6. **r2** - coverage detector `%` fix + wider verbs; re-adjudicate.
+7. **r3** - replay test compares all top-level keys; `_norm_cand`
+   carve-outs confined to the stale branch.
+8. **n1-n4** - cosmetic.
 
 ## Verdict on top-three placement
 
-Against the field described in landscape.md this is the most defensible
-submission by a wide margin: it is the only one with a measured engine
-benchmark, a code-checked approval gate, a verified citation layer,
-and a testability matrix on funded programs - exactly the four things
-a methods-skeptical panel can verify rather than take on trust. Where
-it is beatable is candidate novelty: the four leads are the same
-molecules the strongest competitors also found, and a judge who
-weights insight over rigor could rank texdata's KG work or a
-mechanistically bolder portfolio ahead on the drug list. Honest call:
-**top three, probably top two** - the floor is guaranteed by rigor no
-competitor publicly matches; the ceiling depends entirely on whether
-the two MAJOR factual errors are fixed before the Oct 23 submission,
-because a package whose headline promise is "no number hand-typed"
-cannot afford a printed claim the artifacts disprove.
+**Top three, most likely top two - conditional on the one-line R1 fix
+before upload.** The differentiators survived a second hostile pass:
+the benchmark, the code-checked approval gate, the citation gate and
+the testability matrix are all real and verified, and no competitor in
+landscape.md publicly matches any one of them. The residual ceiling is
+the same as L9's: candidate novelty (the four leads are the field's
+convergent answer) and whether the panel scores verification rigor over
+mechanistic boldness.
