@@ -312,7 +312,12 @@ def test_coverage_skip_sets(tmp_path):
     assert not vc.is_coverage_target(
         REPO / "docs" / "track2" / "agent_reports" / "L4.md")
     assert vc.is_coverage_target(REPO / "docs" / "track2" / "mechanism.md")
-    assert vc.is_coverage_target(REPO / "nikhilpise_track2_report.md")
+    assert vc.is_coverage_target(REPO / "docs" / "track2_report.md")
+    # the upload copy is byte-identical to the report (pinned in
+    # tests/test_make_track2_report.py), so scanning it would double-count
+    assert not vc.is_coverage_target(REPO / "nikhilpise_track2_report.md")
+    # family-facing prose cites the report, not papers, by design
+    assert not vc.is_coverage_target(REPO / "docs" / "track2" / "FAMILY_SUMMARY.md")
 
 
 def test_cli_end_to_end(tmp_path, capsys):

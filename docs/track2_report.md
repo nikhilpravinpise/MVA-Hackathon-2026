@@ -2,7 +2,7 @@
 
 - **Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
 - **Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
-- **Report generated:** 2026-10-13 from commit `d7bf37e` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
+- **Report generated:** 2026-10-13 from commit `9a2083d` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
 
 > **This is a hypothesis-generation document for research follow-up, not medical advice.** Every candidate below is an existing approved medicine proposed for laboratory testing first; none should be given to any child on the strength of this report.
 
@@ -87,7 +87,7 @@ Sources: Ensembl REST VEP + transcript model, UniProt O60566, AlphaFold DB v6, g
 
 The engine (`src/track2/`, `tools/run_track2.py`, frozen `config/track2.yaml`) is gene-agnostic: given a disease gene, its seed module and an axis map, it (1) expands the module on STRING, (2) pulls drug-target evidence from Open Targets, ChEMBL and DGIdb, (3) keeps only approved medicines (ChEMBL max_phase 4, not withdrawn, with an openFDA label), (4) scores network proximity between drug targets and the disease module against degree-matched random sets, (5) queries transcriptomic signature reversal on LINCS L1000 (SigCom LINCS), and (6) reports every evidence channel's contribution to a transparent weighted score and tier. Every API response is cached and replayed, so the ranking is byte-reproducible offline. Design details, source versions and limitations: [repo:docs/track2/engine.md].
 
-**Funnel (MVA run, config sha `f4b0cca2092b`).** Disease module: 71 genes (seeds + STRING neighbours of BUB1B at score >= 700). 108 Open Targets clinical rows and 1403 DGIdb interactions -> 482 distinct drug names -> approval gate: 96 approved, 115 not phase 4, 6 withdrawn, 252 unresolvable names (investigational codes or non-drug entities, counted rather than guessed). LINCS L1000 reversal: status `ok`, 100 reversers on `l1000_cp`. The mechanism-direction layer then removed **37 mechanism-opposed** approved drugs (genotoxic, aneugenic, antimitotic or checkpoint-weakening - section 3) from the ranking; they are listed, not hidden, in the evidence file.
+**Funnel (MVA run, config sha `f4b0cca2092b`).** Disease module: 71 genes (seeds + STRING neighbours of BUB1B at score >= 700). 108 Open Targets clinical rows and 1403 DGIdb interactions -> 482 distinct drug names -> approval gate: 96 approved, 115 not phase 4, 6 withdrawn, 252 unresolvable names (investigational codes or non-drug entities, counted rather than guessed). LINCS L1000 reversal: status `ok`, 100 reversers on `l1000_cp` [repo:docs/track2/evidence/candidates.json]. The mechanism-direction layer then removed **37 mechanism-opposed** approved drugs (genotoxic, aneugenic, antimitotic or checkpoint-weakening - section 3) from the ranking; they are listed, not hidden, in the evidence file.
 
 | Rank | Drug | Module targets | Axis | Direction | Tier | Score | Pediatric label |
 |---|---|---|---|---|---|---|---|
@@ -200,9 +200,9 @@ Masked-marginal log-likelihood ratios over 1319 scored variants (1273 gnomAD v4 
 *Risks specific to this child's phenotype:*
 
 - Label section 5.10 'Effects on Growth and Development in Pediatric Patients': epiphyses delayed fusion, osteopenia, growth retardation and gynecomastia reported; label advises monitoring bone growth and development. Directly relevant to a child with short stature and failure to thrive.
-- Myelosuppression (severe thrombocytopenia, neutropenia, anaemia) and bleeding; dasatinib also inhibits platelet function - additive bleeding risk with any antiplatelet adjunct.
-- Fluid retention incl. pleural effusions; pulmonary arterial hypertension; QT prolongation; severe dermatologic reactions; tumour lysis syndrome; embryo-fetal toxicity.
-- Hypothesis framing: senolytic regimens are intermittent 'hit-and-run' (3-day cycles in the human pilots), which limits total exposure relative to continuous oncology dosing - but no pediatric senolytic dosing exists; any use here is untested.
+- Myelosuppression (severe thrombocytopenia, neutropenia, anaemia) and bleeding; dasatinib also inhibits platelet function - additive bleeding risk with any antiplatelet adjunct. [repo:openFDA label 02b04c6f]
+- Fluid retention incl. pleural effusions; pulmonary arterial hypertension; QT prolongation; severe dermatologic reactions; tumour lysis syndrome; embryo-fetal toxicity. [repo:openFDA label 02b04c6f]
+- Hypothesis framing: senolytic regimens are intermittent 'hit-and-run' (3-day cycles in the human pilots), which limits total exposure relative to continuous oncology dosing - but no pediatric senolytic dosing exists; any use here is untested. [repo:openFDA label 02b04c6f]
 
 *What would make us wrong:* We are wrong if the BubR1-hypomorph rescue depended on the INK-ATTAC genetic circuit rather than on senescent-cell removal per se, or if this child's senescent compartment is protective - holding aneuploid clones arrested - so clearing it accelerates neoplasia ([PMID:22048312](https://pubmed.ncbi.nlm.nih.gov/22048312/), [PMID:20123995](https://pubmed.ncbi.nlm.nih.gov/20123995/)). Decisive experiment (T1, 2-4 weeks): intermittent D+Q exposure of patient fibroblasts; GO on >=50% reduction of the senescent-marker fraction with no rise in aneuploidy rate or euploid cytotoxicity, NO-GO on nonselective toxicity or aneuploid expansion after clearance (testability.json).
 
@@ -222,9 +222,9 @@ Masked-marginal log-likelihood ratios over 1319 scored variants (1273 gnomAD v4 
 
 *Risks specific to this child's phenotype:*
 
-- Infections, including serious infections, at higher frequency under age 6 (label: 96% any infection vs 67% in >=6y; 35% serious vs 7%) - immunosuppression concern in a cancer-predisposed child.
-- Non-infectious pneumonitis, stomatitis, renal failure (monitor renal function - nephrocalcinosis phenotype), hyperglycaemia/hyperlipidaemia, myelosuppression, impaired wound healing, radiation sensitisation, embryo-fetal toxicity, live-vaccine avoidance.
-- No boxed warning on this oncology label, unlike sirolimus's transplant boxed warning - but the same class-level immunosuppression applies.
+- Infections, including serious infections, at higher frequency under age 6 (label: 96% any infection vs 67% in >=6y; 35% serious vs 7%) - immunosuppression concern in a cancer-predisposed child. [repo:openFDA label 01f7b5fb]
+- Non-infectious pneumonitis, stomatitis, renal failure (monitor renal function - nephrocalcinosis phenotype), hyperglycaemia/hyperlipidaemia, myelosuppression, impaired wound healing, radiation sensitisation, embryo-fetal toxicity, live-vaccine avoidance. [repo:openFDA label 01f7b5fb]
+- No boxed warning on this oncology label, unlike sirolimus's transplant boxed warning - but the same class-level immunosuppression applies. [repo:openFDA label 01f7b5fb]
 
 *What would make us wrong:* We are wrong if the mTORC1 hyperactivity seen in the MVA-mouse model is downstream noise rather than driver - the association is correlational ([PMID:31738183](https://pubmed.ncbi.nlm.nih.gov/31738183/)) - or if SASP suppression frees aneuploid clones from their secretory neighbourhood-watch while immunosuppression raises net cancer risk faster than senescence control lowers it. Decisive experiment (T1, 2-4 weeks): everolimus on patient fibroblasts; GO on >=30% SASP reduction with stable aneuploidy and <20% proliferation slowdown, NO-GO on cytostasis or any aneuploidy rise (testability.json).
 
@@ -245,10 +245,10 @@ Masked-marginal log-likelihood ratios over 1319 scored variants (1273 gnomAD v4 
 
 *Risks specific to this child's phenotype:*
 
-- Niacin at lipid-lowering doses: flushing, hepatotoxicity (label contraindicates significant/unexplained hepatic dysfunction), hyperglycaemia, hyperuricaemia, GI/peptic-ulcer caution - the approved-dose adverse profile is adult-derived.
-- Nutritional-dose nicotinamide/niacin (vitamin-level) has a wide safety margin in children, but the NAD-restoration hypothesis may require pharmacologic doses - an open question.
-- Form-choice risk (claim c5): pharmacologic nicotinamide could inhibit sirtuins; the safe-form question is unresolved, not a detail.
-- No reproductive-age considerations for the child directly; family context includes recurrent spontaneous abortion - niacin pregnancy safety is not established at pharmacologic doses.
+- Niacin at lipid-lowering doses: flushing, hepatotoxicity (label contraindicates significant/unexplained hepatic dysfunction), hyperglycaemia, hyperuricaemia, GI/peptic-ulcer caution - the approved-dose adverse profile is adult-derived. [repo:openFDA label bf287412]
+- Nutritional-dose nicotinamide/niacin (vitamin-level) has a wide safety margin in children, but the NAD-restoration hypothesis may require pharmacologic doses - an open question. [repo:openFDA label bf287412]
+- Form-choice risk (claim c5): pharmacologic nicotinamide could inhibit sirtuins; the safe-form question is unresolved, not a detail. [repo:openFDA label bf287412]
+- No reproductive-age considerations for the child directly; family context includes recurrent spontaneous abortion - niacin pregnancy safety is not established at pharmacologic doses. [repo:openFDA label bf287412]
 
 *What would make us wrong:* We are wrong if the NAD+/SIRT2 deacetylation axis does not reach this particular hypomorph - Asn1002Lys may destabilise BubR1 by a route NAD+ cannot touch - or if approved-form pharmacology differs materially from NMN, since nicotinamide itself inhibits sirtuins ([PMID:12297502](https://pubmed.ncbi.nlm.nih.gov/12297502/), [PMID:24825348](https://pubmed.ncbi.nlm.nih.gov/24825348/)). Decisive experiment (T1, 2-4 weeks): niacin versus nicotinamide head-to-head on patient fibroblasts; GO on >=1.3-fold BubR1 protein rise with no aneuploidy increase - the same readout resolves the form question (testability.json).
 
@@ -267,9 +267,9 @@ Masked-marginal log-likelihood ratios over 1319 scored variants (1273 gnomAD v4 
 
 *Risks specific to this child's phenotype:*
 
-- Retinal toxicity: label warns of irreversible retinal damage related to CUMULATIVE dose and duration, recommending baseline and ongoing retinal exams - the dominant concern for any chronic chemopreventive use in a young child.
-- Cardiomyopathy and ventricular arrhythmias incl. QT prolongation (fatal cases reported); serious skin reactions (SJS/TEN/DRESS); hematologic toxicity (myelosuppression); renal toxicity/phospholipidosis - relevant given nephrocalcinosis phenotype.
-- Chronic daily dosing for interception would exceed the cumulative exposure pattern the retinal-toxicity warning is anchored to; any use would need ophthalmologic surveillance from baseline.
+- Retinal toxicity: label warns of irreversible retinal damage related to CUMULATIVE dose and duration, recommending baseline and ongoing retinal exams - the dominant concern for any chronic chemopreventive use in a young child. [repo:openFDA label 04139607]
+- Cardiomyopathy and ventricular arrhythmias incl. QT prolongation (fatal cases reported); serious skin reactions (SJS/TEN/DRESS); hematologic toxicity (myelosuppression); renal toxicity/phospholipidosis - relevant given nephrocalcinosis phenotype. [repo:openFDA label 04139607]
+- Chronic daily dosing for interception would exceed the cumulative exposure pattern the retinal-toxicity warning is anchored to; any use would need ophthalmologic surveillance from baseline. [repo:openFDA label 04139607]
 
 *What would make us wrong:* We are wrong if the aneuploidy selectivity is a cell-line artefact - the founding screen used engineered trisomic backgrounds, not mosaic SAC-defective cells ([PMID:21315436](https://pubmed.ncbi.nlm.nih.gov/21315436/)) - or if chronic autophagy blockade harms quality-control-dependent tissues more than it trims aneuploid clones ([PMID:33505028](https://pubmed.ncbi.nlm.nih.gov/33505028/)). Decisive experiment (T1-T2, 3-6 weeks): CQ/HCQ on the patient's mosaic fibroblasts, which carry an internal euploid control; GO on >=2-fold preferential depletion of the aneuploid fraction, NO-GO on equal euploid and aneuploid toxicity (testability.json).
 
@@ -310,13 +310,13 @@ The four programs and what each can measure are taken verbatim from the Society'
 
 | Candidate | Worm repurposing screen | Patient fibroblasts | Multi-patient scRNA-seq | Supplements & cell health |
 |---|---|---|---|---|
-| **dasatinib + quercetin** | embryonic/larval viability, him rate, growth, behavioural tracking; GO: informational only (T1, 2-3 weeks) | SA-beta-gal/p16/p21+ fraction, SASP cytokine panel (IL-6, IL-8, IL-1a), aneuploidy rate (interphase FISH / scDNA-seq), micronuclei; GO: GO if >=50% reduction in senescent-marker fraction with no rise in aneuploidy rate or cytotoxicity to euploid cells; NO-GO if nonselective toxicity (T1, 2-4 weeks) | senescence/SASP module scores; p16 program; GO: GO if SASP modules significantly reduced vs untreated (T2, 6-8 weeks) | -; GO: - (n/a, -) |
-| **sirolimus** | lifespan, growth, embryonic viability; GO: informational (T1, 3-6 weeks (lifespan assays are slow)) | SASP cytokines, p-S6 (pharmacodynamic), aneuploidy rate, BubR1 protein, growth rate; GO: GO if SASP down >=30% with stable aneuploidy rate and no growth suppression; NO-GO on aneuploidy rise or cytostasis (a growth-retarded child cannot take a growth-suppressing drug) (T1, 2-4 weeks) | HALLMARK_MTORC1_SIGNALING, SASP modules; GO: GO if mTORC1 module significantly reduced (T2, 6-8 weeks) | -; GO: - (n/a, -) |
-| **everolimus** | lifespan, growth, viability; GO: informational (T1, 3-6 weeks) | SASP cytokines, p-S6, aneuploidy rate, proliferation index, BubR1 level; GO: GO if SASP down >=30%, stable aneuploidy, <20% proliferation slowdown; NO-GO on cytostasis (T1, 2-4 weeks) | mTORC1/SASP modules; GO: GO on significant reduction (T2, 6-8 weeks) | -; GO: - (n/a, -) |
-| **metformin** | viability, growth, him rate, lifespan; GO: informational (T1, 3-6 weeks) | SASP cytokines (IKK/NF-kB axis per PMID:23521863), micronuclei, aneuploidy rate, p-AMPK, BUBR1/MAD2 expression (per PMID:35568294 caveat); GO: GO if a dose window exists with SASP down AND no micronucleus increase; NO-GO if micronuclei rise within/near clinical exposure (the Lyu 2022 caveat is the whole experiment) (T1, 2-4 weeks) | NF-kB/SASP modules; GO: secondary (T2, 6-8 weeks) | -; GO: - (n/a, -) |
-| **hydroxychloroquine / chloroquine** | viability, him rate, growth; GO: informational (T1, 2-3 weeks) | fraction of aneuploid vs euploid cells before/after (FISH or scDNA-seq), viability, autophagy markers; GO: GO if aneuploid-fraction reduction >=2-fold preferential vs euploid; NO-GO if no selectivity or broad toxicity (T1-T2, 3-6 weeks) | aneuploid-signature cell fraction; autophagy/proteotoxic modules; GO: GO on aneuploid-signature depletion (T2, 6-8 weeks) | -; GO: - (n/a, -) |
-| **niacin / nicotinamide (approved NAD+ precursors)** | viability, him rate, growth, lifespan; GO: GO on viability/him improvement (T1, 3-6 weeks) | BubR1 protein level (western/IF), NAD+ level, mitotic timing under nocodazole, aneuploidy rate; GO: GO if BubR1 protein up measurably (e.g. >=1.3-fold) with no aneuploidy rise; head-to-head niacin vs nicotinamide resolves the form question (T1, 2-4 weeks) | progeroid/stress modules; GO: secondary (T2, 6-8 weeks) | cell stability endpoints; GO: program-defined (T1, program-dependent) |
-| **aspirin** | viability, him rate; GO: informational (T1, 2-3 weeks) | tetraploid/aneuploid fraction trajectory (FISH/scDNA-seq), apoptosis markers; GO: GO on >=1.5-fold euploid enrichment vs vehicle (T1, 3-5 weeks) | aneuploid-signature fraction; GO: secondary (T2, 6-8 weeks) | -; GO: - (n/a, -) |
+| **dasatinib + quercetin** [repo:testability.json] | embryonic/larval viability, him rate, growth, behavioural tracking; GO: informational only (T1, 2-3 weeks) | SA-beta-gal/p16/p21+ fraction, SASP cytokine panel (IL-6, IL-8, IL-1a), aneuploidy rate (interphase FISH / scDNA-seq), micronuclei; GO: GO if >=50% reduction in senescent-marker fraction with no rise in aneuploidy rate or cytotoxicity to euploid cells; NO-GO if nonselective toxicity (T1, 2-4 weeks) | senescence/SASP module scores; p16 program; GO: GO if SASP modules significantly reduced vs untreated (T2, 6-8 weeks) | -; GO: - (n/a, -) |
+| **sirolimus** [repo:testability.json] | lifespan, growth, embryonic viability; GO: informational (T1, 3-6 weeks (lifespan assays are slow)) | SASP cytokines, p-S6 (pharmacodynamic), aneuploidy rate, BubR1 protein, growth rate; GO: GO if SASP down >=30% with stable aneuploidy rate and no growth suppression; NO-GO on aneuploidy rise or cytostasis (a growth-retarded child cannot take a growth-suppressing drug) (T1, 2-4 weeks) | HALLMARK_MTORC1_SIGNALING, SASP modules; GO: GO if mTORC1 module significantly reduced (T2, 6-8 weeks) | -; GO: - (n/a, -) |
+| **everolimus** [repo:testability.json] | lifespan, growth, viability; GO: informational (T1, 3-6 weeks) | SASP cytokines, p-S6, aneuploidy rate, proliferation index, BubR1 level; GO: GO if SASP down >=30%, stable aneuploidy, <20% proliferation slowdown; NO-GO on cytostasis (T1, 2-4 weeks) | mTORC1/SASP modules; GO: GO on significant reduction (T2, 6-8 weeks) | -; GO: - (n/a, -) |
+| **metformin** [repo:testability.json] | viability, growth, him rate, lifespan; GO: informational (T1, 3-6 weeks) | SASP cytokines (IKK/NF-kB axis per PMID:23521863), micronuclei, aneuploidy rate, p-AMPK, BUBR1/MAD2 expression (per PMID:35568294 caveat); GO: GO if a dose window exists with SASP down AND no micronucleus increase; NO-GO if micronuclei rise within/near clinical exposure (the Lyu 2022 caveat is the whole experiment) (T1, 2-4 weeks) | NF-kB/SASP modules; GO: secondary (T2, 6-8 weeks) | -; GO: - (n/a, -) |
+| **hydroxychloroquine / chloroquine** [repo:testability.json] | viability, him rate, growth; GO: informational (T1, 2-3 weeks) | fraction of aneuploid vs euploid cells before/after (FISH or scDNA-seq), viability, autophagy markers; GO: GO if aneuploid-fraction reduction >=2-fold preferential vs euploid; NO-GO if no selectivity or broad toxicity (T1-T2, 3-6 weeks) | aneuploid-signature cell fraction; autophagy/proteotoxic modules; GO: GO on aneuploid-signature depletion (T2, 6-8 weeks) | -; GO: - (n/a, -) |
+| **niacin / nicotinamide (approved NAD+ precursors)** [repo:testability.json] | viability, him rate, growth, lifespan; GO: GO on viability/him improvement (T1, 3-6 weeks) | BubR1 protein level (western/IF), NAD+ level, mitotic timing under nocodazole, aneuploidy rate; GO: GO if BubR1 protein up measurably (e.g. >=1.3-fold) with no aneuploidy rise; head-to-head niacin vs nicotinamide resolves the form question (T1, 2-4 weeks) | progeroid/stress modules; GO: secondary (T2, 6-8 weeks) | cell stability endpoints; GO: program-defined (T1, program-dependent) |
+| **aspirin** [repo:testability.json] | viability, him rate; GO: informational (T1, 2-3 weeks) | tetraploid/aneuploid fraction trajectory (FISH/scDNA-seq), apoptosis markers; GO: GO on >=1.5-fold euploid enrichment vs vehicle (T1, 3-5 weeks) | aneuploid-signature fraction; GO: secondary (T2, 6-8 weeks) | -; GO: - (n/a, -) |
 
 Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard reagents), T2: $5k-50k (sequencing, screens, animal work), T3: > $50k.
 
@@ -327,7 +327,7 @@ Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard 
 - mitotic timing under nocodazole challenge (functional SAC strength)
 - SA-beta-gal / p16 / p21 senescent fraction + SASP cytokines (Axis-B pharmacodynamic)
 
-**Decision logic:** Fibroblast assays are the decisive tier (T1 cost, disease-relevant cells, internal euploid control, 2-6 weeks). Worm assays are cheap whole-organism confirmation. scRNA-seq quantifies signature reversal. The supplements program is the natural home for NAD-precursor adjuncts. Any candidate showing an INCREASE in aneuploidy rate or micronuclei on patient cells is an automatic NO-GO regardless of other benefits.
+**Decision logic** [repo:docs/track2/evidence/testability.json]: Fibroblast assays are the decisive tier (T1 cost, disease-relevant cells, internal euploid control, 2-6 weeks). Worm assays are cheap whole-organism confirmation. scRNA-seq quantifies signature reversal. The supplements program is the natural home for NAD-precursor adjuncts. Any candidate showing an INCREASE in aneuploidy rate or micronuclei on patient cells is an automatic NO-GO regardless of other benefits.
 
 ## 8. Scalability
 
@@ -338,7 +338,7 @@ Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard 
 
 ## 9. Rigor and reproducibility
 
-- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 69 uncovered claim sentences** (exit 0, 0 network requests).
+- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 26 uncovered claim sentences** (exit 0, 0 network requests).
 - 132 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
 - Approval, pediatric-label and boxed-warning facts come from live ChEMBL and openFDA responses recorded in each dossier (`docs/track2/evidence/dossiers/`).
 - Decision freeze: benchmark truth and seed genes were committed in `config/track2.yaml` before the engine was run (git history).

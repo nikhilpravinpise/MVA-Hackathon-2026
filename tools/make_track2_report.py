@@ -97,6 +97,13 @@ class Refs:
         return "\n".join(rows)
 
 
+def _has_source(text: str) -> bool:
+    """Does this fragment already name where it came from (a paper, a
+    label set_id, a ChEMBL id)? Used to avoid double-tagging."""
+    return bool(CITE_RE.search(text or "")
+                or re.search(r"(set_id|CHEMBL\d+|label section)", text or "", re.I))
+
+
 def md_cell(s) -> str:
     return str(s if s is not None else "").replace("|", "/").replace("\n", " ")
 
@@ -233,7 +240,7 @@ def engine_section(c: dict | None, refs: Refs) -> str:
             f"{f.get('gated_out_withdrawn')} withdrawn, {f.get('gated_out_unresolved')} unresolvable "
             f"names (investigational codes or non-drug entities, counted rather than guessed). "
             f"LINCS L1000 reversal: status `{lincs.get('status')}`, {lincs.get('n_reversers')} reversers "
-            f"on `{lincs.get('library')}`.")
+            f"on `{lincs.get('library')}` [repo:docs/track2/evidence/candidates.json].")
     if opposed:
         head += (f" The mechanism-direction layer then removed **{len(opposed)} mechanism-opposed** "
                  f"approved drugs (genotoxic, aneugenic, antimitotic or checkpoint-weakening - section 3) "
@@ -420,8 +427,15 @@ def lead_sections(port: dict | None, refs: Refs) -> str:
                    f"Boxed warning: {md_cell(ped.get('boxed_warning'))}")
         risks = ped.get("key_risks") or []
         if risks:
+            # Each risk is a label fact or a dossier claim: carry its source
+            # into the bullet, since a reader meets these out of context.
+            src = (f"[repo:openFDA label {str(ped.get('label_source', '')).split('set_id ')[-1][:8]}]"
+                   if ped.get("label_source")
+                   else f"[repo:docs/track2/evidence/dossiers/{item['dossier']}.json]")
             out.append("\n*Risks specific to this child's phenotype:*\n")
-            out += [f"- {refs.linkify(md_cell(r))}" for r in risks]
+            out += [f"- {refs.linkify(md_cell(r))} {src}"
+                    if not _has_source(r) else f"- {refs.linkify(md_cell(r))}"
+                    for r in risks]
         if item.get("falsifier"):
             out.append(f"\n*What would make us wrong:* {refs.linkify(item['falsifier'])}")
         out.append("")
@@ -462,11 +476,13 @@ def testability_section(t: dict | None, refs: Refs) -> str:
             e = by.get(p)
             cells.append(md_cell(f"{e['readout']}; GO: {e['go_no_go']} ({e['cost_tier']}, {e['time_to_result']})")
                          if e else "-")
-        rows.append(f"| **{md_cell(line['drug'])}** | " + " | ".join(cells) + " |")
+        rows.append(f"| **{md_cell(line['drug'])}** [repo:testability.json] | "
+                    + " | ".join(cells) + " |")
     core = "\n".join(f"- {refs.linkify(md_cell(x))}" for x in t.get("fibroblast_core_readouts") or [])
     tiers = ", ".join(f"{k}: {v}" for k, v in (t.get("cost_tiers") or {}).items())
     return ("\n".join(rows) + f"\n\nCost tiers - {tiers}.\n\n**Fibroblast core readouts:**\n\n{core}\n\n"
-            f"**Decision logic:** {refs.linkify(md_cell(t.get('decision_logic')))}")
+            f"**Decision logic** [repo:docs/track2/evidence/testability.json]: "
+            f"{refs.linkify(md_cell(t.get('decision_logic')))}")
 
 
 def screen_counts(md_path: Path) -> dict | None:

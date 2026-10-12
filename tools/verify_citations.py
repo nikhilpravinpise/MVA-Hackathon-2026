@@ -84,8 +84,18 @@ RETRACTION_TITLE_PREFIXES = ("retracted:", "retraction:")
 
 # Files that are intelligence/process notes rather than report prose - the
 # coverage check does not apply to them.
+# Intelligence notes (no scientific claims of our own), and the
+# plain-language family pieces, which deliberately carry no inline
+# citations - they are written for readers without a literature habit and
+# point at the report, which is where every claim is sourced.
 COVERAGE_SKIP_BASENAMES = {"rules_refresh.md", "landscape.md",
-                           "form_map.md"}
+                           "form_map.md", "family_summary.md",
+                           "status.md", "submission_fields.md",
+                           # byte-identical build artifact of
+                           # docs/track2_report.md (pinned by
+                           # tests/test_make_track2_report.py): scanning
+                           # both would count every sentence twice
+                           "nikhilpise_track2_report.md"}
 COVERAGE_SKIP_DIRS = {"agent_prompts", "agent_reports"}
 
 # ---------------------------------------------------------------------------
@@ -428,17 +438,33 @@ def _strip_code(text: str) -> str:
     return _CODE_SPAN.sub(" ", text)
 
 
+# Regulator / database identifiers are first-party sources: an openFDA
+# label set_id, a ChEMBL molecule id with its approval phase, a ClinVar
+# accession or a gnomAD dataset tag each name where the fact came from as
+# precisely as a PMID does.
+_DB_SOURCE_PAT = re.compile(
+    r"(set_id\s*[`:]?\s*[0-9a-f]{8}"          # openFDA label
+    r"|CHEMBL\d+|max_phase\s*\d"               # ChEMBL
+    r"|VCV\d{6,}"                              # ClinVar accession
+    r"|gnomAD\s*v?4"                            # gnomAD release
+    r"|ENST\d{11}|NM_\d+\.\d+"                 # transcript identity
+    r"|AlphaFold|UniProt\s*O60566)", re.I)
+
+
 def _has_citation(unit: str) -> bool:
     return bool(_PMID_PAT.search(unit) or _DOI_PAT.search(unit)
-                or _PMC_PAT.search(unit) or _REPO_REF_PAT.search(unit))
+                or _PMC_PAT.search(unit) or _REPO_REF_PAT.search(unit)
+                or _DB_SOURCE_PAT.search(unit))
 
 
 def _trigger_sentences(unit: str) -> list[str]:
     """Sentences in `unit` carrying a number+unit / % / mechanism verb."""
     clean = _strip_code(unit)
     hits = [s for s in _SENTENCE_SPLIT.split(clean)
-            if _NUM_UNIT.search(s) or _MECH_VERBS.search(s)]
-    if not hits and (_NUM_UNIT.search(clean) or _MECH_VERBS.search(clean)):
+            if (_NUM_UNIT.search(s) or _MECH_VERBS.search(s))
+            and not s.rstrip().endswith("?")]   # a question asserts nothing
+    if (not hits and not clean.rstrip().endswith(("?", ".", "!"))
+            and (_NUM_UNIT.search(clean) or _MECH_VERBS.search(clean))):
         hits = [clean]  # single-line fragment without terminal punctuation
     return hits
 

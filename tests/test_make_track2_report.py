@@ -80,3 +80,25 @@ def test_committed_report_is_current_and_clean():
     assert "made possible through the Hackathon, organized by Sage Bionetworks" in text
     assert "Cognition Devin Pro" in text and "Claude Pro/Max" in text
     assert "not medical advice" in text
+
+
+def test_upload_copy_is_byte_identical_to_the_report():
+    """`--upload` writes the same bytes to the repo root; the citation
+    gate skips the copy from its coverage scan on that promise."""
+    a = REPO / "docs" / "track2_report.md"
+    b = REPO / "nikhilpise_track2_report.md"
+    if not b.exists():
+        import pytest
+        pytest.skip("upload copy not built (make track2-report)")
+    assert a.read_bytes() == b.read_bytes()
+
+
+def test_report_has_no_uncovered_claims():
+    """GATE 7: every claim sentence in the submitted report carries a
+    citation or names the artifact/registry it came from."""
+    import subprocess
+    out = subprocess.run(
+        [sys.executable, str(REPO / "tools" / "verify_citations.py"), "--offline",
+         "--coverage-strict", "--quiet", str(REPO / "docs" / "track2_report.md")],
+        cwd=REPO, capture_output=True, text=True)
+    assert out.returncode == 0, out.stdout + out.stderr
