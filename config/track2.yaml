@@ -1,0 +1,258 @@
+# Track 2 - mechanism-to-approved-drug repurposing engine, frozen config.
+#
+# frozen_at: 2026-10-12 (decision freeze BEFORE the first engine run; the
+# benchmark truth below is declared blind, see docs/track2_plan.md 4.3).
+# Any post-freeze change must be logged in docs/decisions.md.
+#
+# The engine is gene-agnostic: to run another disease, replace `case` and
+# `seed_genes`; every weight, threshold and library id lives here so a run
+# is fully described by this file (its sha256 is recorded in the outputs).
+
+version: 1
+frozen_at: "2026-10-12"
+
+# IO-bound API calls run through a small order-preserving thread pool.
+# Wall-clock only; results never depend on completion order (see engine.pmap).
+workers: 8
+
+# ---------------------------------------------------------------- case ----
+case:
+  name: mva_bub1b
+  disease: "Mosaic variegated aneuploidy syndrome 1 (MVA1, OMIM:257300)"
+  disease_gene: BUB1B
+  # published in the Track 1 report - the only patient-derived facts used.
+  hpo_terms:
+    [HP:0002859, HP:0000121, HP:0004322, HP:0001508,
+     HP:0003202, HP:0001622, HP:0001518, HP:0200067]
+  variants:
+    - {hgvsc: "c.2210T>G", hgvsp: "p.Leu737Ter", allele_role: null}
+    - {hgvsc: "c.3006T>G", hgvsp: "p.Asn1002Lys", allele_role: hypomorph}
+
+# Three therapeutic axes (plan section 1). Axis assignment for a drug comes
+# from the axis of its module-overlapping targets (config `axis` per gene).
+axes:
+  A: "residual-BubR1 rescue - raise abundance/activity of the hypomorph allele product"
+  B: "senescence/damage control - senolytic or senomorphic damping of aneuploidy sequelae"
+  C: "aneuploid vulnerability / cancer interception - selective stress on aneuploid cells"
+
+# ---------------------------------------------------------- seed genes ----
+# Each seed carries a role (disease_gene | pathway) and a one-line
+# justification - frozen so the module cannot drift post-hoc.
+seed_genes:
+  # -- axis A: SAC / kinetochore-attachment module the defect lives in ------
+  - {symbol: BUB1B,   role: disease_gene, axis: A,
+     justification: "Disease gene; p.Leu737Ter null + p.Asn1002Lys hypomorph reduces BubR1 and weakens the spindle assembly checkpoint."}
+  - {symbol: BUB1,    role: pathway, axis: A,
+     justification: "SAC kinase partnering BubR1 at kinetochores; its loss phenocopies checkpoint weakness."}
+  - {symbol: BUB3,    role: pathway, axis: A,
+     justification: "GLEBS-domain partner of BubR1/Bub1 in the mitotic checkpoint complex."}
+  - {symbol: MAD2L1,  role: pathway, axis: A,
+     justification: "Mad2 core of the checkpoint complex restraining CDC20-APC/C."}
+  - {symbol: MAD1L1,  role: pathway, axis: A,
+     justification: "Mad1; biallelic MAD1L1 variants cause an MVA-like phenotype; recruits Mad2."}
+  - {symbol: CDC20,   role: pathway, axis: A,
+     justification: "APC/C activator directly restrained by the checkpoint complex - the SAC effector."}
+  - {symbol: KNL1,    role: pathway, axis: A,
+     justification: "Kinetochore scaffold docking Bub3-BubR1 and PP2A-B56 for error correction."}
+  - {symbol: PPP2R5A, role: pathway, axis: A,
+     justification: "PP2A-B56 regulatory subunit recruited through the BubR1 KARD domain; error correction."}
+  - {symbol: PPP2R5D, role: pathway, axis: A,
+     justification: "B56-delta subunit of the same kinetochore PP2A module."}
+  - {symbol: CEP57,   role: pathway, axis: A,
+     justification: "MVA2 disease gene; centrosome/spindle integrity with the same clinical phenotype."}
+  - {symbol: TRIP13,  role: pathway, axis: A,
+     justification: "MVA3 disease gene; AAA+ ATPase governing checkpoint-complex disassembly."}
+  - {symbol: SIRT2,   role: pathway, axis: A,
+     justification: "Deacetylates and stabilizes BubR1; a druggable NAD+-dependent lever on residual BubR1."}
+  - {symbol: AURKB,   role: pathway, axis: A,
+     justification: "Chromosomal-passenger kinase opposing PP2A-B56 in attachment error correction."}
+  # -- axis B: senescence / aneuploidy-damage response ----------------------
+  - {symbol: CDKN2A,  role: pathway, axis: B,
+     justification: "p16 senescence effector; clearing p16+ cells rescued the BubR1-hypomorph mouse."}
+  - {symbol: CDKN1A,  role: pathway, axis: B,
+     justification: "p21; the p53-driven proliferative brake executed downstream of aneuploidy."}
+  - {symbol: TP53,    role: pathway, axis: B,
+     justification: "Guardian node of the aneuploidy response; drives the senescence axis and cancer context."}
+  - {symbol: MTOR,    role: pathway, axis: B,
+     justification: "mTOR sustains the senescent state; approved rapalogs are the lead senomorphics."}
+  - {symbol: PRKAA1,  role: pathway, axis: B,
+     justification: "AMPK alpha1; energy-sensing node engaged by metformin-class agents."}
+  - {symbol: PRKAA2,  role: pathway, axis: B,
+     justification: "AMPK alpha2 catalytic subunit; same energy-sensing axis."}
+  # -- axis C: aneuploid-cell dependency / cancer interception --------------
+  - {symbol: TTK,     role: pathway, axis: C,
+     justification: "MPS1; aneuploid cells are dependent on residual checkpoint tone - interception lever."}
+  - {symbol: KIF18A,  role: pathway, axis: C,
+     justification: "Kinesin-8; chromosomally unstable cells are selectively dependent on KIF18A."}
+
+# --------------------------------------------------------- module build ---
+module:
+  # disease module = seed genes  UNION  top STRING neighbours of
+  # `disease_gene` (identical rule in benchmark mode, where seeds = {gene}).
+  neighbor_limit: 60          # partners per disease gene, STRING API
+  required_score: 700         # STRING combined score, 0-1000 (high confidence)
+  # routing universe for shortest paths = module UNION first neighbours of
+  # every module gene (same score threshold, limited to universe_partner_limit
+  # per gene, hard-capped at universe_cap nodes - deterministic truncation in
+  # sorted order so a hub gene cannot swamp the graph).
+  universe_partner_limit: 40
+  universe_cap: 450
+
+# ------------------------------------------------------ drug collection ---
+collection:
+  # candidate drugs are harvested for every module gene from
+  #   Open Targets target.drugAndClinicalCandidates
+  #   DGIdb gene.interactions
+  # then resolved to ChEMBL ids (conceptId, else MyChem/ChEMBL name lookup).
+  # PER-GENE cap keeps each module gene's strongest-linked drugs
+  # (OT-approved flag first, then DGIdb source count, then name) so a hub
+  # neighbour cannot crowd out every other gene's candidates.
+  per_gene_cap: 50
+  max_unresolved_name_lookups: 400   # bound live run time; overflow logged
+  chembl_name_lookup: true
+  # investigational code names (CC-115, AZD-8055, PD-0325901, ...) never
+  # resolve to an approved INN - skipped before name lookups, counted.
+  skip_code_names: true
+  # global backstop cap pre-gate by a deterministic ranking
+  # (#module genes linked desc, #DGIdb sources desc, name asc) - disclosed
+  # bound, counts recorded in the output funnel.
+  max_candidates: 800
+
+# -------------------------------------------------------- approval gate ---
+approval:
+  # approved  <=>  ChEMBL max_phase == 4 AND withdrawn_flag is false.
+  # Cross-checks recorded as evidence, never as the sole gate:
+  #   openfda  - an openFDA drug label hit on generic/substance name
+  #   drugcentral - DrugCentral approval rows via MyChem.info (FDA/EMA/PMDA)
+  max_phase: 4
+  exclude_withdrawn: true
+  note_ema_only: true          # EMA- or PMDA-only approvals flagged, not dropped
+
+# ------------------------------------------------------------- LINCS ------
+# Disease-proxy signature for SigCom LINCS rank reversal (L1000 chemical
+# perturbagen library).  Assumption, declared: aneuploidy drives a
+# senescence/SASP program UP while the weakened mitotic/checkpoint module
+# trends DOWN.  Channel degrades to null if the API is unreachable.
+lincs:
+  enabled: true
+  library: l1000_cp            # LINCS L1000 chemical perturbagen consensus
+  result_limit: 100
+  up_genes:   [CDKN1A, CDKN2A, TP53, SERPINE1, IL6, GLB1]
+  down_genes: [BUB1B, BUB1, CDC20, MAD2L1, TTK, AURKB, KNL1]
+  # name harmonisation between L1000 pert_name strings and INN spellings
+  alias_map:
+    rapamycin: sirolimus
+    glyburide: glibenclamide
+    "fk-506": tacrolimus
+    fk506: tacrolimus
+    "gsk-690693": capivasertib
+
+# --------------------------------------------------------- proximity ------
+# Guney et al. 2016 (PMID 26831545) 'closest' distance on the STRING graph:
+#   d_c(T, M) = (1/|T|) * sum_t min_s dist(t, s)   s in module M
+# z-score against degree-matched random target sets (fixed seed).
+proximity:
+  n_random: 200
+  random_seed: 20261012
+  unreachable_distance: 6     # assigned when a target is outside the
+                              # routing universe or not connected
+  z_full: -2.0                # z <= z_full maps to channel 1.0
+  z_zero: 0.0                 # z >= z_zero maps to channel 0.0
+
+# ------------------------------------------------------------ scoring -----
+# score = sum(w_i * c_i);  a missing/failed channel contributes 0 with the
+# weight kept in the denominator (conservative, documented in engine.md).
+scoring:
+  weights:
+    target_overlap:       0.30   # |targets ∩ module| / |targets|
+    network_proximity:    0.25   # z mapped piecewise (proximity.z_full..z_zero)
+    signature_reversal:   0.20   # best LINCS reverser, logp_fisher capped
+    interaction_evidence: 0.15   # min(1, #module genes w/ DGIdb hit / 2)
+    literature:           0.10   # min(1, DGIdb publication count / 3)
+  reversal_logp_cap: 20.0        # -log10(p) saturation for signature channel
+  tiers:
+    T1: 0.45                # score >= 0.45 AND >= 2 non-zero channels
+    T2: 0.25                # score >= 0.25
+    # everything else T3
+  t1_min_channels: 2
+
+# ---------------------------------------------------------- benchmark -----
+# Retrospective truth, frozen blind: seed each case's disease gene ONLY
+# (module = gene + STRING neighbours); the declared approved drugs must
+# never be added as seeds.  Citations resolved live via NCBI eutils on
+# 2026-10-12; title + year recorded verbatim.
+benchmark:
+  neighbor_limit: 60
+  required_score: 700
+  cases:
+    - gene: TSC2
+      disease: "tuberous sclerosis complex / sporadic LAM"
+      known_drugs: [everolimus, sirolimus]
+      citations:
+        - {pmid: "21047224", year: 2010,
+           title: "Everolimus for subependymal giant-cell astrocytomas in tuberous sclerosis"}
+        - {pmid: "21410393", year: 2011,
+           title: "Efficacy and safety of sirolimus in lymphangioleiomyomatosis"}
+    - gene: PIK3CA
+      disease: "PIK3CA-related overgrowth spectrum"
+      known_drugs: [alpelisib]
+      citations:
+        - {pmid: "29899452", year: 2018,
+           title: "Targeted therapy in patients with PIK3CA-related overgrowth syndrome"}
+    - gene: FBN1
+      disease: "Marfan syndrome"
+      known_drugs: [losartan]
+      citations:
+        - {pmid: "25405392", year: 2014,
+           title: "Atenolol versus losartan in children and young adults with Marfan's syndrome"}
+    - gene: KCNJ11
+      disease: "KCNJ11 neonatal diabetes"
+      known_drugs: [glibenclamide]
+      citations:
+        - {pmid: "16885550", year: 2006,
+           title: "Switching from insulin to oral sulfonylureas in patients with diabetes due to Kir6.2 mutations"}
+    - gene: CFTR
+      disease: "cystic fibrosis (G551D)"
+      known_drugs: [ivacaftor]
+      citations:
+        - {pmid: "22047557", year: 2011,
+           title: "A CFTR potentiator in patients with cystic fibrosis and the G551D mutation"}
+    - gene: SCN1A
+      disease: "Dravet syndrome"
+      known_drugs: [fenfluramine]
+      citations:
+        - {pmid: "31862249", year: 2019,
+           title: "Fenfluramine hydrochloride for the treatment of seizures in Dravet syndrome: a randomised, double-blind, placebo-controlled trial"}
+    - gene: ACVR1
+      disease: "fibrodysplasia ossificans progressiva"
+      known_drugs: [palovarotene]
+      citations:
+        - {pmid: "36583535", year: 2023,
+           title: "Reduction of New Heterotopic Ossification (HO) in the Open-Label, Phase 3 MOVE Trial of Palovarotene for Fibrodysplasia Ossificans Progressiva (FOP)"}
+    - gene: CACNA1A
+      disease: "episodic ataxia type 2"
+      known_drugs: [acetazolamide]
+      citations:
+        - {pmid: "22158718", year: 2012,
+           title: "Use of acetazolamide in sulfonamide-allergic patients with neurologic channelopathies"}
+        - {pmid: "39174244", year: 2024,
+           title: "The episodic ataxias"}
+    - gene: GLA
+      disease: "Fabry disease"
+      known_drugs: [migalastat]
+      citations:
+        - {pmid: "27834756", year: 2017,
+           title: "Oral pharmacological chaperone migalastat compared with enzyme replacement therapy in Fabry disease: 18-month results from the randomised phase III ATTRACT study"}
+
+# ---------------------------------------------------------- endpoints -----
+endpoints:
+  opentargets: "https://api.platform.opentargets.org/api/v4/graphql"
+  chembl:      "https://www.ebi.ac.uk/chembl/api/data"
+  dgidb:       "https://dgidb.org/api/graphql"
+  string:      "https://string-db.org/api"
+  openfda:     "https://api.fda.gov/drug/label.json"
+  mychem:      "https://mychem.info/v1"
+  lincs_meta:  "https://maayanlab.cloud/sigcom-lincs/metadata-api"
+  lincs_data:  "https://data-api.sigcom-lincs.k8s.maayanlab.cloud/v1/api/v1"
+  eutils:      "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+  user_agent:  "mva-track2-engine/0.1 (MVA Hackathon 2026; track2 lane L2)"

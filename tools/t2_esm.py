@@ -39,6 +39,8 @@ import argparse
 import json
 import os
 import re
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -151,10 +153,26 @@ def median(vals: list[float]) -> float | None:
 
 
 # -------------------------------------------------------------- fetchers
-def _get_json(url: str, data: bytes | None = None):
-    req = urllib.request.Request(url, data=data, headers=UA)
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.loads(r.read().decode("utf-8"))
+RETRY_STATUS = (429, 500, 502, 503, 504)
+
+
+def _get_json(url: str, data: bytes | None = None, retries: int = 5,
+              backoff: float = 2.0, _sleep=time.sleep):
+    """GET/POST JSON with exponential backoff on rate limits and transient
+    server errors. NCBI answers 429 to shared cloud egress IPs (observed
+    on Modal 2026-10-12), so a single attempt is not enough there. The
+    final failure is re-raised as a plain RuntimeError: urllib's HTTPError
+    carries an open file handle that Modal cannot pickle back."""
+    for attempt in range(retries + 1):
+        req = urllib.request.Request(url, data=data, headers=UA)
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            if e.code not in RETRY_STATUS or attempt == retries:
+                raise RuntimeError(f"HTTP {e.code} for {url}") from None
+            wait = float(e.headers.get("Retry-After") or backoff * 2 ** attempt)
+            _sleep(min(wait, 60.0))
 
 
 def fetch_uniprot(acc: str = UNIPROT_ACC) -> dict:

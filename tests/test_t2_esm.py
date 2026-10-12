@@ -150,3 +150,50 @@ def test_mock_scorer_rejects_wt_mismatch():
     scorer = te.MockScorer()
     with pytest.raises(ValueError):
         scorer.score_variants("ACDE", [{"pos": 2, "wt": "G", "mut": "A"}])
+
+
+class _Resp:
+    def __init__(self, body: bytes):
+        self._b = body
+
+    def read(self):
+        return self._b
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+
+def _fail_with(code):
+    import urllib.error
+
+    def opener(req, timeout=60):
+        raise urllib.error.HTTPError(req.full_url, code, "err", {}, None)
+    return opener
+
+
+def test_get_json_retries_429_then_succeeds(monkeypatch):
+    """NCBI 429s shared cloud IPs: back off and retry; a persistent or
+    non-retryable failure surfaces as a picklable RuntimeError."""
+    calls, sleeps = [], []
+    flaky_fail = _fail_with(429)
+
+    def flaky(req, timeout=60):
+        calls.append(req.full_url)
+        if len(calls) < 3:
+            flaky_fail(req)
+        return _Resp(b'{"ok": 1}')
+
+    monkeypatch.setattr(te.urllib.request, "urlopen", flaky)
+    assert te._get_json("https://x.test/a", _sleep=sleeps.append) == {"ok": 1}
+    assert len(calls) == 3 and sleeps == [2.0, 4.0]
+
+    monkeypatch.setattr(te.urllib.request, "urlopen", _fail_with(429))
+    with pytest.raises(RuntimeError, match="HTTP 429"):
+        te._get_json("https://x.test/b", retries=2, _sleep=lambda s: None)
+
+    monkeypatch.setattr(te.urllib.request, "urlopen", _fail_with(404))
+    with pytest.raises(RuntimeError, match="HTTP 404"):
+        te._get_json("https://x.test/c", _sleep=lambda s: pytest.fail("404 must not retry"))

@@ -1,0 +1,1 @@
+{"request": {"method": "GET", "url": "https://mychem.info/v1/query?q=okadaic%20acid&fields=inn,drugcentral,chembl.molecule_chembl_id&size=5", "body": null}, "status": 200, "fetched_at": "2026-10-12T14:24:35+00:00", "body": "{\"took\": 2, \"total\": 6, \"max_score\": 43.0598, \"hits\": [{\"chembl\": {\"molecule_chembl_id\": \"CHEMBL280487\"}}, {}, {}, {}, {}]}"}

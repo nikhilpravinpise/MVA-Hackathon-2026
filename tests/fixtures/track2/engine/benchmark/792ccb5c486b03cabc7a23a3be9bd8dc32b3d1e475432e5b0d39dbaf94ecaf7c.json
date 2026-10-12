@@ -1,0 +1,1 @@
+{"request": {"method": "GET", "url": "https://www.ebi.ac.uk/chembl/api/data/mechanism.json?molecule_chembl_id=CHEMBL985&limit=50", "body": null}, "status": 200, "fetched_at": "2026-10-12T14:25:37+00:00", "body": "{\"mechanisms\": []}"}

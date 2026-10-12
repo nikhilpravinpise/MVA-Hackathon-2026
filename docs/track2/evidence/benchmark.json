@@ -1,0 +1,873 @@
+{
+  "schema": "t2.benchmark/1",
+  "generated_by": "tools/run_track2.py --benchmark",
+  "generated_at": "2026-10-12T14:37:17+00:00",
+  "cases": [
+    {
+      "gene": "TSC2",
+      "disease": "tuberous sclerosis complex / sporadic LAM",
+      "citations": [
+        {
+          "pmid": "21047224",
+          "year": 2010,
+          "title": "Everolimus for subependymal giant-cell astrocytomas in tuberous sclerosis"
+        },
+        {
+          "pmid": "21410393",
+          "year": 2011,
+          "title": "Efficacy and safety of sirolimus in lymphangioleiomyomatosis"
+        }
+      ],
+      "module_genes": 61,
+      "n_candidates": 105,
+      "funnel": {
+        "module_genes": 61,
+        "ot_rows": 176,
+        "dgidb_interactions": 1540,
+        "collected": 570,
+        "dropped_over_cap": 0,
+        "name_lookups": 252,
+        "code_names_skipped": 81,
+        "weak_names_skipped": 49,
+        "unresolved_names": 289,
+        "gated_in": 105,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 148,
+        "gated_out_withdrawn": 9,
+        "gated_out_unresolved": 289
+      },
+      "known_drugs": [
+        {
+          "drug": "everolimus",
+          "found": true,
+          "stage": "ranked",
+          "rank": 3,
+          "score": 0.77,
+          "tier": "T1"
+        },
+        {
+          "drug": "sirolimus",
+          "found": true,
+          "stage": "ranked",
+          "rank": 4,
+          "score": 0.77,
+          "tier": "T1"
+        }
+      ],
+      "rank_of_known": 3,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "fulvestrant",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "tamoxifen",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "everolimus",
+          "score": 0.77,
+          "tier": "T1"
+        },
+        {
+          "drug": "sirolimus",
+          "score": 0.77,
+          "tier": "T1"
+        },
+        {
+          "drug": "alpelisib",
+          "score": 0.75,
+          "tier": "T1"
+        },
+        {
+          "drug": "temsirolimus",
+          "score": 0.75,
+          "tier": "T1"
+        },
+        {
+          "drug": "enzalutamide",
+          "score": 0.725,
+          "tier": "T1"
+        },
+        {
+          "drug": "estradiol valerate",
+          "score": 0.725,
+          "tier": "T1"
+        },
+        {
+          "drug": "cantharidin",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "capivasertib",
+          "score": 0.7,
+          "tier": "T1"
+        }
+      ]
+    },
+    {
+      "gene": "PIK3CA",
+      "disease": "PIK3CA-related overgrowth spectrum",
+      "citations": [
+        {
+          "pmid": "29899452",
+          "year": 2018,
+          "title": "Targeted therapy in patients with PIK3CA-related overgrowth syndrome"
+        }
+      ],
+      "module_genes": 61,
+      "n_candidates": 166,
+      "funnel": {
+        "module_genes": 61,
+        "ot_rows": 1026,
+        "dgidb_interactions": 5147,
+        "collected": 1208,
+        "dropped_over_cap": 408,
+        "name_lookups": 400,
+        "code_names_skipped": 122,
+        "weak_names_skipped": 52,
+        "unresolved_names": 457,
+        "gated_in": 166,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 147,
+        "gated_out_withdrawn": 1,
+        "gated_out_unresolved": 457
+      },
+      "known_drugs": [
+        {
+          "drug": "alpelisib",
+          "found": true,
+          "stage": "ranked",
+          "rank": 2,
+          "score": 0.8,
+          "tier": "T1"
+        }
+      ],
+      "rank_of_known": 2,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "afatinib",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "alpelisib",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "avapritinib",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "brigatinib",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "cabozantinib",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "epirubicin",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "erlotinib",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "fulvestrant",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "gefitinib",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "ibrutinib",
+          "score": 0.8,
+          "tier": "T1"
+        }
+      ]
+    },
+    {
+      "gene": "FBN1",
+      "disease": "Marfan syndrome",
+      "citations": [
+        {
+          "pmid": "25405392",
+          "year": 2014,
+          "title": "Atenolol versus losartan in children and young adults with Marfan's syndrome"
+        }
+      ],
+      "module_genes": 47,
+      "n_candidates": 62,
+      "funnel": {
+        "module_genes": 47,
+        "ot_rows": 45,
+        "dgidb_interactions": 266,
+        "collected": 207,
+        "dropped_over_cap": 0,
+        "name_lookups": 144,
+        "code_names_skipped": 13,
+        "weak_names_skipped": 16,
+        "unresolved_names": 107,
+        "gated_in": 62,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 35,
+        "gated_out_withdrawn": 2,
+        "gated_out_unresolved": 107
+      },
+      "known_drugs": [
+        {
+          "drug": "losartan",
+          "found": false,
+          "stage": "not_collected",
+          "rank": null,
+          "score": null,
+          "tier": null
+        }
+      ],
+      "rank_of_known": null,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "folic acid",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "amifostine",
+          "score": 0.7636,
+          "tier": "T1"
+        },
+        {
+          "drug": "hydrogen peroxide",
+          "score": 0.7636,
+          "tier": "T1"
+        },
+        {
+          "drug": "isopropyl alcohol",
+          "score": 0.7505,
+          "tier": "T1"
+        },
+        {
+          "drug": "dacarbazine",
+          "score": 0.637,
+          "tier": "T1"
+        },
+        {
+          "drug": "etidronic acid",
+          "score": 0.637,
+          "tier": "T1"
+        },
+        {
+          "drug": "cyclosporine",
+          "score": 0.5965,
+          "tier": "T1"
+        },
+        {
+          "drug": "hydrocortisone butyrate",
+          "score": 0.5612,
+          "tier": "T1"
+        },
+        {
+          "drug": "ramipril",
+          "score": 0.5612,
+          "tier": "T1"
+        },
+        {
+          "drug": "cladribine",
+          "score": 0.56,
+          "tier": "T1"
+        }
+      ]
+    },
+    {
+      "gene": "KCNJ11",
+      "disease": "KCNJ11 neonatal diabetes",
+      "citations": [
+        {
+          "pmid": "16885550",
+          "year": 2006,
+          "title": "Switching from insulin to oral sulfonylureas in patients with diabetes due to Kir6.2 mutations"
+        }
+      ],
+      "module_genes": 26,
+      "n_candidates": 80,
+      "funnel": {
+        "module_genes": 26,
+        "ot_rows": 68,
+        "dgidb_interactions": 384,
+        "collected": 322,
+        "dropped_over_cap": 0,
+        "name_lookups": 138,
+        "code_names_skipped": 53,
+        "weak_names_skipped": 23,
+        "unresolved_names": 140,
+        "gated_in": 80,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 78,
+        "gated_out_withdrawn": 1,
+        "gated_out_unresolved": 140
+      },
+      "known_drugs": [
+        {
+          "drug": "glibenclamide",
+          "found": true,
+          "stage": "ranked",
+          "rank": 11,
+          "score": 0.7,
+          "tier": "T1"
+        }
+      ],
+      "rank_of_known": 11,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "baclofen",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "repaglinide",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "epirubicin",
+          "score": 0.7333,
+          "tier": "T1"
+        },
+        {
+          "drug": "glimepiride",
+          "score": 0.7333,
+          "tier": "T1"
+        },
+        {
+          "drug": "acetohexamide",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "calcium oxybate",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "chlorpropamide",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "diazoxide",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "gliclazide",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "glipizide",
+          "score": 0.7,
+          "tier": "T1"
+        }
+      ]
+    },
+    {
+      "gene": "CFTR",
+      "disease": "cystic fibrosis (G551D)",
+      "citations": [
+        {
+          "pmid": "22047557",
+          "year": 2011,
+          "title": "A CFTR potentiator in patients with cystic fibrosis and the G551D mutation"
+        }
+      ],
+      "module_genes": 61,
+      "n_candidates": 96,
+      "funnel": {
+        "module_genes": 61,
+        "ot_rows": 80,
+        "dgidb_interactions": 641,
+        "collected": 452,
+        "dropped_over_cap": 0,
+        "name_lookups": 218,
+        "code_names_skipped": 43,
+        "weak_names_skipped": 49,
+        "unresolved_names": 205,
+        "gated_in": 96,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 128,
+        "gated_out_withdrawn": 9,
+        "gated_out_unresolved": 205
+      },
+      "known_drugs": [
+        {
+          "drug": "ivacaftor",
+          "found": true,
+          "stage": "ranked",
+          "rank": 6,
+          "score": 0.699,
+          "tier": "T1"
+        }
+      ],
+      "rank_of_known": 6,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "riboflavin",
+          "score": 0.7667,
+          "tier": "T1"
+        },
+        {
+          "drug": "urea",
+          "score": 0.7667,
+          "tier": "T1"
+        },
+        {
+          "drug": "elexacaftor",
+          "score": 0.7242,
+          "tier": "T1"
+        },
+        {
+          "drug": "tezacaftor",
+          "score": 0.7242,
+          "tier": "T1"
+        },
+        {
+          "drug": "crofelemer",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "ivacaftor",
+          "score": 0.699,
+          "tier": "T1"
+        },
+        {
+          "drug": "cysteamine",
+          "score": 0.6575,
+          "tier": "T1"
+        },
+        {
+          "drug": "deferoxamine",
+          "score": 0.6575,
+          "tier": "T1"
+        },
+        {
+          "drug": "hydralazine",
+          "score": 0.6575,
+          "tier": "T1"
+        },
+        {
+          "drug": "ifosfamide",
+          "score": 0.6575,
+          "tier": "T1"
+        }
+      ]
+    },
+    {
+      "gene": "SCN1A",
+      "disease": "Dravet syndrome",
+      "citations": [
+        {
+          "pmid": "31862249",
+          "year": 2019,
+          "title": "Fenfluramine hydrochloride for the treatment of seizures in Dravet syndrome: a randomised, double-blind, placebo-controlled trial"
+        }
+      ],
+      "module_genes": 46,
+      "n_candidates": 125,
+      "funnel": {
+        "module_genes": 46,
+        "ot_rows": 1025,
+        "dgidb_interactions": 1265,
+        "collected": 255,
+        "dropped_over_cap": 0,
+        "name_lookups": 70,
+        "code_names_skipped": 25,
+        "weak_names_skipped": 12,
+        "unresolved_names": 71,
+        "gated_in": 125,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 31,
+        "gated_out_withdrawn": 12,
+        "gated_out_unresolved": 71
+      },
+      "known_drugs": [
+        {
+          "drug": "fenfluramine",
+          "found": false,
+          "stage": "not_collected",
+          "rank": null,
+          "score": null,
+          "tier": null
+        }
+      ],
+      "rank_of_known": null,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "bupivacaine",
+          "score": 0.7333,
+          "tier": "T1"
+        },
+        {
+          "drug": "articaine",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "articaine hydrochloride",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "benoxinate",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "benoxinate hydrochloride",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "carbamazepine",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "chloroprocaine",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "cocaine",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "cocaine hydrochloride",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "dibucaine",
+          "score": 0.7,
+          "tier": "T1"
+        }
+      ]
+    },
+    {
+      "gene": "ACVR1",
+      "disease": "fibrodysplasia ossificans progressiva",
+      "citations": [
+        {
+          "pmid": "36583535",
+          "year": 2023,
+          "title": "Reduction of New Heterotopic Ossification (HO) in the Open-Label, Phase 3 MOVE Trial of Palovarotene for Fibrodysplasia Ossificans Progressiva (FOP)"
+        }
+      ],
+      "module_genes": 50,
+      "n_candidates": 49,
+      "funnel": {
+        "module_genes": 50,
+        "ot_rows": 38,
+        "dgidb_interactions": 475,
+        "collected": 229,
+        "dropped_over_cap": 0,
+        "name_lookups": 107,
+        "code_names_skipped": 15,
+        "weak_names_skipped": 23,
+        "unresolved_names": 96,
+        "gated_in": 49,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 77,
+        "gated_out_withdrawn": 1,
+        "gated_out_unresolved": 96
+      },
+      "known_drugs": [
+        {
+          "drug": "palovarotene",
+          "found": false,
+          "stage": "not_collected",
+          "rank": null,
+          "score": null,
+          "tier": null
+        }
+      ],
+      "rank_of_known": null,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "dibotermin alfa",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "eptotermin alfa",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "amifostine",
+          "score": 0.6753,
+          "tier": "T1"
+        },
+        {
+          "drug": "folic acid",
+          "score": 0.564,
+          "tier": "T1"
+        },
+        {
+          "drug": "sirolimus",
+          "score": 0.564,
+          "tier": "T1"
+        },
+        {
+          "drug": "cladribine",
+          "score": 0.5307,
+          "tier": "T1"
+        },
+        {
+          "drug": "cyclophosphamide anhydrous",
+          "score": 0.5307,
+          "tier": "T1"
+        },
+        {
+          "drug": "everolimus",
+          "score": 0.5307,
+          "tier": "T1"
+        },
+        {
+          "drug": "hydrogen peroxide",
+          "score": 0.5307,
+          "tier": "T1"
+        },
+        {
+          "drug": "idoxuridine",
+          "score": 0.5307,
+          "tier": "T1"
+        }
+      ]
+    },
+    {
+      "gene": "CACNA1A",
+      "disease": "episodic ataxia type 2",
+      "citations": [
+        {
+          "pmid": "22158718",
+          "year": 2012,
+          "title": "Use of acetazolamide in sulfonamide-allergic patients with neurologic channelopathies"
+        },
+        {
+          "pmid": "39174244",
+          "year": 2024,
+          "title": "The episodic ataxias"
+        }
+      ],
+      "module_genes": 61,
+      "n_candidates": 100,
+      "funnel": {
+        "module_genes": 61,
+        "ot_rows": 513,
+        "dgidb_interactions": 1113,
+        "collected": 401,
+        "dropped_over_cap": 0,
+        "name_lookups": 158,
+        "code_names_skipped": 32,
+        "weak_names_skipped": 31,
+        "unresolved_names": 125,
+        "gated_in": 100,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 118,
+        "gated_out_withdrawn": 10,
+        "gated_out_unresolved": 125
+      },
+      "known_drugs": [
+        {
+          "drug": "acetazolamide",
+          "found": false,
+          "stage": "not_collected",
+          "rank": null,
+          "score": null,
+          "tier": null
+        }
+      ],
+      "rank_of_known": null,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "amlodipine",
+          "score": 0.8,
+          "tier": "T1"
+        },
+        {
+          "drug": "nicardipine",
+          "score": 0.7333,
+          "tier": "T1"
+        },
+        {
+          "drug": "celecoxib",
+          "score": 0.7146,
+          "tier": "T1"
+        },
+        {
+          "drug": "clevidipine",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "diltiazem",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "isradipine",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "nifedipine",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "nisoldipine",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "verapamil",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "amlodipine benzoate",
+          "score": 0.6993,
+          "tier": "T1"
+        }
+      ]
+    },
+    {
+      "gene": "GLA",
+      "disease": "Fabry disease",
+      "citations": [
+        {
+          "pmid": "27834756",
+          "year": 2017,
+          "title": "Oral pharmacological chaperone migalastat compared with enzyme replacement therapy in Fabry disease: 18-month results from the randomised phase III ATTRACT study"
+        }
+      ],
+      "module_genes": 39,
+      "n_candidates": 26,
+      "funnel": {
+        "module_genes": 39,
+        "ot_rows": 22,
+        "dgidb_interactions": 188,
+        "collected": 158,
+        "dropped_over_cap": 0,
+        "name_lookups": 45,
+        "code_names_skipped": 5,
+        "weak_names_skipped": 37,
+        "unresolved_names": 65,
+        "gated_in": 26,
+        "gated_out_no_chembl": 0,
+        "gated_out_phase": 59,
+        "gated_out_withdrawn": 2,
+        "gated_out_unresolved": 65
+      },
+      "known_drugs": [
+        {
+          "drug": "migalastat",
+          "found": true,
+          "stage": "ranked",
+          "rank": 2,
+          "score": 0.6669,
+          "tier": "T1"
+        }
+      ],
+      "rank_of_known": 2,
+      "k": 25,
+      "top10": [
+        {
+          "drug": "voglibose",
+          "score": 0.7,
+          "tier": "T1"
+        },
+        {
+          "drug": "migalastat",
+          "score": 0.6669,
+          "tier": "T1"
+        },
+        {
+          "drug": "miglitol",
+          "score": 0.6669,
+          "tier": "T1"
+        },
+        {
+          "drug": "acarbose",
+          "score": 0.6136,
+          "tier": "T1"
+        },
+        {
+          "drug": "pyrimethamine",
+          "score": 0.5634,
+          "tier": "T1"
+        },
+        {
+          "drug": "busulfan",
+          "score": 0.5611,
+          "tier": "T1"
+        },
+        {
+          "drug": "oseltamivir",
+          "score": 0.5579,
+          "tier": "T1"
+        },
+        {
+          "drug": "uracil mustard",
+          "score": 0.5277,
+          "tier": "T1"
+        },
+        {
+          "drug": "avalglucosidase alfa",
+          "score": 0.5246,
+          "tier": "T1"
+        },
+        {
+          "drug": "atidarsagene autotemcel",
+          "score": 0.4944,
+          "tier": "T1"
+        }
+      ]
+    }
+  ],
+  "n_cases": 9,
+  "n_known_recovered": 6,
+  "recall_at_1": 0.0,
+  "recall_at_5": 0.333,
+  "recall_at_10": 0.444,
+  "recall_at_25": 0.556,
+  "notes": [
+    "recall@k = fraction of cases whose best-ranked declared drug appears at rank <= k in the approved-candidate list",
+    "a declared drug missing entirely means it never entered the candidate space (its targets are not module genes) or failed the approval gate - both reported via funnel counts"
+  ],
+  "config_sha": "16a5ee589395c0ec9cd043d2ff3f846f3a5270d921a3b0392a1a0aa2971821cd"
+}
