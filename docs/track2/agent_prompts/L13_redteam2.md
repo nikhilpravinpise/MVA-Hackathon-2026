@@ -1,0 +1,18 @@
+LANE L13 - Second hostile red team on the corrected package. Report file: docs/track2/agent_reports/L13.md.
+Owned paths: docs/track2/redteam2.md, docs/track2/rubric_self_assessment.md, docs/track2/agent_reports/L13.md.
+READ-ONLY everywhere else. You find and prove problems; you do not fix them. Running read-only commands (pytest, the generators, verify_citations, git log, live API spot-checks) is expected.
+
+Context: the first red team (docs/track2/redteam.md, by lane L9 at commit 97ea2b7) scored the package Rigor 84 / Impact 86 / Innovation 85 / Scalability 87, weighted 85.2, and raised 2 MAJOR + 8 MINOR + 8 NIT findings. Lanes L10, L11 and L12 then closed them. Read redteam.md and the reports L10.md, L11.md, L12.md first, then review the package as it stands now (HEAD).
+
+Your job has three parts:
+
+1. **Verify the closures, hostilely.** For every finding in redteam.md, confirm in the live artifacts that it is actually closed and that the fix did not introduce a new problem or quietly weaken a check. Specifically interrogate:
+   - the pediatric-flag rework (L11): is `classify_pediatric` right on labels it was NOT tested against? Pick 5 drugs from candidates.json you did not see in its tests, read their recorded label fixtures, and judge the flag yourself. A false POSITIVE is worse than a false negative here - hunt for one.
+   - the openFDA single-ingredient preference: does it ever pick a label for the wrong molecule (the methylprednisolone class of bug) that the fix did not catch?
+   - the coverage detector's new exemptions (operational measurements, operational fragments, questions, registry ids): construct a sentence that SHOULD be flagged and is not. If the gate can be fooled by ordinary report prose, that is a finding.
+   - the superlatives L10 kept ("only Axis-A candidate", "only candidate with direct aneuploidy-selective evidence", "strongest pediatric regulatory footing", "most direct senolytic after D+Q"): verify each against the artifacts and the literature, not against our own prose.
+   - L12's out-of-paths edit to tests/test_track2_engine.py: does the test still fail when it should? Mutate the committed evidence (in a scratch copy) and confirm the comparison tests catch it.
+2. **Attack what the first review did not reach.** It did not audit: the family-facing summary (docs/track2/FAMILY_SUMMARY.md), the video script (video/scenes.yaml - every number spoken must exist in the evidence; check them), the submission fields doc, the PDF rendering (tools/make_track2_pdf.py - does anything in the report render wrong or get silently dropped?), the Makefile targets, and the repo's public-readiness (would a judge cloning it be able to reproduce the report? run `make track2-report` style checks and say what breaks).
+3. **Re-score and decide.** Rewrite docs/track2/rubric_self_assessment.md for the current state: per criterion (Scientific Rigor 35%, Potential Impact 25%, Innovation 25%, Scalability 15%) give the evidence for the score with file:line, the strongest remaining argument against, a numeric score, and the single change that would raise it most. GATE 7 in docs/track2_plan.md wants >= 85% per criterion; say plainly where we are below and why. End with: the prioritised remaining fix list, and a verdict on whether this would place top-three against the competitor work described in docs/track2/landscape.md.
+
+Write findings into docs/track2/redteam2.md with severity (BLOCKER/MAJOR/MINOR/NIT), file:line, the evidence that proves it, and the smallest fix. Keep a "checked clean" ledger of what you could not fault - that is as useful as the findings. Do not soften anything.
