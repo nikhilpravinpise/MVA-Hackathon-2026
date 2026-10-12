@@ -29,3 +29,11 @@ table { border-collapse: collapse; font-size: 30px; width: 100%; }
 td, th { text-align: left; padding: 14px 18px; border-bottom: 2px solid #22304f; }
 th { color: var(--muted); font-weight: 600; }
 body.title h1 { font-size: 96px; margin-top: 120px; }
+
+/* Vertical rhythm: with one headline and few lines, top-aligned bodies
+   leave a dead band above the footer - center the block instead. */
+.body { display: flex; flex-direction: column; justify-content: center; }
+.body > :last-child { margin-bottom: 0; }
+table + p { margin-top: 28px; }
+body.title .frame { justify-content: center; }
+body.title .foot { position: absolute; left: 0; right: 0; bottom: 0; }

@@ -28,7 +28,7 @@ HERE = Path(__file__).resolve().parent
 BUILD = HERE / "build"
 OUT = HERE / "out"
 MAX_SECONDS = 180.0
-PAD_SECONDS = 0.35          # breath between scenes
+PAD_SECONDS = 0.25          # breath between scenes (x9 scenes of the budget)
 TICKS_PER_SEC = 10_000_000  # edge-tts offsets are 100-ns ticks
 
 
