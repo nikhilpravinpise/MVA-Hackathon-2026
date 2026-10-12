@@ -2,3 +2,7 @@
 # (src/submit.py emits LF; the oracle tolerates CRLF but the archived
 # upload bytes must be byte-exact).
 *.csv text eol=lf
+
+# Recorded API fixtures are replayed byte-for-byte: never rewrite their
+# line endings on checkout.
+tests/fixtures/track2/** -text
