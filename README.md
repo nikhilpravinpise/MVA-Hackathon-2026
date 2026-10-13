@@ -1,10 +1,48 @@
-# MVA Hackathon 2026 - Track 1 + Track 2 pipelines
+# MVA Hackathon 2026 - variant prioritization + drug repurposing
 
-A deterministic, leak-firewalled N-of-1 variant-prioritization funnel for the
-Mosaic Variegated Aneuploidy hackathon: genotype QC -> gnomAD rarity tier ->
-consequence/damage ensemble -> per-gene inheritance hypotheses (compound-het,
-hom-alt, dominant, X-linked) -> HPO phenotype scoring -> rank-mapped epcr ->
-submission CSV validated against the vendored official scorer.
+[![ci](https://github.com/nikhilpravinpise/MVA-Hackathon-2026/actions/workflows/ci.yml/badge.svg)](https://github.com/nikhilpravinpise/MVA-Hackathon-2026/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](requirements.txt)
+[![release](https://img.shields.io/github/v/release/nikhilpravinpise/MVA-Hackathon-2026)](https://github.com/nikhilpravinpise/MVA-Hackathon-2026/releases)
+[![competition space](https://img.shields.io/badge/competition-MVA%20Hackathon%202026-blueviolet)](https://huggingface.co/spaces/SageBio/rare-disease-real-kid-mva-hackathon-2026)
+
+![Rescue, Remove, Intercept - a testable approved-drug portfolio for BUB1B
+mosaic variegated aneuploidy, and the open engine that built it](docs/assets/title.png)
+
+One child's genome -> a verified causal call -> a ranked, testable
+approved-drug portfolio, plus the open engine that produced it. Every
+number in both reports is regenerated from committed artifacts, every
+citation is resolved live and retraction-checked, and the whole suite
+(550 tests) replays on a bare clone with no patient data.
+
+## Results at a glance
+
+| | Track 1 - variant prioritization | Track 2 - drug repurposing |
+|---|---|---|
+| Deliverable | Submission CSV + report | 4-lead tested portfolio + ~10,800-word report + 179 s pitch video |
+| Headline | **100.0 / 1.000** on the vendored official scorer, rank 1, verified on the public leaderboard | **recall@10 = 0.56** on a blind 9-gene benchmark run from the same code |
+| Honesty | No leaked variant used as truth; answer-blind funnel | 37 mechanism-opposed drugs excluded *and listed*; engine misses named, not hidden |
+| Verification | 60-fixture oracle battery; deterministic reruns | 137/137 citations resolve live, retraction-checked; strict gate: 0 uncovered claims |
+| Patient data | Never leaves `data/` (gitignored, retention-manifested) | none used |
+
+## Start here (judges)
+
+- **Track 2 report** (the judged artifact): [`nikhilpise_track2_report.md`](nikhilpise_track2_report.md)
+- **PDF + pitch video + captions**: the [`track2-submission` release](https://github.com/nikhilpravinpise/MVA-Hackathon-2026/releases/tag/track2-submission)
+- **Plain-language summary for families**: [`docs/track2/FAMILY_SUMMARY.md`](docs/track2/FAMILY_SUMMARY.md)
+- **How the portfolio was chosen**: [`docs/track2/candidates.md`](docs/track2/candidates.md) + [`docs/track2/engine.md`](docs/track2/engine.md)
+- **Scored against the official rubric**: [`docs/track2/rubric_self_assessment.md`](docs/track2/rubric_self_assessment.md) (two hostile red-team passes: [`redteam.md`](docs/track2/redteam.md), [`redteam2.md`](docs/track2/redteam2.md))
+- **Track 1 report**: [`nikhilpise_track1_report.md`](nikhilpise_track1_report.md); submitted bytes: [`nikhilpise_answer-blind-funnel.csv`](nikhilpise_answer-blind-funnel.csv)
+- **Everything else**: [`docs/README.md`](docs/README.md) - the full documentation map
+
+## Contents
+
+- [Layout](#layout)
+- [Reproduce (stand-in harness - zero patient data)](#reproduce-stand-in-harness---zero-patient-data)
+- [Scoring contract (verified, not assumed)](#scoring-contract-verified-not-assumed)
+- [Track 2 - drug repurposing](#track-2---drug-repurposing)
+- [Verification](#verification)
+- [Acknowledgement](#acknowledgement)
 
 ## Layout
 
@@ -15,7 +53,7 @@ submission CSV validated against the vendored official scorer.
 | `tools/` | runners: audit_scorer_fixtures, audit_freshness, check_citations, check_discussions, fetch_public_vcfs, fetch_refs, fetch_big, genes_to_disease_json, normalize_contigs, run_pipeline, run_track1, run_sensitivity, make_report, make_figures, make_arm_a_csv, public_release_check, run_eda, extract_hpo, run_fastqc, run_phasing, run_vep, run_exomiser, compare_arms, run_realign, run_cnv, build_real_spike, revel_to_vcf, gnomad_split, modal_app |
 | `scorer/` | vendored `evaluation.py` - the official scorer oracle (see `scorer/NOTICE.md`) |
 | `config/` | frozen `pipeline.yaml` + `acmg_sf_v33.json` |
-| `docs/` | plan.md (source of truth), status.md (phase-by-phase compliance map), report.md (regenerated), report_map.md, report_model2.md (Arm-A model report), figures/ (report SVGs + ASCII pileup, generated), decisions/team/llm/runtime logs, disclosure position, attestation_hf_gated_access.md (verbatim gating form), FAMILY_EXPLAINER.md + ANSWER_BLIND_PROTOCOL.md (community/award artifacts) |
+| `docs/` | plan.md (source of truth), status.md (phase-by-phase compliance map), report.md (regenerated), report_map.md, report_model2.md (Arm-A model report), figures/ (report SVGs + ASCII pileup, generated), decisions/team/llm/runtime logs, disclosure position, attestation_hf_gated_access.md (verbatim gating form), FAMILY_EXPLAINER.md + ANSWER_BLIND_PROTOCOL.md (community/award artifacts) - see `docs/README.md` for the full map |
 | `submissions/` | upload-ready CSVs (as-submitted model1 copy + model2 candidates), each oracle-verified |
 | `data/` `results/` | patient data + outputs - gitignored; `RETENTION.md` manifests tracked |
 | `env/` | downloaded public corpora (gitignored, re-fetchable) |
@@ -24,7 +62,7 @@ submission CSV validated against the vendored official scorer.
 
 ```sh
 python -m venv .venv
-.venv/Scripts/python.exe -m pip install -r requirements.txt
+.venv/Scripts/python.exe -m pip install -r requirements.txt   # Linux/macOS: .venv/bin/python
 .venv/Scripts/python.exe -m pytest tests -q   # the suite
 make refs        # download hp.obo + phenotype.hpoa + genes_to_phenotype
 make spike control    # build synthetic proband + negative control
@@ -98,6 +136,20 @@ make track2-video      # needs .venv-video (edge-tts + playwright + pyyaml),
 make track2-all        # report -> citations -> tests, in order
 ```
 
+## Verification
+
+CI (`.github/workflows/ci.yml`) runs the suite on Ubuntu + Windows against
+Python 3.12 and 3.13, plus a gates job that replays the citation cache in
+strict coverage mode, runs the doc-vs-artifact freshness audit, and tripwires
+on committed secrets. Locally, the same gates are:
+
+```sh
+python tools/audit_freshness.py                       # 0 FAIL
+python tools/verify_citations.py --offline --coverage-strict
+python tools/public_release_check.py                  # secrets scan over history
+python -m pytest tests -q                             # the suite
+```
+
 ## Acknowledgement
 
 *This work was made possible through the Hackathon, organized by Sage
@@ -107,3 +159,7 @@ Science), with prize sponsorship from AWS and Anthropic. We are deeply
 grateful to the child and their family who generously contributed their
 data and their story to advance research into this rare disease. We
 acknowledge their trust in making this Hackathon possible.*
+
+## License
+
+[MIT](LICENSE)

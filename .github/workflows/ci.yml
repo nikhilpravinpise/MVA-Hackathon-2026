@@ -1,0 +1,63 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  tests:
+    name: pytest (${{ matrix.os }}, py${{ matrix.python-version }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.12", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - run: python -m pip install -r requirements.txt
+
+      # Patient-data and optional-extra tests self-skip via env guards /
+      # importorskip; the rest must pass on a bare clone.
+      - run: python -m pytest tests -q
+
+  gates:
+    name: audit + citation + secrets gates
+    runs-on: ubuntu-latest
+    steps:
+      # Full history: the freshness audit and the release check inspect
+      # git log, so a shallow clone would under-report.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - run: python -m pip install -r requirements.txt
+
+      # Doc-vs-artifact staleness audit: exit 1 on FAIL (warnings allowed -
+      # gitignored result trees legitimately warn off the artifact machine).
+      - name: freshness audit
+        run: python tools/audit_freshness.py
+
+      # Replay-mode citation gate: resolves every PMID/DOI from the
+      # committed cache (no network) and enforces that no claim sentence
+      # goes un-sourced.
+      - name: citation gate (offline, strict coverage)
+        run: python tools/verify_citations.py --offline --coverage-strict
+
+      # Secrets tripwire: exits 1 if an identifier-class secret is found
+      # in HEAD or history. Non-secret findings are advisory.
+      - name: public-release secrets check
+        run: python tools/public_release_check.py
