@@ -1,0 +1,1 @@
+{"request": {"method": "GET", "url": "https://mychem.info/v1/query?q=jnj-7706621&fields=inn,drugcentral,chembl.molecule_chembl_id&size=5", "body": null}, "status": 200, "fetched_at": "2026-10-12T14:26:29+00:00", "body": "{\"took\": 3, \"total\": 2, \"max_score\": 41.732613, \"hits\": [{\"chembl\": {\"molecule_chembl_id\": \"CHEMBL191003\"}}, {}]}"}

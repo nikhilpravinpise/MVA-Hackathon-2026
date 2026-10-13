@@ -1,0 +1,1 @@
+{"header":{"type":"esearch","version":"0.3"},"esearchresult":{"count":"1","retmax":"1","retstart":"0","idlist":["533901"],"translationset":[],"translationstack":[{"term":"BUB1B[gene]","field":"gene","count":"2503","explode":"N"},{"term":"000040209701[chrpos38]","field":"chrpos38","count":"1","explode":"N"},"AND"],"querytranslation":"BUB1B[gene] AND 000040209701[chrpos38]"}}

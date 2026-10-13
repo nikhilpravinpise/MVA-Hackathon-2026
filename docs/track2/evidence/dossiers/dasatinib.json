@@ -1,0 +1,74 @@
+{
+  "schema": "t2.dossier/1",
+  "drug": "dasatinib",
+  "combination": "dasatinib + quercetin (D+Q); quercetin is a supplement, included as adjunct only per plan section 0",
+  "axis": "B",
+  "approval": {
+    "chembl_id": "CHEMBL5416410",
+    "chembl_max_phase": 4,
+    "chembl_first_approval": 2006,
+    "openfda_label_set_id": "02b04c6f-4ea5-4fcb-bf6d-2631d5ab31e4",
+    "openfda_label_effective_time": "20260305",
+    "note": "Approved BCR-ABL/SRC-family kinase inhibitor for Ph+ CML/ALL including pediatric use. Senolytic use is off-label."
+  },
+  "claims": [
+    {"id": "c1",
+     "text": "BubR1 insufficiency drives p16Ink4a-positive cellular senescence in skeletal muscle and adipose tissue; genetic p16Ink4a inactivation attenuates senescence and premature ageing in BubR1-insufficient mice.",
+     "kind": "mechanism", "cites": ["PMID:18516091"], "strength": "direct"},
+    {"id": "c2",
+     "text": "In BubR1-hypomorphic progeroid mice, drug-inducible clearance of p16Ink4a-positive senescent cells delayed onset of age-related pathology in adipose tissue, skeletal muscle and eye, and attenuated established disease when started late in life - the direct causal evidence that senolysis modifies the BubR1-insufficiency phenotype.",
+     "kind": "preclinical", "cites": ["PMID:22048312"], "strength": "direct"},
+    {"id": "c3",
+     "text": "Dasatinib + quercetin is the canonical senolytic pair: dasatinib clears senescent human fat-cell progenitors, quercetin clears senescent endothelial cells, and the combination reduced senescent-cell burden and extended healthspan in aged, irradiated and progeroid (Ercc1-/delta) mice.",
+     "kind": "preclinical", "cites": ["PMID:25754370"], "strength": "direct"},
+    {"id": "c4",
+     "text": "First human evidence that D+Q lowers senescent-cell burden: in a 9-patient open-label diabetic-kidney-disease pilot, 3 days of D 100 mg + Q 1000 mg reduced adipose p16/p21-expressing cells, SA-beta-gal activity and circulating SASP factors (IL-1a, IL-6, MMP-9/12) within 11 days.",
+     "kind": "clinical", "cites": ["PMID:31542391"], "strength": "direct"},
+    {"id": "c5",
+     "text": "In a first-in-human open-label pilot in idiopathic pulmonary fibrosis (n=14), intermittent D+Q was feasible and improved physical-function measures; pulmonary function and reported health were unchanged - feasibility-level evidence, not efficacy proof.",
+     "kind": "clinical", "cites": ["PMID:30616998"], "strength": "indirect"},
+    {"id": "c6",
+     "text": "MVA1 disease mechanism is chronic chromosome missegregation producing mosaic aneuploidy; aneuploid and damaged cells enter p53/p21- and p16-driven senescence, linking the BubR1 genotype to the senescent-cell burden that D+Q targets (MVA review; genotype-phenotype chain).",
+     "kind": "mechanism", "cites": ["PMID:39169218", "PMID:31738183"], "strength": "indirect"},
+    {"id": "c7",
+     "text": "Counter-consideration: senescence is also a tumour-suppressive response, and aneuploid-cell proliferation is limited by a p53-dependent mechanism; indiscriminate removal of the senescent compartment in a cancer-predisposition syndrome could remove both harmful and protective arrested cells. Net direction in this genotype is untested.",
+     "kind": "safety", "cites": ["PMID:20123995", "PMID:22048312"], "strength": "indirect"}
+  ],
+  "pediatric": {
+    "label_source": "openFDA drug/label set_id 02b04c6f-4ea5-4fcb-bf6d-2631d5ab31e4 (effective 2026-03-05); dasatinib tablets",
+    "boxed_warning": "None on this label.",
+    "approved_pediatric_indication": "Pediatric patients 1 year of age and older: Ph+ CML in chronic phase; newly diagnosed Ph+ ALL in combination with chemotherapy (quoted label fact).",
+    "engine_flag_note": "candidates.json reports pediatric_flag 'labeled_pediatric_indication' for 'dasatinib anhydrous', resolved by the single-ingredient label pick to the same set_id 02b04c6f quoted here; the >=1y indication sits in the label's Indications and Usage (section 1), which the current classifier reads (winning sentence kept in pediatric_flag_evidence). An earlier engine read only the pediatric_use field - absent on this label record - and reported 'none' (regenerated 2026-10-13). This dossier's pediatric block remains authoritative for the quoted label facts.",
+    "label_pediatric_dosing_fact": "Label Table 1 starting dose by body weight, once daily (quoted label fact, not advice): 10-<20 kg 40 mg; 20-<30 kg 60 mg; 30-<45 kg 70 mg; >=45 kg 100 mg; tablets not recommended <10 kg.",
+    "key_risks": [
+      "Label section 5.10 'Effects on Growth and Development in Pediatric Patients': epiphyses delayed fusion, osteopenia, growth retardation and gynecomastia reported; label advises monitoring bone growth and development. Directly relevant to a child with short stature and failure to thrive.",
+      "Myelosuppression (severe thrombocytopenia, neutropenia, anaemia) and bleeding; dasatinib also inhibits platelet function - additive bleeding risk with any antiplatelet adjunct.",
+      "Fluid retention incl. pleural effusions; pulmonary arterial hypertension; QT prolongation; severe dermatologic reactions; tumour lysis syndrome; embryo-fetal toxicity.",
+      "Hypothesis framing: senolytic regimens are intermittent 'hit-and-run' (3-day cycles in the human pilots), which limits total exposure relative to continuous oncology dosing - but no pediatric senolytic dosing exists; any use here is untested."
+    ],
+    "monitoring": [
+      "CBC for myelosuppression",
+      "Bone growth/development surveillance (label 5.10)",
+      "Symptoms of fluid retention, PAH, QT interval",
+      "If ever used senolytically: p16/SA-beta-gal biomarker response before/after cycle (research setting only)"
+    ]
+  },
+  "testability": {
+    "celegans": {"assay": "san-1(ok1580) or bub-3 mutant rescue", "readout": "embryonic/larval viability, him rate, growth rate, behavioural tracking", "expected": "dasatinib is an SRC-family inhibitor; C. elegans SRC ortholog src-1 exists - plausible senolytic-like clearance of damaged cells, but the worm lacks a classical senescent compartment; interpret cautiously", "priority": "low-medium"},
+    "fibroblasts": {"assay": "intermittent D+Q exposure of MVA patient fibroblasts", "readout": "SA-beta-gal/p16+ cell fraction, SASP cytokines, aneuploidy rate by FISH/scDNA-seq, micronuclei", "expected": "reduced senescent fraction and SASP; aneuploidy rate itself should be unchanged (senolytics do not repair the SAC)", "priority": "high"},
+    "scrnaseq": {"assay": "signature reversal on patient scRNA-seq map", "readout": "senescence/SASP module scores", "expected": "down-shift of SASP/p16 programs", "priority": "medium"},
+    "supplements": {"assay": "n/a", "readout": "-", "expected": "quercetin itself sits in the supplement program, not as a drug candidate", "priority": "n/a"}
+  },
+  "verdict": "shortlist",
+  "verdict_reason": "Strongest mechanistic-to-human chain of any candidate: the disease-relevant BubR1-hypomorph mouse is the literal model organism of the anchor senolysis study (PMID:22048312), and D+Q is the only candidate class with human evidence of senescent-cell clearance (PMID:31542391). Dasatinib is approved with a pediatric label; quercetin is adjunct-only per plan. Rank capped by the label's pediatric growth-retardation warning in a child whose phenotype includes short stature and failure to thrive, and by the untested risk of clearing a tumour-suppressive senescent compartment in a cancer-predisposition syndrome.",
+  "citations": {
+    "PMID:18516091": {"title": "Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency", "journal": "Nat Cell Biol", "year": 2008, "doi": "10.1038/ncb1744"},
+    "PMID:22048312": {"title": "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders", "journal": "Nature", "year": 2011, "doi": "10.1038/nature10600"},
+    "PMID:25754370": {"title": "The Achilles' heel of senescent cells: from transcriptome to senolytic drugs", "journal": "Aging Cell", "year": 2015, "doi": "10.1111/acel.12344"},
+    "PMID:31542391": {"title": "Senolytics decrease senescent cells in humans: Preliminary report from a clinical trial of Dasatinib plus Quercetin in individuals with diabetic kidney disease", "journal": "EBioMedicine", "year": 2019, "doi": "10.1016/j.ebiom.2019.08.069"},
+    "PMID:30616998": {"title": "Senolytics in idiopathic pulmonary fibrosis: Results from a first-in-human, open-label, pilot study", "journal": "EBioMedicine", "year": 2019, "doi": "10.1016/j.ebiom.2018.12.052"},
+    "PMID:39169218": {"title": "Mosaic variegated aneuploidy in development, ageing and cancer", "journal": "Nat Rev Genet", "year": 2024, "doi": "10.1038/s41576-024-00762-6"},
+    "PMID:31738183": {"title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome", "journal": "J Clin Invest", "year": 2020, "doi": "10.1172/JCI126863"},
+    "PMID:20123995": {"title": "Proliferation of aneuploid human cells is limited by a p53-dependent mechanism", "journal": "J Cell Biol", "year": 2010, "doi": "10.1083/jcb.200905057"}
+  }
+}

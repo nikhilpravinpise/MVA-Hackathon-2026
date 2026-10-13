@@ -1,0 +1,16 @@
+LANE L12 - Regenerate the evidence layer on the fixed engine, close the last desync, re-render. Report file: docs/track2/agent_reports/L12.md.
+Owned paths: docs/track2/evidence/ (all), docs/track2/mechanism.md, docs/track2/candidates.md, docs/track2_report_template.md, docs/track2_report.md, nikhilpise_track2_report.md, tools/t2_mechanism.py, tests/test_t2_mechanism.py, tests/fixtures/track2/mechanism/, docs/track2/agent_reports/L12.md.
+Do NOT touch: src/track2/, tools/verify_citations.py, tools/make_track2_report.py, docs/track2/engine.md, docs/track2/compute.md, docs/track2/redteam.md, docs/track2/rubric_self_assessment.md.
+
+Read first: docs/track2/agent_reports/L11.md (especially "Replay diff vs committed evidence" and "For the lead / next lanes") and docs/track2/agent_reports/L10.md.
+
+1. **Regenerate the engine evidence on L11's fixed engine.** Run exactly what L11 documents:
+   `C:/Dev/MVA-Hackathon-2026/.venv/Scripts/python.exe tools/run_track2.py --mode record --cache-dir tests/fixtures/track2/engine/mva`
+   and the `--benchmark` equivalent against its own cache dir. Fixtures are committed and replay is deterministic, so this must not need the network; if it does, say exactly which request was missing rather than going live silently.
+   Then verify the regenerated `candidates.json` / `benchmark.json` against the pinned delta tables in `tests/test_track2_engine.py` (`_L11_FLAG_DIFFS`, `_L11_SET_ID_DIFFS`, `_L11_OTHER_DIFFS`): every change must be in those tables and nothing else may move. Those comparison tests should flip to strict equality on their own once `funnel.merged` is present - confirm that happened, and report any diff the tables did not predict.
+2. **Fix the one failing test: `tests/test_t2_mechanism.py::test_replay_matches_written_json`.** `mechanism.json` claim c23 was edited by hand (the "largest cohort" red-team fix, correct and must stay) while `tools/t2_mechanism.py` regenerates the old wording from its fixtures. Make the generator the source of truth: move the corrected wording into `t2_mechanism.py` so a replay reproduces the committed file byte-for-byte. Do not revert the correction, and do not weaken the test to pass.
+3. **Close red-team m4 residue.** `docs/track2_report_template.md` line ~115 still reads "committed in `config/track2.yaml` before the engine was run (git history)". Git shows the config commit landing ~6 minutes AFTER the benchmark run, so the wording is wrong even though the substance is fine (the engine reads the truth list from the config it ran on and records its hash). Reword it the way the generator already does elsewhere.
+4. **Re-render and re-verify.** `tools/make_track2_report.py --upload`, then `tools/verify_citations.py --coverage-strict` (must PASS, 0 uncovered), then `python -m pytest tests -q` (must be 0 failed). Rebuild the PDF with `python tools/make_track2_pdf.py` (system python, not the repo venv).
+5. **Report the deltas that reach the reader**: which pediatric-label cells in the report's shortlist and engine tables changed, whether any ranked position moved, and the final counts (candidates, approved, excluded, distinct actives, uncovered claims, tests).
+
+Accuracy over tidiness: if a regenerated value contradicts something written in the report prose or a dossier, fix the prose and say so in your report.

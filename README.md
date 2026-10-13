@@ -1,4 +1,4 @@
-# MVA Hackathon 2026 - Track 1 pipeline
+# MVA Hackathon 2026 - Track 1 + Track 2 pipelines
 
 A deterministic, leak-firewalled N-of-1 variant-prioritization funnel for the
 Mosaic Variegated Aneuploidy hackathon: genotype QC -> gnomAD rarity tier ->
@@ -11,7 +11,7 @@ submission CSV validated against the vendored official scorer.
 | Path | What |
 |---|---|
 | `src/` | funnel modules (vcf, triage, genes, pheno, prioritize, phasing, reads, sf_scan, acmg, submit, vcf_qc, synth) |
-| `tests/` | oracle parity, CSV contract, adversarial bytes, funnel unit, e2e gates, freshness pins (372 tests, 1 env-gated skip) |
+| `tests/` | oracle parity, CSV contract, adversarial bytes, funnel unit, e2e gates, freshness pins, plus the Track-2 suites (mechanism, engine, direction layer, PRISM/ESM, citation gate, report + PDF generators, video builder) - 540+ tests |
 | `tools/` | runners: audit_scorer_fixtures, audit_freshness, check_citations, check_discussions, fetch_public_vcfs, fetch_refs, fetch_big, genes_to_disease_json, normalize_contigs, run_pipeline, run_track1, run_sensitivity, make_report, make_figures, make_arm_a_csv, public_release_check, run_eda, extract_hpo, run_fastqc, run_phasing, run_vep, run_exomiser, compare_arms, run_realign, run_cnv, build_real_spike, revel_to_vcf, gnomad_split, modal_app |
 | `scorer/` | vendored `evaluation.py` - the official scorer oracle (see `scorer/NOTICE.md`) |
 | `config/` | frozen `pipeline.yaml` + `acmg_sf_v33.json` |
@@ -67,6 +67,36 @@ fail the file. `src/submit.py` satisfies all of it; the test suite replays
 
 Patient data never leaves `data/`; no variant from any leaked Space is used
 as ground truth - the pipeline output is the submission.
+
+## Track 2 - drug repurposing
+
+From the Track 1 genotype to a testable, approved-drug portfolio: a
+gene-agnostic engine (`src/track2/`) expands a STRING disease module, pulls
+drug-target evidence from Open Targets/ChEMBL/DGIdb, keeps approved
+medicines only (ChEMBL max_phase 4, not withdrawn), scores network
+proximity and LINCS L1000 signature reversal, applies a cited
+mechanism-direction layer, and writes committed evidence JSON that the
+report, citation gate and tests all read. A retrospective benchmark on
+genes with known approved repurposings is run blind from the same code.
+
+| Path | What |
+|---|---|
+| `src/track2/` | engine (`engine.py`, `sources.py`, `httpcache.py`), scoring (`scoring.py`, `proximity.py`), safety layer (`direction.py`), PRISM (`prism.py`), benchmark (`benchmark.py`), config (`t2config.py`) |
+| `tools/` | `run_track2.py`, `t2_mechanism.py`, `t2_prism.py`, `make_track2_report.py`, `verify_citations.py`, `make_track2_pdf.py` |
+| `docs/track2/` | `engine.md` design doc, `mechanism.md`, `candidates.md` screen log, `submission_fields.md`, `abstract.md`, `FAMILY_SUMMARY.md`, `evidence/` committed JSON (candidates, benchmark, dossiers, portfolio, testability, prism, esm) |
+| `docs/track2_report.md` | the generated report (template `docs/track2_report_template.md`; upload copy `nikhilpise_track2_report.md`) |
+| `video/` | 3-minute pitch builder (`scenes.yaml` + `build.py` -> `out/pitch.mp4`) |
+
+```sh
+make track2            # engine run + benchmark (replay mode; --mode live re-pulls)
+make track2-report     # regenerate docs/track2_report.md + upload copy
+make track2-citations  # citation gate over the Track-2 tree (0 unresolved)
+make track2-pdf        # nikhilpise_track2_report.pdf - needs system python with
+                       # `pip install markdown-it-py playwright` and Chrome
+make track2-video      # needs .venv-video (edge-tts + playwright + pyyaml),
+                       # ffmpeg and Chrome - see video/README.md
+make track2-all        # report -> citations -> tests, in order
+```
 
 ## Acknowledgement
 

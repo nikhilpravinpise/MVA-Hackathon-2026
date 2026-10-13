@@ -1,0 +1,157 @@
+# 3-minute Track 2 pitch. `narration` is spoken (edge-tts neural voice);
+# `bullets`/`html` are what is on screen. Every number here must exist in
+# docs/track2/evidence/ - tests/test_video_build.py pins the script's word
+# budget and video/build.py enforces the 3:00 limit with ffprobe.
+voice: en-GB-RyanNeural
+rate: "+9%"
+
+scenes:
+  - id: title
+    layout: title
+    kicker: MVA Hackathon 2026 - Track 2
+    title: "Rescue, Remove, Intercept"
+    html: >
+      <p class="big">A testable approved-drug portfolio for BUB1B mosaic
+      variegated aneuploidy - and the open engine that built it.</p>
+      <p class="muted">nikhilpise - Track 1 score 100.0 / F-max 1.000</p>
+    narration: >
+      In Track 1 our pipeline found this child's answer: two changes in BUB1B,
+      scored one hundred out of one hundred. Track 2 asks the harder question:
+      given that mechanism, is there an existing medicine worth testing?
+
+  - id: mechanism
+    kicker: The mechanism, per allele
+    title: "One copy silent, one copy weakened"
+    bullets:
+      - "p.Leu737Ter: stop codon 748 nucleotides before the last exon junction - predicted to be destroyed, a null allele"
+      - "p.Asn1002Lys: in the kinase-like domain; AlphaMissense 0.92, ESM-2 at the 88th percentile of constraint"
+      - "Null plus weakened is the classic MVA1 genotype - so the weakened copy is the child's entire supply of BubR1"
+      - "We never observed the two changes on opposite chromosomes: phase is unknown, and we say so"
+    narration: >
+      BubR1 inspects cell division, holding the cell until every chromosome is
+      correctly attached. One of this child's copies carries a stop signal early
+      enough that the message is predicted to be destroyed. The other is full
+      length with a damaging change in its kinase-like domain. So that weakened
+      copy is the child's entire supply of BubR1, and that fact sets the therapy
+      logic. One caveat: we never proved the two changes sit on opposite
+      chromosomes.
+
+  - id: axes
+    kicker: Three therapeutic questions
+    title: "Rescue, Remove, Intercept"
+    html: >
+      <div class="row">
+        <div class="card a"><h2>A. Rescue</h2><p>Make the one working copy
+        last longer. NAD+ supports SIRT2, which keeps BubR1 stable.</p></div>
+        <div class="card b"><h2>B. Remove</h2><p>Clear or quiet the worn-out
+        senescent cells that wrong chromosome counts leave behind.</p></div>
+        <div class="card c"><h2>C. Intercept</h2><p>Disadvantage aneuploid
+        cells, and watch for cancer early.</p></div>
+      </div>
+    narration: >
+      That gives three questions, each pointing at medicines that already
+      exist. Rescue: help the working copy do more. Remove: clear the damaged
+      senescent cells left behind. Intercept: disadvantage aneuploid cells, and
+      catch cancer early.
+
+  - id: engine
+    kicker: The engine
+    title: "Gene in, approved shortlist out"
+    bullets:
+      - "71-gene disease module from STRING; 482 drug names from Open Targets and DGIdb"
+      - "Approval checked by code, never from memory: 96 pass ChEMBL phase 4, not withdrawn - openFDA label read where one exists"
+      - "A cited mechanism-direction layer excludes 37 drugs that would worsen a checkpoint defect - and lists them with the rank they would have had"
+      - "19 of the raw top 20 were such drugs. Doxorubicin ranked first."
+    narration: >
+      We built an engine that works for any gene, checking approval in code
+      rather than trusting a model's memory. One finding changed the design:
+      nineteen of the raw top twenty were chemotherapy and DNA-damaging agents,
+      doxorubicin first. They carry the most published evidence, and they are
+      the last thing this child needs. So a cited rule layer excludes them, and
+      shows every exclusion with the rank it would have had.
+
+  - id: benchmark
+    kicker: Does the method work?
+    title: "Tested blind on diseases with known answers"
+    html: >
+      <table>
+        <tr><th>Gene</th><th>Known approved drug</th><th>Engine rank</th></tr>
+        <tr><td>PIK3CA</td><td>alpelisib</td><td>2</td></tr>
+        <tr><td>GLA</td><td>migalastat</td><td>2</td></tr>
+        <tr><td>TSC2</td><td>everolimus</td><td>3</td></tr>
+        <tr><td>CFTR</td><td>ivacaftor</td><td>6</td></tr>
+        <tr><td>KCNJ11</td><td>glibenclamide</td><td>10</td></tr>
+        <tr><td>FBN1</td><td>losartan</td><td>never collected</td></tr>
+      </table>
+      <p class="muted">9 genes, truth declared in the frozen config: recall@10 =
+      0.56</p>
+    narration: >
+      Then we tested the method instead of asserting it. The same pipeline ran
+      blind on nine diseases whose approved drug is known - answers declared
+      in the frozen config, never fed in. It found the known drug in the
+      top ten for five of nine. Every miss is structural: losartan acts outside
+      the Marfan gene's network, so a network engine never collects it.
+
+  - id: portfolio
+    kicker: The portfolio
+    title: "Four leads, each with a way to be proven wrong"
+    html: >
+      <table>
+        <tr><th>Lead</th><th>Axis</th><th>Pediatric label</th><th>Decisive test</th></tr>
+        <tr><td>Dasatinib + quercetin</td><td>Remove</td><td>from age 1, warns on growth</td><td>senescent fraction down 50%</td></tr>
+        <tr><td>Everolimus</td><td>Remove</td><td>from age 1 in tuberous sclerosis</td><td>SASP down 30%, growth intact</td></tr>
+        <tr><td>Niacin</td><td>Rescue</td><td>not established in children</td><td>BubR1 protein up 1.3x</td></tr>
+        <tr><td>Hydroxychloroquine</td><td>Intercept</td><td>malaria only, 31 kg and up</td><td>aneuploid cells cut 2-fold</td></tr>
+      </table>
+      <p class="muted">16 options considered and rejected, with reasons -
+      including growth hormone, and drugs that weaken the checkpoint further</p>
+    narration: >
+      The portfolio is four leads, ranked by how close the evidence is to a
+      BubR1-deficient human system, how feasible each is in a child, and how
+      cheaply it can be falsified. The senolytic pair leads because its anchor
+      experiment was run in the BubR1 mouse itself. Everolimus follows: approved
+      from age one in another tumour-predisposition syndrome. Niacin alone aims
+      at the cause. We also publish sixteen rejections, and why.
+
+  - id: testable
+    kicker: Impact
+    title: "Mapped onto the labs that already exist"
+    bullets:
+      - "Every candidate crossed with the MVA Society's four funded programs: worm screen, patient fibroblasts, single-cell RNA-seq, supplements"
+      - "Each cell carries the assay, the expected direction, a go/no-go threshold, a cost tier and a time to result"
+      - "The decisive first experiment is a skin-cell panel: about four weeks, lowest cost tier"
+      - "Universal no-go: any candidate that raises the aneuploidy rate is out, whatever else it does"
+    narration: >
+      A hypothesis nobody can test is worth little, so every candidate is
+      mapped onto the four programmes the MVA Society already funds, with an
+      assay and a go or no-go threshold in each cell. The cheapest decisive
+      experiment uses the child's own skin cells. And one rule overrides all:
+      any candidate that raises the aneuploidy rate is out.
+
+  - id: rigor
+    kicker: Why you can trust the numbers
+    title: "Everything here is checked by code"
+    bullets:
+      - "137 of 137 citations resolved live against PubMed, Crossref and DataCite, and checked for retraction - title and year must match"
+      - "Approval status, pediatric labels and boxed warnings read from ChEMBL and openFDA responses"
+      - "No number is typed by hand: the report is generated from the evidence files"
+      - "Over 500 tests, offline from recorded responses. One command rebuilds all of it."
+    narration: >
+      When AI helps write a scientific report, none of it should be taken on
+      trust. Every citation is resolved live against PubMed and Crossref,
+      checked for retraction, and its title matched against our claim. Approval
+      facts come from database responses, no number is typed by hand, and over
+      five hundred tests run offline.
+
+  - id: close
+    layout: title
+    kicker: Thank you
+    title: "A hypothesis, and a way to test it"
+    html: >
+      <p class="big">github.com/nikhilpravinpise/MVA-Hackathon-2026</p>
+      <p class="muted">For research testing, not medical advice. With thanks
+      to the child and family who shared their data and their story.</p>
+    narration: >
+      Nothing here is a treatment this child can take today. It is a ranked,
+      cited, falsifiable set of hypotheses, and an open engine that produces
+      them for any gene. Our thanks to the family who shared their story.

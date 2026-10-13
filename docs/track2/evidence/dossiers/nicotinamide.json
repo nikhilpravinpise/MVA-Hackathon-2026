@@ -1,0 +1,68 @@
+{
+  "schema": "t2.dossier/1",
+  "drug": "nicotinamide / niacin",
+  "approved_forms": "niacin (nicotinic acid, CHEMBL573, max_phase 4) and niacinamide/nicotinamide (CHEMBL1140, max_phase 4). Nicotinamide riboside (CHEMBL438497, max_phase 3) and nicotinamide mononucleotide are NOT approved drugs - adjunct consideration only per plan section 0.",
+  "axis": "A",
+  "approval": {
+    "chembl_id": "CHEMBL573 (niacin), CHEMBL1140 (niacinamide)",
+    "chembl_max_phase": 4,
+    "chembl_first_approval": 1982,
+    "openfda_label_set_id": "bf287412-160b-403f-8eb4-57f29a475902",
+    "openfda_label_effective_time": "20211223",
+    "note": "NIACOR (nicotinic acid) label queried; approved for hypercholesterolemia adjunct therapy. NAD-restoration use is off-label. ChEMBL records first_approval 1982 for both CHEMBL573 (niacin) and CHEMBL1140 (niacinamide), live-checked 2026-10-13 - a registry value, since these vitamins predate modern approval records."
+  },
+  "claims": [
+    {"id": "c1",
+     "text": "Axis-A anchor: the age-related decline of BubR1 protein is driven by declining NAD+ and loss of SIRT2-mediated deacetylation of BubR1 lysine-668 (opposed by CBP acetylation); in mice, SIRT2 overexpression OR treatment with the NAD+ precursor NMN increased BubR1 abundance in vivo, and SIRT2 overexpression extended median lifespan specifically in BubR1-hypomorphic (H/H) animals.",
+     "kind": "mechanism", "cites": ["PMID:24825348", "PMID:25672491"], "strength": "direct"},
+    {"id": "c2",
+     "text": "Raising BubR1 abundance is itself disease-modifying in models: sustained high BubR1 expression in mice preserves genomic integrity, corrects checkpoint and microtubule-kinetochore attachment defects, reduces tumorigenesis even with oncogenic Ras, and extends healthy lifespan - the proof that increasing residual BubR1 output compensates a defective checkpoint.",
+     "kind": "preclinical", "cites": ["PMID:23242215"], "strength": "direct"},
+    {"id": "c3",
+     "text": "Independent lab confirmation with honest bound: SIRT2 overexpression rescues health and lifespan in the BubR1-hypomorph model via improved BubR1 protein stability, but the same overexpression in wild-type mice had NO effect on health or lifespan - i.e. the SIRT2 benefit appears conditional on BubR1 under-expression, which is exactly the MVA1 situation (null + hypomorph alleles) but offers no general-longevity claim.",
+     "kind": "preclinical", "cites": ["PMID:38009412"], "strength": "direct"},
+    {"id": "c4",
+     "text": "Class-level clinical plausibility: NAD+ supplementation shows benefit in several premature-ageing and DNA-repair-deficiency diseases where PARP hyperactivation depletes NAD+, with a favourable safety profile - a review-level support for NAD restoration in rare progeroid/genome-instability disease, though MVA itself was not studied.",
+     "kind": "clinical", "cites": ["PMID:41436848"], "strength": "analogy"},
+    {"id": "c5",
+     "text": "Critical pharmacology caveat: nicotinamide is BOTH an NAD+ precursor AND an end-product inhibitor of sirtuin deacetylases (established for yeast Sir2 and human SIRT1) - so high-dose nicotinamide could theoretically inhibit the very SIRT2-BubR1 axis it is meant to fuel. Nicotinic acid (niacin) raises NAD+ via the Preiss-Handler pathway without product inhibition of sirtuins; the choice of form is therefore mechanistically non-trivial.",
+     "kind": "mechanism", "cites": ["PMID:12297502", "PMID:24825348"], "strength": "direct"},
+    {"id": "c6",
+     "text": "Mechanistic nuance: SIRT2 also deacetylates BubR1 at K250 during prometaphase, where deacetylation promotes timely APC/C-mediated BubR1 degradation at mitotic exit; SIRT2 regulation of BubR1 is site- and context-specific, so 'more SIRT2 activity' does not linearly equal 'more BubR1'.",
+     "kind": "mechanism", "cites": ["PMID:25285631"], "strength": "indirect"}
+  ],
+  "pediatric": {
+    "label_source": "openFDA drug/label set_id bf287412-160b-403f-8eb4-57f29a475902 (effective 2021-12-23); NIACOR (nicotinic acid)",
+    "boxed_warning": "None.",
+    "approved_pediatric_indication": "None. Label states verbatim: 'Pediatric Use - Safety and effectiveness in children and adolescents have not been established.' (quoted label fact)",
+    "label_pediatric_dosing_fact": "No pediatric dosing on label.",
+    "key_risks": [
+      "Niacin at lipid-lowering doses: flushing, hepatotoxicity (label contraindicates significant/unexplained hepatic dysfunction), hyperglycaemia, hyperuricaemia, GI/peptic-ulcer caution - the approved-dose adverse profile is adult-derived.",
+      "Nutritional-dose nicotinamide/niacin (vitamin-level) has a wide safety margin in children, but the NAD-restoration hypothesis may require pharmacologic doses - an open question.",
+      "Form-choice risk (claim c5): pharmacologic nicotinamide could inhibit sirtuins; the safe-form question is unresolved, not a detail.",
+      "No reproductive-age considerations for the child directly; family context includes recurrent spontaneous abortion - niacin pregnancy safety is not established at pharmacologic doses."
+    ],
+    "monitoring": [
+      "Hepatic function (label contraindication territory)",
+      "Glucose, uric acid",
+      "If used in the supplements research program: BubR1 protein and NAD+ levels as pharmacodynamic markers"
+    ]
+  },
+  "testability": {
+    "celegans": {"assay": "san-1 mutant + NAD+ precursor exposure (sir-2.1 is the worm SIRT1/2-family deacetylase)", "readout": "embryonic viability, him rate, growth, lifespan", "expected": "rescue direction if NAD/SIRT axis stabilises residual SAN-1 function; clean genetic test", "priority": "high (lowest cost)"},
+    "fibroblasts": {"assay": "NAD+ precursor exposure on MVA patient fibroblasts", "readout": "BubR1 protein level (western/IF), NAD+ level, aneuploidy rate, mitotic timing under nocodazole", "expected": "increased BubR1 abundance = the direct Axis-A pharmacodynamic readout; then whether aneuploidy rate falls", "priority": "high"},
+    "scrnaseq": {"assay": "signature reversal", "readout": "senescence/progeroid modules", "expected": "secondary", "priority": "low-medium"},
+    "supplements": {"assay": "directly aligned - the society's supplements program tests supplement-driven stabilisation of MVA cells", "readout": "cell stability endpoints", "expected": "NR/NMN would likely be tested here as supplements while niacin/nicotinamide are the approved-drug forms", "priority": "high (program fit)"}
+  },
+  "verdict": "shortlist",
+  "verdict_reason": "The only Axis-A candidate: rather than managing downstream damage, it aims to raise abundance of the residual hypomorphic BubR1 allele's output - the most disease-modifying mechanism available, anchored by the EMBO J 2014 result that NAD+/SIRT2 raises BubR1 in vivo and extends BubR1-hypomorph lifespan (PMID:24825348), independently replicated as BubR1-conditional (PMID:38009412), and matched to the MVA Society's supplements program direction. Approved forms exist (niacin CHEMBL573, niacinamide CHEMBL1140, both phase 4). Rank tempered by the nicotinamide-sirtuin-inhibition paradox (PMID:12297502), absence of pediatric approval, and the fact that NMN - the exact molecule used in the anchor study - is a supplement, so the approved-form evidence is extrapolated.",
+  "citations": {
+    "PMID:24825348": {"title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan", "journal": "EMBO J", "year": 2014, "doi": "10.15252/embj.201386907"},
+    "PMID:23242215": {"title": "Increased expression of BubR1 protects against aneuploidy and cancer and extends healthy lifespan", "journal": "Nat Cell Biol", "year": 2013, "doi": "10.1038/ncb2643"},
+    "PMID:38009412": {"title": "SIRT2 transgenic over-expression does not impact lifespan in mice", "journal": "Aging Cell", "year": 2023, "doi": "10.1111/acel.14027"},
+    "PMID:41436848": {"title": "Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage", "journal": "Aging Cell", "year": 2026, "doi": "10.1111/acel.70319"},
+    "PMID:12297502": {"title": "Inhibition of silencing and accelerated aging by nicotinamide, a putative negative regulator of yeast sir2 and human SIRT1", "journal": "J Biol Chem", "year": 2002, "doi": "10.1074/jbc.M205670200"},
+    "PMID:25285631": {"title": "Deacetylation of the mitotic checkpoint protein BubR1 at lysine 250 by SIRT2 and subsequent effects on BubR1 degradation during the prometaphase/anaphase transition", "journal": "Biochem Biophys Res Commun", "year": 2014, "doi": "10.1016/j.bbrc.2014.09.128"},
+    "PMID:25672491": {"title": "Selective Sirt2 inhibition by ligand-induced rearrangement of the active site", "journal": "Nat Commun", "year": 2015, "doi": "10.1038/ncomms7263", "note": "the tool compound SirReal2 (SIRT2 inhibitor) destabilises BubR1 protein in cells - corroborates that SIRT2 activity maintains BubR1 stability"}
+  }
+}

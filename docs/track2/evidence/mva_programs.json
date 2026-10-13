@@ -1,0 +1,108 @@
+{
+  "schema": "t2.mva_programs/1",
+  "generated_by": "lane L3 manual curation",
+  "fetch_date": "2026-10-12",
+  "source_pages": [
+    {"url": "https://mvasociety.org/our-research-projects/", "fetched": "2026-10-12",
+     "note": "Primary program listing. All program descriptions below are quoted from this page verbatim."},
+    {"url": "https://mvasociety.org/why-research-matters/", "fetched": "2026-10-12",
+     "note": "States aims: stabilise cells, reduce cancer risk, repurpose existing drugs, build toward trials."},
+    {"url": "https://mvasociety.org/related-publications/", "fetched": "2026-10-12",
+     "note": "Society-curated publication list; includes the C. elegans drug-repurposing platform paper (PMID:39773880)."},
+    {"url": "https://mvasociety.org/mvas-first-research-conference/", "fetched": "2026-10-12",
+     "note": "First MVA Research Conference, GOSH London, 17 Sep 2026; topics included disease modelling, BubR1 biology, mitochondrial function and immune responses, and drug repurposing in worm models."}
+  ],
+  "funding_context": "Page states GBP 200,000 raised of a GBP 250,000 goal; the goal would fund a dedicated researcher in a London lab for 2 years. Projects are carried out by research partners free of charge or at reduced fee.",
+  "programs": [
+    {
+      "id": "worm_repurposing_screen",
+      "name": "Drug Repurposing Study",
+      "quoted_description": "We're testing existing medicines using a worm model of MVA, with research led in London and supported by collaborators in Scotland and Spain. This approach could improve and fast-track treatment options by building on drugs that are already approved for other conditions, leading to new treatment options in years, not decades.",
+      "what_the_page_says_exactly": "The page says 'a worm model of MVA' without naming the species, the genetic model, the host lab, or the readout. The species is not stated anywhere on mvasociety.org as of fetch date.",
+      "inferred_species": {
+        "statement": "C. elegans is the near-certain species: the society's related-publications page links O'Brien et al. eLife 2025 (PMID:39773880, 'High-throughput tracking enables systematic phenotyping and drug repurposing in C. elegans disease models', Imperial College London / MRC London Institute of Medical Sciences), which is a London-based FDA-approved-library repurposing screen in CRISPR C. elegans disease models - matching 'research led in London' and 'testing existing medicines'. This is an inference from the society's own linked publication, not a stated fact.",
+        "confidence": "high but indirect"
+      },
+      "can_measure": [
+        "Rescue of a quantifiable phenotype in the MVA worm model after drug exposure (behavioural/phenotypic readout per the linked platform paper)",
+        "If the model is a san-1 (MAD3/BubR1 ortholog) loss/hypomorph or related SAC mutant, scorable readouts documented in the C. elegans literature include embryonic/larval lethality, slow growth, him (high incidence of males = X nondisjunction), vulval defects, and radiosensitivity (PMID:18248670, PMID:29046436)"
+      ],
+      "candidate_assay": "FDA-approved compound library or nominated-candidate rescue of the MVA-model phenotype",
+      "citations": ["PMID:39773880", "PMID:41013606", "PMID:18248670", "PMID:19109417", "PMID:29046436"]
+    },
+    {
+      "id": "patient_fibroblasts",
+      "name": "Fibroblast growth",
+      "quoted_description": "Skin biopsies have been taken from MVA families to allow fibroblasts to be grown. This is the start of our own, dedicated MVA research which will be managed through a laboratory in London. We look forward to detailing the progress of this work over the coming months",
+      "what_the_page_says_exactly": "Fibroblasts are being grown from MVA-family skin biopsies in a London laboratory; earliest stage ('the start of our own, dedicated MVA research'). No assays are described yet.",
+      "can_measure": [
+        "Direct aneuploidy rate in patient cells (interphase FISH panel, single-cell DNA sequencing, or micronucleus index) - the disease-defining cellular readout",
+        "BubR1 protein abundance by western/immunofluorescence (Axis A candidates)",
+        "Mitotic timing/checkpoint strength under nocodazole challenge (functional SAC readout)",
+        "Senescent-cell burden markers (SA-beta-gal, p16/p21) and SASP cytokines (Axis B candidates)",
+        "Drug-response readouts per candidate (e.g. autophagic flux for HCQ, p-S6 for mTOR inhibitors)"
+      ],
+      "candidate_assay": "Ex vivo candidate exposure on patient fibroblasts with aneuploidy-rate and BubR1-abundance readouts",
+      "citations": ["PMID:39169218", "PMID:31738183"]
+    },
+    {
+      "id": "multi_patient_scrnaseq",
+      "name": "Single-Cell RNA Sequencing",
+      "quoted_description": "In Spain, researchers are comparing single-cell RNA profiles from several MVA patients. This genetic 'map' will help us uncover new insights into how MVA affects cells at their core - and identify new targets for therapy.",
+      "what_the_page_says_exactly": "scRNA-seq comparison across several MVA patients, performed in Spain; aim is mechanistic insight and target discovery.",
+      "can_measure": [
+        "An MVA transcriptomic signature (senescence/SASP, DNA damage, proteotoxic-stress, immune activation programs) across cell types",
+        "In-silico signature-reversal scoring of each candidate (compare candidate-perturbation signatures against the MVA signature)",
+        "Post-treatment signature reversal if exposed patient cells are sequenced"
+      ],
+      "candidate_assay": "Connectivity-map-style reversal of the patient scRNA-seq signature by candidate-exposed cells",
+      "citations": ["PMID:39169218"]
+    },
+    {
+      "id": "supplements_cell_health",
+      "name": "Supplements and Cell Health",
+      "quoted_description": "Following promising results seen in mouse studies, scientists in the USA are testing whether certain supplements can improve the stability of human MVA cells. If successful, this could open up new supportive treatments for patients.",
+      "what_the_page_says_exactly": "US-based testing of unnamed supplements on human MVA cells, motivated by mouse results; endpoint is cellular 'stability'. The supplements are not named on the page.",
+      "inference": {
+        "statement": "The mouse result most consistent with 'improved stability of MVA cells' is NAD+/SIRT2 stabilisation of BubR1 (PMID:24825348: NMN or SIRT2 overexpression raises BubR1 abundance and extends lifespan of BubR1-hypomorphic mice), and the society's publications page links a 2026 review on NAD supplementation in premature-ageing/DNA-damage diseases (PMID:41436848). NAD-precursor supplementation is therefore the plausible, but unconfirmed, focus.",
+        "confidence": "plausible but unconfirmed"
+      },
+      "can_measure": [
+        "Cellular stability endpoints on patient cells (growth, viability, aneuploidy rate, BubR1 protein)",
+        "Whether approved NAD precursors (niacin/nicotinamide) reproduce the supplement effect at approved-drug exposure levels"
+      ],
+      "candidate_assay": "NAD-precursor and adjunct exposure on MVA patient cells with stability/aneuploidy readouts",
+      "citations": ["PMID:24825348", "PMID:41436848", "PMID:38009412"]
+    }
+  ],
+  "celegans_orthologs": {
+    "note": "Human-to-worm SAC orthologs verified against the primary C. elegans literature (abstracts read live 2026-10-12).",
+    "orthologs": [
+      {"human": "BUB1B (BubR1/MAD3)", "worm": "san-1", "evidence": "san-1 is the MAD3 homologue; san-1(ok1580) deletion is viable with low-penetrance phenotypes (increased males, larval arrest, slow growth, vulval defects) - the worm analogue of a hypomorphic BUB1B state.", "cites": ["PMID:18248670"]},
+      {"human": "MAD1L1 (MAD1)", "worm": "mdf-1", "evidence": "MDF-1 is the MAD-1 homologue; core of one of two checkpoint branches.", "cites": ["PMID:18248670", "PMID:19109417", "PMID:18936247"]},
+      {"human": "MAD2L1 (MAD2)", "worm": "mdf-2", "evidence": "MDF-2 is the MAD-2 homologue; MDF-1/MDF-2 form the core kinetochore checkpoint signal.", "cites": ["PMID:18248670", "PMID:19109417"]},
+      {"human": "BUB3", "worm": "bub-3", "evidence": "bub-3 is the predicted BUB-3 homologue; acts in the SAN-1/MAD3 branch; bub-3 and san-1 mutants are IR-hypersensitive with embryonic lethality in sired embryos.", "cites": ["PMID:18248670", "PMID:19109417", "PMID:29046436"]}
+    ],
+    "checkpoint_architecture": "C. elegans SAC has two largely independent branches: a kinetochore MDF-1/MDF-2 core and a cytoplasmic SAN-1/BUB-3 branch; elevating MDF-2 can bypass SAN-1/BUB-3 requirement (PMID:19109417). A san-1 model therefore isolates the BubR1-side branch.",
+    "scorable_phenotypes": [
+      {"phenotype": "embryonic/larval viability", "evidence": "san-1(ok1580) viable at low penetrance; viability collapses on mdf-1/mdf-2/bub-3/hcp-1 RNAi; irradiated bub-3/san-1 mutants sire lethal embryos", "cites": ["PMID:18248670", "PMID:29046436"]},
+      {"phenotype": "him (high incidence of males) / aneuploidy proxy", "evidence": "san-1(ok1580) shows increased incidence of males (X-chromosome nondisjunction)", "cites": ["PMID:18248670"]},
+      {"phenotype": "growth rate / developmental delay, vulval morphology", "evidence": "slow growth, larval arrest, protruding vulva and vulval morphogenesis defects in san-1 and irradiated bub-3 mutants", "cites": ["PMID:18248670", "PMID:29046436"]},
+      {"phenotype": "behavioural tracking phenome", "evidence": "high-throughput tracking resolves drug-rescuable behavioural phenotypes across 25 CRISPR C. elegans disease models", "cites": ["PMID:39773880", "PMID:41013606"]},
+      {"phenotype": "genotoxin (IR) sensitivity", "evidence": "bub-3 and san-1 deletions confer IR hypersensitivity via the checkpoint's DNA-damage-response role", "cites": ["PMID:29046436"]}
+    ]
+  },
+  "citations": {
+    "PMID:39773880": {"title": "High-throughput tracking enables systematic phenotyping and drug repurposing in C. elegans disease models", "journal": "eLife", "year": 2025, "doi": "10.7554/eLife.92491"},
+    "PMID:41013606": {"title": "High-throughput behavioural phenotyping of 25 C. elegans disease models including patient-specific mutations", "journal": "BMC Biol", "year": 2025, "doi": "10.1186/s12915-025-02368-8"},
+    "PMID:18248670": {"title": "Genetic analysis of the spindle checkpoint genes san-1, mdf-2, bub-3 and the CENP-F homologues hcp-1 and hcp-2 in Caenorhabditis elegans", "journal": "Cell Div", "year": 2008, "doi": "10.1186/1747-1028-3-6"},
+    "PMID:19109417": {"title": "Systematic analysis in Caenorhabditis elegans reveals that the spindle checkpoint is composed of two largely independent branches", "journal": "Mol Biol Cell", "year": 2009, "doi": "10.1091/mbc.e08-10-1047"},
+    "PMID:18936247": {"title": "SPDL-1 functions as a kinetochore receptor for MDF-1 in Caenorhabditis elegans", "journal": "J Cell Biol", "year": 2008, "doi": "10.1083/jcb.200805185"},
+    "PMID:29046436": {"title": "Caenorhabditis elegans BUB-3 and SAN-1/MAD3 Spindle Assembly Checkpoint Components Are Required for Genome Stability in Response to Treatment with Ionizing Radiation", "journal": "G3 (Bethesda)", "year": 2017, "doi": "10.1534/g3.117.1122"},
+    "PMID:24825348": {"title": "SIRT2 induces the checkpoint kinase BubR1 to increase lifespan", "journal": "EMBO J", "year": 2014, "doi": "10.15252/embj.201386907"},
+    "PMID:38009412": {"title": "SIRT2 transgenic over-expression does not impact lifespan in mice", "journal": "Aging Cell", "year": 2023, "doi": "10.1111/acel.14027"},
+    "PMID:41436848": {"title": "Promising Results With NAD Supplementation in Rare Diseases With Premature Aging and DNA Damage", "journal": "Aging Cell", "year": 2026, "doi": "10.1111/acel.70319"},
+    "PMID:39169218": {"title": "Mosaic variegated aneuploidy in development, ageing and cancer", "journal": "Nat Rev Genet", "year": 2024, "doi": "10.1038/s41576-024-00762-6"},
+    "PMID:31738183": {"title": "BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome", "journal": "J Clin Invest", "year": 2020, "doi": "10.1172/JCI126863"}
+  }
+}

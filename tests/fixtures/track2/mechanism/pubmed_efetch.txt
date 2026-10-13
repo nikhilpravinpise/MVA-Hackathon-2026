@@ -1,0 +1,1300 @@
+1. Trends Biochem Sci. 1998 Jun;23(6):198-9. doi: 10.1016/s0968-0004(98)01208-0.
+
+A rule for termination-codon position within intron-containing genes: when 
+nonsense affects RNA abundance.
+
+Nagy E(1), Maquat LE.
+
+Author information:
+(1)Dept of Human Genetics, Roswell Park Cancer Institute, Buffalo, USA.
+
+DOI: 10.1016/s0968-0004(98)01208-0
+PMID: 9644970 [Indexed for MEDLINE]
+
+
+2. Nat Genet. 2016 Oct;48(10):1112-8. doi: 10.1038/ng.3664. Epub 2016 Sep 12.
+
+The rules and impact of nonsense-mediated mRNA decay in human cancers.
+
+Lindeboom RG(1)(2), Supek F(1)(2)(3), Lehner B(1)(2)(4).
+
+Author information:
+(1)EMBL-CRG Systems Biology Unit, Centre for Genomic Regulation (CRG), Barcelona 
+Institute of Science and Technology, Barcelona, Spain.
+(2)Universitat Pompeu Fabra (UPF), Barcelona, Spain.
+(3)Division of Electronics, Rudjer Boskovic Institute, Zagreb, Croatia.
+(4)Institució Catalana de Recerca i Estudis Avançats (ICREA), Barcelona, Spain.
+
+Premature termination codons (PTCs) cause a large proportion of inherited human 
+genetic diseases. PTC-containing transcripts can be degraded by an mRNA 
+surveillance pathway termed nonsense-mediated mRNA decay (NMD). However, the 
+efficiency of NMD varies; it is inefficient when a PTC is located downstream of 
+the last exon junction complex (EJC). We used matched exome and transcriptome 
+data from 9,769 human tumors to systematically elucidate the rules of NMD 
+targeting in human cells. An integrated model incorporating multiple rules 
+beyond the canonical EJC model explains approximately three-fourths of the 
+non-random variance in NMD efficiency across thousands of PTCs. We also show 
+that dosage compensation may sometimes mask the effects of NMD. Applying the NMD 
+model identifies signatures of both positive and negative selection on 
+NMD-triggering mutations in human tumors and provides a classification for 
+tumor-suppressor genes.
+
+DOI: 10.1038/ng.3664
+PMCID: PMC5045715
+PMID: 27618451 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no competing financial 
+interests.
+
+
+3. Nat Genet. 2019 Nov;51(11):1645-1651. doi: 10.1038/s41588-019-0517-5. Epub
+2019  Oct 28.
+
+The impact of nonsense-mediated mRNA decay on genetic disease, gene editing and 
+cancer immunotherapy.
+
+Lindeboom RGH(1), Vermeulen M(1), Lehner B(2)(3)(4), Supek F(5)(6).
+
+Author information:
+(1)Department of Molecular Biology, Faculty of Science, Radboud Institute for 
+Molecular Life Sciences, Oncode Institute, Radboud University Nijmegen, 
+Nijmegen, the Netherlands.
+(2)Systems Biology Program, Centre for Genomic Regulation, The Barcelona 
+Institute of Science and Technology, Barcelona, Spain. ben.lehner@crg.eu.
+(3)Universitat Pompeu Fabra, Barcelona, Spain. ben.lehner@crg.eu.
+(4)Institució Catalana de Recerca i Estudis Avançats, Barcelona, Spain. 
+ben.lehner@crg.eu.
+(5)Institució Catalana de Recerca i Estudis Avançats, Barcelona, Spain. 
+fran.supek@irbbarcelona.org.
+(6)Institut de Recerca Biomedica Barcelona, The Barcelona Institute of Science 
+and Technology, Barcelona, Spain. fran.supek@irbbarcelona.org.
+
+Premature termination codons (PTCs) can result in the production of truncated 
+proteins or the degradation of messenger RNAs by nonsense-mediated mRNA decay 
+(NMD). Which of these outcomes occurs can alter the effect of a mutation, with 
+the engagement of NMD being dependent on a series of rules. Here, by applying 
+these rules genome-wide to obtain a resource called NMDetective, we explore the 
+impact of NMD on genetic disease and approaches to therapy. First, human genetic 
+diseases differ in whether NMD typically aggravates or alleviates the effects of 
+PTCs. Second, failure to trigger NMD is a cause of ineffective gene inactivation 
+by CRISPR-Cas9 gene editing. Finally, NMD is a determinant of the efficacy of 
+cancer immunotherapy, with only frameshifted transcripts that escape NMD 
+predicting a response. These results demonstrate the importance of incorporating 
+the rules of NMD into clinical decision-making. Moreover, they suggest that 
+inhibiting NMD may be effective in enhancing cancer immunotherapy.
+
+DOI: 10.1038/s41588-019-0517-5
+PMCID: PMC6858879
+PMID: 31659324 [Indexed for MEDLINE]
+
+Conflict of interest statement: Competing Interests The authors declare no 
+competing interests.
+
+
+4. Nat Genet. 2004 Nov;36(11):1159-61. doi: 10.1038/ng1449. Epub 2004 Oct 10.
+
+Constitutional aneuploidy and cancer predisposition caused by biallelic 
+mutations in BUB1B.
+
+Hanks S(1), Coleman K, Reid S, Plaja A, Firth H, Fitzpatrick D, Kidd A, Méhes K, 
+Nash R, Robin N, Shannon N, Tolmie J, Swansbury J, Irrthum A, Douglas J, Rahman 
+N.
+
+Author information:
+(1)Section of Cancer Genetics, Institute of Cancer Research, Sutton, Surrey, UK.
+
+Comment in
+    Nat Genet. 2004 Nov;36(11):1144-5. doi: 10.1038/ng1104-1144.
+
+Mosaic variegated aneuploidy is a rare recessive condition characterized by 
+growth retardation, microcephaly, childhood cancer and constitutional mosaicism 
+for chromosomal gains and losses. In five families with mosaic variegated 
+aneuploidy, including two with embryonal rhabdomyosarcoma, we identified 
+truncating and missense mutations of BUB1B, which encodes BUBR1, a key protein 
+in the mitotic spindle checkpoint. These data are the first to relate germline 
+mutations in a spindle checkpoint gene with a human disorder and strongly 
+support a causal link between aneuploidy and cancer development.
+
+DOI: 10.1038/ng1449
+PMID: 15475955 [Indexed for MEDLINE]
+
+
+5. Am J Med Genet A. 2006 Feb 15;140(4):358-67. doi: 10.1002/ajmg.a.31069.
+
+Monoallelic BUB1B mutations and defective mitotic-spindle checkpoint in seven 
+families with premature chromatid separation (PCS) syndrome.
+
+Matsuura S(1), Matsumoto Y, Morishima K, Izumi H, Matsumoto H, Ito E, Tsutsui K, 
+Kobayashi J, Tauchi H, Kajiwara Y, Hama S, Kurisu K, Tahara H, Oshimura M, 
+Komatsu K, Ikeuchi T, Kajii T.
+
+Author information:
+(1)Department of Radiation Biology, Research Institute for Radiation Biology and 
+Medicine, Hiroshima University, Hiroshima, Japan. shinya@hiroshima-u.ac.jp
+
+Cancer-prone syndrome of premature chromatid separation (PCS syndrome) with 
+mosaic variegated aneuploidy (MVA) is a rare autosomal recessive disorder 
+characterized by growth retardation, microcephaly, childhood cancer, premature 
+chromatid separation of all chromosomes, and mosaicism for various trisomies and 
+monosomies. Biallelic BUB1B mutations were recently reported in five of eight 
+families with MVA syndrome (probably identical to the PCS syndrome). We here 
+describe molecular analysis of BUB1B (encoding BubR1) in seven Japanese families 
+with the PCS syndrome. Monoallelic BUB1B mutations were found in all seven 
+families studied: a single-base deletion (1833delT) in four families; and a 
+splice site mutation, a nonsense mutation, and a missense mutation in one family 
+each. Transcripts derived from the patients with the 1833delT mutation and the 
+splice site mutation were significantly reduced, probably due to 
+nonsense-mediated mRNA decay. No mutation was found in the second alleles in the 
+seven families studied, but RT-PCR of BUB1B and Western blot analysis of BubR1 
+indicated a modest decrease of their transcripts. BubR1 in the cells from two 
+patients showed both reduced protein expression and diminished kinetochore 
+localization. Their expression level of p55cdc, a specific activator of 
+anaphase-promoting complex, was normal but its kinetochore association was 
+abolished. Microcell-mediated transfer of chromosome 15 (containing BUB1B) into 
+the cells restored normal BubR1 levels, kinetochore localization of p55cdc, and 
+the normal responses to colcemid treatment. These findings indicate the 
+involvement of BubR1 in p55cdc-mediated mitotic checkpoint signaling, and 
+suggest that >50% decrease in expression (or activity) of BubR1 is involved in 
+the PCS syndrome.
+
+Copyright (c) 2006 Wiley-Liss, Inc.
+
+DOI: 10.1002/ajmg.a.31069
+PMID: 16411201 [Indexed for MEDLINE]
+
+
+6. Cancer Res. 2010 Jun 15;70(12):4891-900. doi: 10.1158/0008-5472.CAN-09-4319. 
+Epub 2010 Jun 1.
+
+Molecular causes for BUBR1 dysfunction in the human cancer predisposition 
+syndrome mosaic variegated aneuploidy.
+
+Suijkerbuijk SJ(1), van Osch MH, Bos FL, Hanks S, Rahman N, Kops GJ.
+
+Author information:
+(1)Department of Physiological Chemistry and Cancer Genomics Centre, University 
+Medical Center Utrecht, Utrecht, the Netherlands.
+
+Genetic mutations in the mitotic regulatory kinase BUBR1 are associated with the 
+cancer-susceptible disorder mosaic variegated aneuploidy (MVA). In patients with 
+biallelic mutations, a missense mutation pairs with a truncating mutation. Here, 
+we show that cell lines derived from MVA patients with biallelic mutations have 
+an impaired mitotic checkpoint, chromosome alignment defects, and low overall 
+BUBR1 abundance. Ectopic expression of BUBR1 restored mitotic checkpoint 
+activity, proving that BUBR1 dysfunction causes chromosome segregation errors in 
+the patients. Combined analysis of patient cells and functional protein 
+replacement shows that all MVA mutations fall in two distinct classes: those 
+that impose specific defects in checkpoint activity or microtubule attachment 
+and those that lower BUBR1 protein abundance. Low protein abundance is the 
+direct result of the absence of transcripts from truncating mutants combined 
+with high protein turnover of missense mutants. In this group of missense 
+mutants, the amino acid change consistently occurs in or near the BUBR1 kinase 
+domain. Our findings provide a molecular explanation for chromosomal instability 
+in patients with biallelic genetic mutations in BUBR1.
+
+DOI: 10.1158/0008-5472.CAN-09-4319
+PMCID: PMC2887387
+PMID: 20516114 [Indexed for MEDLINE]
+
+
+7. Nat Genet. 2004 Jul;36(7):744-9. doi: 10.1038/ng1382. Epub 2004 Jun 20.
+
+BubR1 insufficiency causes early onset of aging-associated phenotypes and 
+infertility in mice.
+
+Baker DJ(1), Jeganathan KB, Cameron JD, Thompson M, Juneja S, Kopecka A, Kumar 
+R, Jenkins RB, de Groen PC, Roche P, van Deursen JM.
+
+Author information:
+(1)[1] Departments of Pediatric and Adolescent Medicine, Mayo Clinic, 200 First 
+Street SW, Rochester, Minnesota 55905, USA. [2] Departments of Biochemistry and 
+Molecular Biology, Mayo Clinic, 200 First Street SW, Rochester, Minnesota 55905, 
+USA.
+
+Comment in
+    Nat Genet. 2004 Jul;36(7):672-4. doi: 10.1038/ng0704-672.
+    Nat Rev Mol Cell Biol. 2013 Oct;14(10):611. doi: 10.1038/nrm3666.
+
+Faithful segregation of replicated chromosomes is essential for maintenance of 
+genetic stability and seems to be monitored by several mitotic checkpoints. 
+Various components of these checkpoints have been identified in mammals, but 
+their physiological relevance is largely unknown. Here we show that mutant mice 
+with low levels of the spindle assembly checkpoint protein BubR1 develop 
+progressive aneuploidy along with a variety of progeroid features, including 
+short lifespan, cachectic dwarfism, lordokyphosis, cataracts, loss of 
+subcutaneous fat and impaired wound healing. Graded reduction of BubR1 
+expression in mouse embryonic fibroblasts causes increased aneuploidy and 
+senescence. Male and female mutant mice have defects in meiotic chromosome 
+segregation and are infertile. Natural aging of wild-type mice is marked by 
+decreased expression of BubR1 in multiple tissues, including testis and ovary. 
+These results suggest a role for BubR1 in regulating aging and infertility.
+
+DOI: 10.1038/ng1382
+PMID: 15208629 [Indexed for MEDLINE]
+
+
+8. PLoS Genet. 2012;8(12):e1003138. doi: 10.1371/journal.pgen.1003138. Epub 2012 
+Dec 27.
+
+Reduced life- and healthspan in mice carrying a mono-allelic BubR1 MVA mutation.
+
+Wijshake T(1), Malureanu LA, Baker DJ, Jeganathan KB, van de Sluis B, van 
+Deursen JM.
+
+Author information:
+(1)Department of Pediatric and Adolescent Medicine, Mayo Clinic, Rochester, 
+Minnesota, United States of America.
+
+Mosaic Variegated Aneuploidy (MVA) syndrome is a rare autosomal recessive 
+disorder characterized by inaccurate chromosome segregation and high rates of 
+near-diploid aneuploidy. Children with MVA syndrome die at an early age, are 
+cancer prone, and have progeroid features like facial dysmorphisms, short 
+stature, and cataracts. The majority of MVA cases are linked to mutations in 
+BUBR1, a mitotic checkpoint gene required for proper chromosome segregation. 
+Affected patients either have bi-allelic BUBR1 mutations, with one allele 
+harboring a missense mutation and the other a nonsense mutation, or mono-allelic 
+BUBR1 mutations combined with allelic variants that yield low amounts of 
+wild-type BubR1 protein. Parents of MVA patients that carry single allele 
+mutations have mild mitotic defects, but whether they are at risk for any of the 
+pathologies associated with MVA syndrome is unknown. To address this, we 
+engineered a mouse model for the nonsense mutation 2211insGTTA (referred to as 
+GTTA) found in MVA patients with bi-allelic BUBR1 mutations. Here we report that 
+both the median and maximum lifespans of the resulting BubR1(+/GTTA) mice are 
+significantly reduced. Furthermore, BubR1(+/GTTA) mice develop several 
+aging-related phenotypes at an accelerated rate, including cataract formation, 
+lordokyphosis, skeletal muscle wasting, impaired exercise ability, and fat loss. 
+BubR1(+/GTTA) mice develop mild aneuploidies and show enhanced growth of 
+carcinogen-induced tumors. Collectively, these data demonstrate that the BUBR1 
+GTTA mutation compromises longevity and healthspan, raising the interesting 
+possibility that mono-allelic changes in BUBR1 might contribute to differences 
+in aging rates in the general population.
+
+DOI: 10.1371/journal.pgen.1003138
+PMCID: PMC3531486
+PMID: 23300461 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors have declared that no competing 
+interests exist.
+
+
+9. Nat Cell Biol. 2008 Jul;10(7):825-36. doi: 10.1038/ncb1744. Epub 2008 May 30.
+
+Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 
+insufficiency.
+
+Baker DJ(1), Perez-Terzic C, Jin F, Pitel KS, Niederländer NJ, Jeganathan K, 
+Yamada S, Reyes S, Rowe L, Hiddinga HJ, Eberhardt NL, Terzic A, van Deursen JM.
+
+Author information:
+(1)Department of Pediatric and Adolescent Medicine, Mayo Clinic College of 
+Medicine, Rochester, MN 55905, USA.
+
+Erratum in
+    Nat Cell Biol. 2012 Jun;14(6):649. Pitel, Kevin [corrected to Pitel, Kevin 
+S].
+
+Expression of p16(Ink4a) and p19(Arf) increases with age in both rodent and 
+human tissues. However, whether these tumour suppressors are effectors of ageing 
+remains unclear, mainly because knockout mice lacking p16(Ink4a) or p19(Arf) die 
+early of tumours. Here, we show that skeletal muscle and fat, two tissues that 
+develop early ageing-associated phenotypes in response to BubR1 insufficiency, 
+have high levels of p16(Ink4a) and p19(Arf). Inactivation of p16(Ink4a) in 
+BubR1-insufficient mice attenuates both cellular senescence and premature ageing 
+in these tissues. Conversely, p19(Arf) inactivation exacerbates senescence and 
+ageing in BubR1 mutant mice. Thus, we identify BubR1 insufficiency as a trigger 
+for activation of the Cdkn2a locus in certain mouse tissues, and demonstrate 
+that p16(Ink4a) is an effector and p19(Arf) an attenuator of senescence and 
+ageing in these tissues.
+
+DOI: 10.1038/ncb1744
+PMCID: PMC2594014
+PMID: 18516091 [Indexed for MEDLINE]
+
+
+10. Nature. 2011 Nov 2;479(7372):232-6. doi: 10.1038/nature10600.
+
+Clearance of p16Ink4a-positive senescent cells delays ageing-associated 
+disorders.
+
+Baker DJ(1), Wijshake T, Tchkonia T, LeBrasseur NK, Childs BG, van de Sluis B, 
+Kirkland JL, van Deursen JM.
+
+Author information:
+(1)Department of Pediatric and Adolescent Medicine, Mayo Clinic College of 
+Medicine, Rochester, Minnesota 55905, USA.
+
+Comment in
+    Nature. 2011 Nov 09;479(7372):186-7. doi: 10.1038/479186a.
+    Nat Rev Mol Cell Biol. 2019 Jul;20(7):388. doi: 10.1038/s41580-019-0128-0.
+
+Advanced age is the main risk factor for most chronic diseases and functional 
+deficits in humans, but the fundamental mechanisms that drive ageing remain 
+largely unknown, impeding the development of interventions that might delay or 
+prevent age-related disorders and maximize healthy lifespan. Cellular 
+senescence, which halts the proliferation of damaged or dysfunctional cells, is 
+an important mechanism to constrain the malignant progression of tumour cells. 
+Senescent cells accumulate in various tissues and organs with ageing and have 
+been hypothesized to disrupt tissue structure and function because of the 
+components they secrete. However, whether senescent cells are causally 
+implicated in age-related dysfunction and whether their removal is beneficial 
+has remained unknown. To address these fundamental questions, we made use of a 
+biomarker for senescence, p16(Ink4a), to design a novel transgene, INK-ATTAC, 
+for inducible elimination of p16(Ink4a)-positive senescent cells upon 
+administration of a drug. Here we show that in the BubR1 progeroid mouse 
+background, INK-ATTAC removes p16(Ink4a)-positive senescent cells upon drug 
+treatment. In tissues--such as adipose tissue, skeletal muscle and eye--in which 
+p16(Ink4a) contributes to the acquisition of age-related pathologies, life-long 
+removal of p16(Ink4a)-expressing cells delayed onset of these phenotypes. 
+Furthermore, late-life clearance attenuated progression of already established 
+age-related disorders. These data indicate that cellular senescence is causally 
+implicated in generating age-related phenotypes and that removal of senescent 
+cells can prevent or delay tissue dysfunction and extend healthspan.
+
+DOI: 10.1038/nature10600
+PMCID: PMC3468323
+PMID: 22048312 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no competing financial 
+interests.
+
+
+11. Cell Rep. 2013 Apr 25;3(4):1164-74. doi: 10.1016/j.celrep.2013.03.028. Epub
+2013  Apr 18.
+
+p21 both attenuates and drives senescence and aging in BubR1 progeroid mice.
+
+Baker DJ(1), Weaver RL, van Deursen JM.
+
+Author information:
+(1)Department of Pediatric and Adolescent Medicine, Mayo Clinic College of 
+Medicine, Rochester, MN 55905, USA.
+
+BubR1 insufficiency occurs with natural aging and induces progeroid phenotypes 
+in both mice and children with mosaic variegated aneuploidy syndrome. In 
+response to BubR1 insufficiency, skeletal muscle, fat, and lens tissue engage 
+p19(Arf) to attenuate senescence and age-related deterioration. Here, we address 
+how p19(Arf) exerts this caretaker role using BubR1 progeroid mice lacking p53 
+or its transcriptional target p21. We show that p53 delays functional decline of 
+skeletal muscle and fat in a p21-dependent fashion by inhibiting 
+p16(Ink4a)-mediated senescence of progenitor cells. Strikingly, p53 also 
+attenuates the formation of cataractous lenses, but here its antiaging effect is 
+p21 independent, as we found p21 to promote senescence of lens epithelial cells 
+and cataract formation. Together, these results demonstrate that p53 counteracts 
+tissue destruction in response to BubR1 insufficiency through diverse mechanisms 
+and uncover a causal link between senescence of the progenitor cell compartment 
+and age-related dysfunction.
+
+Copyright © 2013 The Authors. Published by Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.celrep.2013.03.028
+PMCID: PMC3785294
+PMID: 23602569 [Indexed for MEDLINE]
+
+
+12. Nat Cell Biol. 2013 Jan;15(1):96-102. doi: 10.1038/ncb2643. Epub 2012 Dec 16.
+
+Increased expression of BubR1 protects against aneuploidy and cancer and extends 
+healthy lifespan.
+
+Baker DJ(1), Dawlaty MM, Wijshake T, Jeganathan KB, Malureanu L, van Ree JH, 
+Crespo-Diaz R, Reyes S, Seaburg L, Shapiro V, Behfar A, Terzic A, van de Sluis 
+B, van Deursen JM.
+
+Author information:
+(1)Department of Pediatric and Adolescent Medicine, Mayo Clinic, 200 First 
+Street Southwest, Rochester, Minnesota 55905, USA.
+
+Comment in
+    Nat Rev Mol Cell Biol. 2013 Oct;14(10):611. doi: 10.1038/nrm3666.
+
+The BubR1 gene encodes for a mitotic regulator that ensures accurate segregation 
+of chromosomes through its role in the mitotic checkpoint and the establishment 
+of proper microtubule-kinetochore attachments. Germline mutations that reduce 
+BubR1 abundance cause aneuploidy, shorten lifespan and induce premature ageing 
+phenotypes and cancer in both humans and mice. A reduced BubR1 expression level 
+is also a feature of chronological ageing, but whether this age-related decline 
+has biological consequences is unknown. Using a transgenic approach in mice, we 
+show that sustained high-level expression of BubR1 preserves genomic integrity 
+and reduces tumorigenesis, even in the presence of genetic alterations that 
+strongly promote aneuplodization and cancer, such as oncogenic Ras. We find that 
+BubR1 overabundance exerts its protective effect by correcting mitotic 
+checkpoint impairment and microtubule-kinetochore attachment defects. 
+Furthermore, sustained high-level expression of BubR1 extends lifespan and 
+delays age-related deterioration and aneuploidy in several tissues. 
+Collectively, these data uncover a generalized function for BubR1 in 
+counteracting defects that cause whole-chromosome instability and suggest that 
+modulating BubR1 provides a unique opportunity to extend healthy lifespan.
+
+DOI: 10.1038/ncb2643
+PMCID: PMC3707109
+PMID: 23242215 [Indexed for MEDLINE]
+
+
+13. EMBO J. 2014 Jul 1;33(13):1438-53. doi: 10.15252/embj.201386907. Epub 2014
+May  12.
+
+SIRT2 induces the checkpoint kinase BubR1 to increase lifespan.
+
+North BJ(1), Rosenberg MA(2), Jeganathan KB(3), Hafner AV(1), Michan S(1), Dai 
+J(2), Baker DJ(3), Cen Y(4), Wu LE(5), Sauve AA(4), van Deursen JM(3), 
+Rosenzweig A(2), Sinclair DA(6).
+
+Author information:
+(1)Department of Genetics, Paul F. Glenn Laboratories for the Biological 
+Mechanisms of Aging Harvard Medical School, Boston, MA, USA.
+(2)Cardiovascular Division, Beth Israel Deaconess Medical Center Harvard Medical 
+School, Boston, MA, USA.
+(3)Department of Pediatric and Adolescent Medicine, Mayo Clinic College of 
+Medicine, Rochester, MN, USA.
+(4)Department of Pharmacology, Weill Medical College of Cornell University, New 
+York, NY, USA.
+(5)Department of Pharmacology, School of Medicine The University of New South 
+Wales, Sydney, NSW, Australia.
+(6)Department of Genetics, Paul F. Glenn Laboratories for the Biological 
+Mechanisms of Aging Harvard Medical School, Boston, MA, USA Department of 
+Pharmacology, School of Medicine The University of New South Wales, Sydney, NSW, 
+Australia david_sinclair@hms.harvard.edu.
+
+Comment in
+    EMBO J. 2014 Jul 1;33(13):1417-9. doi: 10.15252/embj.201488983.
+
+Mice overexpressing the mitotic checkpoint kinase gene BubR1 live longer, 
+whereas mice hypomorphic for BubR1 (BubR1(H/H)) live shorter and show signs of 
+accelerated aging. As wild-type mice age, BubR1 levels decline in many tissues, 
+a process that is proposed to underlie normal aging and age-related diseases. 
+Understanding why BubR1 declines with age and how to slow this process is 
+therefore of considerable interest. The sirtuins (SIRT1-7) are a family of 
+NAD(+)-dependent deacetylases that can delay age-related diseases. Here, we show 
+that the loss of BubR1 levels with age is due to a decline in NAD(+) and the 
+ability of SIRT2 to maintain lysine-668 of BubR1 in a deacetylated state, which 
+is counteracted by the acetyltransferase CBP. Overexpression of SIRT2 or 
+treatment of mice with the NAD(+) precursor nicotinamide mononucleotide (NMN) 
+increases BubR1 abundance in vivo. Overexpression of SIRT2 in BubR1(H/H) animals 
+increases median lifespan, with a greater effect in male mice. Together, these 
+data indicate that further exploration of the potential of SIRT2 and NAD(+) to 
+delay diseases of aging in mammals is warranted.
+
+© 2014 The Authors.
+
+DOI: 10.15252/embj.201386907
+PMCID: PMC4194088
+PMID: 24825348 [Indexed for MEDLINE]
+
+
+14. EMBO J. 2009 Jul 22;28(14):2077-89. doi: 10.1038/emboj.2009.123. Epub 2009
+Apr  30.
+
+BubR1 acetylation at prometaphase is required for modulating APC/C activity and 
+timing of mitosis.
+
+Choi E(1), Choe H, Min J, Choi JY, Kim J, Lee H.
+
+Author information:
+(1)Department of Biological Sciences and Institute of Molecular Biology and 
+Genetics, College of Natural Sciences, Seoul National University, Seoul, Korea.
+
+Comment in
+    EMBO J. 2009 Jul 22;28(14):1991-3. doi: 10.1038/emboj.2009.149.
+
+Regulation of BubR1 is central to the control of APC/C activity. We have found 
+that BubR1 forms a complex with PCAF and is acetylated at lysine 250. Using mass 
+spectrometry and acetylated BubR1-specific antibodies, we have confirmed that 
+BubR1 acetylation occurs at prometaphase. Importantly, BubR1 acetylation was 
+required for checkpoint function, through the inhibition of ubiquitin-dependent 
+BubR1 degradation. BubR1 degradation began before the onset of anaphase. It was 
+noted that the pre-anaphase degradation was regulated by BubR1 acetylation. 
+Degradation of an acetylation-mimetic form, BubR1-K250Q, was inhibited and 
+chromosome segregation in cells expressing BubR1-K250Q was markedly delayed. By 
+contrast, the acetylation-deficient mutant, BubR1-K250R, was unstable, and 
+mitosis was accelerated in BubR1-K250R-expressing cells. Furthermore, we found 
+that APC/C-Cdc20 was responsible for BubR1 degradation during mitosis. On the 
+basis of our collective results, we propose that the acetylation status of BubR1 
+is a molecular switch that converts BubR1 from an inhibitor to a substrate of 
+the APC/C complex, thus providing an efficient way to modulate APC/C activity 
+and mitotic timing.
+
+DOI: 10.1038/emboj.2009.123
+PMCID: PMC2684026
+PMID: 19407811 [Indexed for MEDLINE]
+
+
+15. Dev Cell. 2012 Oct 16;23(4):745-55. doi: 10.1016/j.devcel.2012.09.005.
+
+Integration of kinase and phosphatase activities by BUBR1 ensures formation of 
+stable kinetochore-microtubule attachments.
+
+Suijkerbuijk SJ(1), Vleugel M, Teixeira A, Kops GJ.
+
+Author information:
+(1)Molecular Cancer Research and Cancer Genomics Centre, UMC Utrecht, 
+Universiteitsweg 100, 3584 CG Utrecht, The Netherlands.
+
+Maintenance of chromosomal stability depends on error-free chromosome 
+segregation. The pseudokinase BUBR1 is essential for this, because it is a core 
+component of the mitotic checkpoint and is required for formation of stable 
+kinetochore-microtubule attachments. We have identified a conserved and highly 
+phosphorylated domain (KARD) in BUBR1 that is crucial for formation of 
+kinetochore-microtubule attachments. Deletion of this domain or prevention of 
+its phosphorylation abolishes formation of kinetochore microtubules, which can 
+be reverted by inhibiting Aurora B activity. Phosphorylation of KARD by PLK1 
+promotes direct interaction of BUBR1 with the PP2A-B56α phosphatase that 
+counters excessive Aurora B activity at kinetochores. As a result, removal of 
+BUBR1 from mitotic cells or inhibition of PLK1 reduces PP2A-B56α kinetochore 
+binding and elevates phosphorylation of Aurora B substrates on the outer 
+kinetochore. We propose that PLK1 and BUBR1 cooperate to stabilize 
+kinetochore-microtubule interactions by regulating PP2A-B56α-mediated 
+dephosphorylation of Aurora B substrates at the kinetochore-microtubule 
+interface.
+
+Copyright © 2012 Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.devcel.2012.09.005
+PMID: 23079597 [Indexed for MEDLINE]
+
+
+16. Dev Cell. 2012 Jun 12;22(6):1321-9. doi: 10.1016/j.devcel.2012.03.009.
+
+The vertebrate mitotic checkpoint protein BUBR1 is an unusual pseudokinase.
+
+Suijkerbuijk SJ(1), van Dam TJ, Karagöz GE, von Castelmur E, Hubner NC, Duarte 
+AM, Vleugel M, Perrakis A, Rüdiger SG, Snel B, Kops GJ.
+
+Author information:
+(1)Molecular Cancer Research and Cancer Genomics Centre, Department of Medical 
+Oncology, UMC Utrecht, Universiteitsweg 100, 3584 CG Utrecht, The Netherlands.
+
+Comment in
+    Dev Cell. 2012 Jun 12;22(6):1123-5. doi: 10.1016/j.devcel.2012.05.020.
+    Nat Rev Mol Cell Biol. 2012 Jul 11;13(8):478-9. doi: 10.1038/nrm3399.
+
+Chromosomal stability is safeguarded by a mitotic checkpoint, of which BUB1 and 
+Mad3/BUBR1 are core components. These paralogs have similar, but not identical, 
+domain organization. We show that Mad3/BUBR1 and BUB1 paralogous pairs arose by 
+nine independent gene duplications throughout evolution, followed by parallel 
+subfunctionalization in which preservation of the ancestral, amino-terminal KEN 
+box or kinase domain was mutually exclusive. In one exception, vertebrate 
+BUBR1-defined by the KEN box-preserved the kinase domain but allowed 
+nonconserved degeneration of catalytic motifs. Although BUBR1 evolved to a 
+typical pseudokinase in some vertebrates, it retained the catalytic triad in 
+humans. However, we show that putative catalysis by human BUBR1 is dispensable 
+for error-free chromosome segregation. Instead, residues that interact with ATP 
+in conventional kinases are essential for conformational stability in BUBR1. We 
+propose that parallel evolution of BUBR1 orthologs rendered its kinase function 
+dispensable in vertebrates, producing an unusual, triad-containing pseudokinase.
+
+Copyright © 2012 Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.devcel.2012.03.009
+PMID: 22698286 [Indexed for MEDLINE]
+
+
+17. J Cell Sci. 2013 Mar 1;126(Pt 5):1086-92. doi: 10.1242/jcs.122481. Epub 2013
+Jan  23.
+
+Direct binding between BubR1 and B56-PP2A phosphatase complexes regulate mitotic 
+progression.
+
+Kruse T(1), Zhang G, Larsen MS, Lischetti T, Streicher W, Kragh Nielsen T, Bjørn 
+SP, Nilsson J.
+
+Author information:
+(1)The Novo Nordisk Foundation Center for Protein Research, Faculty of Health 
+and Medical Sciences, University of Copenhagen, Blegdamsvej 3b, 2200 Copenhagen, 
+Denmark.
+
+BubR1 is a central component of the spindle assembly checkpoint that inhibits 
+progression into anaphase in response to improper kinetochore-microtubule 
+interactions. In addition, BubR1 also helps stabilize kinetochore-microtubule 
+interactions by counteracting the Aurora B kinase but the mechanism behind this 
+is not clear. Here we show that BubR1 directly binds to the B56 family of 
+protein phosphatase 2A (PP2A) regulatory subunits through a conserved motif that 
+is phosphorylated by cyclin-dependent kinase 1 (Cdk1) and polo-like kinase 1 
+(Plk1). Two highly conserved hydrophobic residues surrounding the serine 670 
+Cdk1 phosphorylation site are required for B56 binding. Mutation of these 
+residues prevents the establishment of a proper metaphase plate and delays cells 
+in mitosis. Furthermore, we show that phosphorylation of serines 670 and 676 
+stimulates the binding of B56 to BubR1 and that BubR1 targets a pool of B56 to 
+kinetochores. Our data suggest that BubR1 counteracts Aurora B kinase activity 
+at improperly attached kinetochores by recruiting B56-PP2A phosphatase 
+complexes.
+
+DOI: 10.1242/jcs.122481
+PMID: 23345399 [Indexed for MEDLINE]
+
+
+18. Cell Rep. 2020 Nov 17;33(7):108397. doi: 10.1016/j.celrep.2020.108397.
+
+BUBR1 Pseudokinase Domain Promotes Kinetochore PP2A-B56 Recruitment, Spindle 
+Checkpoint Silencing, and Chromosome Alignment.
+
+Gama Braga L(1), Cisneros AF(2), Mathieu MM(3), Clerc M(4), Garcia P(4), Lottin 
+B(4), Garand C(4), Thebault P(4), Landry CR(5), Elowe S(6).
+
+Author information:
+(1)Biologie Cellulaire et Moléculaire, Faculté de Médicine, Université Laval, 
+Québec, QC G1V 0A6, Canada; Centre de Recherche du Centre Hospitalier 
+Universitaire (CHU) de Québec-Université Laval, Axe de Reproduction, Santé de la 
+Mère et de l'Enfant, Québec, QC G1V 4G2, Canada; PROTEO-Regroupement Québécois 
+de Recherche sur la Fonction, l'Ingénierie et les Applications des Protéines, 
+Québec, QC G1V 0A6, Canada.
+(2)PROTEO-Regroupement Québécois de Recherche sur la Fonction, l'Ingénierie et 
+les Applications des Protéines, Québec, QC G1V 0A6, Canada; Institut de Biologie 
+Intégrative et des Systèmes (IBIS) et Centre de Recherche en Données Massives de 
+l'Université Laval, Université Laval, Québec, QC G1V 0A6, Canada; Département de 
+Biochimie, Microbiologie et Bio-informatique, Université Laval, Québec, QC G1V 
+0A6, Canada.
+(3)Biologie Cellulaire et Moléculaire, Faculté de Médicine, Université Laval, 
+Québec, QC G1V 0A6, Canada; Centre de Recherche du Centre Hospitalier 
+Universitaire (CHU) de Québec-Université Laval, Axe de Reproduction, Santé de la 
+Mère et de l'Enfant, Québec, QC G1V 4G2, Canada.
+(4)Centre de Recherche du Centre Hospitalier Universitaire (CHU) de 
+Québec-Université Laval, Axe de Reproduction, Santé de la Mère et de l'Enfant, 
+Québec, QC G1V 4G2, Canada.
+(5)PROTEO-Regroupement Québécois de Recherche sur la Fonction, l'Ingénierie et 
+les Applications des Protéines, Québec, QC G1V 0A6, Canada; Institut de Biologie 
+Intégrative et des Systèmes (IBIS) et Centre de Recherche en Données Massives de 
+l'Université Laval, Université Laval, Québec, QC G1V 0A6, Canada; Département de 
+Biochimie, Microbiologie et Bio-informatique, Université Laval, Québec, QC G1V 
+0A6, Canada; Département de Biologie, Université Laval, Québec, QC G1V 0A6, 
+Canada.
+(6)Centre de Recherche du Centre Hospitalier Universitaire (CHU) de 
+Québec-Université Laval, Axe de Reproduction, Santé de la Mère et de l'Enfant, 
+Québec, QC G1V 4G2, Canada; PROTEO-Regroupement Québécois de Recherche sur la 
+Fonction, l'Ingénierie et les Applications des Protéines, Québec, QC G1V 0A6, 
+Canada; Département de Pédiatire, Faculté de Médicine, Université Laval et le 
+Centre de Recherche sur le Cancer de l'Université Laval, Québec, QC G1R 2J6, 
+Canada. Electronic address: sabine.elowe@crchuq.ulaval.ca.
+
+The balance of phospho-signaling at the outer kinetochore is critical for 
+forming accurate attachments between kinetochores and the mitotic spindle and 
+timely exit from mitosis. A major player in determining this balance is the 
+PP2A-B56 phosphatase, which is recruited to the kinase attachment regulatory 
+domain (KARD) of budding uninhibited by benzimidazole 1-related 1 (BUBR1) in a 
+phospho-dependent manner. This unleashes a rapid, switch-like phosphatase relay 
+that reverses mitotic phosphorylation at the kinetochore, extinguishing the 
+checkpoint and promoting anaphase. Here, we demonstrate that the C-terminal 
+pseudokinase domain of human BUBR1 is required to promote KARD phosphorylation. 
+Mutation or removal of the pseudokinase domain results in decreased PP2A-B56 
+recruitment to the outer kinetochore attenuated checkpoint silencing and errors 
+in chromosome alignment as a result of imbalance in Aurora B activity. Our data, 
+therefore, elucidate a function for the BUBR1 pseudokinase domain in ensuring 
+accurate and timely exit from mitosis.
+
+Copyright © 2020 The Author(s). Published by Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.celrep.2020.108397
+PMID: 33207204 [Indexed for MEDLINE]
+
+Conflict of interest statement: Declaration of Interests The authors declare no 
+competing interests.
+
+
+19. J Cell Biol. 2010 Feb 8;188(3):369-81. doi: 10.1083/jcb.200905057. Epub 2010
+Feb  1.
+
+Proliferation of aneuploid human cells is limited by a p53-dependent mechanism.
+
+Thompson SL(1), Compton DA.
+
+Author information:
+(1)Department of Biochemistry, Dartmouth Medical School, Hanover, NH 03755, USA.
+
+Most solid tumors are aneuploid, and it has been proposed that aneuploidy is the 
+consequence of an elevated rate of chromosome missegregation in a process called 
+chromosomal instability (CIN). However, the relationship of aneuploidy and CIN 
+is unclear because the proliferation of cultured diploid cells is compromised by 
+chromosome missegregation. The mechanism for this intolerance of nondiploid 
+genomes is unknown. In this study, we show that in otherwise diploid human 
+cells, chromosome missegregation causes a cell cycle delay with nuclear 
+accumulation of the tumor suppressor p53 and the cyclin kinase inhibitor p21. 
+Deletion of the p53 gene permits the accumulation of nondiploid cells such that 
+CIN generates cells with aneuploid genomes that resemble many human tumors. 
+Thus, the p53 pathway plays an important role in limiting the propagation of 
+aneuploid human cells in culture to preserve the diploid karyotype of the 
+population. These data fit with the concordance of aneuploidy and disruption of 
+the p53 pathway in many tumors, but the presence of aneuploid cells in some 
+normal human and mouse tissues indicates that there are known exceptions to the 
+involvement of p53 in aneuploid cells and that tissue context may be important 
+in how cells respond to aneuploidy.
+
+DOI: 10.1083/jcb.200905057
+PMCID: PMC2819684
+PMID: 20123995 [Indexed for MEDLINE]
+
+
+20. Dev Cell. 2017 Jun 19;41(6):638-651.e5. doi: 10.1016/j.devcel.2017.05.022.
+
+Chromosome Mis-segregation Generates Cell-Cycle-Arrested Cells with Complex 
+Karyotypes that Are Eliminated by the Immune System.
+
+Santaguida S(1), Richardson A(2), Iyer DR(3), M'Saad O(4), Zasadil L(4), Knouse 
+KA(5), Wong YL(2), Rhind N(3), Desai A(2), Amon A(6).
+
+Author information:
+(1)Department of Biology, Koch Institute for Integrative Cancer Research at MIT, 
+Howard Hughes Medical Institute, Massachusetts Institute of Technology, 76-543, 
+Cambridge, MA 02138, USA. Electronic address: ste@mit.edu.
+(2)Department of Cellular and Molecular Medicine, Ludwig Institute for Cancer 
+Research, University of California, San Diego, La Jolla, CA 92093, USA.
+(3)Department of Biochemistry and Molecular Pharmacology, University of 
+Massachusetts Medical School, 364 Plantation Street, Worcester, MA 01605, USA.
+(4)Department of Biology, Koch Institute for Integrative Cancer Research at MIT, 
+Howard Hughes Medical Institute, Massachusetts Institute of Technology, 76-543, 
+Cambridge, MA 02138, USA.
+(5)Department of Biology, Koch Institute for Integrative Cancer Research at MIT, 
+Howard Hughes Medical Institute, Massachusetts Institute of Technology, 76-543, 
+Cambridge, MA 02138, USA; Division of Health Sciences and Technology, Harvard 
+Medical School, Boston, MA 02115, USA.
+(6)Department of Biology, Koch Institute for Integrative Cancer Research at MIT, 
+Howard Hughes Medical Institute, Massachusetts Institute of Technology, 76-543, 
+Cambridge, MA 02138, USA. Electronic address: angelika@mit.edu.
+
+Comment in
+    Trends Genet. 2017 Oct;33(10):662-664. doi: 10.1016/j.tig.2017.07.007.
+
+Aneuploidy, a state of karyotype imbalance, is a hallmark of cancer. Changes in 
+chromosome copy number have been proposed to drive disease by modulating the 
+dosage of cancer driver genes and by promoting cancer genome evolution. Given 
+the potential of cells with abnormal karyotypes to become cancerous, do pathways 
+that limit the prevalence of such cells exist? By investigating the immediate 
+consequences of aneuploidy on cell physiology, we identified mechanisms that 
+eliminate aneuploid cells. We find that chromosome mis-segregation leads to 
+further genomic instability that ultimately causes cell-cycle arrest. We further 
+show that cells with complex karyotypes exhibit features of senescence and 
+produce pro-inflammatory signals that promote their clearance by the immune 
+system. We propose that cells with abnormal karyotypes generate a signal for 
+their own elimination that may serve as a means for cancer cell 
+immunosurveillance.
+
+Copyright © 2017 Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.devcel.2017.05.022
+PMCID: PMC5536848
+PMID: 28633018 [Indexed for MEDLINE]
+
+
+21. Dev Cell. 2021 Jul 26;56(14):2043-2058.e7. doi: 10.1016/j.devcel.2021.06.009.
+ Epub 2021 Jul 2.
+
+Proteostasis failure and mitochondrial dysfunction leads to aneuploidy-induced 
+senescence.
+
+Joy J(1), Barrio L(1), Santos-Tapia C(1), Romão D(1), Giakoumakis NN(1), 
+Clemente-Ruiz M(1), Milán M(2).
+
+Author information:
+(1)Institute for Research in Biomedicine (IRB Barcelona), The Barcelona 
+Institute of Science and Technology, Baldiri Reixac 10, 08028 Barcelona, Spain.
+(2)Institute for Research in Biomedicine (IRB Barcelona), The Barcelona 
+Institute of Science and Technology, Baldiri Reixac 10, 08028 Barcelona, Spain; 
+Institució Catalana de Recerca i Estudis Avançats (ICREA), Pg. Lluís Companys 
+23, 08010 Barcelona, Spain. Electronic address: marco.milan@irbbarcelona.org.
+
+Aneuploidy, an unbalanced number of chromosomes, is highly deleterious at the 
+cellular level and leads to senescence, a stress-induced response characterized 
+by permanent cell-cycle arrest and a well-defined associated secretory 
+phenotype. Here, we use a Drosophila epithelial model to delineate the pathway 
+that leads to the induction of senescence as a consequence of the acquisition of 
+an aneuploid karyotype. Whereas aneuploidy induces, as a result of gene dosage 
+imbalance, proteotoxic stress and activation of the major protein quality 
+control mechanisms, near-saturation functioning of autophagy leads to 
+compromised mitophagy, accumulation of dysfunctional mitochondria, and the 
+production of radical oxygen species (ROS). We uncovered a role of c-Jun 
+N-terminal kinase (JNK) in driving senescence as a consequence of dysfunctional 
+mitochondria and ROS. We show that activation of the major protein quality 
+control mechanisms and mitophagy dampens the deleterious effects of aneuploidy, 
+and we identify a role of senescence in proteostasis and compensatory 
+proliferation for tissue repair.
+
+Copyright © 2021 Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.devcel.2021.06.009
+PMID: 34216545 [Indexed for MEDLINE]
+
+Conflict of interest statement: Declaration of interests The authors declare no 
+competing interests.
+
+
+22. N Engl J Med. 2010 Dec 30;363(27):2628-37. doi: 10.1056/NEJMoa1006565.
+
+Homozygous BUB1B mutation and susceptibility to gastrointestinal neoplasia.
+
+Rio Frio T(1), Lavoie J, Hamel N, Geyer FC, Kushner YB, Novak DJ, Wark L, 
+Capelli C, Reis-Filho JS, Mai S, Pastinen T, Tischkowitz MD, Marcus VA, Foulkes 
+WD.
+
+Author information:
+(1)Program in Cancer Genetics, Department of Oncology, McGill University, 
+Montreal, QC, Canada.
+
+Comment in
+    N Engl J Med. 2010 Dec 30;363(27):2665-6. doi: 10.1056/NEJMe1008017.
+    N Engl J Med. 2011 Mar 31;364(13):1279-80. doi: 10.1056/NEJMc1101053.
+
+A patient received a diagnosis of adenocarcinoma of the ampulla of Vater at 34 
+years of age. Two decades later, adenomatous polyps were found, followed by 
+multiple primary invasive adenocarcinomas of both the colon and the stomach. 
+Premature chromatid separation and mosaic variegated aneuploidy, combined with 
+structural chromosomal abnormalities, were detected in his cells. We identified 
+a germline homozygous intronic mutation, c.2386-11A→G, in the spindle-assembly 
+checkpoint gene BUB1B, which creates a de novo splice site that is favored over 
+the authentic (i.e., preferentially used) site. Our findings expand the 
+phenotype associated with BUB1B mutations and the mosaic variegated aneuploidy 
+syndrome to include common adult-onset cancers and provide evidence for the 
+interdependency of the APC protein (encoded by the adenomatous polyposis coli 
+gene) and the BUBR1 protein (encoded by BUB1B) in humans. (Funded by the Turner 
+Family Cancer Research Fund and others.).
+
+DOI: 10.1056/NEJMoa1006565
+PMID: 21190457 [Indexed for MEDLINE]
+
+
+23. Pediatr Blood Cancer. 2019 Aug;66(8):e27804. doi: 10.1002/pbc.27804. Epub
+2019  May 13.
+
+Long-term remission of bilateral Wilms tumors that developed from premature 
+separation of chromatids/mosaic variegated aneuploidy syndrome due to bilateral 
+nephrectomy and peritoneal dialysis.
+
+Ochiai K(1), Yamada A(1), Kimoto Y(1), Imamura H(1), Ikeda T(1), Matsukubo M(2), 
+Ieiri S(2), Moritake H(1).
+
+Author information:
+(1)Division of Pediatrics, Faculty of Medicine, University of Miyazaki, 
+Miyazaki, Japan.
+(2)Department of Pediatric Surgery, Kagoshima University, Kagoshima, Japan.
+
+We report a 38-month-old Japanese male with premature chromatid 
+separation/mosaic variegated aneuploidy syndrome bearing biallelic BUB1B 
+germline mutations who suffered from bilateral Wilms tumor. After right 
+nephrectomy, dactinomycin monotherapy was administered for the left Wilms tumor; 
+however, severe adverse reaction prevented the patient from receiving further 
+chemotherapy. Left nephrectomy was then performed without postoperative 
+chemotherapy. The patient survived for 15 months after bilateral nephrectomy 
+without peritoneal relapse, metastasis of Wilms tumor, or the occurrence of 
+rhabdomyosarcoma and maintained a good quality of life while receiving 
+peritoneal dialysis at home.
+
+© 2019 Wiley Periodicals, Inc.
+
+DOI: 10.1002/pbc.27804
+PMID: 31081598 [Indexed for MEDLINE]
+
+
+24. Nature. 2021 Feb;590(7846):486-491. doi: 10.1038/s41586-020-03114-6. Epub
+2021  Jan 27.
+
+Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition.
+
+Cohen-Sharir Y(1), McFarland JM(2), Abdusamad M(2), Marquis C(3), Bernhard 
+SV(4), Kazachkova M(2), Tang H(2), Ippolito MR(5), Laue K(1), Zerbib J(1), 
+Malaby HLH(3), Jones A(2), Stautmeister LM(4), Bockaj I(6), Wardenaar R(6), 
+Lyons N(2), Nagaraja A(2)(7), Bass AJ(2)(7), Spierings DCJ(6), Foijer F(6), 
+Beroukhim R(2)(7), Santaguida S(5)(8), Golub TR(2)(7), Stumpff J(3), Storchová 
+Z(4), Ben-David U(9).
+
+Author information:
+(1)Department of Human Molecular Genetics and Biochemistry, Faculty of Medicine, 
+Tel Aviv University, Tel Aviv, Israel.
+(2)Cancer Program, Broad Institute of MIT and Harvard, Cambridge, MA, USA.
+(3)Department of Molecular Physiology and Biophysics, University of Vermont, 
+Burlington, VT, USA.
+(4)Department of Molecular Genetics, TU Kaiserlautern, Kaiserlautern, Germany.
+(5)Department of Experimental Oncology at IEO, European Institute of Oncology 
+IRCCS, Milan, Italy.
+(6)European Research Institute for the Biology of Aging (ERIBA), University of 
+Groningen, Groningen, The Netherlands.
+(7)Dana Farber Cancer Institute, Boston, MA, USA.
+(8)Department of Oncology and Hemato-Oncology, University of Milan, Milan, 
+Italy.
+(9)Department of Human Molecular Genetics and Biochemistry, Faculty of Medicine, 
+Tel Aviv University, Tel Aviv, Israel. ubendavid@tauex.tau.ac.il.
+
+Selective targeting of aneuploid cells is an attractive strategy for cancer 
+treatment1. However, it is unclear whether aneuploidy generates any clinically 
+relevant vulnerabilities in cancer cells. Here we mapped the aneuploidy 
+landscapes of about 1,000 human cancer cell lines, and analysed genetic and 
+chemical perturbation screens2-9 to identify cellular vulnerabilities associated 
+with aneuploidy. We found that aneuploid cancer cells show increased sensitivity 
+to genetic perturbation of core components of the spindle assembly checkpoint 
+(SAC), which ensures the proper segregation of chromosomes during mitosis10. 
+Unexpectedly, we also found that aneuploid cancer cells were less sensitive than 
+diploid cells to short-term exposure to multiple SAC inhibitors. Indeed, 
+aneuploid cancer cells became increasingly sensitive to inhibition of SAC over 
+time. Aneuploid cells exhibited aberrant spindle geometry and dynamics, and kept 
+dividing when the SAC was inhibited, resulting in the accumulation of mitotic 
+defects, and in unstable and less-fit karyotypes. Therefore, although aneuploid 
+cancer cells could overcome inhibition of SAC more readily than diploid cells, 
+their long-term proliferation was jeopardized. We identified a specific mitotic 
+kinesin, KIF18A, whose activity was perturbed in aneuploid cancer cells. 
+Aneuploid cancer cells were particularly vulnerable to depletion of KIF18A, and 
+KIF18A overexpression restored their response to SAC inhibition. Our results 
+identify a therapeutically relevant, synthetic lethal interaction between 
+aneuploidy and the SAC.
+
+DOI: 10.1038/s41586-020-03114-6
+PMCID: PMC8262644
+PMID: 33505028 [Indexed for MEDLINE]
+
+Conflict of interest statement: Competing Interests T.R.G. is a consultant to 
+GlaxoSmithKline and is a founder of Sherlock Biosciences. R.B. own shares in 
+Ampressa and receives grant funding from Novartis. A.J.B. receives funding from 
+Merck, Bayer and Novartis, and is an advisor to Earli and Helix Nano and a 
+co-founder of Signet Therapeutics. The other authors declare no competing 
+interests.
+
+
+25. Nature. 2021 Feb;590(7846):492-497. doi: 10.1038/s41586-020-03133-3. Epub
+2021  Jan 27.
+
+Whole-genome doubling confers unique genetic vulnerabilities on tumour cells.
+
+Quinton RJ(1), DiDomizio A(1), Vittoria MA(1), Kotýnková K(1), Ticas CJ(1), 
+Patel S(1), Koga Y(2), Vakhshoorzadeh J(1), Hermance N(3), Kuroda TS(4), 
+Parulekar N(2), Taylor AM(5)(6)(7), Manning AL(3), Campbell JD(2)(6), Ganem 
+NJ(8)(9).
+
+Author information:
+(1)Department of Pharmacology & Experimental Therapeutics, Boston University 
+School of Medicine, Boston, MA, USA.
+(2)Department of Medicine, Boston University School of Medicine, Boston, MA, 
+USA.
+(3)Department of Biology and Biotechnology, Worcester Polytechnic Institute, 
+Worcester, MA, USA.
+(4)Department of Molecular Pathobiology and Cell Adhesion Biology, Mie 
+University Graduate School of Medicine, Mie, Japan.
+(5)Department of Medical Oncology, Dana-Farber Cancer Institute, Boston, MA, 
+USA.
+(6)Cancer Program, Broad Institute, Cambridge, MA, USA.
+(7)Department of Pathology and Cell Biology, Columbia University Medical Center, 
+Member, Herbert Irving Comprehensive Cancer Center, New York, NY, USA.
+(8)Department of Pharmacology & Experimental Therapeutics, Boston University 
+School of Medicine, Boston, MA, USA. nganem@bu.edu.
+(9)Department of Medicine, Boston University School of Medicine, Boston, MA, 
+USA. nganem@bu.edu.
+
+Erratum in
+    Nature. 2021 May;593(7860):E15. doi: 10.1038/s41586-021-03591-3.
+
+Whole-genome doubling (WGD) is common in human cancers, occurring early in 
+tumorigenesis and generating genetically unstable tetraploid cells that fuel 
+tumour development1,2. Cells that undergo WGD (WGD+ cells) must adapt to 
+accommodate their abnormal tetraploid state; however, the nature of these 
+adaptations, and whether they confer vulnerabilities that can be exploited 
+therapeutically, is unclear. Here, using sequencing data from roughly 10,000 
+primary human cancer samples and essentiality data from approximately 600 cancer 
+cell lines, we show that WGD gives rise to common genetic traits that are 
+accompanied by unique vulnerabilities. We reveal that WGD+ cells are more 
+dependent than WGD- cells on signalling from the spindle-assembly checkpoint, 
+DNA-replication factors and proteasome function. We also identify KIF18A, which 
+encodes a mitotic kinesin protein, as being specifically required for the 
+viability of WGD+ cells. Although KIF18A is largely dispensable for accurate 
+chromosome segregation during mitosis in WGD- cells, its loss induces notable 
+mitotic errors in WGD+ cells, ultimately impairing cell viability. Collectively, 
+our results suggest new strategies for specifically targeting WGD+ cancer cells 
+while sparing the normal, non-transformed WGD- cells that comprise human tissue.
+
+DOI: 10.1038/s41586-020-03133-3
+PMCID: PMC7889737
+PMID: 33505027 [Indexed for MEDLINE]
+
+Conflict of interest statement: Declaration of Interests The authors declare no 
+competing interests.
+
+
+26. Endocr Rev. 2019 Apr 1;40(2):558-574. doi: 10.1210/er.2018-00166.
+
+Growth Hormone's Links to Cancer.
+
+Boguszewski CL(1), Boguszewski MCDS(2).
+
+Author information:
+(1)Department of Internal Medicine, Endocrine Division (SEMPR), University 
+Hospital, Federal University of Parana, Curitiba, Brazil.
+(2)Department of Pediatrics, Endocrine Division (SEMPR), University Hospital, 
+Federal University of Parana, Curitiba, Brazil.
+
+Several components of the GH axis are involved in tumor progression, and 
+GH-induced intracellular signaling has been strongly associated with breast 
+cancer susceptibility in genome-wide association studies. In the general 
+population, high IGF-I levels and low IGF-binding protein-3 levels within the 
+normal range are associated with the development of common malignancies, and 
+components of the GH-IGF signaling system exhibit correlations with clinical, 
+histopathological, and therapeutic parameters in cancer patients. Despite 
+promising findings in preclinical studies, anticancer therapies targeting the 
+GH-IGF signaling system have led to disappointing results in clinical trials. 
+There is substantial evidence for some degree of protection against tumor 
+development in several animal models and in patients with genetic defects 
+associated with GH deficiency or resistance. In contrast, the link between GH 
+excess and cancer risk in acromegaly patients is much less clear, and cancer 
+screening in acromegaly has been a highly controversial issue. Recent studies 
+have shown that increased life expectancy in acromegaly patients who attain 
+normal GH and IGF-I levels is associated with more deaths due to age-related 
+cancers. Replacement GH therapy in GH deficiency hypopituitary adults and short 
+children has been shown to be safe when no other risk factors for malignancy are 
+present. Nevertheless, the use of GH in cancer survivors and in short children 
+with RASopathies, chromosomal breakage syndromes, or DNA-repair disorders should 
+be carefully evaluated owing to an increased risk of recurrence, primary cancer, 
+or second neoplasia in these individuals.
+
+Copyright © 2019 Endocrine Society.
+
+DOI: 10.1210/er.2018-00166
+PMID: 30500870 [Indexed for MEDLINE]
+
+
+27. Eur J Endocrinol. 2020 Oct;183(4):471-480. doi: 10.1530/EJE-20-0369.
+
+Influence of growth hormone therapy on the occurrence of a second neoplasm in 
+survivors of childhood cancer.
+
+Thomas-Teinturier C(1)(2)(3), Oliver-Petit I(4), Pacquement H(5), Fresneau 
+B(1)(2)(6), Allodji RS(1)(2)(7), Veres C(1)(2)(7), Bolle S(8), Berchery D(9), 
+Demoor-Goldschmidt C(1)(2)(10), Haddy N(1)(2)(7), Diallo I(1)(2)(7), de Vathaire 
+F(1)(2)(7).
+
+Author information:
+(1)Cancer and Radiation, CESP, Unit 1018 INSERM, Villejuif, France.
+(2)University Paris-Saclay, Villejuif, France.
+(3)Department of Pediatric Endocrinology, AP-HP, Université Paris Saclay, site 
+Bicetre, Le Kremlin Bicêtre, France.
+(4)Department of Pediatric Endocrinology, Children Hospital, Toulouse, France.
+(5)Department of Pediatrics Oncology, Institut Curie, Paris, France.
+(6)Department of Pediatrics Oncology, Institut Gustave Roussy, Villejuif, 
+France.
+(7)Department of Research Gustave Roussy, Villejuif, France.
+(8)Department of Radiotherapy Oncology, Institut Gustave Roussy, Villejuif, 
+France.
+(9)Centre Claudius Régaud, Toulouse, France.
+(10)Department of Pediatrics Oncology, CHU Angers, Angers, France.
+
+CONTEXT: Growth hormone (GH) deficiency is a common late effect of cranial 
+irradiation. However, concerns have been raised that GH treatment might lead to 
+an increased risk of a second neoplasm (SN).
+OBJECTIVE: To study the impact of GH treatment on the risk of SN in a French 
+cohort of survivors of childhood cancer (CCS) treated before 1986.
+DESIGN AND SETTING: Cohort study and nested case-control study.
+PARTICIPANTS: Of the 2852 survivors, with a median follow-up of 26 years, 196 
+had received GH therapy (median delay from cancer diagnosis: 5.5 years).
+MAIN OUTCOME MEASURES: Occurrence of SN.
+RESULTS: In total, 374 survivors developed a SN, including 40 who had received 
+GH therapy. In a multivariate analysis, GH treatment did not increase the risk 
+of secondary non-meningioma brain tumors (RR: 0.6, 95% CI: 0.2-1.5, P = 0.3), 
+secondary non-brain cancer (RR: 0.7, 95% CI: 0.4-1.2, P = 0.2), or meningioma 
+(RR: 1.9, 95% CI: 0.9-4, P = 0.09). Nevertheless, we observed a slight 
+non-significant increase in the risk of meningioma with GH duration: 1.6-fold 
+(95% CI: 1.2-3.0) after an exposure of less than 4 years vs 2.3-fold (95% CI: 
+0.9-5.6) after a longer exposure (P for trend = 0.07) confirmed by the results 
+of a case-control study.
+CONCLUSION: This study confirms the overall safety of GH use in survivors of 
+childhood cancer, which does not increase the risk of a SN. The slight excess in 
+the risk of meningioma in patients with long-term GH treatment is 
+non-significant and could be due to difficulties in adjustment on cranial 
+radiation volume/dose and/or undiagnosed meningioma predisposing conditions.
+
+DOI: 10.1530/EJE-20-0369
+PMID: 32738133 [Indexed for MEDLINE]
+
+
+28. Science. 2023 Sep 22;381(6664):eadg7492. doi: 10.1126/science.adg7492. Epub
+2023  Sep 22.
+
+Accurate proteome-wide missense variant effect prediction with AlphaMissense.
+
+Cheng J(1), Novati G(1), Pan J(#)(1), Bycroft C(#)(1), Žemgulytė A(#)(1), 
+Applebaum T(#)(1), Pritzel A(1), Wong LH(1), Zielinski M(1), Sargeant T(1), 
+Schneider RG(1), Senior AW(1), Jumper J(1), Hassabis D(1), Kohli P(1), Avsec 
+Ž(1).
+
+Author information:
+(1)Google DeepMind, London, UK.
+(#)Contributed equally
+
+Comment in
+    Kidney Int. 2024 Aug;106(2):175-178. doi: 10.1016/j.kint.2024.02.022.
+
+The vast majority of missense variants observed in the human genome are of 
+unknown clinical significance. We present AlphaMissense, an adaptation of 
+AlphaFold fine-tuned on human and primate variant population frequency databases 
+to predict missense variant pathogenicity. By combining structural context and 
+evolutionary conservation, our model achieves state-of-the-art results across a 
+wide range of genetic and experimental benchmarks, all without explicitly 
+training on such data. The average pathogenicity score of genes is also 
+predictive for their cell essentiality, capable of identifying short essential 
+genes that existing statistical approaches are underpowered to detect. As a 
+resource to the community, we provide a database of predictions for all possible 
+human single amino acid substitutions and classify 89% of missense variants as 
+either likely benign or likely pathogenic.
+
+DOI: 10.1126/science.adg7492
+PMID: 37733863 [Indexed for MEDLINE]
+
+
+29. Nature. 2020 May;581(7809):434-443. doi: 10.1038/s41586-020-2308-7. Epub 2020
+ May 27.
+
+The mutational constraint spectrum quantified from variation in 141,456 humans.
+
+Karczewski KJ(1)(2), Francioli LC(3)(4), Tiao G(3)(4), Cummings BB(3)(4)(5), 
+Alföldi J(3)(4), Wang Q(3)(4)(6), Collins RL(3)(6)(7), Laricchia KM(3)(4), Ganna 
+A(3)(4)(8), Birnbaum DP(3)(4), Gauthier LD(9), Brand H(3)(7), Solomonson 
+M(3)(4), Watts NA(3)(4), Rhodes D(10), Singer-Berk M(3)(4), England EM(3)(4), 
+Seaby EG(3)(4), Kosmicki JA(3)(4)(6), Walters RK(3)(4)(11), Tashman K(3)(4)(11), 
+Farjoun Y(9), Banks E(9), Poterba T(3)(4)(11), Wang A(3)(4)(11), Seed 
+C(3)(4)(11), Whiffin N(3)(4)(12)(13), Chong JX(14), Samocha KE(15), 
+Pierce-Hoffman E(3)(4), Zappala Z(3)(4)(16), O'Donnell-Luria AH(3)(4)(17)(18), 
+Minikel EV(3), Weisburd B(9), Lek M(19), Ware JS(3)(12)(13), Vittal C(4)(11), 
+Armean IM(3)(4), Bergelson L(9), Cibulskis K(9), Connolly KM(20), Covarrubias 
+M(9), Donnelly S(3), Ferriera S(20), Gabriel S(20), Gentry J(9), Gupta N(3)(20), 
+Jeandet T(9), Kaplan D(9), Llanwarne C(9), Munshi R(9), Novod S(9), Petrillo 
+N(9), Roazen D(9), Ruano-Rubio V(9), Saltzman A(3), Schleicher M(3), Soto J(9), 
+Tibbetts K(9), Tolonen C(9), Wade G(9), Talkowski ME(3)(7)(21); Genome 
+Aggregation Database Consortium; Neale BM(3)(4)(11), Daly MJ(3)(4)(8)(11), 
+MacArthur DG(22)(23)(24)(25).
+
+Collaborators: Aguilar Salinas CA, Ahmad T, Albert CM, Ardissino D, Atzmon G, 
+Barnard J, Beaugerie L, Benjamin EJ, Boehnke M, Bonnycastle LL, Bottinger EP, 
+Bowden DW, Bown MJ, Chambers JC, Chan JC, Chasman D, Cho J, Chung MK, Cohen B, 
+Correa A, Dabelea D, Daly MJ, Darbar D, Duggirala R, Dupuis J, Ellinor PT, 
+Elosua R, Erdmann J, Esko T, Färkkilä M, Florez J, Franke A, Getz G, Glaser B, 
+Glatt SJ, Goldstein D, Gonzalez C, Groop L, Haiman C, Hanis C, Harms M, Hiltunen 
+M, Holi MM, Hultman CM, Kallela M, Kaprio J, Kathiresan S, Kim BJ, Kim YJ, Kirov 
+G, Kooner J, Koskinen S, Krumholz HM, Kugathasan S, Kwak SH, Laakso M, Lehtimäki 
+T, Loos RJF, Lubitz SA, Ma RCW, MacArthur DG, Marrugat J, Mattila KM, McCarroll 
+S, McCarthy MI, McGovern D, McPherson R, Meigs JB, Melander O, Metspalu A, Neale 
+BM, Nilsson PM, O'Donovan MC, Ongur D, Orozco L, Owen MJ, Palmer CNA, Palotie A, 
+Park KS, Pato C, Pulver AE, Rahman N, Remes AM, Rioux JD, Ripatti S, Roden DM, 
+Saleheen D, Salomaa V, Samani NJ, Scharf J, Schunkert H, Shoemaker MB, Sklar P, 
+Soininen H, Sokol H, Spector T, Sullivan PF, Suvisaari J, Tai ES, Teo YY, 
+Tiinamaija T, Tsuang M, Turner D, Tusie-Luna T, Vartiainen E, Vawter MP, Ware 
+JS, Watkins H, Weersma RK, Wessman M, Wilson JG, Xavier RJ.
+
+Author information:
+(1)Program in Medical and Population Genetics, Broad Institute of MIT and 
+Harvard, Cambridge, MA, USA. konradk@broadinstitute.org.
+(2)Analytic and Translational Genetics Unit, Massachusetts General Hospital, 
+Boston, MA, USA. konradk@broadinstitute.org.
+(3)Program in Medical and Population Genetics, Broad Institute of MIT and 
+Harvard, Cambridge, MA, USA.
+(4)Analytic and Translational Genetics Unit, Massachusetts General Hospital, 
+Boston, MA, USA.
+(5)Program in Biological and Biomedical Sciences, Harvard Medical School, 
+Boston, MA, USA.
+(6)Program in Bioinformatics and Integrative Genomics, Harvard Medical School, 
+Boston, MA, USA.
+(7)Center for Genomic Medicine, Massachusetts General Hospital, Boston, MA, USA.
+(8)Institute for Molecular Medicine Finland, Helsinki, Finland.
+(9)Data Sciences Platform, Broad Institute of MIT and Harvard, Cambridge, MA, 
+USA.
+(10)Centre for Translational Bioinformatics, William Harvey Research Institute, 
+Barts and the London School of Medicine and Dentistry, Queen Mary University of 
+London and Barts Health NHS Trust, London, UK.
+(11)Stanley Center for Psychiatric Research, Broad Institute of MIT and Harvard, 
+Cambridge, MA, USA.
+(12)National Heart & Lung Institute and MRC London Institute of Medical 
+Sciences, Imperial College London, London, UK.
+(13)Cardiovascular Research Centre, Royal Brompton & Harefield Hospitals NHS 
+Trust, London, UK.
+(14)Department of Pediatrics, University of Washington, Seattle, WA, USA.
+(15)Wellcome Sanger Institute, Wellcome Genome Campus, Hinxton, Cambridge, UK.
+(16)Vertex Pharmaceuticals Inc, Boston, MA, USA.
+(17)Division of Genetics and Genomics, Boston Children's Hospital, Boston, MA, 
+USA.
+(18)Department of Pediatrics, Harvard Medical School, Boston, MA, USA.
+(19)Department of Genetics, Yale School of Medicine, New Haven, CT, USA.
+(20)Broad Genomics, Broad Institute of MIT and Harvard, Cambridge, MA, USA.
+(21)Department of Neurology, Harvard Medical School, Boston, MA, USA.
+(22)Program in Medical and Population Genetics, Broad Institute of MIT and 
+Harvard, Cambridge, MA, USA. d.macarthur@garvan.org.au.
+(23)Analytic and Translational Genetics Unit, Massachusetts General Hospital, 
+Boston, MA, USA. d.macarthur@garvan.org.au.
+(24)Centre for Population Genomics, Garvan Institute of Medical Research, and 
+UNSW Sydney, Sydney, New South Wales, Australia. d.macarthur@garvan.org.au.
+(25)Centre for Population Genomics, Murdoch Children's Research Institute, 
+Melbourne, Victoria, Australia. d.macarthur@garvan.org.au.
+
+Erratum in
+    Nature. 2021 Feb;590(7846):E53. doi: 10.1038/s41586-020-03174-8.
+    Nature. 2021 Sep;597(7874):E3-E4. doi: 10.1038/s41586-021-03758-y.
+
+Comment in
+    Nature. 2020 May;581(7809):385-386. doi: 10.1038/d41586-020-01485-4.
+    Nat Rev Genet. 2020 Aug;21(8):448. doi: 10.1038/s41576-020-0255-7.
+
+Genetic variants that inactivate protein-coding genes are a powerful source of 
+information about the phenotypic consequences of gene disruption: genes that are 
+crucial for the function of an organism will be depleted of such variants in 
+natural populations, whereas non-essential genes will tolerate their 
+accumulation. However, predicted loss-of-function variants are enriched for 
+annotation errors, and tend to be found at extremely low frequencies, so their 
+analysis requires careful variant annotation and very large sample sizes1. Here 
+we describe the aggregation of 125,748 exomes and 15,708 genomes from human 
+sequencing studies into the Genome Aggregation Database (gnomAD). We identify 
+443,769 high-confidence predicted loss-of-function variants in this cohort after 
+filtering for artefacts caused by sequencing and annotation errors. Using an 
+improved model of human mutation rates, we classify human protein-coding genes 
+along a spectrum that represents tolerance to inactivation, validate this 
+classification using data from model organisms and engineered human cells, and 
+show that it can be used to improve the power of gene discovery for both common 
+and rare diseases.
+
+DOI: 10.1038/s41586-020-2308-7
+PMCID: PMC7334197
+PMID: 32461654 [Indexed for MEDLINE]
+
+Conflict of interest statement: K.J.K. owns stock in Personalis. R.K.W. has 
+received unrestricted research grants from Takeda Pharmaceutical Company. 
+A.H.O’D.-L. has received honoraria from ARUP and Chan Zuckerberg Initiative. 
+E.V.M. has received research support in the form of charitable contributions 
+from Charles River Laboratories and Ionis Pharmaceuticals, and has consulted for 
+Deerfield Management. J.S.W. is a consultant for MyoKardia. B.M.N. is a member 
+of the scientific advisory board at Deep Genomics and consultant for Camp4 
+Therapeutics, Takeda Pharmaceutical, and Biogen. M.J.D. is a founder of Maze 
+Therapeutics. D.G.M. is a founder with equity in Goldfinch Bio, and has received 
+research support from AbbVie, Astellas, Biogen, BioMarin, Eisai, Merck, Pfizer, 
+and Sanofi-Genzyme. The views expressed in this article are those of the 
+author(s) and not necessarily those of the NHS, the NIHR, or the Department of 
+Health. M.I.M. has served on advisory panels for Pfizer, NovoNordisk, Zoe 
+Global; has received honoraria from Merck, Pfizer, NovoNordisk and Eli Lilly; 
+has stock options in Zoe Global and has received research funding from Abbvie, 
+Astra Zeneca, Boehringer Ingelheim, Eli Lilly, Janssen, Merck, NovoNordisk, 
+Pfizer, Roche, Sanofi Aventis, Servier & Takeda. As of June 2019, M.I.M. is an 
+employee of Genentech, and holds stock in Roche. N.R. is a non-executive 
+director of AstraZeneca.
+
+
+30. Nucleic Acids Res. 2018 Jan 4;46(D1):D1062-D1067. doi: 10.1093/nar/gkx1153.
+
+ClinVar: improving access to variant interpretations and supporting evidence.
+
+Landrum MJ(1), Lee JM(1), Benson M(1), Brown GR(1), Chao C(1), Chitipiralla 
+S(1), Gu B(1), Hart J(1), Hoffman D(1), Jang W(1), Karapetyan K(1), Katz K(1), 
+Liu C(1), Maddipatla Z(1), Malheiro A(1), McDaniel K(1), Ovetsky M(1), Riley 
+G(1), Zhou G(1), Holmes JB(1), Kattman BL(1), Maglott DR(1).
+
+Author information:
+(1)National Center for Biotechnology Information, National Library of Medicine, 
+National Institutes of Health, Bethesda, MD 20894, USA.
+
+ClinVar (https://www.ncbi.nlm.nih.gov/clinvar/) is a freely available, public 
+archive of human genetic variants and interpretations of their significance to 
+disease, maintained at the National Institutes of Health. Interpretations of the 
+clinical significance of variants are submitted by clinical testing 
+laboratories, research laboratories, expert panels and other groups. ClinVar 
+aggregates data by variant-disease pairs, and by variant (or set of variants). 
+Data aggregated by variant are accessible on the website, in an improved set of 
+variant call format files and as a new comprehensive XML report. ClinVar 
+recently started accepting submissions that are focused primarily on providing 
+phenotypic information for individuals who have had genetic testing. Submissions 
+may come from clinical providers providing their own interpretation of the 
+variant ('provider interpretation') or from groups such as patient registries 
+that primarily provide phenotypic information from patients ('phenotyping 
+only'). ClinVar continues to make improvements to its search and retrieval 
+functions. Several new fields are now indexed for more precise searching, and 
+filters allow the user to narrow down a large set of search results.
+
+Published by Oxford University Press on behalf of Nucleic Acids Research 2017.
+
+DOI: 10.1093/nar/gkx1153
+PMCID: PMC5753237
+PMID: 29165669 [Indexed for MEDLINE]

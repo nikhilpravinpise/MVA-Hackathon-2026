@@ -1,0 +1,62 @@
+{
+  "schema": "t2.dossier/1",
+  "drug": "metformin",
+  "axis": "B",
+  "secondary_axis": "C (AMPK/energy-stress aneuploid-cell vulnerability, analogous to AICAR)",
+  "approval": {
+    "chembl_id": "CHEMBL1431",
+    "chembl_max_phase": 4,
+    "chembl_first_approval": 1995,
+    "openfda_label_set_id": "05d4df4b-dfe8-4828-b423-a3d4f2c4114a",
+    "openfda_label_effective_time": "20181206",
+    "note": "Approved biguanide (RIOMET oral solution label queried for clean single-agent pediatric text). Boxed warning: lactic acidosis."
+  },
+  "claims": [
+    {"id": "c1",
+     "text": "Metformin suppresses the senescence-associated secretory phenotype by interfering with IKK/NF-kB activation - a senomorphic action on the same paracrine-damage axis the MVA phenotype likely involves (p16-driven senescence in BubR1 insufficiency).",
+     "kind": "mechanism", "cites": ["PMID:23521863", "PMID:18516091"], "strength": "indirect"},
+    {"id": "c2",
+     "text": "Aneuploidy-selective vulnerability rationale: energy-stress induction selectively kills aneuploid cells - the AMPK activator AICAR induced p53-mediated apoptosis in trisomic MEFs. Metformin activates AMPK by a different route (complex I inhibition); whether clinical metformin exposure reproduces AICAR-class aneuploidy selectivity is unproven.",
+     "kind": "mechanism", "cites": ["PMID:21315436"], "strength": "analogy"},
+    {"id": "c3",
+     "text": "Important counter-evidence: at 1-16 mM in vitro (well above clinical plasma exposure of roughly 10-40 uM), metformin induced micronuclei/nucleoplasmic bridges and DEREGULATED BUBR1 and MAD2 expression - i.e. high-dose metformin can itself impair the spindle checkpoint. Dose window matters; any benefit must be shown at exposures that do not worsen missegregation.",
+     "kind": "safety", "cites": ["PMID:35568294"], "strength": "direct"},
+    {"id": "c4",
+     "text": "Population-level associations between metformin use and reduced cancer incidence are widely reported but confounded (indication, immortal-time bias); no randomised cancer-prevention evidence exists in non-diabetic children.",
+     "kind": "clinical", "cites": ["PMID:35568294"], "strength": "indirect",
+     "note": "Lyu et al. cite the epidemiological anticancer association in their motivation; we flag it as hypothesis-level only."}
+  ],
+  "pediatric": {
+    "label_source": "openFDA drug/label set_id 05d4df4b-dfe8-4828-b423-a3d4f2c4114a (effective 2018-12-06); RIOMET (metformin HCl oral solution)",
+    "boxed_warning": "LACTIC ACIDOSIS: postmarketing cases have resulted in death, hypothermia, hypotension and resistant bradyarrhythmias; risk factors include renal impairment, contrast studies, surgery, hypoxic states, hepatic impairment. Contraindicated at eGFR <30 mL/min/1.73m2; not recommended at eGFR 30-45.",
+    "approved_pediatric_indication": "Type 2 diabetes mellitus in pediatric patients 10 years of age and older (10-16 studied); safety/effectiveness not established below 10 years (quoted label fact).",
+    "engine_flag_note": "candidates.json now reports pediatric_flag 'labeled_pediatric_indication' for both metformin entries, resolved to a single-ingredient metformin hydrochloride tablets label (set_id 011de1a5) whose section 8.4 records T2DM use established at ages 10-16 - consistent with the RIOMET oral-solution label quoted above (set_id 05d4df4b, queried for clean single-agent pediatric text). An earlier engine resolved the ZITUVIMET sitagliptin/metformin combination-product label and reported 'none' (regenerated 2026-10-13). This dossier's pediatric block remains authoritative for the quoted label facts.",
+    "label_pediatric_dosing_fact": "Pediatric (>=10y) start 500 mg twice daily with meals, titrate weekly to max 2,000 mg/day (quoted label fact, not advice).",
+    "key_risks": [
+      "Lactic-acidosis boxed warning: nephrocalcinosis in the HPO profile makes renal function the gating safety question; label mandates eGFR assessment before and during use and discontinuation below eGFR 30.",
+      "Vitamin B12 lowering (label 5.2): chronic B12 deficiency risk is relevant in a failure-to-thrive child with already-marginal nutrition/growth.",
+      "Hypoglycaemia when combined with insulin/secretagogues (less relevant here); GI intolerance affecting nutrition.",
+      "Theoretical: supratherapeutic-exposure SAC/genotoxic effects (claim c3) argue for exposure-level caution in a chromosome-instability syndrome."
+    ],
+    "monitoring": [
+      "eGFR/renal function before and during treatment (boxed warning; nephrocalcinosis phenotype)",
+      "Vitamin B12 at 2-3 year intervals (label advice)",
+      "Hold for iodinated contrast procedures and intercurrent hypoxic/dehydrating illness (label advice)",
+      "Growth/nutrition tracking given B12 and GI effects"
+    ]
+  },
+  "testability": {
+    "celegans": {"assay": "san-1 mutant growth/lifespan rescue at graded doses", "readout": "viability, growth rate, him rate, lifespan", "expected": "possible mild benefit via AMPK/stress pathways; high doses expected toxic", "priority": "medium"},
+    "fibroblasts": {"assay": "clinical-range metformin exposure on MVA patient fibroblasts", "readout": "SASP cytokines, aneuploidy rate (FISH/scDNA-seq), micronuclei, p-AMPK biomarker", "expected": "SASP suppression at clinical-range exposure; go/no-go = no increase in micronuclei/aneuploidy at the tested range (per c3)", "priority": "high"},
+    "scrnaseq": {"assay": "signature reversal", "readout": "NF-kB/SASP modules", "expected": "partial reversal", "priority": "low-medium"},
+    "supplements": {"assay": "n/a", "readout": "-", "expected": "-", "priority": "n/a"}
+  },
+  "verdict": "shortlist",
+  "verdict_reason": "Cheapest, safest-on-paper senomorphic with a pediatric label (T2DM >=10y) and plausible SASP-suppressing mechanism (PMID:23521863), plus an energy-stress analogy to AICAR's aneuploidy selectivity (PMID:21315436). Held back from top rank by two honest weaknesses: the aneuploidy-selective effect is demonstrated for AICAR/17-AAG/chloroquine, not metformin itself (analogy only), and high-dose metformin can itself deregulate BUBR1/MAD2 and induce micronuclei in vitro (PMID:35568294) - in an MVA child the dose window between senomorphic benefit and checkpoint harm is the experiment, not a given. Renal function (nephrocalcinosis) is the gating safety check.",
+  "citations": {
+    "PMID:23521863": {"title": "Metformin inhibits the senescence-associated secretory phenotype by interfering with IKK/NF-kB activation", "journal": "Aging Cell", "year": 2013, "doi": "10.1111/acel.12075"},
+    "PMID:18516091": {"title": "Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency", "journal": "Nat Cell Biol", "year": 2008, "doi": "10.1038/ncb1744"},
+    "PMID:21315436": {"title": "Identification of aneuploidy-selective antiproliferation compounds", "journal": "Cell", "year": 2011, "doi": "10.1016/j.cell.2011.01.017"},
+    "PMID:35568294": {"title": "High-dose metformin induces a low-glucose dependent genotoxic stress", "journal": "Food Chem Toxicol", "year": 2022, "doi": "10.1016/j.fct.2022.113129"}
+  }
+}

@@ -1,0 +1,1 @@
+{"request": {"method": "GET", "url": "https://api.fda.gov/drug/label.json?search=openfda.brand_name%3A%22TEGAFUR%22&limit=1", "body": null}, "status": 404, "fetched_at": "2026-10-12T14:32:29+00:00", "body": "{\"error\": {\"code\": \"NOT_FOUND\", \"message\": \"No matches found!\"}}"}

@@ -61,6 +61,26 @@ GT = frozenset([("chr15", 40209701, "T", "G"),
                 ("chr15", 40220612, "T", "G")])
 
 
+# The run outputs live under the gitignored results/ tree: present on the
+# machine that produced them, absent in a fresh clone or a worktree. The
+# checks that read them report WARN there instead of FAIL, matching the
+# skip the pytest wrappers apply (tests/test_freshness.py).
+PATIENT_TREE = REPO / "results" / "track1_patient_modal"
+
+
+def artifacts_present() -> bool:
+    return PATIENT_TREE.is_dir()
+
+
+def needs_artifacts(name: str, out) -> bool:
+    """True when the check should be skipped; records the WARN row."""
+    if artifacts_present():
+        return False
+    out.warn(name, "skipped: gitignored results/ tree absent here "
+                   "(run on the machine holding the artifacts)")
+    return True
+
+
 class Out:
     def __init__(self):
         self.rows = []
@@ -210,6 +230,8 @@ def check_emitted_claims(out: Out):
 def check_artifact_numbers(out: Out):
     """Stage counts, ablation ranks, Exomiser + mosdepth numbers cited in
     docs/report.md vs the JSON artifacts they were generated from."""
+    if needs_artifacts("artifact-numbers", out):
+        return
     rep = _read("docs/report.md")
     problems = []
     try:
@@ -247,6 +269,8 @@ def check_artifact_numbers(out: Out):
 def check_csv_identity(out: Out):
     """The three copies of the submitted CSV must be byte-identical, and
     every submissions/*.csv must oracle-score 100/1.0/rank-1."""
+    if needs_artifacts("csv-identity", out):
+        return
     import csv
     import io
     from src.submit import validate_submission_bytes
@@ -303,6 +327,11 @@ PATH_DOCS = [d for d in LIVE_DOCS
              if d not in ("docs/status.md", "docs/report_map.md",
                           "docs/deletion_runbook.md")]
 
+# Trees that .gitignore keeps out of the repo: patient data, run outputs
+# and downloaded corpora. They exist on the machine that produced them,
+# never in a fresh clone or a worktree.
+GITIGNORED_ROOTS = ("results", "data", "env")
+
 
 def check_paths_exist(out: Out):
     """Artifact paths cited in live docs must exist on disk (results/ are
@@ -327,18 +356,31 @@ def check_paths_exist(out: Out):
                     if ".." in pat:  # 'results/.../x' placeholder syntax
                         continue
                     pats.append((rel, i, pat))
-    missing = []
+    missing, ungitted = [], []
     for rel, i, pat in pats:
         for ex in _brace_expand(pat.rstrip(".,;:")):
             ex = ex.rstrip("/")
             if "*" in ex:
-                if not globmod.glob(str(REPO / ex)):
-                    missing.append(f"{rel}:{i} {ex}")
-            elif not (REPO / ex).exists():
-                missing.append(f"{rel}:{i} {ex}")
+                gone = not globmod.glob(str(REPO / ex))
+            else:
+                gone = not (REPO / ex).exists()
+            if not gone:
+                continue
+            # results/, data/ and env/ are gitignored: absent in a fresh
+            # clone (and in a worktree), present on the run machine. A
+            # vanished tracked path is drift; a vanished gitignored one is
+            # only reportable where the artifacts live.
+            (ungitted if ex.split("/", 1)[0] in GITIGNORED_ROOTS
+             else missing).append(f"{rel}:{i} {ex}")
     if missing:
         out.fail("paths-exist",
                  f"{len(missing)} missing: " + "; ".join(missing[:8]))
+    elif ungitted:
+        out.warn("paths-exist",
+                 f"{len(pats)} path refs checked; {len(ungitted)} under "
+                 f"gitignored roots not present here (run on the machine "
+                 f"holding the artifacts to verify): "
+                 + "; ".join(ungitted[:4]))
     else:
         out.ok("paths-exist", f"{len(pats)} path refs resolve on disk")
 
@@ -391,6 +433,8 @@ def check_line_refs(out: Out):
 def check_figures_deterministic(out: Out):
     """Regenerate docs/figures into a temp dir; bytes must match the
     committed copies (a stale figure = a report that lies)."""
+    if needs_artifacts("figures-deterministic", out):
+        return
     args = [PY, "tools/make_figures.py",
             "--sam", "results/track1_patient_modal/realign/region.sam",
             "--allele-balance", f"{ARMS}/allele_balance.json",

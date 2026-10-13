@@ -1,0 +1,145 @@
+{
+ "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=23602569",
+ "status": 200,
+ "recorded": "2026-10-12",
+ "response": {
+  "header": {
+   "type": "esummary",
+   "version": "0.3"
+  },
+  "result": {
+   "uids": [
+    "23602569"
+   ],
+   "23602569": {
+    "uid": "23602569",
+    "pubdate": "2013 Apr 25",
+    "epubdate": "2013 Apr 18",
+    "source": "Cell Rep",
+    "authors": [
+     {
+      "name": "Baker DJ",
+      "authtype": "Author",
+      "clusterid": ""
+     },
+     {
+      "name": "Weaver RL",
+      "authtype": "Author",
+      "clusterid": ""
+     },
+     {
+      "name": "van Deursen JM",
+      "authtype": "Author",
+      "clusterid": ""
+     }
+    ],
+    "lastauthor": "van Deursen JM",
+    "title": "p21 both attenuates and drives senescence and aging in BubR1 progeroid mice.",
+    "sorttitle": "p21 both attenuates and drives senescence and aging in bubr1 progeroid mice",
+    "volume": "3",
+    "issue": "4",
+    "pages": "1164-74",
+    "lang": [
+     "eng"
+    ],
+    "nlmuniqueid": "101573691",
+    "issn": "",
+    "essn": "2211-1247",
+    "pubtype": [
+     "Journal Article",
+     "Research Support, N.I.H., Extramural",
+     "Research Support, Non-U.S. Gov't"
+    ],
+    "recordstatus": "PubMed - indexed for MEDLINE",
+    "pubstatus": "256",
+    "articleids": [
+     {
+      "idtype": "pubmed",
+      "idtypen": 1,
+      "value": "23602569"
+     },
+     {
+      "idtype": "mid",
+      "idtypen": 8,
+      "value": "NIHMS460178"
+     },
+     {
+      "idtype": "pmc",
+      "idtypen": 8,
+      "value": "PMC3785294"
+     },
+     {
+      "idtype": "pmcid",
+      "idtypen": 5,
+      "value": "pmc-id: PMC3785294;manuscript-id: NIHMS460178;"
+     },
+     {
+      "idtype": "doi",
+      "idtypen": 3,
+      "value": "10.1016/j.celrep.2013.03.028"
+     },
+     {
+      "idtype": "pii",
+      "idtypen": 4,
+      "value": "S2211-1247(13)00135-6"
+     }
+    ],
+    "history": [
+     {
+      "pubstatus": "received",
+      "date": "2012/05/16 00:00"
+     },
+     {
+      "pubstatus": "revised",
+      "date": "2013/02/11 00:00"
+     },
+     {
+      "pubstatus": "accepted",
+      "date": "2013/03/20 00:00"
+     },
+     {
+      "pubstatus": "entrez",
+      "date": "2013/04/23 06:00"
+     },
+     {
+      "pubstatus": "pubmed",
+      "date": "2013/04/23 06:00"
+     },
+     {
+      "pubstatus": "medline",
+      "date": "2013/11/07 06:00"
+     },
+     {
+      "pubstatus": "pmc-release",
+      "date": "2014/04/25 00:00"
+     }
+    ],
+    "references": [],
+    "attributes": [
+     "Has Abstract"
+    ],
+    "pmcrefcount": 48,
+    "fulljournalname": "Cell reports",
+    "elocationid": "doi: 10.1016/j.celrep.2013.03.028",
+    "doctype": "citation",
+    "srccontriblist": [],
+    "booktitle": "",
+    "medium": "",
+    "edition": "",
+    "publisherlocation": "",
+    "publishername": "",
+    "srcdate": "",
+    "reportnumber": "",
+    "availablefromurl": "",
+    "locationlabel": "",
+    "doccontriblist": [],
+    "docdate": "",
+    "bookname": "",
+    "chapter": "",
+    "sortpubdate": "2013/04/25 00:00",
+    "sortfirstauthor": "Baker DJ",
+    "vernaculartitle": ""
+   }
+  }
+ }
+}

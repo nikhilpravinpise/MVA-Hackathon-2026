@@ -2,7 +2,7 @@
 # Python lives in .venv; override with PY=python3 if needed.
 PY := .venv/Scripts/python.exe
 
-.PHONY: test gate refs spike control report report-patient report-upload figures freshness track1 citations audit all
+.PHONY: test gate refs spike control report report-patient report-upload figures freshness track1 citations audit all track2 track2-mechanism track2-citations track2-report track2-pdf track2-video track2-all
 
 ## full test suite (skips slow / missing-corpus tests gracefully)
 test:
@@ -150,3 +150,35 @@ citations:
 ## report sections stay "Pending dataset access".
 all: spike control track1 report test
 	@echo "done: see docs/report.md and results/t1_spike/run_summary.json"
+
+## ---------------------------------------------------------------- Track 2
+## engine run (replays recorded fixtures; --mode live to re-pull)
+track2:
+	$(PY) tools/run_track2.py
+	$(PY) tools/run_track2.py --benchmark
+
+## mechanism evidence from public APIs (--replay uses recorded fixtures)
+track2-mechanism:
+	$(PY) tools/t2_mechanism.py --replay
+
+## citation gate over the whole Track-2 tree (GATE 7: 0 unresolved)
+track2-citations:
+	$(PY) tools/verify_citations.py
+
+## regenerate docs/track2_report.md + the upload copy from evidence only
+track2-report:
+	$(PY) tools/make_track2_report.py --upload
+
+## reading copy for the panel (needs: pip install markdown-it-py playwright)
+track2-pdf: track2-report
+	python tools/make_track2_pdf.py
+
+## 3-minute pitch video (needs .venv-video + ffmpeg + Chrome; see video/README.md)
+track2-video:
+	.venv-video/Scripts/python.exe video/build.py
+
+## everything a Track-2 submission needs, in order
+track2-all: track2-report track2-citations
+	$(PY) -m pytest tests -q
+	@echo "report + upload copy rebuilt, citations green, suite green"
+	@echo "next: make track2-pdf, make track2-video, docs/track2/submission_fields.md"

@@ -1,0 +1,644 @@
+{
+ "url": "https://api.crossref.org/works/10.1038%2Fnature10600",
+ "status": 200,
+ "recorded": "2026-10-12",
+ "response": {
+  "status": "ok",
+  "message-type": "work",
+  "message-version": "1.0.0",
+  "message": {
+   "indexed": {
+    "date-parts": [
+     [
+      2026,
+      10,
+      10
+     ]
+    ],
+    "date-time": "2026-10-10T20:56:48Z",
+    "timestamp": 1791665808128,
+    "version": "4.3.4"
+   },
+   "reference-count": 30,
+   "publisher": "Springer Science and Business Media LLC",
+   "issue": "7372",
+   "license": [
+    {
+     "start": {
+      "date-parts": [
+       [
+        2011,
+        11,
+        1
+       ]
+      ],
+      "date-time": "2011-11-01T00:00:00Z",
+      "timestamp": 1320105600000
+     },
+     "content-version": "tdm",
+     "delay-in-days": 0,
+     "URL": "http://www.springer.com/tdm"
+    }
+   ],
+   "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+   },
+   "short-container-title": [
+    "Nature"
+   ],
+   "published-print": {
+    "date-parts": [
+     [
+      2011,
+      11
+     ]
+    ]
+   },
+   "DOI": "10.1038/nature10600",
+   "type": "journal-article",
+   "created": {
+    "date-parts": [
+     [
+      2011,
+      11,
+      1
+     ]
+    ],
+    "date-time": "2011-11-01T08:58:18Z",
+    "timestamp": 1320137898000
+   },
+   "page": "232-236",
+   "source": "Crossref",
+   "is-referenced-by-count": 3509,
+   "title": [
+    "Clearance of p16Ink4a-positive senescent cells delays ageing-associated disorders"
+   ],
+   "prefix": "10.1038",
+   "volume": "479",
+   "author": [
+    {
+     "given": "Darren J.",
+     "family": "Baker",
+     "sequence": "first",
+     "affiliation": [],
+     "role": [
+      {
+       "vocabulary": "crossref",
+       "role": "author"
+      }
+     ]
+    },
+    {
+     "given": "Tobias",
+     "family": "Wijshake",
+     "sequence": "additional",
+     "affiliation": [],
+     "role": [
+      {
+       "vocabulary": "crossref",
+       "role": "author"
+      }
+     ]
+    },
+    {
+     "given": "Tamar",
+     "family": "Tchkonia",
+     "sequence": "additional",
+     "affiliation": [],
+     "role": [
+      {
+       "vocabulary": "crossref",
+       "role": "author"
+      }
+     ]
+    },
+    {
+     "given": "Nathan K.",
+     "family": "LeBrasseur",
+     "sequence": "additional",
+     "affiliation": [],
+     "role": [
+      {
+       "vocabulary": "crossref",
+       "role": "author"
+      }
+     ]
+    },
+    {
+     "given": "Bennett G.",
+     "family": "Childs",
+     "sequence": "additional",
+     "affiliation": [],
+     "role": [
+      {
+       "vocabulary": "crossref",
+       "role": "author"
+      }
+     ]
+    },
+    {
+     "given": "Bart",
+     "family": "van de Sluis",
+     "sequence": "additional",
+     "affiliation": [],
+     "role": [
+      {
+       "vocabulary": "crossref",
+       "role": "author"
+      }
+     ]
+    },
+    {
+     "given": "James L.",
+     "family": "Kirkland",
+     "sequence": "additional",
+     "affiliation": [],
+     "role": [
+      {
+       "vocabulary": "crossref",
+       "role": "author"
+      }
+     ]
+    },
+    {
+     "given": "Jan M.",
+     "family": "van Deursen",
+     "sequence": "additional",
+     "affiliation": [],
+     "role": [
+      {
+       "vocabulary": "crossref",
+       "role": "author"
+      }
+     ]
+    }
+   ],
+   "member": "297",
+   "published-online": {
+    "date-parts": [
+     [
+      2011,
+      11,
+      2
+     ]
+    ]
+   },
+   "reference": [
+    {
+     "key": "BFnature10600_CR1",
+     "doi-asserted-by": "publisher",
+     "first-page": "107",
+     "DOI": "10.1016/j.gde.2010.10.005",
+     "volume": "21",
+     "author": "J Campisi",
+     "year": "2011",
+     "unstructured": "Campisi, J. Cellular senescence: putting the paradoxes in perspective. Curr. Opin. Genet. Dev. 21, 107\u2013112 (2011)",
+     "journal-title": "Curr. Opin. Genet. Dev."
+    },
+    {
+     "key": "BFnature10600_CR2",
+     "doi-asserted-by": "publisher",
+     "first-page": "2463",
+     "DOI": "10.1101/gad.1971610",
+     "volume": "24",
+     "author": "T Kuilman",
+     "year": "2010",
+     "unstructured": "Kuilman, T., Michaloglou, C., Mooi, W. J. & Peeper, D. S. The essence of senescence. Genes Dev. 24, 2463\u20132479 (2010)",
+     "journal-title": "Genes Dev."
+    },
+    {
+     "key": "BFnature10600_CR3",
+     "doi-asserted-by": "publisher",
+     "first-page": "513",
+     "DOI": "10.1016/j.cell.2005.02.003",
+     "volume": "120",
+     "author": "J Campisi",
+     "year": "2005",
+     "unstructured": "Campisi, J. Senescent cells, tumor suppression, and organismal aging: good citizens, bad neighbors. Cell 120, 513\u2013522 (2005)",
+     "journal-title": "Cell"
+    },
+    {
+     "key": "BFnature10600_CR4",
+     "doi-asserted-by": "publisher",
+     "first-page": "e301",
+     "DOI": "10.1371/journal.pbio.0060301",
+     "volume": "6",
+     "author": "JP Copp\u00e9",
+     "year": "2008",
+     "unstructured": "Copp\u00e9, J. P. et al. Senescence-associated secretory phenotypes reveal cell-nonautonomous functions of oncogenic RAS and the p53 tumor suppressor. PLoS Biol. 6, e301 (2008)",
+     "journal-title": "PLoS Biol."
+    },
+    {
+     "key": "BFnature10600_CR5",
+     "doi-asserted-by": "publisher",
+     "first-page": "547",
+     "DOI": "10.1083/jcb.201009094",
+     "volume": "192",
+     "author": "F Rodier",
+     "year": "2011",
+     "unstructured": "Rodier, F. & Campisi, J. Four faces of cellular senescence. J. Cell Biol. 192, 547\u2013556 (2011)",
+     "journal-title": "J. Cell Biol."
+    },
+    {
+     "key": "BFnature10600_CR6",
+     "doi-asserted-by": "publisher",
+     "first-page": "797",
+     "DOI": "10.1038/nm1262",
+     "volume": "11",
+     "author": "UB Pajvani",
+     "year": "2005",
+     "unstructured": "Pajvani, U. B. et al. Fat apoptosis through targeted activation of caspase 8: a new mouse model of inducible and reversible lipoatrophy. Nature Med. 11, 797\u2013803 (2005)",
+     "journal-title": "Nature Med."
+    },
+    {
+     "key": "BFnature10600_CR7",
+     "doi-asserted-by": "publisher",
+     "first-page": "265",
+     "DOI": "10.1016/j.cell.2006.10.003",
+     "volume": "127",
+     "author": "WY Kim",
+     "year": "2006",
+     "unstructured": "Kim, W. Y. & Sharpless, N. E. The regulation of INK4/ARF in cancer and aging. Cell 127, 265\u2013275 (2006)",
+     "journal-title": "Cell"
+    },
+    {
+     "key": "BFnature10600_CR8",
+     "doi-asserted-by": "publisher",
+     "first-page": "1299",
+     "DOI": "10.1172/JCI22475",
+     "volume": "114",
+     "author": "J Krishnamurthy",
+     "year": "2004",
+     "unstructured": "Krishnamurthy, J. et al. Ink4a/Arf expression is a biomarker of aging. J. Clin. Invest. 114, 1299\u20131307 (2004)",
+     "journal-title": "J. Clin. Invest."
+    },
+    {
+     "key": "BFnature10600_CR9",
+     "doi-asserted-by": "publisher",
+     "first-page": "48655",
+     "DOI": "10.1074/jbc.M108278200",
+     "volume": "276",
+     "author": "W Wang",
+     "year": "2001",
+     "unstructured": "Wang, W., Wu, J., Zhang, Z. & Tong, T. Characterization of regulatory elements on the promoter region of p16INK4a that contribute to overexpression of p16 in senescent fibroblasts. J. Biol. Chem. 276, 48655\u201348661 (2001)",
+     "journal-title": "J. Biol. Chem."
+    },
+    {
+     "key": "BFnature10600_CR10",
+     "doi-asserted-by": "publisher",
+     "first-page": "118",
+     "DOI": "10.1016/j.devcel.2008.11.004",
+     "volume": "16",
+     "author": "LA Malureanu",
+     "year": "2009",
+     "unstructured": "Malureanu, L. A. et al. BubR1 N terminus acts as a soluble inhibitor of cyclin B degradation by APC/CCdc20 in interphase. Dev. Cell 16, 118\u2013131 (2009)",
+     "journal-title": "Dev. Cell"
+    },
+    {
+     "key": "BFnature10600_CR11",
+     "doi-asserted-by": "publisher",
+     "first-page": "105",
+     "DOI": "10.1016/j.devcel.2008.11.005",
+     "volume": "16",
+     "author": "A Kulukian",
+     "year": "2009",
+     "unstructured": "Kulukian, A., Han, J. S. & Cleveland, D. W. Unattached kinetochores catalyze production of an anaphase inhibitor that requires a Mad2 template to prime Cdc20 for BubR1 binding. Dev. Cell 16, 105\u2013117 (2009)",
+     "journal-title": "Dev. Cell"
+    },
+    {
+     "key": "BFnature10600_CR12",
+     "doi-asserted-by": "publisher",
+     "first-page": "744",
+     "DOI": "10.1038/ng1382",
+     "volume": "36",
+     "author": "DJ Baker",
+     "year": "2004",
+     "unstructured": "Baker, D. J. et al. BubR1 insufficiency causes early onset of aging-associated phenotypes and infertility in mice. Nature Genet. 36, 744\u2013749 (2004)",
+     "journal-title": "Nature Genet."
+    },
+    {
+     "key": "BFnature10600_CR13",
+     "doi-asserted-by": "publisher",
+     "first-page": "921",
+     "DOI": "10.1016/j.neurobiolaging.2006.05.012",
+     "volume": "28",
+     "author": "TK Hartman",
+     "year": "2007",
+     "unstructured": "Hartman, T. K., Wengenack, T. M., Poduslo, J. F. & van Deursen, J. M. Mutant mice with small amounts of BubR1 display accelerated age-related gliosis. Neurobiol. Aging 28, 921\u2013927 (2007)",
+     "journal-title": "Neurobiol. Aging"
+    },
+    {
+     "key": "BFnature10600_CR14",
+     "doi-asserted-by": "publisher",
+     "first-page": "1050",
+     "DOI": "10.1161/01.STR.0000257967.86132.01",
+     "volume": "38",
+     "author": "T Matsumoto",
+     "year": "2007",
+     "unstructured": "Matsumoto, T. et al. Aging-associated vascular phenotype in mutant mice with low levels of BubR1. Stroke 38, 1050\u20131056 (2007)",
+     "journal-title": "Stroke"
+    },
+    {
+     "key": "BFnature10600_CR15",
+     "doi-asserted-by": "publisher",
+     "first-page": "825",
+     "DOI": "10.1038/ncb1744",
+     "volume": "10",
+     "author": "DJ Baker",
+     "year": "2008",
+     "unstructured": "Baker, D. J. et al. Opposing roles for p16Ink4a and p19Arf in senescence and ageing caused by BubR1 insufficiency. Nature Cell Biol. 10, 825\u2013836 (2008)",
+     "journal-title": "Nature Cell Biol."
+    },
+    {
+     "key": "BFnature10600_CR16",
+     "doi-asserted-by": "publisher",
+     "first-page": "2235",
+     "DOI": "10.1242/jcs.026633",
+     "volume": "121",
+     "author": "Q Gan",
+     "year": "2008",
+     "unstructured": "Gan, Q. et al. PPAR\u03b3 accelerates cellular senescence by inducing p16INK4\u03b1 expression in human diploid fibroblasts. J. Cell Sci. 121, 2235\u20132245 (2008)",
+     "journal-title": "J. Cell Sci."
+    },
+    {
+     "key": "BFnature10600_CR17",
+     "doi-asserted-by": "publisher",
+     "first-page": "593",
+     "DOI": "10.1016/S0092-8674(00)81902-9",
+     "volume": "88",
+     "author": "M Serrano",
+     "year": "1997",
+     "unstructured": "Serrano, M., Lin, A. W., McCurrach, M. E., Beach, D. & Lowe, S. W. Oncogenic ras provokes premature cell senescence associated with accumulation of p53 and p16INK4a. Cell 88, 593\u2013602 (1997)",
+     "journal-title": "Cell"
+    },
+    {
+     "key": "BFnature10600_CR18",
+     "doi-asserted-by": "publisher",
+     "first-page": "199",
+     "DOI": "10.1006/excr.2001.5420",
+     "volume": "272",
+     "author": "H Kim",
+     "year": "2002",
+     "unstructured": "Kim, H. et al. Expression profiles of p53-, p16INK4a-, and telomere-regulating genes in replicative senescent primary human, mouse, and chicken fibroblast cells. Exp. Cell Res. 272, 199\u2013208 (2002)",
+     "journal-title": "Exp. Cell Res."
+    },
+    {
+     "key": "BFnature10600_CR19",
+     "doi-asserted-by": "publisher",
+     "first-page": "685",
+     "DOI": "10.4161/epi.5.8.12996",
+     "volume": "5",
+     "author": "N Popov",
+     "year": "2010",
+     "unstructured": "Popov, N. & Gil, J. Epigenetic regulation of the INK4b\u2013ARF\u2013INK4a locus: in sickness and in health. Epigenetics 5, 685\u2013690 (2010)",
+     "journal-title": "Epigenetics"
+    },
+    {
+     "key": "BFnature10600_CR20",
+     "doi-asserted-by": "publisher",
+     "first-page": "667",
+     "DOI": "10.1038/nrm1987",
+     "volume": "7",
+     "author": "J Gil",
+     "year": "2006",
+     "unstructured": "Gil, J. & Peters, G. Regulation of the INK4b\u2013ARF\u2013INK4a tumour suppressor locus: all for one or one for all. Nature Rev. Mol. Cell Biol. 7, 667\u2013677 (2006)",
+     "journal-title": "Nature Rev. Mol. Cell Biol."
+    },
+    {
+     "key": "BFnature10600_CR21",
+     "doi-asserted-by": "publisher",
+     "first-page": "e1001233",
+     "DOI": "10.1371/journal.pgen.1001233",
+     "volume": "6",
+     "author": "CE Burd",
+     "year": "2010",
+     "unstructured": "Burd, C. E. et al. Expression of linear and novel circular forms of an INK4/ARF-associated non-coding RNA correlates with atherosclerosis risk. PLoS Genet. 6, e1001233 (2010)",
+     "journal-title": "PLoS Genet."
+    },
+    {
+     "key": "BFnature10600_CR22",
+     "doi-asserted-by": "publisher",
+     "first-page": "5566",
+     "DOI": "10.1021/bi200642e",
+     "volume": "50",
+     "author": "J Li",
+     "year": "2011",
+     "unstructured": "Li, J., Poi, M. J. & Tsai, M. D. Regulatory mechanisms of tumor suppressor P16INK4A and their relevance to cancer. Biochemistry 50, 5566\u20135582 (2011)",
+     "journal-title": "Biochemistry"
+    },
+    {
+     "key": "BFnature10600_CR23",
+     "doi-asserted-by": "publisher",
+     "first-page": "657",
+     "DOI": "10.1016/j.cell.2008.06.049",
+     "volume": "134",
+     "author": "V Krizhanovsky",
+     "year": "2008",
+     "unstructured": "Krizhanovsky, V. et al. Senescence of activated stellate cells limits liver fibrosis. Cell 134, 657\u2013667 (2008)",
+     "journal-title": "Cell"
+    },
+    {
+     "key": "BFnature10600_CR24",
+     "doi-asserted-by": "publisher",
+     "first-page": "676",
+     "DOI": "10.1038/ncb2070",
+     "volume": "12",
+     "author": "JI Jun",
+     "year": "2010",
+     "unstructured": "Jun, J. I. & Lau, L. F. The matricellular protein CCN1 induces fibroblast senescence and restricts fibrosis in cutaneous wound healing. Nature Cell Biol. 12, 676\u2013685 (2010)",
+     "journal-title": "Nature Cell Biol."
+    },
+    {
+     "key": "BFnature10600_CR25",
+     "doi-asserted-by": "publisher",
+     "first-page": "102",
+     "DOI": "10.1038/nprot.2008.221",
+     "volume": "4",
+     "author": "M Soleimani",
+     "year": "2009",
+     "unstructured": "Soleimani, M. & Nadri, S. A protocol for isolation and culture of mesenchymal stem cells from mouse bone marrow. Nature Protocols 4, 102\u2013106 (2009)",
+     "journal-title": "Nature Protocols"
+    },
+    {
+     "key": "BFnature10600_CR26",
+     "doi-asserted-by": "publisher",
+     "first-page": "313",
+     "DOI": "10.1083/jcb.201003090",
+     "volume": "191",
+     "author": "L Malureanu",
+     "year": "2010",
+     "unstructured": "Malureanu, L. et al. Cdc20 hypomorphic mice fail to counteract de novo synthesis of cyclin B1 in mitosis. J. Cell Biol. 191, 313\u2013329 (2010)",
+     "journal-title": "J. Cell Biol."
+    },
+    {
+     "key": "BFnature10600_CR27",
+     "doi-asserted-by": "publisher",
+     "first-page": "9363",
+     "DOI": "10.1073/pnas.92.20.9363",
+     "volume": "92",
+     "author": "GP Dimri",
+     "year": "1995",
+     "unstructured": "Dimri, G. P. et al. A biomarker that identifies senescent human cells in culture and in aging skin in vivo. Proc. Natl Acad. Sci. USA 92, 9363\u20139367 (1995)",
+     "journal-title": "Proc. Natl Acad. Sci. USA"
+    },
+    {
+     "key": "BFnature10600_CR28",
+     "first-page": "S102",
+     "volume": "20",
+     "author": "JL Kirkland",
+     "year": "1996",
+     "unstructured": "Kirkland, J. L., Hollenberg, C. H. & Gillon, W. S. Effects of fat depot site on differentiation-dependent gene expression in rat preadipocytes. Int. J. Obes. Relat. Metab. Disord. 20 (Suppl 3). S102\u2013S107 (1996)",
+     "journal-title": "Int. J. Obes. Relat. Metab. Disord."
+    },
+    {
+     "key": "BFnature10600_CR29",
+     "doi-asserted-by": "publisher",
+     "first-page": "940",
+     "DOI": "10.1093/gerona/glp068",
+     "volume": "64A",
+     "author": "NK LeBrasseur",
+     "year": "2009",
+     "unstructured": "LeBrasseur, N. K. et al. Myostatin inhibition enhances the effects of exercise on performance and metabolic outcomes in aged mice. J. Gerontol. A Biol. Sci. Med. Sci. 64A, 940\u2013948 (2009)",
+     "journal-title": "J. Gerontol. A Biol. Sci. Med. Sci."
+    },
+    {
+     "key": "BFnature10600_CR30",
+     "doi-asserted-by": "publisher",
+     "first-page": "648",
+     "DOI": "10.1161/CIRCRESAHA.109.203109",
+     "volume": "105",
+     "author": "A Martinez-Fernandez",
+     "year": "2009",
+     "unstructured": "Martinez-Fernandez, A. et al. iPS programmed without c-MYC yield proficient cardiogenesis for functional heart chimerism. Circ. Res. 105, 648\u2013656 (2009)",
+     "journal-title": "Circ. Res."
+    }
+   ],
+   "container-title": [
+    "Nature"
+   ],
+   "original-title": [],
+   "language": "en",
+   "link": [
+    {
+     "URL": "http://www.nature.com/articles/nature10600.pdf",
+     "content-type": "application/pdf",
+     "content-version": "vor",
+     "intended-application": "text-mining"
+    },
+    {
+     "URL": "http://www.nature.com/articles/nature10600",
+     "content-type": "text/html",
+     "content-version": "vor",
+     "intended-application": "text-mining"
+    },
+    {
+     "URL": "http://www.nature.com/articles/nature10600.pdf",
+     "content-type": "application/pdf",
+     "content-version": "vor",
+     "intended-application": "similarity-checking"
+    }
+   ],
+   "deposited": {
+    "date-parts": [
+     [
+      2023,
+      5,
+      18
+     ]
+    ],
+    "date-time": "2023-05-18T13:56:10Z",
+    "timestamp": 1684418170000
+   },
+   "score": 1,
+   "resource": {
+    "primary": {
+     "URL": "https://www.nature.com/articles/nature10600"
+    }
+   },
+   "subtitle": [],
+   "short-title": [],
+   "issued": {
+    "date-parts": [
+     [
+      2011,
+      11
+     ]
+    ]
+   },
+   "references-count": 30,
+   "journal-issue": {
+    "issue": "7372",
+    "published-print": {
+     "date-parts": [
+      [
+       2011,
+       11
+      ]
+     ]
+    }
+   },
+   "alternative-id": [
+    "BFnature10600"
+   ],
+   "URL": "https://doi.org/10.1038/nature10600",
+   "relation": {
+    "has-review": [
+     {
+      "id-type": "doi",
+      "id": "10.3410/f.13371067.14741200",
+      "asserted-by": "object"
+     },
+     {
+      "id-type": "doi",
+      "id": "10.3410/f.13371067.793515613",
+      "asserted-by": "object"
+     },
+     {
+      "id-type": "doi",
+      "id": "10.3410/f.13371067.14742070",
+      "asserted-by": "object"
+     },
+     {
+      "id-type": "doi",
+      "id": "10.3410/f.13371067.14797059",
+      "asserted-by": "object"
+     },
+     {
+      "id-type": "doi",
+      "id": "10.3410/f.13371067.14750078",
+      "asserted-by": "object"
+     },
+     {
+      "id-type": "doi",
+      "id": "10.3410/f.13371067.14753077",
+      "asserted-by": "object"
+     }
+    ]
+   },
+   "ISSN": [
+    "0028-0836",
+    "1476-4687"
+   ],
+   "issn-type": [
+    {
+     "value": "0028-0836",
+     "type": "print"
+    },
+    {
+     "value": "1476-4687",
+     "type": "electronic"
+    }
+   ],
+   "subject": [],
+   "published": {
+    "date-parts": [
+     [
+      2011,
+      11
+     ]
+    ]
+   }
+  }
+ }
+}

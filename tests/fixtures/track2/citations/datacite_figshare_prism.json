@@ -1,0 +1,26 @@
+{
+ "url": "https://api.datacite.org/dois/10.6084%2Fm9.figshare.11384241",
+ "status": 200,
+ "recorded": "2026-10-12",
+ "response": {
+  "data": {
+   "id": "10.6084/m9.figshare.11384241",
+   "attributes": {
+    "titles": [
+     {
+      "title": "DepMap 19Q4 Public"
+     }
+    ],
+    "publicationYear": 2020,
+    "types": {
+     "ris": "DATA",
+     "bibtex": "misc",
+     "citeproc": "dataset",
+     "schemaOrg": "Dataset",
+     "resourceType": "Dataset",
+     "resourceTypeGeneral": "Dataset"
+    }
+   }
+  }
+ }
+}
