@@ -13,7 +13,7 @@ One child's genome -> a verified causal call -> a ranked, testable
 approved-drug portfolio, plus the open engine that produced it. Every
 number in both reports is regenerated from committed artifacts, every
 citation is resolved live and retraction-checked, and the whole suite
-(550 tests) replays on a bare clone with no patient data.
+(562 tests) replays on a bare clone with no patient data.
 
 ## Results at a glance
 
