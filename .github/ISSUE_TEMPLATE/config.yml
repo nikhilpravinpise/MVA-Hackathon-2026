@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Hackathon Space discussions
+    url: https://huggingface.co/spaces/SageBio/rare-disease-real-kid-mva-hackathon-2026/discussions
+    about: Questions about the competition itself belong on the Space, not here.
+  - name: Documentation map
+    url: https://github.com/nikhilpravinpise/MVA-Hackathon-2026/blob/main/docs/README.md
+    about: Start with the doc index before filing.

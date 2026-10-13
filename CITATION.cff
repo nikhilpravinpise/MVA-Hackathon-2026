@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: If you use this software or pipeline in your work, please cite it as below.
+title: >-
+  MVA Hackathon 2026: N-of-1 variant prioritization and drug repurposing
+  for BUB1B mosaic variegated aneuploidy
+authors:
+  - family-names: Pise
+    given-names: Nikhil Pravin
+type: software
+license: MIT
+repository-code: https://github.com/nikhilpravinpise/MVA-Hackathon-2026
+keywords:
+  - rare disease
+  - mosaic variegated aneuploidy
+  - BUB1B
+  - variant prioritization
+  - drug repurposing
+  - bioinformatics
+abstract: >-
+  A deterministic, leak-firewalled N-of-1 variant-prioritization funnel
+  (Track 1, verified 100.0/1.000 on the official scorer) and a
+  gene-agnostic drug-repurposing engine (Track 2) producing a ranked,
+  pediatric-label-checked portfolio of approved medicines for a BUB1B
+  mosaic variegated aneuploidy proband. All reports are generated from
+  committed evidence artifacts; every citation is resolved live and
+  retraction-checked.
+date-released: 2026-10-13
