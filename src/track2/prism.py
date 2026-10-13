@@ -50,12 +50,20 @@ def load_index(cfg):
         return {}, meta
     path = Path(pcfg.get("file") or
                 "docs/track2/evidence/prism.json")
+    repo = Path(__file__).resolve().parents[2]
     if not path.is_absolute():
-        path = Path(__file__).resolve().parents[2] / path
+        path = repo / path
+    # Evidence files are published: record the repo-relative path so the
+    # committed JSON is identical on any machine (an absolute path would
+    # leak the author's layout and break strict replay comparison).
+    try:
+        shown = path.resolve().relative_to(repo).as_posix()
+    except ValueError:
+        shown = str(path)  # file outside the repo (custom cfg)
     key = str(path)
     if key in _INDEX_CACHE:
         return _INDEX_CACHE[key], {**meta, "status": "ok",
-                                   "file": str(path),
+                                   "file": shown,
                                    "n_rows": _INDEX_CACHE[key]["_n_rows"]}
     if not path.exists():
         meta["status"] = "missing_file"
@@ -68,7 +76,7 @@ def load_index(cfg):
         if nm and nm not in index:
             index[nm] = r
     _INDEX_CACHE[key] = index
-    return index, {**meta, "status": "ok", "file": str(path),
+    return index, {**meta, "status": "ok", "file": shown,
                    "n_rows": len(rows)}
 
 

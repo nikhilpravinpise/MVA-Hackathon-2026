@@ -1,7 +1,7 @@
 {
   "schema": "t2.candidates/1",
   "generated_by": "tools/run_track2.py",
-  "generated_at": "2026-10-13T00:09:33+00:00",
+  "generated_at": "2026-10-13T06:40:01+00:00",
   "case": {
     "name": "mva_bub1b",
     "disease": "Mosaic variegated aneuploidy syndrome 1 (MVA1, OMIM:257300)",
@@ -762,7 +762,7 @@
     "enabled": true,
     "weight": 0.0,
     "status": "ok",
-    "file": "C:\\Dev\\MVA-Hackathon-2026\\.claude\\worktrees\\track2\\docs\\track2\\evidence\\prism.json",
+    "file": "docs/track2/evidence/prism.json",
     "n_rows": 1498,
     "n_candidates_screened": 68,
     "n_candidates_not_in_screen": 28
