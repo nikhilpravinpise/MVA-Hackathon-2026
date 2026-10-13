@@ -46,8 +46,8 @@ almost always takes, but nobody has shown it in this child, and a parental
 test would settle it. If a medicine could help that copy
 last longer or work a little better, it would address the cause rather
 than the consequences. There is a known route: a vitamin-derived molecule
-called NAD+ supports a protein that keeps BubR1 stable, and in mice bred
-to have the same shortage, raising NAD+ helped. The approved form is a
+called NAD+ supports a protein that keeps BubR1 stable, and in mice,
+topping up NAD+ raised the amount of BubR1 protein. The approved form is a
 form of vitamin B3. It is not approved for children, and whether it does
 anything for this particular genetic change is exactly what a laboratory
 test would tell us.
@@ -91,8 +91,9 @@ fair to ask how much to trust the result. Three answers:
   Each paper we cite is looked up in the public medical literature
   database, confirmed to exist, confirmed not to have been retracted, and
   its title and year matched against what we claim it says.
-- **Whether a medicine is really approved is checked against the
-  regulators' own data**, not asserted.
+- **Whether a medicine is really approved is checked by our code against
+  public drug-approval data** (ChEMBL phase-4 status, plus FDA label
+  records where they exist), not asserted.
 - **We tested our own method.** We ran the same program on nine other
   diseases where the right answer is already known and published, and
   reported how often it found that answer, including the times it did

@@ -65,7 +65,7 @@
   },
   {
    "label": "NR / NMN (Axis-A supplement adjuncts)",
-   "why": "NMN is the actual NAD+ precursor that raised BubR1 abundance and extended lifespan in BubR1-hypomorphic mice (PMID:24825348), with supportive review-level evidence for NAD supplementation in premature-aging and DNA-repair disease (PMID:41436848). Neither form is a market-approved drug, so they belong to the MVA Society supplements program rather than the drug leads."
+   "why": "NMN is the actual NAD+ precursor that raised BubR1 abundance in vivo in the anchor study (PMID:24825348; note the same study's lifespan extension in BubR1-hypomorphic mice came from SIRT2 overexpression, not NMN), with supportive review-level evidence for NAD supplementation in premature-aging and DNA-repair disease (PMID:41436848). Neither form is a market-approved drug, so they belong to the MVA Society supplements program rather than the drug leads."
   },
   {
    "label": "structured cancer surveillance (non-drug)",

@@ -12,8 +12,9 @@ aneuploid-cell vulnerability with cancer interception.
 
 A gene-agnostic engine expands a STRING disease module, pulls drug-target
 evidence from Open Targets, ChEMBL and DGIdb, keeps only approved medicines
-(ChEMBL max_phase 4, not withdrawn, openFDA label present), scores network
-proximity, and queries LINCS L1000 signature reversal. On BUB1B it collected
+(ChEMBL max_phase 4, not withdrawn; openFDA labels looked up per candidate
+and recorded where found), scores network proximity, and queries LINCS L1000
+signature reversal. On BUB1B it collected
 482 drug names and ranked 96 approved candidates
 [repo:docs/track2/evidence/candidates.json]. Run blind on 9 genes whose
 genotype-to-drug answer is established and declared in the frozen config the
@@ -56,4 +57,4 @@ pharmacogenomics is not a child's tissue; and pediatric label facts bound,
 but do not settle, safety. This is a hypothesis-generation method for
 laboratory follow-up, not medical advice.
 
-Word count: 451 (body only; excludes the heading and the [repo:...] artifact markers, which are pointers rather than prose. The form's limit is 500.)
+Word count: 458 (body only; excludes the heading and the [repo:...] artifact markers, which are pointers rather than prose. The form's limit is 500.)

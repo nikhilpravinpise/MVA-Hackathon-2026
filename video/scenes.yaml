@@ -58,8 +58,8 @@ scenes:
     kicker: The engine
     title: "Gene in, approved shortlist out"
     bullets:
-      - "71-gene disease module; 482 drug names from Open Targets, ChEMBL, DGIdb and STRING"
-      - "Approval checked by code, never from memory: 96 pass ChEMBL phase 4 plus an FDA label"
+      - "71-gene disease module from STRING; 482 drug names from Open Targets and DGIdb"
+      - "Approval checked by code, never from memory: 96 pass ChEMBL phase 4, not withdrawn - openFDA label read where one exists"
       - "A cited mechanism-direction layer excludes 37 drugs that would worsen a checkpoint defect - and lists them with the rank they would have had"
       - "19 of the raw top 20 were such drugs. Doxorubicin ranked first."
     narration: >
@@ -83,12 +83,12 @@ scenes:
         <tr><td>KCNJ11</td><td>glibenclamide</td><td>10</td></tr>
         <tr><td>FBN1</td><td>losartan</td><td>never collected</td></tr>
       </table>
-      <p class="muted">9 genes, truth committed before the run: recall@10 =
+      <p class="muted">9 genes, truth declared in the frozen config: recall@10 =
       0.56</p>
     narration: >
       Then we tested the method instead of asserting it. The same pipeline ran
-      blind on nine diseases whose approved drug is known, with the answer
-      committed before the run and never fed in. It found the known drug in the
+      blind on nine diseases whose approved drug is known - answers declared
+      in the frozen config, never fed in. It found the known drug in the
       top ten for five of nine. Every miss is structural: losartan acts outside
       the Marfan gene's network, so a network engine never collects it.
 
@@ -135,13 +135,13 @@ scenes:
       - "136 of 136 citations resolved live against PubMed, Crossref and DataCite, and checked for retraction - title and year must match"
       - "Approval status, pediatric labels and boxed warnings read from ChEMBL and openFDA responses"
       - "No number is typed by hand: the report is generated from the evidence files"
-      - "508 tests, offline from recorded responses. One command rebuilds all of it."
+      - "Over 500 tests, offline from recorded responses. One command rebuilds all of it."
     narration: >
       When AI helps write a scientific report, none of it should be taken on
       trust. Every citation is resolved live against PubMed and Crossref,
       checked for retraction, and its title matched against our claim. Approval
-      facts come from database responses, no number is typed by hand, and five
-      hundred tests run offline.
+      facts come from database responses, no number is typed by hand, and over
+      five hundred tests run offline.
 
   - id: close
     layout: title

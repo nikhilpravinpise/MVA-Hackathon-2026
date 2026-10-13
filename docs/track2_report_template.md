@@ -23,7 +23,7 @@ For each idea we checked, by computer, that the medicine is really approved; we 
 - **Mechanism.** Allele 1 (c.2210T>G, p.Leu737Ter) is a predicted null: the stop codon sits far upstream of the last exon junction, so the transcript is predicted to undergo nonsense-mediated decay. Allele 2 (c.3006T>G, p.Asn1002Lys) is a predicted hypomorph in the kinase-like domain. This null + hypomorph pairing is the characteristic MVA1 genotype{{CITE_HANKS}}. Phase (in trans) is **inferred, not observed** (section 2.3).
 - **Therapeutic logic.** Because one allele is null, the missense allele is the child's only source of BubR1, and BubR1 dosage is known to be tractable in vivo{{CITE_DOSAGE}}. That makes *residual-allele rescue* (axis A) the most disease-specific idea, with senescent-cell clearance (axis B, anchored in the BubR1-hypomorph mouse){{CITE_P16}} and aneuploid-cell vulnerability plus cancer interception (axis C) as complementary axes.
 - **Method.** A deterministic, gene-agnostic engine ranks approved drugs from public evidence (section 4), a curated, machine-verified literature layer adds mechanism and pediatric-label evidence (section 5), and the two are reconciled in a frozen portfolio decision (`docs/track2/evidence/portfolio.json`).
-- **Rigor receipts.** Approval status is checked by code, never from memory; every citation is resolved against PubMed/Crossref/DataCite and checked for retraction; the engine is benchmarked retrospectively on independent genotype-to-drug successes declared before the run (section 4.2); everything reruns from recorded fixtures.
+- **Rigor receipts.** Approval status is checked by code, never from memory; every citation is resolved against PubMed/Crossref/DataCite and checked for retraction; the engine is benchmarked retrospectively on independent genotype-to-drug successes declared in the frozen config (section 4.2); everything reruns from recorded fixtures.
 - **Impact.** Every candidate maps to an assay in one of the MVA Society's four funded research programs, with an explicit go/no-go threshold (section 7). The decisive first experiment is a T1-cost fibroblast panel.
 
 ## 2. Variant mechanism
@@ -52,7 +52,7 @@ For each idea we checked, by computer, that the medicine is really approved; we 
 
 ### 4.1 How candidates are generated
 
-The engine (`src/track2/`, `tools/run_track2.py`, frozen `config/track2.yaml`) is gene-agnostic: given a disease gene, its seed module and an axis map, it (1) expands the module on STRING, (2) pulls drug-target evidence from Open Targets, ChEMBL and DGIdb, (3) keeps only approved medicines (ChEMBL max_phase 4, not withdrawn, with an openFDA label), (4) scores network proximity between drug targets and the disease module against degree-matched random sets, (5) queries transcriptomic signature reversal on LINCS L1000 (SigCom LINCS), and (6) reports every evidence channel's contribution to a transparent weighted score and tier. Every API response is cached and replayed, so the ranking is byte-reproducible offline. Design details, source versions and limitations: [repo:docs/track2/engine.md].
+The engine (`src/track2/`, `tools/run_track2.py`, frozen `config/track2.yaml`) is gene-agnostic: given a disease gene, its seed module and an axis map, it (1) expands the module on STRING, (2) pulls drug-target evidence from Open Targets, ChEMBL and DGIdb, (3) keeps only approved medicines (ChEMBL max_phase 4, not withdrawn; an openFDA label is then looked up per candidate and recorded where one exists - it is not part of the gate), (4) scores network proximity between drug targets and the disease module against degree-matched random sets, (5) queries transcriptomic signature reversal on LINCS L1000 (SigCom LINCS), and (6) reports every evidence channel's contribution to a transparent weighted score and tier. Every API response is cached and replayed, so the ranking is byte-reproducible offline. Design details, source versions and limitations: [repo:docs/track2/engine.md].
 
 {{ENGINE_SECTION}}
 
@@ -119,7 +119,7 @@ The four programs and what each can measure are taken verbatim from the Society'
 
 1. **Phase is unknown.** If the two variants were in cis, the null + hypomorph model and axis A would not apply as stated.
 2. **N-of-1, no patient-cell data yet.** Every candidate is a mechanistic extrapolation; section 7 is the plan to replace extrapolation with measurement.
-3. **The missense allele's residual function is unmeasured.** Axis A assumes the Asn1002Lys protein retains partial function; a fibroblast BubR1 western and nocodazole-arrest assay resolve this first.
+3. **The missense allele's residual function is unmeasured.** Axis A assumes the Asn1002Lys protein retains partial function; a fibroblast BubR1 western and nocodazole-arrest assay resolve this first [repo:docs/track2/evidence/testability.json].
 4. **Database bias.** Drug-target resources over-represent oncology and well-studied targets; BubR1 itself has no approved direct modulator, so axis A works through upstream regulators.
 5. **Cell-line pharmacogenomics is not a child's tissue.** PRISM associations come from cancer lines and are associations, not mechanisms.
 6. **Approved is not safe for this child.** Pediatric label facts are quoted, not extrapolated into dosing; the risks are listed per candidate.
