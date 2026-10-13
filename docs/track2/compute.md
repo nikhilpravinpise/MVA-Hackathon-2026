@@ -1,3 +1,8 @@
+---
+title: Compute: PRISM + ESM
+nav_order: 6
+parent: Track 2
+---
 # Track 2 compute note - L5 (pharmacogenomics + protein-LM variant effect)
 
 Written 2026-10-12. Owner: lane L5 (`tools/t2_prism.py`, `tools/t2_esm.py`,

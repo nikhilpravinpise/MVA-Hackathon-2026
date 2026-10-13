@@ -1,3 +1,8 @@
+---
+title: Candidate dossiers
+nav_order: 5
+parent: Track 2
+---
 # Track 2 candidate dossiers - curated literature layer (lane L3)
 
 Generated 2026-10-12. This is the curated-literature complement to the engine's

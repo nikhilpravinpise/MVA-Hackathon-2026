@@ -1,3 +1,7 @@
+---
+title: Decision log
+nav_order: 10
+---
 # Decision log
 
 Decision-freeze ledger (plan.md section 2.1.1): any post-freeze change to

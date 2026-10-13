@@ -1,3 +1,7 @@
+---
+title: Status map
+nav_order: 5
+---
 # Implementation status vs docs/plan.md
 
 Line-by-line compliance map for Phases 0-6 (the implemented scope).

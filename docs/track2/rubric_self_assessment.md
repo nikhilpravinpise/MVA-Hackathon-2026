@@ -1,3 +1,8 @@
+---
+title: Rubric self-assessment
+nav_order: 9
+parent: Track 2
+---
 # Track 2 rubric self-assessment (L13, second hostile review)
 
 Date: 2026-10-13. Reviewed version: HEAD `4041b35`

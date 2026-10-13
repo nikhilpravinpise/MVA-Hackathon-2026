@@ -1,3 +1,7 @@
+---
+title: Track 1 rubric self-assessment
+nav_order: 14
+---
 # Track 1 rubric self-assessment
 
 Track 1 scoring is automated (rank points + F-max against the NHS-validated

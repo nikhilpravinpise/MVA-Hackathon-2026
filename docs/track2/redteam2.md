@@ -1,3 +1,8 @@
+---
+title: Red team 2
+nav_order: 11
+parent: Track 2
+---
 # L13 - Second hostile red team on the corrected Track 2 package
 
 Date: 2026-10-13. Reviewer: lane L13, read-only outside owned paths.

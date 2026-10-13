@@ -1,0 +1,19 @@
+title: MVA Hackathon 2026
+description: >-
+  N-of-1 variant prioritization + drug repurposing for BUB1B mosaic
+  variegated aneuploidy - every number regenerated, every citation
+  resolved live.
+remote_theme: just-the-docs/just-the-docs@v0.10.1
+
+aux_links:
+  GitHub: https://github.com/nikhilpravinpise/MVA-Hackathon-2026
+  Track 2 submission package: >-
+    https://github.com/nikhilpravinpise/MVA-Hackathon-2026/releases/tag/track2-submission
+  Competition Space: >-
+    https://huggingface.co/spaces/SageBio/rare-disease-real-kid-mva-hackathon-2026
+
+search_enabled: true
+heading_anchors: true
+
+# The repo is the artifact; the site renders the docs/ folder of main.
+# Non-doc support files still serve as static assets (figures/*.svg etc).

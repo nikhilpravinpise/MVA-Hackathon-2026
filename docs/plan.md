@@ -1,3 +1,7 @@
+---
+title: Track 1 execution plan
+nav_order: 4
+---
 # MVA Hackathon 2026 - Execution Plan
 
 > **Status-date snapshot (2026-10-05 banner):** written 2026-09-18 and

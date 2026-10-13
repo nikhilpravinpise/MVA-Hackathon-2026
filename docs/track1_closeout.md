@@ -1,3 +1,7 @@
+---
+title: Track 1 close-out ledger
+nav_order: 6
+---
 # Track 1 close-out ledger - 2026-10-05
 
 One page that answers "is Track 1 actually, provably done?" - every

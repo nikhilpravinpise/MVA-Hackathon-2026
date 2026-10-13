@@ -1,3 +1,7 @@
+---
+title: Answer-blind protocol
+nav_order: 9
+---
 # The Answer-Blind Protocol - a reusable template for N-of-1 genomic challenges
 
 This document packages the methodology used in this repository as a

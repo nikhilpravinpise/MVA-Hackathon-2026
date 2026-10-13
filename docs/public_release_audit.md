@@ -1,3 +1,7 @@
+---
+title: Public-release audit
+nav_order: 15
+---
 # Public-release audit
 
 scrub commit: `20c8b3f`; 32 scrubbed tokens (19 history-only, 13 still present at HEAD, 0 scrubbed-then-readded)

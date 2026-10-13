@@ -1,3 +1,8 @@
+---
+title: Method abstract
+nav_order: 7
+parent: Track 2
+---
 # Track 2 method abstract - a repurposing portfolio for BUB1B mosaic variegated aneuploidy
 
 We built a testable, approved-drug repurposing portfolio for one child's

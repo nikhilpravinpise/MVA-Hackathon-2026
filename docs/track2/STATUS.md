@@ -1,3 +1,8 @@
+---
+title: Status / resume ledger
+nav_order: 1
+parent: Track 2
+---
 # Track 2 - where we are
 
 Paused 2026-10-12 23:21 IST on branch `worktree-track2`

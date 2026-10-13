@@ -1,3 +1,7 @@
+---
+title: Model2 (Exomiser) report
+nav_order: 12
+---
 # Track 1 Methods Report - MVA Hackathon 2026 (model2: Exomiser arm)
 
 **Team:** `nikhilpise` | **Model:** `model2` | **Companion report:**

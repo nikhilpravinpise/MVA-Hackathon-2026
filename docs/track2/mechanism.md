@@ -1,3 +1,8 @@
+---
+title: Variant mechanism
+nav_order: 3
+parent: Track 2
+---
 # Track 2 - Variant mechanism characterization (lane L1)
 
 Quantified per-allele mechanism for the proband's biallelic `BUB1B`

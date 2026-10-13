@@ -1,3 +1,8 @@
+---
+title: Repurposing engine
+nav_order: 4
+parent: Track 2
+---
 # Track 2 repurposing engine (lane L2)
 
 A deterministic, gene-agnostic pipeline that maps a disease mechanism plus

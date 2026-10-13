@@ -1,3 +1,8 @@
+---
+title: Submission fields
+nav_order: 12
+parent: Track 2
+---
 # Track 2 submit form - exact values to paste
 
 Verified against the live form (`hackathon-app/tabs/submit_track2.py`,

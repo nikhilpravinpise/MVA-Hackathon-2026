@@ -1,3 +1,7 @@
+---
+title: Track 1 completion plan
+nav_order: 7
+---
 # Track 1 completion plan (2026-10-12)
 
 Companion to `docs/track1_closeout.md` (evidence ledger and audit table).

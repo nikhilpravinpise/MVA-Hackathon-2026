@@ -1,3 +1,8 @@
+---
+title: Red team 1
+nav_order: 10
+parent: Track 2
+---
 # L9 - Hostile red team on the Track 2 package
 
 Date: 2026-10-13. Reviewer: lane L9, read-only.

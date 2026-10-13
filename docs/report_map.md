@@ -1,3 +1,7 @@
+---
+title: Track 1 report map
+nav_order: 13
+---
 # Report map - methods xlsx question -> report section (GATE-6 checklist)
 
 Source: `hackathon-app/static/templates/methods_description_form.xlsx`

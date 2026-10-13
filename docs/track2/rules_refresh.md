@@ -1,3 +1,8 @@
+---
+title: Rules refresh
+nav_order: 13
+parent: Track 2
+---
 # Track 2 rules refresh - discussions + live Space diff
 
 Compiled 2026-10-12 by lane L4. Sources: `tools/check_discussions.py`

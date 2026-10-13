@@ -1,3 +1,7 @@
+---
+title: Deletion runbook
+nav_order: 16
+---
 # Post-deadline deletion runbook (documented, not executed)
 
 Plan.md Phase 8 + hackathon rules item 10: all patient data must be deleted

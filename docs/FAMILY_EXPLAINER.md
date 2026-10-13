@@ -1,3 +1,7 @@
+---
+title: For families: understanding MVA
+nav_order: 8
+---
 # Understanding MVA and how a genome can point to an answer
 
 *A plain-language explainer for families, offered to the MVA Society

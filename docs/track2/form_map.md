@@ -1,3 +1,8 @@
+---
+title: Methods form map
+nav_order: 15
+parent: Track 2
+---
 # Track 2 methods-form map
 
 Compiled 2026-10-12 by lane L4. Prompt text extracted VERBATIM from the

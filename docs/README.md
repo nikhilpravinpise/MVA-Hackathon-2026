@@ -1,3 +1,7 @@
+---
+title: Documentation map
+nav_order: 2
+---
 # Documentation map
 
 Everything written down about this project, organized by who you are.

@@ -1,3 +1,7 @@
+---
+title: GenAI disclosure log
+nav_order: 11
+---
 # GenAI / LLM use disclosure log
 
 Required by plan.md section 2.3 (compliance doctrine): commercial-tier LLM

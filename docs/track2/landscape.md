@@ -1,3 +1,8 @@
+---
+title: Competitor landscape
+nav_order: 14
+parent: Track 2
+---
 # Track 2 landscape - what competitors are publicly doing
 
 Compiled 2026-10-12 by lane L4. Sources: HF API (`spaces?search=`,
