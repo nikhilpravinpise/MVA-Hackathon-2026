@@ -115,17 +115,17 @@ Five normalized channels `[0,1]`, transparent weighted sum:
 
 | Channel | Definition | Weight |
 |---|---|---|
-| `target_overlap` | |drug MoA targets ∩ M| / |targets| | 0.30 |
-| `network_proximity` | Guney z mapped piecewise: z<=-2 -> 1, z>=0 -> 0, linear between | 0.25 |
-| `signature_reversal` | best matching LINCS reverser `-log10(p)` / 20 | 0.20 |
-| `interaction_evidence` | min(1, #module genes with DGIdb interaction / 2) | 0.15 |
-| `literature` | min(1, DGIdb publication count / 3) | 0.10 |
+| `target_overlap` | |drug MoA targets ∩ M| / |targets| | 0.30 [repo:config/track2.yaml] |
+| `network_proximity` | Guney z mapped piecewise: z<=-2 -> 1, z>=0 -> 0, linear between | 0.25 [repo:config/track2.yaml] |
+| `signature_reversal` | best matching LINCS reverser `-log10(p)` / 20 | 0.20 [repo:config/track2.yaml] |
+| `interaction_evidence` | min(1, #module genes with DGIdb interaction / 2) | 0.15 [repo:config/track2.yaml] |
+| `literature` | min(1, DGIdb publication count / 3) | 0.10 [repo:config/track2.yaml] |
 
 A failed/absent channel contributes 0 with its weight kept in the
 denominator - a drug is never inflated because a source was down.
 Tiers: **T1** score>=0.45 and >=2 non-zero channels; **T2** score>=0.25;
-else **T3**.  Every channel value is emitted under `channels` plus a
-human-readable `rationale_keys` list.
+else **T3** [repo:config/track2.yaml].  Every channel value is emitted
+under `channels` plus a human-readable `rationale_keys` list.
 
 **Axis assignment** (config target->axis map,
 [repo:config/track2.yaml]): A = residual-BubR1 rescue
@@ -146,11 +146,12 @@ exact wrong direction for a spindle-checkpoint-deficient child
 (`evidence/mechanism.json` contraindications; `evidence/rejected.json`).
 
 `src/track2/direction.py` + the versioned `direction:` block in
-`config/track2.yaml` classify every approved candidate:
+`config/track2.yaml` classify every approved candidate
+([repo:src/track2/direction.py], [repo:config/track2.yaml]):
 
 | direction | meaning | rank effect |
 |---|---|---|
-| `opposed` | at least one opposed rule fired | removed from `candidates` into `excluded_mechanism_opposed`, keeping its would-be rank, score and reasons |
+| `opposed` | at least one opposed rule fired | removed from `candidates` into `excluded_mechanism_opposed`, keeping its would-be rank, score and reasons [repo:src/track2/direction.py] |
 | `aligned` | no opposed rule; >=1 aligned rule | stays ranked |
 | `neutral` | no rule fired | stays ranked |
 
@@ -214,11 +215,12 @@ cyclophosphamide, mitomycin, pixantrone, cantharidin, daunorubicin,
 daunorubicin HCl, doxorubicin HCl, etoposide phosphate, idarubicin,
 idarubicin HCl, mitoxantrone, mitoxantrone HCl, podofilox, valrubicin,
 palbociclib, irinotecan, fluorouracil - **19 of 20 mechanism-opposed**
-(only palbociclib survived the filter).
+(only palbociclib survived the filter)
+[repo:docs/track2/evidence/candidates.json].
 
 Post-layer: **37 of 96 approved candidates excluded** (all cytotoxic
 genotoxins + cantharidin + panobinostat); 59 ranked (10 aligned, 49
-neutral).  New top-10: palbociclib, **sirolimus** (aligned,
+neutral) [repo:docs/track2/evidence/candidates.json].  New top-10: palbociclib, **sirolimus** (aligned,
 pediatric-labeled), glycerin, methenamine, octocrylene, omacetaxine,
 pentetic acid, phenylbutanoic acid, abemaciclib, gefitinib.  The
 residual non-oncology noise (excipients/chelators ranking by module
@@ -264,11 +266,65 @@ indication bound - names an affirmative pediatric threshold ("1 year of
 age and older", "pediatric patients >= 31 kg").  Age ranges inside 8.4
 are study populations, not indications ("25 pediatric patients, range
 3-20 years"), and adult age floors ("in adults 75 years or older")
-never count.  `pediatric_text_only` means the 8.4 field exists but
-holds no explicit positive statement; `none` means no label text, or
-every pediatric statement is negated.  The winning sentence is quoted
-verbatim in `pediatric_flag_evidence` `{section, text}`.
-It is a coarse label-derived flag, not a pediatric-safety assessment.
+never count.  The winning sentence is quoted verbatim in
+`pediatric_flag_evidence` `{section, text}`, clipped on a word
+boundary.  It is a coarse label-derived flag, not a pediatric-safety
+assessment.
+
+When no positive sentence is found the lower tiers say *what the
+checked text actually contains* (lane L15, redteam2 r4 - `none` must
+never assert a denial the data does not carry)
+[repo:src/track2/direction.py]:
+
+- `none` - a formal denial exists: some pediatric-population sentence
+  matches "not established"/"not recommended"/"do not use".  The label
+  considered pediatric use and declined it.
+- `pediatric_text_only` - pediatric text exists with no positive and no
+  denial: descriptive use (cyclosporine's transplant labels - "patients
+  as young as 6 months of age have received cyclosporine" - flag
+  `pediatric_text_only`, set_id 5e5926a7
+  [repo:openFDA label 5e5926a7]), risk statements, "ask a
+  doctor" directions, cross-reference stubs.
+- `unknown` - nothing examined bears on pediatric populations at all:
+  no label hit (11 MVA candidates, e.g. omacetaxine mepesuccinate), or
+  a label whose fields are silent on pediatrics (glycerin, flutamide).
+  Pre-L15 these all printed `none`, which asserted a negative the data
+  did not contain.
+
+**Pediatric deep scan** (lane L15): a `limit=1` first hit can be an
+OTC label silent on pediatrics (acetaminophen: openFDA returns 3,300+
+labels and the OTC crowd outranks the pediatric-positive injection
+labels) or a route-specific product shadowing the canonical drug
+(cyclosporine's Vevye *ophthalmic* label denies <18 use while the
+systemic transplant labels document it).  Whenever the picked label is
+not already pediatric-positive the resolver issues one extra
+`(generic OR substance) AND _exists_:pediatric_use limit=25` query and
+prefers the covering single-ingredient label with the most
+pediatric-informative text (positive > descriptive > negated >
+silent), unqualified generic names before route-qualified ones
+[repo:src/track2/sources.py].  The re-picked label is disclosed by
+`approval.openfda_match` = "..._exists_:pediatric_use scan;
+pediatric-bearing single-ingredient label preferred".  On the recorded
+corpus this recovers acetaminophen's `labeled_pediatric_indication`
+(injection label 0f67c1bd, ">=2 years") and cyclosporine's transplant
+text; drugs whose deeper labels are all negated keep their first label
+only when a deeper label would not improve the flag.
+
+**Active matching is token-exact** (lane L15, redteam2 n4): a label's
+active token set minus salt/form words must equal the queried base's.
+The old bidirectional substring test accepted "SIROLIMUS" inside
+"TEMSIROLIMUS" and would have attached "INSULIN" labels to "insulin
+glargine" - wrong molecules.
+
+Residual limits: the scan is bound to the first 25
+pediatric_use-bearing hits per drug (a label whose positive statement
+lives only in INDICATIONS/DOSAGE while its 8.4 field is absent cannot
+surface this way, and a negated first-hit can still shadow a positive
+label beyond rank 25); openFDA hit ordering is not clinically ranked;
+and `pediatric_flag`/`pediatric_flag_evidence`/`pediatric_labeling`
+always describe the *picked* label - check `approval.openfda_match`
+and `approval.combination_label` to see which one that was
+[repo:src/track2/sources.py].
 
 ## PRISM aneuploidy overlay (added 2026-10-12, lane L2b)
 
@@ -288,7 +344,8 @@ FDR-significant launched drug, so it must not drive ranking.  It stays
 visible because a checked-and-null channel is evidence: e.g. sirolimus
 beta +0.002 (q 0.45, n=422 lines) - aneuploidy did NOT predict
 sensitivity to our top aligned hit; dasatinib beta -0.0018 (q 0.63,
-n=458) trends selective but non-significant.  Caveats: cell-line
+n=458) trends selective but non-significant
+[repo:docs/track2/evidence/prism.json].  Caveats: cell-line
 aneuploidy is cancer-genome aneuploidy, not constitutional mosaic
 aneuploidy; AUC associations at n~450 lines are noisy for weak effects.
 
@@ -323,7 +380,8 @@ SERPINE1 IL6 GLB1`), weakened mitotic/checkpoint module DOWN (`BUB1B BUB1
 CDC20 MAD2L1 TTK AURKB KNL1`).  Resolved to SigCom entities, queried via
 `/enrich/ranktwosided` on `l1000_cp`; reversers' perturbagens matched to
 candidates by INN (alias map for rapamycin->sirolimus etc.).  If the API
-is unreachable the channel degrades to 0 and `lincs.status` records it.
+is unreachable the channel degrades to 0 and `lincs.status` records it
+([repo:config/track2.yaml], [repo:src/track2/sources.py]).
 
 ## Benchmark methodology (retrospective, decision-frozen)
 
@@ -384,20 +442,29 @@ track2-trim:       ; $(PY) tools/run_track2.py --trim-cache tests/fixtures/track
   databases are densest for cancer; module neighbours in a checkpoint/
   cell-cycle disease pull cytotoxics and kinase inhibitors to the top.
   The direction layer removes the *wrong-direction* share (genotoxic/
-  aneugenic agents) but cannot judge remaining noise: palbociclib,
+  aneugenic agents [repo:src/track2/direction.py]) but cannot judge
+  remaining noise: palbociclib,
   glycerin, methenamine, pentetic acid etc. are neutral (not opposed)
   and stay evidence-dense at the top.  Non-genotoxic oncology agents
   (CDK4/6, EGFR, BRAF inhibitors) remain by design - the list is a
   curation surface for L3, not a recommendation.
 - **Approved != safe in children.**  The gate checks licensure only.
   `pediatric_flag` is a coarse label-derived hint (labeled indication /
-  text-only / none), not a pediatric-safety assessment; dosing,
-  contraindications and age floors are L3 dossier work.  The flag is
-  only as good as the label openFDA happens to serve: v1 missed the
-  pediatric indication entirely for dasatinib (name variant never
-  resolved) and read a combination-product label for metformin - both
-  fixed 2026-10-13 (see Pediatric flag), and the single-ingredient pick
-  still depends on openFDA's hit ordering within the top-5 refinement.
+  text-only / none / unknown), not a pediatric-safety assessment;
+  dosing, contraindications and age floors are L3 dossier work.  The
+  flag is only as good as the label openFDA happens to serve: v1 missed
+  the pediatric indication entirely for dasatinib (name variant never
+  resolved), read a combination-product label for metformin, and a
+  `limit=1` first hit still landed on pediatric-silent OTC labels
+  (acetaminophen) or route-specific products shadowing the canonical
+  drug (cyclosporine) - all fixed 2026-10-13 (see Pediatric flag): one
+  `_exists_:pediatric_use` deep scan now recovers the best
+  pediatric-bearing single-ingredient label within 25 hits, and
+  silent labels read `unknown` rather than `none`.  Residual: a
+  pediatric statement outside `pediatric_use` on a label without an
+  8.4 field, or a positive label beyond hit 25, still escapes; the
+  flag remains a label-presence check, not the drug's pediatric
+  status.
 - **Axis labels are a config hypothesis map, not evidence of benefit.**
   A candidate's axis comes solely from `config/track2.yaml`'s
   target->axis table.  Gefitinib sits on axis C because EGFR is a
@@ -408,7 +475,8 @@ track2-trim:       ; $(PY) tools/run_track2.py --trim-cache tests/fixtures/track
   13 of 482 collected names in the MVA run resolved to a ChEMBL id a
   different candidate already held; they union-merge into it and are
   counted explicitly in `funnel.merged` so
-  `collected - dropped_over_cap = gate outcomes + merged` closes.
+  `collected - dropped_over_cap = gate outcomes + merged` closes
+  [repo:docs/track2/evidence/candidates.json].
 - **The approved count double-counts salt/ester forms.**  The 96
   approved records of the MVA run are 89 distinct actives: 7 records are
   salt/ester/prodrug forms of an active already counted (metformin
@@ -416,7 +484,8 @@ track2-trim:       ; $(PY) tools/run_track2.py --trim-cache tests/fixtures/track
   hydrochloride, etoposide phosphate, idarubicin hydrochloride,
   mitoxantrone hydrochloride, dexrazoxane hydrochloride).  They are
   distinct ChEMBL molecules, so the gate correctly treats each as
-  separately approved; portfolio reading should group them.
+  separately approved [repo:src/track2/engine.py]; portfolio reading
+  should group them.
 - **Direction rules are mechanism-generic, not verdicts.**  An `opposed`
   label means "this mechanism class pushes the documented disease
   mechanism the wrong way given the cited evidence" - it is not a claim

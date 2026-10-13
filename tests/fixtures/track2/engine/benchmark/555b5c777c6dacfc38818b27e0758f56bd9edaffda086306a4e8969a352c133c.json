@@ -1,0 +1,1 @@
+{"request": {"method": "GET", "url": "https://api.fda.gov/drug/label.json?search=%28openfda.generic_name%3A%22CORTISONE%22%20OR%20openfda.substance_name%3A%22CORTISONE%22%29%20AND%20_exists_%3Apediatric_use&limit=25", "body": null}, "status": 404, "fetched_at": "2026-10-12T23:39:38+00:00", "body": "{\"error\": {\"code\": \"NOT_FOUND\", \"message\": \"No matches found!\"}}"}

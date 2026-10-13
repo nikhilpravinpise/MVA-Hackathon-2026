@@ -321,6 +321,145 @@ def test_openfda_label_no_hit():
     assert label == {} and meta["status"] == "no_hit"
 
 
+# ------------------------------------------------------- L15 (redteam2) ----
+_SIROLIMUS = {"set_id": "sir", "openfda": {
+    "generic_name": ["SIROLIMUS"], "substance_name": ["SIROLIMUS"]}}
+_TEMSIROLIMUS = {"set_id": "tem", "openfda": {
+    "generic_name": ["TEMSIROLIMUS"], "substance_name": ["TEMSIROLIMUS"]}}
+
+
+def test_openfda_pick_single_token_exact():
+    """redteam2 n4: matching is token-set equality, not substring -
+    'sirolimus' must not accept a 'temsirolimus' label."""
+    assert sources.openfda_pick_single(
+        [_TEMSIROLIMUS, _SIROLIMUS], "sirolimus") is _SIROLIMUS
+    assert sources.openfda_pick_single([_TEMSIROLIMUS],
+                                       "sirolimus") is None
+    # ...and the reverse direction too
+    assert sources.openfda_pick_single([_SIROLIMUS],
+                                       "temsirolimus") is None
+    # salt/form words are not a second ingredient: the real committed
+    # labels for metformin and methenamine still match
+    assert sources.openfda_pick_single([_METFORMIN], "metformin") is _METFORMIN
+    assert sources.openfda_pick_single(
+        [{"openfda": {"substance_name": ["METHENAMINE HIPPURATE"]}}],
+        "methenamine") is not None
+    # a two-token base still requires BOTH tokens
+    assert sources.openfda_pick_single(
+        [{"openfda": {"substance_name": ["INSULIN GLARGINE"]}}],
+        "insulin") is None
+
+
+def _ped_hit(set_id, generic, substances, ped=None, ind=None, dos=None):
+    lab = {"set_id": set_id, "openfda": {
+        "generic_name": [generic], "substance_name": substances}}
+    if ped is not None:
+        lab["pediatric_use"] = [ped]
+    if ind is not None:
+        lab["indications_and_usage"] = [ind]
+    if dos is not None:
+        lab["dosage_and_administration"] = [dos]
+    return lab
+
+
+def test_openfda_label_deep_scan_recovers_pediatric_label():
+    """redteam2 r4 (acetaminophen): the limit=1 OTC label is silent on
+    pediatrics; the _exists_:pediatric_use scan surfaces the Rx
+    injection label behind the OTC/combo crowd and it wins."""
+    otc = _ped_hit("otc", "ACETAMINOPHEN", ["ACETAMINOPHEN"],
+                   ind="Uses temporarily relieves minor aches and pains")
+    combo = _ped_hit("cb", "OXYCODONE AND ACETAMINOPHEN",
+                     ["OXYCODONE", "ACETAMINOPHEN"],
+                     ped="Pediatric Use Safety and effectiveness in "
+                         "pediatric patients have not been established.")
+    inj = _ped_hit("inj", "ACETAMINOPHEN", ["ACETAMINOPHEN"],
+                   ped="8.4 Pediatric Use The safety and effectiveness "
+                       "of acetaminophen injection in pediatric "
+                       "patients 2 years and older is supported by "
+                       "evidence from adequate and well-controlled "
+                       "studies")
+    http = _Scripted([
+        ("_exists_", (200, {"results": [combo, inj]})),
+        ("%22ACETAMINOPHEN%22", (200, {"results": [otc]})),
+    ])
+    label, meta = sources.openfda_label(http, "ep", "acetaminophen",
+                                        scorer=engine._ped_scorer)
+    assert label is inj
+    assert meta["combo"] is False
+    assert "_exists_:pediatric_use" in meta["note"]
+    # exactly two requests: the primary limit=1 + the deep scan
+    assert len(http.urls) == 2
+
+
+def test_openfda_label_deep_scan_prefers_unqualified_generic():
+    """redteam2 r4 (cyclosporine): a route-qualified first hit
+    (ophthalmic, negated) yields to the bare-generic transplant label
+    carrying descriptive pediatric text."""
+    vevye = _ped_hit("vev", "CYCLOSPORINE OPHTHALMIC SOLUTION",
+                     ["CYCLOSPORINE"],
+                     ped="8.4 Pediatric Use Safety and effectiveness "
+                         "in pediatric patients below the age of 18 "
+                         "years have not been established.")
+    tx = _ped_hit("tx", "CYCLOSPORINE", ["CYCLOSPORINE"],
+                  ped="Pediatric Use Although no adequate and "
+                      "well-controlled studies have been conducted "
+                      "in children, patients as young as 6 months of "
+                      "age have received cyclosporine with no unusual "
+                      "adverse effects.")
+    http = _Scripted([
+        ("_exists_", (200, {"results": [vevye, tx]})),
+        ("%22CYCLOSPORINE%22", (200, {"results": [vevye]})),
+    ])
+    label, meta = sources.openfda_label(
+        http, "ep", "cyclosporine", scorer=engine._ped_scorer)
+    assert label is tx
+    assert meta["combo"] is False
+
+
+def test_openfda_label_no_deep_scan_when_positive():
+    """A pediatric-positive first pick needs no second look."""
+    lab = _ped_hit("ok", "X", ["X"],
+                   ped="Safety and effectiveness in pediatric "
+                       "patients 2 years and older have been "
+                       "established")
+    http = _Scripted([("%22X%22", (200, {"results": [lab]}))])
+    label, meta = sources.openfda_label(http, "ep", "x",
+                                        scorer=engine._ped_scorer)
+    assert label is lab
+    assert not any("_exists_" in u for u in http.urls)
+
+
+def test_openfda_label_deep_scan_keeps_first_when_no_better():
+    """Deep results without a better covering label keep the primary
+    pick (combos never donate pediatric status)."""
+    hit = _ped_hit("h", "Y", ["Y"],
+                   ped="8.4 Pediatric Use Safety and effectiveness "
+                       "in pediatric patients have not been "
+                       "established.")
+    other = _ped_hit("o", "Y AND Z", ["Y", "Z"],
+                     ped="Safety and effectiveness in pediatric "
+                         "patients have been established")
+    http = _Scripted([
+        ("_exists_", (200, {"results": [other, hit]})),
+        ("%22Y%22", (200, {"results": [hit]})),
+    ])
+    label, meta = sources.openfda_label(http, "ep", "y",
+                                        scorer=engine._ped_scorer)
+    assert label is hit
+    assert "generic_name" in meta["note"]
+    assert "_exists_" not in meta["note"]
+
+
+def test_openfda_label_no_scorer_no_deep_scan():
+    """Backwards-compatible: without a scorer the resolver behaves as
+    before - no pediatric deep-scan request is issued."""
+    hit = _ped_hit("h", "Z", ["Z"])
+    http = _Scripted([("%22Z%22", (200, {"results": [hit]}))])
+    label, meta = sources.openfda_label(http, "ep", "z")
+    assert label is hit
+    assert not any("_exists_" in u for u in http.urls)
+
+
 def test_resolve_chembl_merged_counter(monkeypatch):
     """A name resolving to a ChEMBL id already held by another candidate
     is union-merged into it and counted in stats['merged'] - the funnel

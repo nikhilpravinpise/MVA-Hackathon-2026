@@ -197,6 +197,30 @@ _FORM_WORDS = re.compile(
     r"besylate|besilate|tosylate|monohydrate|dihydrate|trihydrate|"
     r"hemihydrate|hydrate|hcl)\b.*$", re.I)
 
+# Salt/ester/hydrate tokens ignored when comparing a label's active
+# ingredient name against the queried base: they describe the form of
+# the same molecule, not a different one.  Superset of _FORM_WORDS that
+# also covers salt tokens the name-stripper never needs (hippurate is
+# the methenamine label's real counter-ion; the others are the usual
+# pharmacopeial salts).
+_FORM_TOKENS = frozenset(
+    "anhydrous hydrochloride hydrobromide sulfate sulfide sodium "
+    "potassium calcium magnesium zinc mesylate maleate tartrate "
+    "bitartrate fumarate succinate mepesuccinate phosphate diphosphate "
+    "citrate acetate lactate nitrate palmitate pamoate propionate "
+    "cypionate enanthate decanoate undecanoate valerate benzoate "
+    "dimesylate esylate besylate besilate tosylate monohydrate "
+    "dihydrate trihydrate hemihydrate hydrate hcl hippurate bromide "
+    "chloride iodide carbonate bicarbonate malate maleic oxalate "
+    "stearate oleate laurate tannate estolate camsylate xinafoate "
+    "edetate tromethamine trometamol pivalate butyrate hexanoate "
+    "octanoate dipropionate glycolate".split())
+
+
+def _tokens(s):
+    """Lowercased alphanumeric token set of a name string."""
+    return set(re.findall(r"[a-z0-9]+", (s or "").lower()))
+
 
 def openfda_name_variants(name):
     """Search-order name variants: the raw name, then the same name with
@@ -231,22 +255,86 @@ def openfda_is_combo(label):
     return any((" AND " in a) or a.count(",") >= 2 for a in actives)
 
 
+def _actives_cover(label, base):
+    """Token-exact coverage of ``base`` by a label's active ingredients.
+
+    Each side is tokenised and salt/form tokens (_FORM_TOKENS) are
+    dropped, then the token SETS must be equal.  A bidirectional
+    substring test previously used here accepts "SIROLIMUS" inside
+    "TEMSIROLIMUS" and "INSULIN" inside "INSULIN LISPRO" - wrong
+    molecules (redteam2 n4).  "METFORMIN HYDROCHLORIDE" still matches
+    base "metformin": hydrochloride is a form word, not a second drug.
+    """
+    bt = _tokens(base) - _FORM_TOKENS
+    if not bt:
+        return False
+    for a in _label_actives(label):
+        if _tokens(a) - _FORM_TOKENS == bt:
+            return True
+    return False
+
+
 def openfda_pick_single(results, base):
     """First single-ingredient label in ``results`` whose actives cover
-    ``base`` (the form-stripped drug name, compared uppercase)."""
-    base = (base or "").upper()
+    ``base`` (the form-stripped drug name) by token equality."""
     for r in results or []:
         if openfda_is_combo(r):
             continue
-        if any(base in a or a in base for a in _label_actives(r)):
+        if _actives_cover(r, base):
             return r
     return None
 
 
-def _openfda_search(http, base, safe, limit=1, field=None):
-    """One label search; returns the results list ([] on miss)."""
+def _generic_unqualified(label):
+    """True when the label's generic_name names only the active(s) -
+    no route/dosage-form qualifiers such as 'OPHTHALMIC SOLUTION' or
+    'NASAL SPRAY'.  An unqualified generic is the canonical product
+    label for the drug entity; qualified ones describe one formulation.
+    """
+    of = (label or {}).get("openfda") or {}
+    allowed = set()
+    for a in _label_actives(label):
+        allowed |= _tokens(a)
+    allowed |= _FORM_TOKENS
+    gens = of.get("generic_name") or []
+    return any(_tokens(g) and _tokens(g) <= allowed for g in gens)
+
+
+def _pick_pediatric(results, base, scorer):
+    """Best pediatric-bearing covering single-ingredient label.
+
+    ``scorer`` maps a label dict to a pediatric-informativeness rank
+    (see engine._ped_scorer).  Order of preference: highest scorer
+    (a label asserting a pediatric indication answers the flag's
+    question directly; descriptive text outranks negated text, which
+    outranks silence) -> unqualified generic_name (canonical product
+    over a route-specific one) -> earliest hit.
+    """
+    best, best_key = None, None
+    for i, r in enumerate(results or []):
+        if openfda_is_combo(r) or not _actives_cover(r, base):
+            continue
+        key = (scorer(r), _generic_unqualified(r), -i)
+        if best_key is None or key > best_key:
+            best, best_key = r, key
+    return best
+
+
+def _openfda_search(http, base, safe, limit=1, field=None, exists=None):
+    """One label search; returns the results list ([] on miss).
+
+    ``exists`` adds an ``AND _exists_:<field>`` clause: openFDA then
+    returns only labels carrying that section, which re-ranks
+    section-bearing labels ahead of silent ones (used by the pediatric
+    deep scan - a plain limit=1 query buries Rx labels under OTC ones
+    for high-coverage drugs like acetaminophen).
+    """
     if field:
         q = urllib.parse.quote(f'openfda.{field}:"{safe}"')
+    elif exists:
+        q = urllib.parse.quote(
+            f'(openfda.generic_name:"{safe}" OR '
+            f'openfda.substance_name:"{safe}") AND _exists_:{exists}')
     else:
         q = urllib.parse.quote(
             f'openfda.generic_name:"{safe}" OR '
@@ -263,12 +351,20 @@ def _match_note(variant_index, variant, how):
     return note
 
 
-def openfda_label(http, base, name):
+def openfda_label(http, base, name, scorer=None):
     """Best label hit for a drug name.  Returns (label, meta).
 
     Order per name variant: generic/substance (limit 1, unchanged request)
     -> if that hit is a combination product, a limit-5 refinement
     preferring the first single-ingredient label still covering the drug
+    -> pediatric deep scan (only when ``scorer`` is given AND the picked
+    label is not already pediatric-positive): one
+    ``_exists_:pediatric_use`` limit-25 query over the fully-stripped
+    name, preferring the covering single-ingredient label with the most
+    pediatric-informative text - a limit=1 first hit can be an OTC label
+    silent on pediatrics (acetaminophen) or a route-specific product
+    shadowing the canonical one (cyclosporine's Vevye); deeper
+    pediatric-bearing labels then win (redteam2 r4)
     -> brand_name (limit 1) -> next name variant (form words stripped).
     ``meta.note`` records which variant/label won; ``meta.combo`` is True
     when the label used is a combination product.
@@ -277,6 +373,7 @@ def openfda_label(http, base, name):
     for vi, variant in enumerate(variants):
         safe = variant.replace('"', "").upper()
         res = _openfda_search(http, base, safe)
+        hit, m = None, None
         if res:
             hit = res[0]
             if openfda_is_combo(hit):
@@ -284,26 +381,44 @@ def openfda_label(http, base, name):
                     _openfda_search(http, base, safe, limit=5),
                     variants[-1])
                 if pick is not None:
+                    hit = pick
                     m = _meta("openfda", "ok", _match_note(
                         vi, variant, "generic_name; single-ingredient "
                         "label preferred over combination hit"))
                     m["combo"] = False
-                    return pick, m
+                else:
+                    m = _meta("openfda", "ok", _match_note(
+                        vi, variant, "generic_name; combination label "
+                        "kept - no single-ingredient label in top hits"))
+                    m["combo"] = True
+            else:
+                m = _meta("openfda", "ok",
+                          _match_note(vi, variant, "generic_name"))
+                m["combo"] = False
+        else:
+            res = _openfda_search(http, base, safe, field="brand_name")
+            if res:
+                hit = res[0]
+                m = _meta("openfda", "ok",
+                          _match_note(vi, variant, "brand_name"))
+                m["combo"] = openfda_is_combo(hit)
+        if hit is None:
+            continue
+        if scorer is not None and scorer(hit) < 3:
+            deep_safe = variants[-1].replace('"', "").upper()
+            deep = _openfda_search(http, base, deep_safe, limit=25,
+                                   exists="pediatric_use")
+            best = _pick_pediatric(deep, variants[-1], scorer)
+            if best is not None and \
+                    (scorer(best), _generic_unqualified(best)) \
+                    > (scorer(hit), _generic_unqualified(hit)):
                 m = _meta("openfda", "ok", _match_note(
-                    vi, variant, "generic_name; combination label kept - "
-                    "no single-ingredient label in top hits"))
-                m["combo"] = True
-                return hit, m
-            m = _meta("openfda", "ok",
-                      _match_note(vi, variant, "generic_name"))
-            m["combo"] = False
-            return hit, m
-        res = _openfda_search(http, base, safe, field="brand_name")
-        if res:
-            m = _meta("openfda", "ok",
-                      _match_note(vi, variant, "brand_name"))
-            m["combo"] = openfda_is_combo(res[0])
-            return res[0], m
+                    vi, variant, "_exists_:pediatric_use scan; "
+                    "pediatric-bearing single-ingredient label "
+                    "preferred"))
+                m["combo"] = False
+                return best, m
+        return hit, m
     return {}, _meta("openfda", "no_hit")
 
 

@@ -292,6 +292,53 @@ def test_coverage_detector(tmp_path):
     assert len(uncovered) == 3
 
 
+def test_coverage_percent_and_unitless_numerics():
+    """redteam2 r2: every sentence the reviewer demonstrated escaping
+    the old detector is now a trigger.  "%" needed the non-word-char
+    boundary fix; folds/ratios/statistics were unitless."""
+    for s in ("Response rate was 35%.",
+              "sign concordance 80% across drugs",
+              "upto 96% of patients",
+              "| metric | 29.9% |",
+              "Spearman rho was 0.72 across the matched drugs.",
+              "Recall at rank 10 was 0.56.",
+              "a 3-fold drop",
+              "12 of 96",
+              "3 of 4 patients responded"):
+        assert vc._trigger_sentences(s), s
+
+
+def test_coverage_expanded_mechanism_verbs():
+    """redteam2 r2: the 14-verb list missed ordinary mechanism prose;
+    every reviewer-demonstrated verb now triggers."""
+    for s in ("Sirolimus suppresses SASP secretion in senescent cells.",
+              "Dasatinib clears senescent cells.",
+              "NMN stabilises BubR1 levels in vitro.",
+              "The drug destabilises the mitotic checkpoint.",
+              "Drug X degrades BUB1B protein.",
+              "Compound Y elevates aneuploidy.",
+              "Compound Y lowers spindle assembly errors.",
+              "Drug Z prevents checkpoint escape.",
+              "Drug Z worsens aneuploid segregation.",
+              "Drug Z rescues the missegregation phenotype.",
+              "Drug Z restores checkpoint control.",
+              "Drug Z blocks mTOR signalling.",
+              "Drug Z blunts SASP secretion."):
+        assert vc._trigger_sentences(s), s
+
+
+def test_coverage_numerics_still_not_overbroad():
+    """Versions, plain integers and non-0.x decimals must not trigger:
+    the new patterns catch stat forms without over-firing."""
+    for s in ("Released in version 12.5 of the pipeline.",
+              "STRING 12.5 provides the network.",
+              "the run finished on 2026-10-13",
+              "seed 20261012 was used",
+              "PMID:23602569",
+              "the batch ran in 50 runs"):
+        assert not vc._trigger_sentences(s), s
+
+
 def test_coverage_operational_fragment(tmp_path):
     """OPERATIONAL_FRAGMENT rule (L11): a fragment without terminal
     punctuation - a markdown table row ends in "|", not "." - is exempt
@@ -307,6 +354,25 @@ def test_coverage_operational_fragment(tmp_path):
     sents = [u["sentence"] for u in uncovered]
     assert not any("1.2 GB" in s for s in sents)
     assert any("1,498 compounds" in s for s in sents)
+
+
+def test_coverage_table_header_and_data_cells(tmp_path):
+    """A verb-bearing column header ('More damaging than ...') is a
+    label, not a claim - its data rows are checked.  A data row with a
+    percent/verb claim but no ref still fires."""
+    md = _write(tmp_path, "report.md",
+                "| Model | LLR | More damaging than ... of panel |\n"
+                "|---|---|---|\n"
+                "| m1 (x) | -5.81 | 88% |\n"
+                "| m2 | -1.2 | kills cells |\n")
+    uncovered = vc.coverage_scan(md, "report.md")
+    sents = [u["sentence"] for u in uncovered]
+    # the header row never produces a claim
+    assert not any("Model" in s for s in sents)
+    # both data rows carry claims: "88%" percent and "kills" verb
+    assert any("88%" in s for s in sents)
+    assert any("kills cells" in s for s in sents)
+    assert len(uncovered) == 2
 
 
 def test_coverage_strict_flag(tmp_path):

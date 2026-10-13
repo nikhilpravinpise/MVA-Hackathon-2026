@@ -168,7 +168,7 @@ _NEGATED_ANY = re.compile(
     r"not (been )?established|assessed,? but not established|"
     r"has not been (established|studied|demonstrated)|"
     r"have not been (performed|studied)|"
-    r"not recommended in (pediatric|children)|"
+    r"not recommended|"
     r"should not be (used|prescribed|administered)|"
     r"do not (administer|give|use)|"
     r"cannot be directly administered|"
@@ -197,6 +197,18 @@ _PED_WEIGHT = re.compile(
     r"|\b(?:>=|≥)\s*\d+\s*kg\b"
     r"|\b\d+\s*kg\s+or\s+(?:more|greater|heavier)\b"
     r"|\bpatients?\s+(?:>=|≥|at least|over)\s*\d+\s*kg\b", re.I)
+
+
+def _clip_words(text, limit=240):
+    """Clip on a word boundary + ' ...' (same convention as
+    tools/make_track2_report.clip): a quoted evidence sentence must
+    never end mid-word - 'of which'/'glomerular' fragments read as
+    bugs to a clinician inspecting the record."""
+    t = re.sub(r"\s+", " ", (text or "").strip())
+    if len(t) <= limit:
+        return t
+    cut = t[:limit].rsplit(" ", 1)[0].rstrip(" ,;:-(")
+    return cut + " ..."
 
 
 def _pediatric_positive(sent, section):
@@ -230,10 +242,25 @@ def classify_pediatric(pediatric_text, indications_text="",
     positive sentence, or None.
 
     A positive sentence in any of the three sections wins.  When none is
-    found the lower tiers keep their pediatric_use-only semantics: "none"
-    when the pediatric-use field is empty or every pediatric statement in
-    it is negated; "pediatric_text_only" when it exists but holds no
-    explicit positive statement.
+    found the lower tiers distinguish *what the checked text actually
+    contains* (L15, redteam2 r4 - "none" must never assert a negative
+    the data does not carry):
+
+      "none"                - a formal denial exists in the checked
+                              text: some pediatric-population sentence
+                              matches a denial pattern ("not
+                              established", "not recommended", "do not
+                              use"): the label considered pediatric use
+                              and declined it.
+      "pediatric_text_only" - pediatric text exists with no positive
+                              and no formal denial: descriptive use
+                              ("transplant recipients as young as one
+                              year have received the drug"), risk
+                              statements, "ask a doctor" directions,
+                              cross-reference stubs.
+      "unknown"             - nothing in the checked text bears on
+                              pediatric populations at all: no label
+                              hit, or a label silent on pediatrics.
     """
     fields = (("pediatric_use", pediatric_text),
               ("indications_and_usage", indications_text),
@@ -242,21 +269,33 @@ def classify_pediatric(pediatric_text, indications_text="",
         for sent in re.split(r"(?<=[.!?])\s+", (text or "").strip()):
             if sent and _pediatric_positive(sent, fname):
                 return "labeled_pediatric_indication", \
-                    {"section": fname, "text": sent.strip()[:240]}
-    t = (pediatric_text or "").strip()
-    if not t or _NEGATED_ANY.search(t):
+                    {"section": fname, "text": _clip_words(sent, 240)}
+    mentions = []
+    for fname, text in fields:
+        for sent in re.split(r"(?<=[.!?])\s+", (text or "").strip()):
+            # strict pediatric-population terms only: loose _POP would
+            # count geriatric text ("patients 65 years and older") as a
+            # pediatric mention and inflate text_only
+            if sent and _PED_POP.search(sent):
+                mentions.append(sent)
+    if not mentions:
+        return "unknown", None
+    if any(_NEGATED_ANY.search(s) for s in mentions):
         return "none", None
     return "pediatric_text_only", None
 
 
 def pediatric_flag(pediatric_text, indications_text="", dosage_text=""):
-    """-> "labeled_pediatric_indication" | "pediatric_text_only" | "none".
+    """-> "labeled_pediatric_indication" | "pediatric_text_only" |
+    "none" | "unknown".
 
-    "none" covers: no label hit, empty pediatric text, and text whose
-    only pediatric statements say safety/effectiveness was NOT established
-    (or use not recommended).  "pediatric_text_only" = pediatric text
-    exists but neither clearly establishes nor clearly denies pediatric
-    use (e.g. risk-only or "see indications" stubs).  See
+    "none" = a formal denial exists in the checked text ("not
+    established", "not recommended", "do not use") - the label
+    considered pediatric use and declined it.  "pediatric_text_only" =
+    pediatric-population text exists with no positive and no denial
+    (descriptive use, risk statements, cross-reference stubs).
+    "unknown" = no label hit, or the checked text is silent on
+    pediatric populations - no evidence either way.  See
     classify_pediatric for the multi-section positive scan.
     """
     flag, _ = classify_pediatric(pediatric_text, indications_text,

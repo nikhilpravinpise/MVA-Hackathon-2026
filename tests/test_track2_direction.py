@@ -243,13 +243,13 @@ def test_pediatric_flag_mixed_label():
 
 def test_pediatric_flag_text_only_and_empty():
     assert direction_mod.pediatric_flag(
-        "See INDICATIONS AND USAGE.") == "pediatric_text_only"
+        "See INDICATIONS AND USAGE.") == "unknown"
     assert direction_mod.pediatric_flag(
         "pediatric patients treated with doxorubicin are at risk for "
         "developing late cardiovascular dysfunction") == \
         "pediatric_text_only"
-    assert direction_mod.pediatric_flag("") == "none"
-    assert direction_mod.pediatric_flag(None) == "none"
+    assert direction_mod.pediatric_flag("") == "unknown"
+    assert direction_mod.pediatric_flag(None) == "unknown"
 
 
 # ---------------------------------------------------------------------------
@@ -391,13 +391,14 @@ def test_pediatric_negative_thresholds_not_positive():
 
 
 def test_pediatric_adult_age_floor_not_positive():
-    """An ADULT age floor in INDICATIONS must not count as pediatric."""
+    """An ADULT age floor in INDICATIONS must not count as pediatric;
+    adult-only text carries no pediatric evidence either way (L15)."""
     ind = ("1.2 Acute Myeloid Leukemia VENCLEXTA is indicated in "
            "combination with azacitidine for the treatment of newly "
            "diagnosed acute myeloid leukemia (AML) in adults 75 years "
            "or older, or who have comorbidities.")
     flag, _ = direction_mod.classify_pediatric("", ind, "")
-    assert flag == "none"
+    assert flag == "unknown"
 
 
 def test_pediatric_positive_wins_over_negated_elsewhere():
@@ -406,6 +407,109 @@ def test_pediatric_positive_wins_over_negated_elsewhere():
     flag, _ = direction_mod.classify_pediatric(
         _ZITUVIMET_PED, _DASATINIB_IND, "")
     assert flag == "labeled_pediatric_indication"
+
+
+# ---------------------------------------------------------------------------
+# L15 - redteam2 r4/n3: 'unknown' tier, denial-priority, word-boundary clip.
+# Label strings below are the real recorded openFDA texts (set_ids noted).
+# ---------------------------------------------------------------------------
+
+# cyclosporine transplant label set_id 5e5926a7-1de0-4b54-a5c0-286b6200ff82
+# (bare generic CYCLOSPORINE; the label the _exists_ deep scan picks):
+# pediatric use documented descriptively - no indication, no denial.
+_CYCLOSPORINE_TX_PED = (
+    "Pediatric Use Although no adequate and well-controlled studies "
+    "have been conducted in children, patients as young as 6 months of "
+    "age have received cyclosporine with no unusual adverse effects.")
+
+# cyclosporine Vevye ophthalmic label set_id
+# 0a60fccf-7e1b-44fe-e063-6394a90aadd5 - the limit=1 first hit: a formal
+# denial for the ophthalmic product.
+_CYCLOSPORINE_VEVYE_PED = (
+    "8.4 Pediatric Use Safety and effectiveness in pediatric patients "
+    "below the age of 18 years have not been established.")
+
+# acetaminophen injection label set_id 0f67c1bd-915b-4681-88dd-22f5154a80b3
+# (bare generic ACETAMINOPHEN; reachable only via the _exists_ deep
+# scan - the limit=1 OTC label is silent on pediatrics).
+_ACETAMINOPHEN_INJ_PED = (
+    "8.4 Pediatric Use Treatment of Acute Pain The safety and "
+    "effectiveness of acetaminophen injection for the treatment of "
+    "acute pain in pediatric patients ages 2 years and older is "
+    "supported by evidence from adequate and well-controlled studies "
+    "of acetaminophen injection in adults and safety and "
+    "pharmacokinetic data from adult and 483 pediatric patients "
+    "across all age groups")
+
+# acetaminophen OTC label set_id 0005aafa-08f8-4990-a54d-cc097195708f:
+# uses-only indications, no pediatric text anywhere in the record.
+_ACETAMINOPHEN_OTC_IND = (
+    "Uses temporarily relieves minor aches and pains due to: headache "
+    "the common cold backache minor pain of arthritis toothache "
+    "muscular aches premenstrual and menstrual cramps temporarily "
+    "reduces fever")
+
+
+def test_pediatric_cyclosporine_transplant_descriptive():
+    """redteam2 r4: the transplant label documents pediatric use without
+    establishing it - text_only, not 'none' (the Vevye denial) and not
+    'labeled' (no established indication)."""
+    flag, ev = direction_mod.classify_pediatric(
+        _CYCLOSPORINE_TX_PED, "", "")
+    assert flag == "pediatric_text_only"
+    assert ev is None
+
+
+def test_pediatric_cyclosporine_vevye_negated():
+    flag, _ = direction_mod.classify_pediatric(
+        _CYCLOSPORINE_VEVYE_PED, "", "")
+    assert flag == "none"
+
+
+def test_pediatric_acetaminophen_injection_positive():
+    flag, ev = direction_mod.classify_pediatric(
+        _ACETAMINOPHEN_INJ_PED, "", "")
+    assert flag == "labeled_pediatric_indication"
+    assert "2 years and older" in ev["text"]
+
+
+def test_pediatric_acetaminophen_otc_silent_unknown():
+    """redteam2 r4: an OTC label silent on pediatrics is 'unknown' - no
+    evidence either way - not 'none' (which asserts a denial)."""
+    flag, _ = direction_mod.classify_pediatric(
+        "", _ACETAMINOPHEN_OTC_IND, "")
+    assert flag == "unknown"
+
+
+def test_pediatric_denial_beats_descriptive():
+    """A label carrying BOTH a formal denial and descriptive pediatric
+    text is 'none': the denial is the label's verdict, the descriptive
+    text does not soften it."""
+    flag, _ = direction_mod.classify_pediatric(
+        _CYCLOSPORINE_TX_PED + " " + _CYCLOSPORINE_VEVYE_PED, "", "")
+    assert flag == "none"
+
+
+def test_pediatric_evidence_clips_on_word_boundary():
+    """redteam2 n3: quoted evidence text must end at a word boundary +
+    ' ...', never mid-word ('glomerular'/'of which' style cuts)."""
+    sent = ("The safety and effectiveness of TESTOPHEN have been "
+            "established in pediatric patients one year of age and "
+            "older for the treatment of serious infections caused by "
+            "susceptible gram negative organisms including extended "
+            "spectrum beta lactamase producing strains in complicated "
+            "intra-abdominal infections and complicated urinary tract "
+            "infections in clinical trials")
+    flag, ev = direction_mod.classify_pediatric(sent, "", "")
+    assert flag == "labeled_pediatric_indication"
+    text = ev["text"]
+    assert text.endswith(" ...")
+    body = text[:-4]
+    assert len(body) <= 240
+    # verbatim prefix ending between words (no mid-word cut)
+    assert sent.startswith(body)
+    rest = sent[len(body):]
+    assert rest.startswith((" ", ",", ";", ":", "-", "(")), rest[:20]
 
 
 # ---------------------------------------------------------------- PRISM ---
@@ -487,7 +591,8 @@ def test_replay_excludes_opposed_and_preserves_records(mva_result):
     assert "rank" not in top
     assert top["score"] > 0 and top["direction_reasons"]
     assert top["pediatric_flag"] in {
-        "labeled_pediatric_indication", "pediatric_text_only", "none"}
+        "labeled_pediatric_indication", "pediatric_text_only", "none",
+        "unknown"}
     # ranked list re-ranks from 1 without gaps
     assert [c["rank"] for c in res["candidates"][:5]] == [1, 2, 3, 4, 5]
     assert all(c["rank"] <= c["rank_before_direction"]

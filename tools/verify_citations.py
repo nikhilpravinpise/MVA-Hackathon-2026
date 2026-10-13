@@ -93,7 +93,8 @@ COVERAGE_SKIP_BASENAMES = {"rules_refresh.md", "landscape.md",
                            "status.md", "submission_fields.md",
                            # internal review notes about this package,
                            # like the agent_reports they sit beside
-                           "redteam.md", "rubric_self_assessment.md",
+                           "redteam.md", "redteam2.md",
+                           "rubric_self_assessment.md",
                            # byte-identical build artifact of
                            # docs/track2_report.md (pinned by
                            # tests/test_make_track2_report.py): scanning
@@ -119,18 +120,55 @@ _EXPECT_KEY_PAT = re.compile(r"^(PMID|PMCID|PMC|DOI)\s*:\s*(.+)$", re.I)
 _REPO_REF_PAT = re.compile(r"\[repo:[^\]]+\]")
 
 _MECH_VERBS = re.compile(
-    r"\b(?:inhibits?|inhibited|activates?|activated|reduces?|reduced"
-    r"|increases?|increased|causes?|caused|binds?|bound|rescues?|rescued)\b",
+    r"\b(?:inhibit(?:s|ed|ing)?|activat(?:e|es|ed|ing)"
+    r"|reduc(?:e|es|ed|ing)|increas(?:e|es|ed|ing)"
+    r"|caus(?:e|es|ed|ing)|bind(?:s|ing)?|bound"
+    r"|rescu(?:e|es|ed|ing)|suppress(?:es|ed|ing)?"
+    r"|clear(?:s|ed|ing)?|stabili[sz]e[sd]?|stabili[sz]ing"
+    r"|destabili[sz]e[sd]?|destabili[sz]ing"
+    r"|degrad(?:e|es|ed|ing)|elevat(?:e|es|ed|ing)"
+    r"|lower(?:s|ed|ing)?|prevent(?:s|ed|ing)?|worsen(?:s|ed|ing)?"
+    r"|restor(?:e|es|ed|ing)|block(?:s|ed|ing)?|blunt(?:s|ed|ing)?"
+    r"|induc(?:e|es|ed|ing)|promot(?:e|es|ed|ing)|enhanc(?:e|es|ed|ing)"
+    r"|disrupt(?:s|ed|ing)?|impair(?:s|ed|ing)?"
+    r"|attenuat(?:e|es|ed|ing)|potentiat(?:e|es|ed|ing)"
+    r"|deplet(?:e|es|ed|ing)|ameliorat(?:e|es|ed|ing)"
+    r"|exacerbat(?:e|es|ed|ing)|mimic(?:s|ked|king)?"
+    r"|revers(?:e|es|ed|ing)|correct(?:s|ed|ing)?"
+    r"|extend(?:s|ed|ing)?|shorten(?:s|ed|ing)?|delay(?:s|ed|ing)?"
+    r"|accelerat(?:e|es|ed|ing)|kill(?:s|ed|ing)?"
+    r"|sensiti[sz]e[sd]?|sensiti[sz]ing|driv(?:e|es|en|ing)"
+    r"|trigger(?:s|ed|ing)?|mediat(?:e|es|ed|ing)"
+    r"|eliminat(?:e|es|ed|ing)|remov(?:e|es|ed|ing)"
+    r"|protect(?:s|ed|ing)?|damag(?:e|es|ed|ing)|weaken(?:s|ed|ing)?"
+    r"|strengthen(?:s|ed|ing)?|arrest(?:s|ed|ing)?"
+    r"|modulat(?:e|es|ed|ing)|downregulat(?:e|es|ed|ing)"
+    r"|upregulat(?:e|es|ed|ing)|treat(?:s|ed|ing)?|decay(?:s|ed|ing)?"
+    r")\b",
     re.IGNORECASE)
 _NUM_UNIT = re.compile(
-    r"\b\d[\d,]*(?:\.\d+)?\s*"
-    r"(?:mg|kg|g|mcg|µg|ug|ml|µl|ul|l|nM|µM|uM|mM|mmol|mol|%"
-    r"|percent(?:age)?|fold|x\b|bp|kb|Mb|Gb|aa|amino acids?"
+    # number + unit.  "%" sits OUTSIDE the \b group on purpose: it is a
+    # non-word character, so a trailing word boundary could never match
+    # after it and every "35%"/"96%"/"29.9%" claim escaped the gate
+    # (redteam2 r2).  The optional hyphen inside makes "3-fold" a claim.
+    r"(?:\b\d[\d,]*(?:\.\d+)?\s*-?\s*"
+    r"(?:(?:mg|kg|g|mcg|µg|ug|ml|µl|ul|l|nM|µM|uM|mM|mmol|mol"
+    r"|percent(?:age)?|fold|bp|kb|Mb|Gb|aa|amino acids?"
     r"|years?|yrs?|months?|weeks?|days?|hours?|hrs?|minutes?|mins?|seconds?"
     r"|patients?|participants?|subjects?|children|infants?|cases?|controls?"
     r"|variants?|alleles?|genes?|drugs?|medications?|compounds?|doses?"
-    r"|cohorts?|trials?|studies|cell lines?|clones?|tumou?rs?)\b",
+    r"|cohorts?|trials?|studies|cell lines?|clones?|tumou?rs?|x)\b|%))"
+    # unitless ratio/count claims: "12 of 96", "3 of 4"
+    r"|\b\d[\d,]*(?:\.\d+)?\s+of\s+\d[\d,]*(?:\.\d+)?\b"
+    # bare sub-1 statistics: "0.72", "0.56", "0.05", "q 0.45" - normal
+    # decimals (12.5, 3.11) and integers stay unclaimed so software
+    # versions and database ids do not over-fire.  In a table ROW this
+    # alone does not trigger (a bare decimal column is a data cell -
+    # the engine's score/weight columns - while "29.9%" or a verb in a
+    # cell is still a claim, exactly as the reviewer demonstrated).
+    r"|\b0\.\d+\b",
     re.IGNORECASE)
+_BARE_STAT = re.compile(r"\b0\.\d+\b")
 _CODE_SPAN = re.compile(r"`[^`]*`")
 _SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
 
@@ -480,16 +518,27 @@ def _is_operational(sentence: str) -> bool:
     return not _NUM_UNIT.search(stripped)
 
 
-def _trigger_sentences(unit: str) -> list[str]:
+def _table_data_cell(sentence: str) -> bool:
+    """A table-row fragment whose ONLY trigger is a bare sub-1 decimal
+    (and no mechanism verb): a score/weight/q-value data cell, not a
+    claim.  Percent and N-of-M triggers still fire in tables."""
+    if _MECH_VERBS.search(sentence):
+        return False
+    return not _NUM_UNIT.search(_BARE_STAT.sub("0", sentence))
+
+
+def _trigger_sentences(unit: str, table_row: bool = False) -> list[str]:
     """Sentences in `unit` carrying a number+unit / % / mechanism verb."""
     clean = _strip_code(unit)
     hits = [s for s in _SENTENCE_SPLIT.split(clean)
             if (_NUM_UNIT.search(s) or _MECH_VERBS.search(s))
             and not s.rstrip().endswith("?")    # a question asserts nothing
-            and not _is_operational(s)]         # runtimes/sizes/costs are ours
+            and not _is_operational(s)          # runtimes/sizes/costs are ours
+            and not (table_row and _table_data_cell(s))]
     if (not hits and not clean.rstrip().endswith(("?", ".", "!"))
             and (_NUM_UNIT.search(clean) or _MECH_VERBS.search(clean))
-            and not _is_operational(clean)):
+            and not _is_operational(clean)
+            and not (table_row and _table_data_cell(clean))):
         # OPERATIONAL_FRAGMENT rule: a single-line fragment without
         # terminal punctuation (e.g. a table row, which ends in "|") is
         # exempted by the same operational-measurement rule as full
@@ -540,8 +589,17 @@ def coverage_scan(path: Path, rel: str) -> list[dict]:
             flush_para(idx)
             if re.fullmatch(r"\|[\s\-:|]+\|", stripped):
                 continue  # separator row
-            if (_trigger_sentences(stripped) and not _has_citation(stripped)):
-                for s in _trigger_sentences(stripped):
+            header = (idx < len(lines)
+                      and re.fullmatch(r"\|[\s\-:|]+\|",
+                                       lines[idx].strip()))
+            hits = _trigger_sentences(stripped, table_row=True)
+            if header:
+                # a column header is a label, not a claim: verb-only
+                # triggers ("| ... | More damaging than ... |" metric
+                # names) are exempt; numeric triggers still fire
+                hits = [s for s in hits if _NUM_UNIT.search(s)]
+            if hits and not _has_citation(stripped):
+                for s in hits:
                     uncovered.append({"file": rel, "line": idx,
                                       "unit": "table_row",
                                       "sentence": s.strip()})
@@ -814,6 +872,13 @@ def main(argv=None) -> int:
         Path(args.json_out).write_text(
             json.dumps(report, indent=1) + "\n", encoding="utf-8")
     if not args.quiet:
+        # the summary can carry unicode from quoted claims (set
+        # intersection chars, micro signs); never let console
+        # encoding turn the gate's verdict into a traceback
+        try:
+            sys.stdout.reconfigure(errors="replace")
+        except (AttributeError, OSError, ValueError):
+            pass
         print(_human_summary(report, code))
     return code
 

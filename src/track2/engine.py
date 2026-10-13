@@ -318,6 +318,24 @@ def _label_text(label, field, clip):
     return t[:clip]
 
 
+# pediatric-informativeness rank for label picking (L15, redteam2 r4):
+# a label asserting a pediatric indication answers the flag's question
+# directly; descriptive pediatric text outranks negated-only text,
+# which outranks a label silent on pediatrics.
+_PED_RANK = {"labeled_pediatric_indication": 3, "pediatric_text_only": 2,
+             "none": 1, "unknown": 0}
+
+
+def _ped_scorer(label):
+    """Label dict -> _PED_RANK via the three-section classifier, on the
+    same clipped texts the output record carries."""
+    flag, _ = direction_mod.classify_pediatric(
+        _label_text(label, "pediatric_use", 800),
+        _label_text(label, "indications_and_usage", 4000),
+        _label_text(label, "dosage_and_administration", 4000))
+    return _PED_RANK.get(flag, 0)
+
+
 # --------------------------------------------------- per-drug evidence ----
 def drug_evidence(http, cfg, c):
     """Fill in label/MoA/warning detail for one approved candidate."""
@@ -344,7 +362,8 @@ def drug_evidence(http, cfg, c):
         if n not in chains:
             chains.append(n)
     for nm in chains[:3]:
-        label, lab_meta = sources.openfda_label(http, ep["openfda"], nm)
+        label, lab_meta = sources.openfda_label(http, ep["openfda"], nm,
+                                                scorer=_ped_scorer)
         if label:
             break
     fda = bool(label)
