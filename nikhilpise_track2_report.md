@@ -2,7 +2,7 @@
 
 - **Team:** nikhilpise - MVA Hackathon 2026, Track 2 (Drug Repurposing)
 - **Repository:** https://github.com/nikhilpravinpise/MVA-Hackathon-2026 (all code, configs, evidence files and tests)
-- **Report generated:** 2026-10-13 from commit `fc6d6fc` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
+- **Report generated:** 2026-10-13 from commit `b7e5585` by `tools/make_track2_report.py` from `docs/track2/evidence/` - no number in this report is hand-typed.
 
 > **This is a hypothesis-generation document for research follow-up, not medical advice.** Every candidate below is an existing approved medicine proposed for laboratory testing first; none should be given to any child on the strength of this report.
 
@@ -37,7 +37,7 @@ For each idea we checked, by computer, that the medicine is really approved; we 
 | Consequence (VEP) | stop_gained | missense_variant |
 | Exon | 17/23 | 23/23 |
 | NMD (50-55 nt rule) | predicted NMD (PTC 748 nt upstream of last exon-exon junction) | escapes NMD (missense allele - no premature termination codon introduced) |
-| Protein consequence | 736-aa product, 29.9% lost incl. kinase-like domain | full-length protein |
+| Protein consequence | 736-aa product, 29.9% of the 1050-aa protein lost incl. kinase-like domain (ENST00000287598.11 translation) | full-length protein |
 | CADD phred / phyloP | 36 / 4.189 | 24.5 / 5.115 |
 | AlphaMissense | n/a (truncating) | 0.9229 (likely_pathogenic) |
 | REVEL / SIFT / PolyPhen | - / - / - | 0.472 / 0.01 / 0.997 |
@@ -93,17 +93,17 @@ The engine (`src/track2/`, `tools/run_track2.py`, frozen `config/track2.yaml`) i
 |---|---|---|---|---|---|---|---|
 | 1 | palbociclib | CDKN2A, NEK2, PRKAA1 | B | neutral | T1 | 0.594 | none |
 | 2 | sirolimus | CDKN2A, MTOR, PRKAA1 | B | aligned | T1 | 0.505 | labeled pediatric indication |
-| 3 | glycerin | CDKN1A | B | neutral | T1 | 0.494 | none |
+| 3 | glycerin | CDKN1A | B | neutral | T1 | 0.494 | unknown |
 | 4 | methenamine | CDKN1A | B | neutral | T1 | 0.494 | labeled pediatric indication |
-| 5 | octocrylene | BIRC5 | none | neutral | T1 | 0.494 | none |
-| 6 | omacetaxine mepesuccinate | BIRC5 | none | neutral | T1 | 0.494 | none |
+| 5 | octocrylene | BIRC5 | none | neutral | T1 | 0.494 | pediatric text only |
+| 6 | omacetaxine mepesuccinate | BIRC5 | none | neutral | T1 | 0.494 | unknown |
 | 7 | pentetic acid | CDKN1A | B | neutral | T1 | 0.494 | labeled pediatric indication |
-| 8 | phenylbutanoic acid | CDKN1A | B | neutral | T1 | 0.494 | none |
-| 9 | abemaciclib | CDKN2A, TP53 | B | neutral | T1 | 0.489 | none |
+| 8 | phenylbutanoic acid | CDKN1A | B | neutral | T1 | 0.494 | unknown |
+| 9 | abemaciclib | CDKN2A, TP53 | B | neutral | T1 | 0.489 | unknown |
 | 10 | gefitinib | SIRT2 | A | neutral | T1 | 0.469 | none |
-| 11 | clotrimazole | CDK1 | none | neutral | T1 | 0.452 | none |
+| 11 | clotrimazole | CDK1 | none | neutral | T1 | 0.452 | labeled pediatric indication |
 | 12 | everolimus | CDKN2A, MTOR | B | aligned | T1 | 0.450 | labeled pediatric indication |
-| 13 | flutamide | BIRC5, CDKN1A | B | neutral | T2 | 0.417 | none |
+| 13 | flutamide | BIRC5, CDKN1A | B | neutral | T2 | 0.417 | unknown |
 | 14 | tamoxifen | CCNA2, TP53 | B | neutral | T2 | 0.417 | none |
 | 15 | celecoxib | CDKN1A | B | neutral | T2 | 0.411 | labeled pediatric indication |
 | 16 | lapatinib | BIRC5 | none | neutral | T2 | 0.355 | none |
@@ -111,6 +111,8 @@ The engine (`src/track2/`, `tools/run_track2.py`, frozen `config/track2.yaml`) i
 | 18 | erlotinib | BIRC5 | none | neutral | T2 | 0.329 | none |
 | 19 | dabrafenib | CDKN2A | B | neutral | T2 | 0.325 | labeled pediatric indication |
 | 20 | vemurafenib | CDKN2A | B | neutral | T2 | 0.325 | none |
+
+*Pediatric label column* (the flag read off the matched openFDA label - a label-presence check, not a pediatric-safety assessment; semantics and caveats in [repo:docs/track2/engine.md]): `labeled pediatric indication` = the label states a pediatric indication; `pediatric text only` = pediatric text without an indication; `none` = the label formally declines pediatric use; `unknown` = no label found, or the label is silent on pediatrics.
 
 Top mechanism-opposed exclusions (would-be rank, rule): doxorubicin (#1, opp_dna_damaging, opp_topoisomerase_poison); epirubicin (#2, opp_topoisomerase_poison); temozolomide (#3, opp_dna_damaging); cyclophosphamide anhydrous (#4, opp_dna_damaging); mitomycin (#5, opp_dna_damaging); pixantrone (#6, opp_dna_damaging, opp_topoisomerase_poison); cantharidin (#7, opp_pp2a_inhibitor); daunorubicin (#8, opp_dna_damaging, opp_topoisomerase_poison). The 96 approved entries include 7 salt or ester forms of an active already counted (daunorubicin hydrochloride, dexrazoxane hydrochloride, doxorubicin hydrochloride, etoposide phosphate, idarubicin hydrochloride, metformin hydrochloride, mitoxantrone hydrochloride), so the distinct active count is 89.
 
@@ -199,7 +201,7 @@ Masked-marginal log-likelihood ratios over 1319 scored variants (1273 gnomAD v4 
 
 *Risks specific to this child's phenotype:*
 
-- Label section 5.10 'Effects on Growth and Development in Pediatric Patients': epiphyses delayed fusion, osteopenia, growth retardation and gynecomastia reported; label advises monitoring bone growth and development. Directly relevant to a child with short stature and failure to thrive.
+- Label section 5.10 'Effects on Growth and Development in Pediatric Patients': epiphyses delayed fusion, osteopenia, growth retardation and gynecomastia reported; label advises monitoring bone growth and development. Directly relevant to a child with short stature and failure to thrive. [repo:openFDA label 02b04c6f]
 - Myelosuppression (severe thrombocytopenia, neutropenia, anaemia) and bleeding; dasatinib also inhibits platelet function - additive bleeding risk with any antiplatelet adjunct. [repo:openFDA label 02b04c6f]
 - Fluid retention incl. pleural effusions; pulmonary arterial hypertension; QT prolongation; severe dermatologic reactions; tumour lysis syndrome; embryo-fetal toxicity. [repo:openFDA label 02b04c6f]
 - Hypothesis framing: senolytic regimens are intermittent 'hit-and-run' (3-day cycles in the human pilots), which limits total exposure relative to continuous oncology dosing - but no pediatric senolytic dosing exists; any use here is untested. [repo:openFDA label 02b04c6f]
@@ -338,7 +340,7 @@ Cost tiers - T0: in-silico / literature only, T1: < $5k (bench assays, standard 
 
 ## 9. Rigor and reproducibility
 
-- `tools/verify_citations.py --offline` over the whole Track 2 tree: **136 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 28 uncovered claim sentences** (exit 0, 0 network requests).
+- `tools/verify_citations.py --offline` over the whole Track 2 tree: **137 distinct citations, 0 unresolved, 0 retracted, 0 title/year mismatches, 0 uncovered claim sentences** (exit 0, 0 network requests).
 - 168 Track 2 tests (network-free, recorded fixtures); run with `python -m pytest tests/test_t2_*.py tests/test_track2_*.py tests/test_verify_citations.py`.
 - Approval, pediatric-label and boxed-warning facts come from live ChEMBL and openFDA responses recorded in each dossier (`docs/track2/evidence/dossiers/`).
 - Decision freeze: the benchmark truth list and seed genes are declared in `config/track2.yaml`, which the engine reads at run time and whose hash it records in the output.

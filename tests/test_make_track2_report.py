@@ -93,6 +93,34 @@ def test_upload_copy_is_byte_identical_to_the_report():
     assert a.read_bytes() == b.read_bytes()
 
 
+def test_has_source_requires_a_concrete_identifier():
+    """L16: the bare words 'label section' (or a bare 'set_id') describe a
+    source without naming one - the risk bullet then carries the real
+    [repo:openFDA label <set_id>] marker.  Only concrete identifiers
+    exempt a bullet from the appended marker."""
+    assert mr._has_source("risk per openFDA set_id 02b04c6f")
+    assert mr._has_source("risk (PMID:1)")
+    assert mr._has_source("risk [repo:docs/track2/evidence/x.json]")
+    assert mr._has_source("targets CHEMBL1234")
+    assert not mr._has_source("Label section 5.10 warns of growth delay")
+    assert not mr._has_source("per the label, set_id pending")
+
+
+def test_protein_loss_row_names_the_transcript():
+    """The '29.9% lost' claim is computed on the MANE translation; the
+    rendered row must name it (ENST accession is a citable source id)."""
+    m = {"transcript": {"transcript": "ENST1", "version": 2},
+         "alleles": [_allele("c.1A>T", []), _allele("c.2A>T", [])]}
+    m["alleles"][0]["protein_loss"] = {"wt_length": 10,
+                                       "truncated_product_length": 7,
+                                       "residues_lost": 3,
+                                       "fraction_lost_pct": 30.0}
+    table = mr.allele_table(m, mr.Refs({}))
+    row = next(l for l in table.splitlines()
+               if l.startswith("| Protein consequence"))
+    assert "ENST1.2 translation" in row and "30.0% of the 10-aa" in row
+
+
 def test_report_has_no_uncovered_claims():
     """GATE 7: every claim sentence in the submitted report carries a
     citation or names the artifact/registry it came from."""

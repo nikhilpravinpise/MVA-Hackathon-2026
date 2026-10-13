@@ -21,7 +21,8 @@ NM_001211.6, protein UniProt O60566 (1050 aa).
 **Exon location.** The variant sits in exon 17 of 23 (ENSE00001029409,
 chr15:40209635-40209775) of the 23-exon canonical transcript. VEP
 consequence on MANE: `stop_gained`, codons `tTa>tGa`, CDS 2210,
-protein 737 (HIGH impact).
+protein 737 (HIGH impact)
+[repo:docs/track2/evidence/mechanism.json].
 
 **NMD prediction.** The premature termination codon (codon 737, first
 nucleotide at spliced-transcript offset 2361) lies **748 nt upstream of
@@ -57,7 +58,8 @@ syndrome 1* (OMIM:257300), multiple submitters, no conflicts
 
 **Exon location.** Exon 23 of 23 - the last exon (ENSE00001948417). A
 nonsense allele here would escape NMD; as a missense substitution the
-transcript is stable and a full-length protein is produced.
+transcript is stable and a full-length protein is produced
+[repo:docs/track2/evidence/mechanism.json].
 
 **Domain context.** Residue 1002 lies inside the C-terminal
 kinase-like/pseudokinase domain (UniProt 766-1050), six residues from
@@ -77,7 +79,7 @@ attacks the *attachment-error-correction* arm, not a catalytic centre.
 | SIFT | 0.01 | deleterious |
 | PolyPhen-2 | 0.997 | probably_damaging |
 | REVEL | 0.472 | moderate - below common 0.5-0.75 support thresholds |
-| CADD | raw 4.167, phred 24.5 | ~top 1% genome-wide |
+| CADD | raw 4.167, phred 24.5 | top ~0.4% of all scored substitutions (phred rank scale; PMID:24487276; [repo:docs/track2/evidence/mechanism.json]) |
 | phyloP (470-way mammalian) | 5.115 | strongly constrained residue |
 
 The ensemble is honestly stated: direction is consistently deleterious,
@@ -160,7 +162,8 @@ contraindication below.
    (PMID:23242215). Since kinase-domain MVA missense products are
    unstable (PMID:20516114), proteostasis/stability interventions target
    the precise deficit.
-2. **Damage mitigation (senescence)** - clearing p16+ senescent cells in
+2. **Damage mitigation (senescence)** [repo:docs/track2/evidence/mechanism.json] -
+   clearing p16+ senescent cells in
    BubR1 progeroid mice delayed and attenuated tissue dysfunction,
    including skeletal muscle and fat (PMID:22048312, 18516091).
 3. **Aneuploid-clone control** - natural immune clearance of complex
@@ -174,12 +177,14 @@ contraindication below.
 
 ## 6. Mechanism-derived contraindications
 
-- **SAC/MPS1/KIF18A inhibitors** - systemic checkpoint weakening adds
+- **SAC/MPS1/KIF18A inhibitors** [repo:docs/track2/evidence/mechanism.json] -
+  systemic checkpoint weakening adds
   mis-segregation on an already-weak checkpoint. Nuance: the same class
   selectively kills aneuploid *cancer* cells - a therapeutic option if a
   tumour is established, contraindicated prophylactically
   (PMID:33505028, 33505027, 20516114).
-- **p53 suppression** - removes the brake on aneuploid-clone propagation
+- **p53 suppression** [repo:docs/track2/evidence/mechanism.json] -
+  removes the brake on aneuploid-clone propagation
   and the protective effect on muscle/fat (PMID:20123995, 23602569).
 - **Growth hormone for short stature** - guidance flags caution in
   chromosomal-breakage/DNA-repair syndromes owing to malignancy risk;
@@ -197,11 +202,13 @@ contraindication below.
   testing, long reads).
 - `u2` N1002K residual function unmeasured; assays: patient-fibroblast
   BubR1 western, nocodazole-arrest timing for SAC competency, k-fibre
-  stability, aneuploidy rate by FISH/scDNA-seq.
-- `u3` NMD is a positional prediction, not a measured decay rate; rare
-  escape would yield a 736-aa fragment of uncertain activity
+  stability, aneuploidy rate by FISH/scDNA-seq
+  [repo:docs/track2/evidence/mechanism.json].
+- `u3` NMD is a positional prediction, not a measured decay rate [repo:docs/track2/evidence/mechanism.json];
+  rare escape would yield a 736-aa fragment of uncertain activity
   (PMID:31659324).
-- `u4` predictor agreement is strong but not unanimous (REVEL 0.472;
+- `u4` predictor agreement is strong but not unanimous
+  [repo:docs/track2/evidence/mechanism.json] (REVEL 0.472;
   the c.3006T>A ClinVar record is a single-submitter VUS).
 
 ## Provenance

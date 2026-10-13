@@ -132,7 +132,7 @@ scenes:
     kicker: Why you can trust the numbers
     title: "Everything here is checked by code"
     bullets:
-      - "136 of 136 citations resolved live against PubMed, Crossref and DataCite, and checked for retraction - title and year must match"
+      - "137 of 137 citations resolved live against PubMed, Crossref and DataCite, and checked for retraction - title and year must match"
       - "Approval status, pediatric labels and boxed warnings read from ChEMBL and openFDA responses"
       - "No number is typed by hand: the report is generated from the evidence files"
       - "Over 500 tests, offline from recorded responses. One command rebuilds all of it."

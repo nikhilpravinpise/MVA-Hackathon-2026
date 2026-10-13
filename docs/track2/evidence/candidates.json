@@ -1,7 +1,7 @@
 {
   "schema": "t2.candidates/1",
   "generated_by": "tools/run_track2.py",
-  "generated_at": "2026-10-12T22:48:01+00:00",
+  "generated_at": "2026-10-13T00:09:33+00:00",
   "case": {
     "name": "mva_bub1b",
     "disease": "Mosaic variegated aneuploidy syndrome 1 (MVA1, OMIM:257300)",
@@ -1212,7 +1212,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "indications_and_usage",
-        "text": "1 INDICATIONS AND USAGE Cyclophosphamide is an alkylating drug indicated for treatment of adults and pediatric patients with: Malignant Diseases: malignant lymphomas: Hodgkin's disease, lymphocytic lymphoma, mixed-cell type lymphoma, histio"
+        "text": "1 INDICATIONS AND USAGE Cyclophosphamide is an alkylating drug indicated for treatment of adults and pediatric patients with: Malignant Diseases: malignant lymphomas: Hodgkin's disease, lymphocytic lymphoma, mixed-cell type lymphoma ..."
       },
       "evidence": {
         "target_overlap": 1.0,
@@ -1426,7 +1426,7 @@
         "opp_dna_damaging",
         "opp_topoisomerase_poison"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
@@ -1639,7 +1639,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "indications_and_usage",
-        "text": "INDICATIONS AND USAGE Daunorubicin hydrochloride in combination with other approved anticancer drugs is indicated for remission induction in acute nonlymphocytic leukemia (myelogenous, monocytic, erythroid) of adults and for remission induc"
+        "text": "INDICATIONS AND USAGE Daunorubicin hydrochloride in combination with other approved anticancer drugs is indicated for remission induction in acute nonlymphocytic leukemia (myelogenous, monocytic, erythroid) of adults and for remission ..."
       },
       "evidence": {
         "target_overlap": 1.0,
@@ -1763,7 +1763,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "indications_and_usage",
-        "text": "INDICATIONS AND USAGE Daunorubicin hydrochloride in combination with other approved anticancer drugs is indicated for remission induction in acute nonlymphocytic leukemia (myelogenous, monocytic, erythroid) of adults and for remission induc"
+        "text": "INDICATIONS AND USAGE Daunorubicin hydrochloride in combination with other approved anticancer drugs is indicated for remission induction in acute nonlymphocytic leukemia (myelogenous, monocytic, erythroid) of adults and for remission ..."
       },
       "evidence": {
         "target_overlap": 1.0,
@@ -1972,10 +1972,10 @@
         "ema_only": false,
         "first_approval": 1996,
         "withdrawn": false,
-        "pediatric_labeling": "",
-        "fda_set_id": "7499fc35-fae8-44ad-bbab-9a1a589bf3ee",
+        "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established. Etoposide injection contains polysorbate 80. In premature infants, a life-threatening syndrome consisting of liver and renal failure, pulmonary deterioration, thrombocytopenia, and ascites has been associated with an injectable vitamin E product containing polysorbate 80. Anaphylactic reactions have been reported in pediatric patients (see WARNINGS section).",
+        "fda_set_id": "0dddbe44-b4f4-431f-9011-8a54abbd4cbf",
         "combination_label": false,
-        "openfda_match": "matched via generic_name",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -2048,12 +2048,12 @@
         "module_genes:TOP2A"
       ],
       "warnings": {
-        "black_box": false,
-        "openfda_boxed": false,
+        "black_box": true,
+        "openfda_boxed": true,
         "ot_warnings": []
       },
-      "pediatric_labeling": "",
-      "fda_set_id": "7499fc35-fae8-44ad-bbab-9a1a589bf3ee",
+      "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established. Etoposide injection contains polysorbate 80. In premature infants, a life-threatening syndrome consisting of liver and renal failure, pulmonary deterioration, thrombocytopenia, and ascites has been associated with an injectable vitamin E product containing polysorbate 80. Anaphylactic reactions have been reported in pediatric patients (see WARNINGS section).",
+      "fda_set_id": "0dddbe44-b4f4-431f-9011-8a54abbd4cbf",
       "dgidb": {
         "module_hits": [
           "TOP2A"
@@ -2322,10 +2322,10 @@
         "ema_only": false,
         "first_approval": 1987,
         "withdrawn": false,
-        "pediatric_labeling": "",
-        "fda_set_id": "1634528a-30c5-4309-acc8-4c0293ae14ae",
+        "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+        "fda_set_id": "accf9569-4b57-4e83-a7db-4e890a75d1ba",
         "combination_label": false,
-        "openfda_match": "matched via generic_name",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -2415,8 +2415,8 @@
           }
         ]
       },
-      "pediatric_labeling": "",
-      "fda_set_id": "1634528a-30c5-4309-acc8-4c0293ae14ae",
+      "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+      "fda_set_id": "accf9569-4b57-4e83-a7db-4e890a75d1ba",
       "dgidb": {
         "module_hits": [
           "TOP2A"
@@ -2449,10 +2449,10 @@
         "ema_only": false,
         "first_approval": 1987,
         "withdrawn": false,
-        "pediatric_labeling": "",
-        "fda_set_id": "1634528a-30c5-4309-acc8-4c0293ae14ae",
+        "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+        "fda_set_id": "accf9569-4b57-4e83-a7db-4e890a75d1ba",
         "combination_label": false,
-        "openfda_match": "matched via generic_name",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -2542,8 +2542,8 @@
           }
         ]
       },
-      "pediatric_labeling": "",
-      "fda_set_id": "1634528a-30c5-4309-acc8-4c0293ae14ae",
+      "pediatric_labeling": "Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
+      "fda_set_id": "accf9569-4b57-4e83-a7db-4e890a75d1ba",
       "dgidb": {
         "module_hits": [
           "TOP2A"
@@ -2672,9 +2672,9 @@
         "first_approval": 1998,
         "withdrawn": false,
         "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
-        "fda_set_id": "8739ae02-e4c5-0fa2-e053-2a91aa0a1b74",
+        "fda_set_id": "e96f30a0-6662-11de-8f80-0002a5d5c51b",
         "combination_label": false,
-        "openfda_match": "matched via generic_name",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -2752,7 +2752,7 @@
         "ot_warnings": []
       },
       "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients have not been established.",
-      "fda_set_id": "8739ae02-e4c5-0fa2-e053-2a91aa0a1b74",
+      "fda_set_id": "e96f30a0-6662-11de-8f80-0002a5d5c51b",
       "dgidb": {
         "module_hits": [
           "TOP2A"
@@ -3564,7 +3564,7 @@
         "opp_dna_damaging",
         "opp_topoisomerase_poison"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.6666666666666666,
@@ -3685,7 +3685,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "8.4 Pediatric Use The safety and effectiveness of methotrexate in pediatric patients have been established for the treatment of ALL as part of the combination chemotherapy maintenance regimen and the treatment of pJIA [see Indications and U"
+        "text": "8.4 Pediatric Use The safety and effectiveness of methotrexate in pediatric patients have been established for the treatment of ALL as part of the combination chemotherapy maintenance regimen and the treatment of pJIA [see Indications and ..."
       },
       "evidence": {
         "target_overlap": 0.6666666666666666,
@@ -4522,7 +4522,7 @@
         "opp_dna_damaging",
         "opp_topoisomerase_poison"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
@@ -5635,7 +5635,7 @@
       "direction_reasons": [
         "opp_sirt2_inhibitor"
       ],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.08333333333333333,
@@ -6029,7 +6029,7 @@
       "mechanism_of_action": "",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
@@ -6224,7 +6224,7 @@
       "mechanism_of_action": "Sunscreen",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "pediatric_text_only",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
@@ -6319,7 +6319,7 @@
       "mechanism_of_action": "Protein synthesis inhibitor",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
@@ -6418,7 +6418,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "8.4 Pediatric Use Technetium Tc 99m pentetate is indicated for lung ventilation and evaluation of pulmonary embolism when paired with perfusion imaging and for renal visualization, assessment of renal perfusion, and estimation of glomerular"
+        "text": "8.4 Pediatric Use Technetium Tc 99m pentetate is indicated for lung ventilation and evaluation of pulmonary embolism when paired with perfusion imaging and for renal visualization, assessment of renal perfusion, and estimation of ..."
       },
       "evidence": {
         "target_overlap": 1.0,
@@ -6526,7 +6526,7 @@
       "mechanism_of_action": "",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 1.0,
@@ -6640,7 +6640,7 @@
       "mechanism_of_action": "Cyclin-dependent kinase 4 inhibitor",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
@@ -6824,10 +6824,10 @@
         "ema_only": false,
         "first_approval": 1975,
         "withdrawn": false,
-        "pediatric_labeling": "",
-        "fda_set_id": "0052992a-819c-4c55-bd88-201a09a3573a",
+        "pediatric_labeling": "Pediatric Use Safety and effectiveness in children have been established for clotrimazole when used as indicated and in the recommended dosage.",
+        "fda_set_id": "116be3a8-9a57-4b4a-a873-98a4ce83bcf7",
         "combination_label": false,
-        "openfda_match": "matched via generic_name",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -6853,8 +6853,11 @@
       "mechanism_of_action": "Cytochrome P450 51 inhibitor",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
-      "pediatric_flag_evidence": null,
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "Pediatric Use Safety and effectiveness in children have been established for clotrimazole when used as indicated and in the recommended dosage."
+      },
       "evidence": {
         "target_overlap": 1.0,
         "network_proximity_z": -0.3516,
@@ -6894,8 +6897,8 @@
         "openfda_boxed": false,
         "ot_warnings": []
       },
-      "pediatric_labeling": "",
-      "fda_set_id": "0052992a-819c-4c55-bd88-201a09a3573a",
+      "pediatric_labeling": "Pediatric Use Safety and effectiveness in children have been established for clotrimazole when used as indicated and in the recommended dosage.",
+      "fda_set_id": "116be3a8-9a57-4b4a-a873-98a4ce83bcf7",
       "dgidb": {
         "module_hits": [
           "CDK1"
@@ -6970,7 +6973,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "8.4 Pediatric Use TSC-Associated SEGA The safety and effectiveness of everolimus tablets/everolimus tablets for oral suspension have been established in pediatric patients age 1 year and older with TSC-associated SEGA that requires therapeu"
+        "text": "8.4 Pediatric Use TSC-Associated SEGA The safety and effectiveness of everolimus tablets/everolimus tablets for oral suspension have been established in pediatric patients age 1 year and older with TSC-associated SEGA that requires ..."
       },
       "evidence": {
         "target_overlap": 0.6666666666666666,
@@ -7131,7 +7134,7 @@
       "mechanism_of_action": "Androgen Receptor antagonist",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.6666666666666666,
@@ -7653,7 +7656,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "8.4 Pediatric Use Levothyroxine sodium is indicated in patients from birth to less than 17 years of age: As a replacement therapy in primary (thyroidal), secondary (pituitary), and tertiary (hypothalamic) congenital or acquired hypothyroidi"
+        "text": "8.4 Pediatric Use Levothyroxine sodium is indicated in patients from birth to less than 17 years of age: As a replacement therapy in primary (thyroidal), secondary (pituitary), and tertiary (hypothalamic) congenital or acquired ..."
       },
       "evidence": {
         "target_overlap": 0.3333333333333333,
@@ -7879,7 +7882,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "Use of TAFINLAR in combination with trametinib for these indications is supported by evidence from studies X2101 and G2201 that enrolled 171 patients (1 to < 18 years of age) with BRAF V600 mutation-positive advanced solid tumors, of which "
+        "text": "Use of TAFINLAR in combination with trametinib for these indications is supported by evidence from studies X2101 and G2201 that enrolled 171 patients (1 to < 18 years of age) with BRAF V600 mutation-positive advanced solid tumors, of which ..."
       },
       "evidence": {
         "target_overlap": 0.5,
@@ -8096,7 +8099,7 @@
       "mechanism_of_action": "Tyrosine-protein kinase BTK inhibitor",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
@@ -8327,7 +8330,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "Use of MEKINIST in combination with dabrafenib for these indications is supported by evidence from studies X2101 and G2201 that enrolled 171 patients (1 to < 18 years of age) with BRAF V600 mutation-positive advanced solid tumors, of which "
+        "text": "Use of MEKINIST in combination with dabrafenib for these indications is supported by evidence from studies X2101 and G2201 that enrolled 171 patients (1 to < 18 years of age) with BRAF V600 mutation-positive advanced solid tumors, of which ..."
       },
       "evidence": {
         "target_overlap": 0.3333333333333333,
@@ -8508,10 +8511,10 @@
         "ema_only": false,
         "first_approval": 1983,
         "withdrawn": false,
-        "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients below the age of 18 years have not been established.",
-        "fda_set_id": "0a60fccf-7e1b-44fe-e063-6394a90aadd5",
+        "pediatric_labeling": "Pediatric Use Although no adequate and well-controlled studies have been conducted in children, patients as young as 6 months of age have received cyclosporine with no unusual adverse effects.",
+        "fda_set_id": "5e5926a7-1de0-4b54-a5c0-286b6200ff82",
         "combination_label": false,
-        "openfda_match": "matched via generic_name",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -8544,7 +8547,7 @@
       "mechanism_of_action": "Cyclophilin A modulator",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "pediatric_text_only",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
@@ -8606,8 +8609,8 @@
           }
         ]
       },
-      "pediatric_labeling": "8.4 Pediatric Use Safety and effectiveness in pediatric patients below the age of 18 years have not been established.",
-      "fda_set_id": "0a60fccf-7e1b-44fe-e063-6394a90aadd5",
+      "pediatric_labeling": "Pediatric Use Although no adequate and well-controlled studies have been conducted in children, patients as young as 6 months of age have received cyclosporine with no unusual adverse effects.",
+      "fda_set_id": "5e5926a7-1de0-4b54-a5c0-286b6200ff82",
       "dgidb": {
         "module_hits": [
           "CDKN1A"
@@ -8785,7 +8788,7 @@
       "mechanism_of_action": "Vitamin k epoxide reductase complex subunit 1 isoform 1 inhibitor",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.5,
@@ -9179,10 +9182,10 @@
         "ema_only": false,
         "first_approval": 1957,
         "withdrawn": false,
-        "pediatric_labeling": "",
-        "fda_set_id": "01f0126c-da22-4ac0-8755-3bc589602e6a",
+        "pediatric_labeling": "Pediatric Use The efficacy and safety of corticosteroids in the pediatric population are based on the well-established course of effect of corticosteroids which is similar in pediatric and adult populations. Published studies provide evidence of efficacy and safety in pediatric patients for the treatment of nephritic syndrome (patients > 2 years of age) and aggressive lymphomas and leukemias (patients > 1 month of age). Other indications for pediatric use of corticosteroids (e.g., severe asthma and wheezing) are based on adequate and well-controlled clinical trials conducted in adults, on the premises that the course of the diseases and their pathophysiology are considered to be substantially similar in both populations. The adverse effects of corticosteroids in pediatric patients are simi",
+        "fda_set_id": "1084208f-3b86-4aef-8247-5b6ed6cd50c7",
         "combination_label": false,
-        "openfda_match": "matched via generic_name; single-ingredient label preferred over combination hit",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -9215,8 +9218,11 @@
       "mechanism_of_action": "Glucocorticoid receptor agonist",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
-      "pediatric_flag_evidence": null,
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "Pediatric Use The efficacy and safety of corticosteroids in the pediatric population are based on the well-established course of effect of corticosteroids which is similar in pediatric and adult populations."
+      },
       "evidence": {
         "target_overlap": 0.5,
         "network_proximity_z": 0.5361,
@@ -9256,8 +9262,8 @@
         "openfda_boxed": false,
         "ot_warnings": []
       },
-      "pediatric_labeling": "",
-      "fda_set_id": "01f0126c-da22-4ac0-8755-3bc589602e6a",
+      "pediatric_labeling": "Pediatric Use The efficacy and safety of corticosteroids in the pediatric population are based on the well-established course of effect of corticosteroids which is similar in pediatric and adult populations. Published studies provide evidence of efficacy and safety in pediatric patients for the treatment of nephritic syndrome (patients > 2 years of age) and aggressive lymphomas and leukemias (patients > 1 month of age). Other indications for pediatric use of corticosteroids (e.g., severe asthma and wheezing) are based on adequate and well-controlled clinical trials conducted in adults, on the premises that the course of the diseases and their pathophysiology are considered to be substantially similar in both populations. The adverse effects of corticosteroids in pediatric patients are simi",
+      "fda_set_id": "1084208f-3b86-4aef-8247-5b6ed6cd50c7",
       "dgidb": {
         "module_hits": [
           "TP53"
@@ -10567,7 +10573,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "8.4 Pediatric Use The safety and effectiveness of VIJOICE have been established in pediatric patients 2 to less than 18 years of age with PROS based on results from a single-arm clinical study of VIJOICE (EPIK-P1) that enrolled 39 pediatric"
+        "text": "8.4 Pediatric Use The safety and effectiveness of VIJOICE have been established in pediatric patients 2 to less than 18 years of age with PROS based on results from a single-arm clinical study of VIJOICE (EPIK-P1) that enrolled 39 ..."
       },
       "evidence": {
         "target_overlap": 0.5,
@@ -11338,7 +11344,7 @@
       "mechanism_of_action": "PI3-kinase p110-alpha subunit inhibitor",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.3333333333333333,
@@ -11574,7 +11580,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "8.4 Pediatric Use The safety and effectiveness of ZOKINVY for the treatment of HGPS and processing-deficient Progeroid Laminopathies (with either heterozygous LMNA mutation with progerin-like protein accumulation or homozygous or compound h"
+        "text": "8.4 Pediatric Use The safety and effectiveness of ZOKINVY for the treatment of HGPS and processing-deficient Progeroid Laminopathies (with either heterozygous LMNA mutation with progerin-like protein accumulation or homozygous or compound ..."
       },
       "evidence": {
         "target_overlap": 0.3333333333333333,
@@ -11690,7 +11696,7 @@
       "pediatric_flag": "labeled_pediatric_indication",
       "pediatric_flag_evidence": {
         "section": "pediatric_use",
-        "text": "8.4 Pediatric Use The safety and effectiveness of mycophenolic acid delayed-release tablets have been established in pediatric kidney transplant patients 5 to 16 years of age who were initiated on mycophenolic acid delayed-release tablets a"
+        "text": "8.4 Pediatric Use The safety and effectiveness of mycophenolic acid delayed-release tablets have been established in pediatric kidney transplant patients 5 to 16 years of age who were initiated on mycophenolic acid delayed-release tablets ..."
       },
       "evidence": {
         "target_overlap": 0.3333333333333333,
@@ -11802,10 +11808,10 @@
         "ema_only": false,
         "first_approval": 1984,
         "withdrawn": false,
-        "pediatric_labeling": "",
-        "fda_set_id": "003b863c-06b0-715d-ccc2-b7da4deac621",
+        "pediatric_labeling": "Pediatric Use NICOTROL NS therapy is not recommended for use in the pediatric population because its safety and effectiveness in children and adolescents who smoke have not been evaluated.",
+        "fda_set_id": "acb7d02d-249b-4645-ac1b-8ff9a56dd244",
         "combination_label": false,
-        "openfda_match": "matched via generic_name",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -11884,8 +11890,8 @@
         "openfda_boxed": false,
         "ot_warnings": []
       },
-      "pediatric_labeling": "",
-      "fda_set_id": "003b863c-06b0-715d-ccc2-b7da4deac621",
+      "pediatric_labeling": "Pediatric Use NICOTROL NS therapy is not recommended for use in the pediatric population because its safety and effectiveness in children and adolescents who smoke have not been evaluated.",
+      "fda_set_id": "acb7d02d-249b-4645-ac1b-8ff9a56dd244",
       "dgidb": {
         "module_hits": [
           "CDKN1A"
@@ -12029,10 +12035,10 @@
         "ema_only": false,
         "first_approval": 1968,
         "withdrawn": false,
-        "pediatric_labeling": "",
-        "fda_set_id": "0005aafa-08f8-4990-a54d-cc097195708f",
+        "pediatric_labeling": "8.4 Pediatric Use Treatment of Acute Pain The safety and effectiveness of acetaminophen injection for the treatment of acute pain in pediatric patients ages 2 years and older is supported by evidence from adequate and well-controlled studies of acetaminophen injection in adults and safety and pharmacokinetic data from adult and 483 pediatric patients across all age groups [see Dosage and Administration (2.3) and Pharmacokinetics (12.3) ] . The effectiveness of acetaminophen injection for the treatment of acute pain in pediatric patients younger than 2 years of age has not been established. In patients younger than 2 years, efficacy was not demonstrated in a double-blind, placebo-controlled study of 198 pediatric patients younger than 2 years. Pediatric patients less than 2 years of age, in",
+        "fda_set_id": "0f67c1bd-915b-4681-88dd-22f5154a80b3",
         "combination_label": false,
-        "openfda_match": "matched via generic_name",
+        "openfda_match": "matched via _exists_:pediatric_use scan; pediatric-bearing single-ingredient label preferred",
         "evidence": [
           "chembl",
           "openfda",
@@ -12081,8 +12087,11 @@
       "mechanism_of_action": "Cyclooxygenase inhibitor",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
-      "pediatric_flag_evidence": null,
+      "pediatric_flag": "labeled_pediatric_indication",
+      "pediatric_flag_evidence": {
+        "section": "pediatric_use",
+        "text": "8.4 Pediatric Use Treatment of Acute Pain The safety and effectiveness of acetaminophen injection for the treatment of acute pain in pediatric patients ages 2 years and older is supported by evidence from adequate and well-controlled ..."
+      },
       "evidence": {
         "target_overlap": 0.2,
         "network_proximity_z": 1.4856,
@@ -12137,8 +12146,8 @@
           }
         ]
       },
-      "pediatric_labeling": "",
-      "fda_set_id": "0005aafa-08f8-4990-a54d-cc097195708f",
+      "pediatric_labeling": "8.4 Pediatric Use Treatment of Acute Pain The safety and effectiveness of acetaminophen injection for the treatment of acute pain in pediatric patients ages 2 years and older is supported by evidence from adequate and well-controlled studies of acetaminophen injection in adults and safety and pharmacokinetic data from adult and 483 pediatric patients across all age groups [see Dosage and Administration (2.3) and Pharmacokinetics (12.3) ] . The effectiveness of acetaminophen injection for the treatment of acute pain in pediatric patients younger than 2 years of age has not been established. In patients younger than 2 years, efficacy was not demonstrated in a double-blind, placebo-controlled study of 198 pediatric patients younger than 2 years. Pediatric patients less than 2 years of age, in",
+      "fda_set_id": "0f67c1bd-915b-4681-88dd-22f5154a80b3",
       "dgidb": {
         "module_hits": [
           "CDKN1A"
@@ -12485,7 +12494,7 @@
       "mechanism_of_action": "Voltage-gated L-type calcium channel blocker",
       "direction": "neutral",
       "direction_reasons": [],
-      "pediatric_flag": "none",
+      "pediatric_flag": "unknown",
       "pediatric_flag_evidence": null,
       "evidence": {
         "target_overlap": 0.16666666666666666,

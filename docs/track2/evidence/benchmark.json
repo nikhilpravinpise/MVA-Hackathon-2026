@@ -1,7 +1,7 @@
 {
   "schema": "t2.benchmark/1",
   "generated_by": "tools/run_track2.py --benchmark",
-  "generated_at": "2026-10-12T22:48:15+00:00",
+  "generated_at": "2026-10-13T00:09:41+00:00",
   "cases": [
     {
       "gene": "TSC2",

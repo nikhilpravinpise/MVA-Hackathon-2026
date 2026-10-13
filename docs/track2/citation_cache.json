@@ -1,4 +1,6 @@
 {
+ "schema": "t2.citation_cache/1",
+ "note": "resolved-citation cache for tools/verify_citations.py; rebuilt with --refresh, replayed with --offline",
  "entries": {
   "DOI:10.1016/j.bbrc.2014.09.128": {
    "found": true,
@@ -940,6 +942,18 @@
    "via": "esummary:pubmed",
    "year": 2013
   },
+  "PMID:24487276": {
+   "found": true,
+   "title": "A general framework for estimating the relative pathogenicity of human genetic variants.",
+   "year": 2014,
+   "pubtypes": [
+    "Journal Article",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "retracted": false,
+   "via": "esummary:pubmed",
+   "resolved_at": "2026-10-13"
+  },
   "PMID:24516128": {
    "found": true,
    "pubtypes": [
@@ -1629,7 +1643,5 @@
    "via": "esummary:pubmed",
    "year": 1998
   }
- },
- "note": "resolved-citation cache for tools/verify_citations.py; rebuilt with --refresh, replayed with --offline",
- "schema": "t2.citation_cache/1"
+ }
 }

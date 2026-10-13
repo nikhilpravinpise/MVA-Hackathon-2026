@@ -41,7 +41,8 @@ four-parameter fits (lower AUC = more killing). One row per
 (broad_id, depmap_id): MTS010 preferred per the readme, else HTS002,
 MTS006, MTS005. STR-passed lines only; >= 100 lines per regression
 (default). BH q across tested compounds. beta < 0 = more killing in
-feature-high lines.
+feature-high lines
+[repo:tools/t2_prism.py] [repo:docs/track2/evidence/prism.json].
 
 *Aneuploidy*: beta < 0 = aneuploid-selective. *BUB1B expression*: beta >
 0 = low-BUB1B-selective.
@@ -50,26 +51,30 @@ feature-high lines.
 
 - 1,498 compounds tested (588 "Launched" broad_ids) - [repo:docs/track2/evidence/prism.json],
   ~457 lines median per regression after screen collapse.
-- **No launched drug reaches FDR q < 0.05 for aneuploidy-selectivity**
+- **No launched drug reaches FDR q < 0.05 for aneuploidy-selectivity** [repo:docs/track2/evidence/prism.json]
   (min launched q = 0.069). Top-of-list is hypothesis-generating only:
   ingenol-mebutate, lomefloxacin, lenalidomide, imatinib, dasatinib
-  (beta -0.004 to -0.002 per arm-alteration unit, all q >= 0.2).
+  (beta -0.004 to -0.002 per arm-alteration unit, all q >= 0.2)
+  [repo:docs/track2/evidence/prism.json].
 - **Concordance check vs Cohen-Sharir's own PRISM analysis (Supp Table
   5): Spearman rho = +0.719, p = 2e-229, sign concordance 80%** across
   1,442 matched drugs - the pipeline reproduces their result on the same
   data. Sign convention verified directly: their effect_size is positive
   when aneuploid lines are *less* sensitive (nutlin-3: +0.154 theirs vs
-  +0.124 our top-vs-bottom-quartile AUC gap).
+  +0.124 our top-vs-bottom-quartile AUC gap)
+  [repo:docs/track2/evidence/prism.json] (DOI:10.1038/s41586-020-03114-6).
 - **SAC/mitotic drugs are mostly aneuploid-*resistant* here** (42/50
   matched show beta > 0): short-course pharmacological SAC inhibition is
   tolerated better by aneuploid lines - exactly the asymmetry
   Cohen-Sharir reported between drug exposure and genetic SAC depletion
   (BUB1B depletion is lethal to aneuploid cells: Supp Table 2
   Achilles-RNAi effect -0.137, q = 5.7e-4; DRIVE-RNAi -0.317,
-  q = 1.1e-4). Implication for the submission: SAC-inhibiting drugs
+  q = 1.1e-4; DOI:10.1038/s41586-020-03114-6). Implication for the
+  submission: SAC-inhibiting drugs
   belong in the *considered-and-rejected* table - in this screen they do
   not preferentially kill aneuploid cells, and mechanistically they would
-  further weaken an already-hypomorphic checkpoint.
+  further weaken an already-hypomorphic checkpoint
+  [repo:docs/track2/evidence/prism.json].
 - **Low-BUB1B-expression sensitivity** (beta > 0 = sensitive at low
   BUB1B): nothing genome-wide significant among launched drugs (min
   q = 0.216); MDM2 inhibitors (nutlin-3 +0.045, idasanutlin +0.037) and
@@ -77,7 +82,8 @@ feature-high lines.
   but are not significant. In the *opposite* direction, mitotic
   kinesin/PLK1 inhibitors (ispinesib q = 0.04, volasertib, rigosertib,
   BI-2536) kill *high*-BUB1B lines - consistent with BUB1B marking
-  proliferative/mitotic demand rather than a vulnerability to exploit.
+  proliferative/mitotic demand rather than a vulnerability to exploit
+  [repo:docs/track2/evidence/prism.json].
 - **Not screened**: metformin, hydroxychloroquine, chloroquine,
   reversine are absent from the secondary-screen compound set; sirolimus/
   everolimus show no selective signal. Dossier lanes must not cite PRISM

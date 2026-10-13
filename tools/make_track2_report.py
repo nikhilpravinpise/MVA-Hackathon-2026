@@ -97,11 +97,19 @@ class Refs:
         return "\n".join(rows)
 
 
+_HAS_ID = re.compile(
+    r"(set_id\s*[`:]?\s*[0-9a-f]{8}|CHEMBL\d+|VCV\d{6,}"
+    r"|ENST\d{11}|NM_\d+\.\d+|\[repo:[^\]]+\])", re.I)
+
+
 def _has_source(text: str) -> bool:
-    """Does this fragment already name where it came from (a paper, a
-    label set_id, a ChEMBL id)? Used to avoid double-tagging."""
-    return bool(CITE_RE.search(text or "")
-                or re.search(r"(set_id|CHEMBL\d+|label section)", text or "", re.I))
+    """Does this fragment already name where it came from - a concrete
+    identifier (a paper id, an openFDA label set_id, a ChEMBL molecule,
+    a ClinVar accession, a transcript accession, or a [repo:] pointer)?
+    Used to avoid double-tagging.  Bare phrases like "label section" or
+    a bare "set_id" describe a source without naming one and do not
+    count: the bullet then carries the real marker appended below."""
+    return bool(CITE_RE.search(text or "") or _HAS_ID.search(text or ""))
 
 
 def md_cell(s) -> str:
@@ -165,8 +173,12 @@ def allele_table(m: dict | None, refs: Refs) -> str:
         pl = al.get("protein_loss")
         if not pl:
             return "full-length protein"
+        t = m.get("transcript") or {}
+        tx = (f" ({t['transcript']}.{t['version']} translation)"
+              if t.get("transcript") and t.get("version") else "")
         return (f"{pl['truncated_product_length']}-aa product, "
-                f"{pl['fraction_lost_pct']}% lost incl. kinase-like domain")
+                f"{pl['fraction_lost_pct']}% of the {pl['wt_length']}-aa "
+                f"protein lost incl. kinase-like domain{tx}")
 
     def struct(al):
         s = al.get("structure") or {}
@@ -231,7 +243,8 @@ def _ped(x: dict) -> str:
     flag = x.get("pediatric_flag")
     if flag:
         return {"labeled_pediatric_indication": "labeled pediatric indication",
-                "pediatric_text_only": "pediatric text only", "none": "none"}.get(flag, flag)
+                "pediatric_text_only": "pediatric text only",
+                "none": "none", "unknown": "unknown"}.get(flag, flag)
     return "label text" if (x.get("approval") or {}).get("pediatric_labeling") else "-"
 
 
@@ -287,6 +300,13 @@ def engine_section(c: dict | None, refs: Refs) -> str:
         rows.append(f"| {i} | {md_cell(x['drug'])} | {md_cell(tg)} | "
                     f"{md_cell(x.get('axis'))} | {md_cell(x.get('direction', '-'))} | {md_cell(x.get('tier'))} | "
                     f"{(x.get('score') or 0):.3f} | {_ped(x)} |")
+    ped_legend = ("\n\n*Pediatric label column* (the flag read off the matched "
+                  "openFDA label - a label-presence check, not a pediatric-safety "
+                  "assessment; semantics and caveats in [repo:docs/track2/engine.md]): "
+                  "`labeled pediatric indication` = the label states a pediatric "
+                  "indication; `pediatric text only` = pediatric text without an "
+                  "indication; `none` = the label formally declines pediatric use; "
+                  "`unknown` = no label found, or the label is silent on pediatrics.")
     tail = ""
     if opposed:
         tail = ("\n\nTop mechanism-opposed exclusions (would-be rank, rule): " + "; ".join(
@@ -298,7 +318,7 @@ def engine_section(c: dict | None, refs: Refs) -> str:
         salt_note = (f" The {f.get('gated_in')} approved entries include {len(salts)} salt or ester "
                      f"forms of an active already counted ({md_cell(', '.join(salts))}), so the "
                      f"distinct active count is {(f.get('gated_in') or 0) - len(salts)}.")
-    return (head + "\n\n" + "\n".join(rows) + tail + salt_note +
+    return (head + "\n\n" + "\n".join(rows) + ped_legend + tail + salt_note +
             "\n\nThe engine ranks *evidence density*, not suitability for this child: databases "
             "over-represent oncology, so the curated layer (section 5) and the pediatric facts decide "
             "the portfolio. What the engine does establish is twofold: it independently reaches the "

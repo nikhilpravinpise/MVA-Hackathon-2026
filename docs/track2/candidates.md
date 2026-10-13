@@ -146,9 +146,7 @@ euploid control; thresholds per
 - D+Q: does intermittent exposure cut p16/SA-beta-gal burden without raising
   aneuploidy? GO >=50% senescent-fraction reduction
   [repo:docs/track2/evidence/testability.json].
-- everolimus: does p-S6/SASP fall without proliferation loss? GO >=30% SASP,
-  <20% proliferation slowdown
-  [repo:docs/track2/evidence/testability.json].
+- everolimus: does p-S6/SASP fall without proliferation loss? GO >=30% SASP, <20% proliferation slowdown [repo:docs/track2/evidence/testability.json].
 - niacin/nicotinamide: does BubR1 protein rise (Axis-A PD marker)? GO >=1.3x - a niacin-vs-nicotinamide head-to-head resolves the form question [repo:docs/track2/evidence/testability.json].
 - HCQ: does the aneuploid fraction fall preferentially (the PMID:21315436
   mechanism on the child's own cells)? GO >=2-fold selective depletion
@@ -162,17 +160,20 @@ cheap whole-organism confirmation; scRNA-seq quantifies signature reversal.
 - **D+Q**: We are wrong if the INK-ATTAC rescue (PMID:22048312) depended on genetic targeting
   rather than cell removal (i.e., pharmacologic senolysis fails to reproduce
   it in BubR1-defective cells), if the child's senescent compartment is
-  protective (holding aneuploid clones arrested) so clearing it accelerates
-  neoplasia, or if dasatinib's SRC/BCR-ABL pharmacology at senolytic pulses
+  protective (holding aneuploid clones arrested; PMID:20123995) so clearing
+  it accelerates neoplasia, or if dasatinib's SRC/BCR-ABL pharmacology at senolytic pulses
   harms a growth-restricted child more than the model predicts. Falsifier:
   patient fibroblasts show no senescent-burden reduction, or cleared cells are
-  replaced by aneuploid expansion.
+  replaced by aneuploid expansion
+  [repo:docs/track2/evidence/portfolio.json].
 - **Everolimus**: We are wrong if mTORC1 hyperactivity in MVA mice is
-  downstream noise rather than driver (the JCI correlation is associational),
+  downstream noise rather than driver (the JCI correlation is associational;
+  PMID:31738183),
   if SASP suppression frees aneuploid clones from their secretory
   neighbourhood-watch, or if chronic immunosuppression raises net cancer risk
   faster than senescence suppression lowers it. Falsifier: fibroblasts show
-  SASP down but aneuploidy up, or no mTORC1 signature on patient scRNA-seq.
+  SASP down but aneuploidy up, or no mTORC1 signature on patient scRNA-seq
+  [repo:docs/track2/evidence/portfolio.json].
 - **Niacin/nicotinamide**: We are wrong if the K668-deacetylation axis does
   not rescue THIS hypomorph (Asn1002Lys may destabilise BubR1 by a route NAD
   cannot reach - e.g., folding, not acetylation), if approved-form
@@ -181,10 +182,12 @@ cheap whole-organism confirmation; scRNA-seq quantifies signature reversal.
   function (protein level vs function gap). Falsifier: no BubR1-protein or
   nocodazole-response change on patient cells after NAD-precursor exposure.
 - **HCQ**: We are wrong if aneuploidy selectivity was a cell-line artefact
-  (Tang used engineered trisomies, not mosaic SAC-defective cells), if chronic
+  (Tang used engineered trisomies, not mosaic SAC-defective cells;
+  PMID:21315436), if chronic
   autophagy blockade harms normal tissues needing proteostasis, or if the
   mosaic test shows no differential killing. Falsifier: fibroblast mosaic
-  assay shows equal euploid/aneuploid toxicity.
+  assay shows equal euploid/aneuploid toxicity
+  [repo:docs/track2/evidence/portfolio.json].
 
 ## 7. Global limitations (honest)
 
@@ -207,8 +210,11 @@ cheap whole-organism confirmation; scRNA-seq quantifies signature reversal.
    to and showed false `none` for 'dasatinib anhydrous' (the >=1y
    indication sits in Indications and Usage) and 'metformin' (the name
    resolved to the ZITUVIMET combination label); the regenerated file
-   shows `labeled_pediatric_indication` for both. The dossier pediatric
-   blocks above, each tied to a recorded set_id, are authoritative.
+   shows `labeled_pediatric_indication` for both. Labels silent on
+   pediatrics now read `unknown` rather than `none`, which is reserved
+   for an explicit label denial. The dossier pediatric
+   blocks above, each tied to a recorded set_id, are authoritative
+   [repo:docs/track2/evidence/dossiers/].
 
 ## Citations
 
