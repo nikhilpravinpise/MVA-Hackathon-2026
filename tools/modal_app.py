@@ -79,8 +79,10 @@ def _atomic_write(path: Path, text: str) -> None:
 
 # Reference pairs carried as constants so ablation containers need no
 # baseline result.json (the local run is answer-blind, no truth.json).
-BASE_TOP_PAIR = sorted([["6", 32584639, "C", "A"],
-                        ["6", 32584809, "C", "T"]])  # HLA-DRB1 comp-het
+# The pre-mask top pair sat in the declared MHC artifact locus; its
+# coordinates are withheld (tools/redact.py), so the baseline pair is empty
+# and `pair_rank` is null - which is what a masked locus must report.
+BASE_TOP_PAIR: list = []
 BUB1B_PAIR = sorted([["15", 40209701, "T", "G"],
                      ["15", 40220612, "T", "G"]])
 # Slice realign/region.bam was cut to (verify against realign tooling if

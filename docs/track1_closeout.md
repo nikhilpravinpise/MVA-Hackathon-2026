@@ -52,7 +52,7 @@ listed with its prep state. Verified server-side, not self-reported:
 |---|---|---|
 | both arms on synthetic spike FIRST | DONE | spike recovered rank 1 (report section 3) |
 | both arms on proband + top-20 concordance | DONE | `arm_concordance.json` (overlap = BUB1B); Arm-A `BUB1B_AR` rank 1 @ 0.9819 |
-| splice check on near-splice candidates | DONE | offslice_eval.json (`15:40216470` splice-benign verdict) |
+| splice check on near-splice candidates | DONE | offslice_eval.json (`[intronic site withheld]` splice-benign verdict) |
 | CNV/SV arm feeds back | DONE | manta+cnvpytor: 0 calls overlapping BUB1B (report section 4a) |
 | funnel emits the pair | DONE | 1 emitted hypothesis of 2,025,791 |
 
@@ -119,7 +119,7 @@ live Space, organizer threads), not against this repo's own claims.
 | A4 | **False claim that the whole VCF lacks PGT/PID** in status.md and this ledger. Truth: header declares PGT/PID, 770,458 of 5,012,204 records carry them; neither BUB1B site does (one participant noted this publicly in thread #17). The report itself was correctly scoped ("at either site"). | blocking for truthfulness | Wording fixed; `check_truth_claims` added to `make freshness` + `test_truth_claims` so it cannot regress. Interpretation unchanged: phase stays `unknown`. |
 | A5 | The 15-check freshness gate passed throughout A3/A4: it only checks claims it was taught. | process | New truth-claims check; absolute negatives swept against artifacts (A2). |
 | A6 | ACMG "combined 11 pts -> Pathogenic" appears in status/ledger shorthand. The report (section 7) already labels it a hypothesis-level ranking aggregate, with the per-allele classes (LP + VUS) as the clinical call and PM3 withheld. | low | Ledger shorthand is a summary of the report, which carries the caveat. Do not quote the aggregate as a classification externally. |
-| A7 | Public flip blind spot: `public_release_check.py` scans identifiers, not genotype content. Tracked docs name patient loci beyond the causal pair: the HLA-DRB1 pseudo-LoF cluster (chr6:325-326 Mb, an artifact shown as a mask rationale) and `15:40216470` (benign off-slice site). Thread #20: organizers asked another team to keep the repo private until IRB guidance arrives on incidental findings; no ruling seen yet. | decision | See open decisions below. |
+| A7 | Public flip blind spot: `public_release_check.py` scans identifiers, not genotype content. Tracked docs named patient loci beyond the causal pair: an MHC-region pseudo-LoF cluster (the artifact behind the declared mask) and one benign off-slice intronic site. Thread #20: organizers asked another team to keep the repo private until IRB guidance arrives on incidental findings; no ruling seen yet. | decision | **RESOLVED 2026-10-17 - redacted.** Both are withheld from every tracked file: `tools/redact.py` (generic MHC-window + HLA-symbol rule, private token list for the intronic site), generators scrub their output, `tests/test_redaction.py` guards it. Commit history still holds the old text (see `public_release_audit.md`); history was not rewritten. |
 | A8 | Dates: submissions close and the leaderboard freezes 2026-10-24 23:59 UTC; qualitative evaluation 2026-10-24 to 2026-11-24 (Space About tab); winners 2026-12-18 (thread #26). Repo must be public once evaluation begins. | verified | flip on 2026-10-24 |
 | A9 | model2 upload: threads #19 and #27 show a second entry creates a duplicate the organizers must retract. | decision | Default: do NOT upload. `submissions/` stays as an archive. |
 
@@ -128,9 +128,8 @@ live Space, organizer threads), not against this repo's own claims.
 1. **Merge this branch** (report, ledgers and gate corrections) to `main`
    before the flip so the public repo carries the corrected disclosure.
 2. **Public flip, 2026-10-24** (not earlier): run
-   `python tools/public_release_check.py`, decide on A7 (accept the
-   HLA-DRB1 and off-slice loci as non-clinical method evidence, or redact
-   them from tracked docs), re-check thread #20 for an IRB ruling on
+   `python tools/public_release_check.py`, A7 is resolved
+   (the two non-causal loci are redacted, see above), re-check thread #20 for an IRB ruling on
    incidental findings (this repo has 0 secondary findings), then flip.
 3. **Deletion**: email within 30 days of close (by 2026-11-23, window
    closes 2026-11-24); drafts and runbook are staged. Local `data/` (~80 GB)

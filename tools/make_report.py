@@ -23,7 +23,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
+sys.path.insert(0, str(REPO / "tools"))
 
+import redact  # noqa: E402
 from src.config import config_hash  # noqa: E402
 from src.vcf import from_submission_chrom, to_submission_chrom  # noqa: E402
 
@@ -727,8 +729,9 @@ def finding_interpretation(hpo_terms_path: str | None,
                       f"{allele_balance.get('filters','?')}):", "",
                       "| Site | Ref/Alt depth | alt VAF |",
                       "|---|---|---|"]
-            refs = {"15:40209701": "T", "15:40220612": "T",
-                    "15:40216470": "A"}
+            refs = {"15:40209701": "T", "15:40220612": "T"}
+            refs.update({k: v.get("ref")
+                         for k, v in redact.private_tokens().items()})
             for site, s in sorted(sites.items()):
                 c = s.get("counts") or {}
                 ref_b = refs.get(site)
@@ -1459,6 +1462,7 @@ def main(argv=None) -> int:
 
     template = TEMPLATE.read_text(encoding="utf-8")
     out = fill(template, mapping)
+    out = redact.scrub(out)  # withheld loci, decision A7
     Path(args.out).write_text(out, encoding="utf-8", newline="\n")
     print(f"wrote {args.out} ({len(out)} bytes)")
     return 0

@@ -28,7 +28,7 @@ artifacts at close-out gets corrected, not spun.
 - **Two-arm convergence design**: a deterministic 7-stage funnel (Arm B)
   validated against Exomiser genome-mode (Arm A) on the same proband. The
   arms independently nominate BUB1B; the funnel additionally *explains
-  Exomiser's miss* on the HLA-DRB1 artifact class (its rank-2 hit is the
+  Exomiser's miss* on the MHC-region artifact class (its rank-2 hit is the
   same extended-MHC misalignment our locus mask encodes as a rule).
 - **The `artifact_loci` stage itself**: a post-observation, direction-
   neutral, disclosed funnel stage - not a submission-time row deletion.
@@ -55,7 +55,7 @@ artifacts at close-out gets corrected, not spun.
   Singleton-emission floor, emit_floor, and the epcr decay map are
   pre-registered in the frozen config.
 - **Off-slice disclosure**: `offslice_eval.json` evaluates the one
-  intermediate het (15:40216470, 1026 bp off the exon slice, splice-
+  intermediate het ([intronic site withheld], 1026 bp off the exon slice, splice-
   benign under SpliceAI) rather than silently ignoring it.
 - **Ablations that can fail**: each of the 5 source drops records
   `bub1b_rank` + `top_emitted` - including the possibility the pair

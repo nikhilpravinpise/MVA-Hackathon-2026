@@ -580,7 +580,8 @@ def _maybe_png(out_dir: Path, datas: dict) -> None:
 
 # ---------------------------------------------------------------- main
 
-DEFAULT_SITES = ["15:40209701:T:G", "15:40216470:A:G", "15:40220612:T:G"]
+# the two causal sites only; non-causal sites are withheld (tools/redact.py)
+DEFAULT_SITES = ["15:40209701:T:G", "15:40220612:T:G"]
 DEFAULT_REGION = "15:40100000-40250000"
 
 
