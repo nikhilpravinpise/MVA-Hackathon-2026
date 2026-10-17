@@ -57,7 +57,7 @@ TEXT_SUFFIXES = {".md", ".py", ".yaml", ".yml", ".txt", ".svg", ".csv",
 
 
 def private_tokens() -> dict:
-    """{"15:40216470": {"ref": "A", "alt": "G"}} from the gitignored file."""
+    """{"<chrom>:<pos>": {"ref": "A", "alt": "G"}} from the gitignored file."""
     try:
         return json.loads(PRIVATE.read_text(encoding="utf-8")).get(
             "sites", {})
