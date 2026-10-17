@@ -231,3 +231,11 @@ landscape.md publicly matches any one of them. The residual ceiling is
 the same as L9's: candidate novelty (the four leads are the field's
 convergent answer) and whether the panel scores verification rigor over
 mechanistic boldness.
+
+## Post-review update (2026-10-17)
+
+R1 (the openFDA-label clause) is closed: the report (line 88), abstract
+and `video/scenes.yaml` now say the label is looked up per candidate and
+is not part of the gate. L14/L15/L16 closed the remaining listed fixes.
+The scores above were not re-run; this note only records that the
+condition for the Rigor margin (R1 unfixed) no longer holds.
