@@ -1,6 +1,6 @@
 # Track 1 Methods Report - MVA Hackathon 2026
 
-**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-12 12:19 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
+**Team:** `nikhilpise` | **Model:** `model1` | **Generated:** 2026-10-17 12:41 UTC by `tools/make_report.py` (all statistics in this document are regenerated from `results/` - nothing is hand-typed; see GATE-6 checklist in `docs/report_map.md`).
 
 > **Data status banner:** PATIENT RUN (PROBAND01, challenge proband) - funnel/ablation numbers below regenerate from results/track1_patient_modal/track1_final_indelfix (VEP-indel CSQ-matching fix); orthogonal evidence arms (mosdepth/DeepVariant/CNV/FASTQ-QC/allele-balance/offslice) cite track1_final, whose inputs are unaffected by the fix; external-validation sections cite the synthetic/real-spike harnesses.
 
@@ -16,9 +16,9 @@
 
 | # | locus (notes) | pair | epcr |
 |---|---|---|---|
-| 1 | HLA-DRB1 compound_het splice_donor_variant+stop_gained | chr6:32584639 C>A + chr6:32584809 C>T | 0.3222 |
-| 2 | HLA-DRB1 compound_het splice_donor_variant+stop_lost | chr6:32584639 C>A + chr6:32588969 T>G | 0.1997 |
-| 3 | HLA-DRB1 compound_het stop_gained+stop_lost | chr6:32584809 C>T + chr6:32588969 T>G | 0.1324 |
+| 1 | MHC-region compound_het splice_donor_variant+stop_gained | chr6:[withheld] C>A + chr6:[withheld] C>T | 0.3222 |
+| 2 | MHC-region compound_het splice_donor_variant+stop_lost | chr6:[withheld] C>A + chr6:[withheld] T>G | 0.1997 |
+| 3 | MHC-region compound_het stop_gained+stop_lost | chr6:[withheld] C>T + chr6:[withheld] T>G | 0.1324 |
 | 4 | BUB1B compound_het stop_gained+missense_variant | chr15:40209701 T>G + chr15:40220612 T>G | 0.0637 |
 
 ## 1. Approach in detail
@@ -209,7 +209,7 @@ Verdict: **True** (both BUB1B sites independently recalled)
 - verdict: `none` - no CNV alleles disturb the biallelic-SNV interpretation
 
 **Off-slice intronic site evaluation:**
-- site: `15:40216470 A>G` (1026 bp outside the exon slice)
+- site: `[intronic site withheld] A>G` (1026 bp outside the exon slice)
 - AD 28/18; SpliceAI deltas 0.0; gnomAD genomes: absent
 - verdict: evaluated; splice-benign under available model; does not change the call
 
@@ -244,33 +244,6 @@ r20 ALT TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[G]AAGTGCCTCTGCAGAGTTGTGTATAGAAG
 r21 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
 r22 ref TCACAGTATCGCAGACAGCTACTGAAGTCCCTACCAGAGT[T]AAGTGCCTCTGCAGAGTTGTGTATAGAAGACAGACCAATG
 ... 26 more covering reads
-
-site 15:40216470 A>G - 46 covering reads
-        ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACACACTTTACATATATATATAAAATACATATGTATATTTTATAT
-                                                ^
-r01 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]C                                       
-r02 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTA                                   
-r03 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACA                                 
-r04 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATA                               
-r05 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATA                               
-r06 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATA                             
-r07 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATA                             
-r08 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATATAT                          
-r09 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATAT                        
-r10 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATATATATA                       
-r11 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAA                      
-r12 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTAC  ATATATATAAAATACAAATGTGTA        
-r13 ALT ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[G]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r14 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r15 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r16 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r17 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r18 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r19 ALT ACCTTGTCTAAGAAACCAAACAAATCACACACATGCACAC[G]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r20 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r21 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-r22 ref ACCTTGTCTAAGAAACCAAACAAAACACACACATGCACAC[A]CTTTACATATATATATAAAATACATATGTATATTTTATAT
-... 24 more covering reads
 
 site 15:40220612 T>G - 29 covering reads
         ATGGTGAATTGTGGAATAAATTCTTTGTGCGGATTCTGAATGCCAATGATGAGGCCACAGTGTCTGTTCTTGGGGAGCTTG
@@ -312,7 +285,7 @@ The submission CSV is the **automated output** of the pipeline
 (`src/submit.py` builds bytes that are oracle-validated locally before any
 upload), with **one disclosed post-observation manual curation step**: the
 extended-MHC artifact-locus mask. The trigger was human review - 3 of
-the 4 emitted run-2 rows were HLA-DRB1/MHC hypotheses outranking the true
+the 4 emitted run-2 rows were MHC-region hypotheses outranking the true
 pair (BUB1B was row 4 of 4), a well-known artifact class, and the motivation honestly included the score impact
 (decisions.md). The mask adds no evidence and raises no *score*, but it
 does change *ranks* (it removed 6,353 artifact-locus candidates in the masked run, 7,331 after
@@ -401,7 +374,7 @@ Two methodologically different engines converge on the same gene and the same re
 | Site | Ref/Alt depth | alt VAF |
 |---|---|---|
 | 15:40209701 | G=26/T=22 | 54% |
-| 15:40216470 | A=28/G=18 | 39% |
+| [intronic site withheld] | A=28/G=18 | 39% |
 | 15:40220612 | T=16/G=13 | 45% |
 
 All three sites sit at ~50% alt fraction - clean heterozygotes, no allele imbalance suggesting contamination or copy-number distortion.

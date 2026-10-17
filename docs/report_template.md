@@ -126,7 +126,7 @@ The submission CSV is the **automated output** of the pipeline
 (`src/submit.py` builds bytes that are oracle-validated locally before any
 upload), with **one disclosed post-observation manual curation step**: the
 extended-MHC artifact-locus mask. The trigger was human review - 3 of
-the 4 emitted run-2 rows were HLA-DRB1/MHC hypotheses outranking the true
+the 4 emitted run-2 rows were MHC-region hypotheses outranking the true
 pair (BUB1B was row 4 of 4), a well-known artifact class, and the motivation honestly included the score impact
 (decisions.md). The mask adds no evidence and raises no *score*, but it
 does change *ranks* (it removed 6,353 artifact-locus candidates in the masked run, 7,331 after

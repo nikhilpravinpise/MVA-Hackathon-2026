@@ -131,7 +131,7 @@ the shipped VCF, and do the annotation stores corroborate?
 |---|---|---|---|---|---|
 | 40209701 T>G (c.2210T>G, p.Leu737Ter) | het 0/1, AD 21/25, GQ99 | **25 T / 27 G** (VAF 52%) | rs759242053, AF 7.87e-05 | **Pathogenic/LP**, MVA1 OMIM:257300 | stop_gained, CADD 36, SpliceAI ~0 |
 | 40220612 T>G (c.3006T>G, p.Asn1002Lys) | het 0/1, AD 15/13, GQ99 | **16 T / 16 G** (VAF 50%) | AF 6.84e-07 | not reported (T>A VUS, T>C LB at same pos) | missense, CADD 24.5, AM 0.9229 LP, REVEL 0.472 |
-| 40216470 A>G (deep intronic) | het 0/1, AD 28/18 | **30 A / 20 G** (VAF 40%) | n/a (outside exome slice) | none | SpliceAI all deltas 0.00 |
+| [withheld] A>G (deep intronic) | het 0/1, AD 28/18 | **30 A / 20 G** (VAF 40%) | n/a (outside exome slice) | none | SpliceAI all deltas 0.00 |
 
 Read-level allele balance from our own alignment independently reproduces all
 three shipped genotype calls. gnomAD AFs queried directly match the VEP-CSQ
@@ -142,7 +142,7 @@ what Exomiser reported. The data is internally consistent at every layer.
 
 5.1 **Funnel input is exon-only.** `patient.vcf.gz` was sliced by
 `exons_pm200bp.bed` (478K of 5.01M records). The deep-intronic hypothesis site
-40216470 - present in the raw VCF with clean AD 28/18 - is **1,026 bp from the
+[withheld] - present in the raw VCF with clean AD 28/18 - is **1,026 bp from the
 nearest BUB1B exon**, outside the slice, so the funnel could never evaluate it
 despite plan.md requiring "evaluate it on evidence, not ignore it." Two cheap
 fixes, no downloads needed: (a) annotate just the off-slice candidate sites
@@ -157,7 +157,7 @@ sites are 10,911 bp apart vs ~465 bp mean insert (max proper-pair span ~1.3
 kb): 0 spanning templates in the region BAM, no `PGT`/`PID` at either site,
 and the only phased records between them are homozygous `1|1` sites
 (uninformative for het phasing). WhatsHap (both local and Modal runs) correctly
-left them `0/1`. The only intermediate het site is 40216470 itself - still
+left them `0/1`. The only intermediate het site is [withheld] itself - still
 4-7 kb from each flank, beyond read linking. Remaining honest avenues:
 population/LD phasing against a reference panel (external data explicitly
 sanctioned by the organizers, discussion #22 - All of Us named), or reporting
@@ -172,7 +172,7 @@ checking it; mosdepth coverage stats; a fastp/fastqc QC table for the report
 the methods write-up).
 
 5.4 **Ranking issue, not a data issue.** Current `submission.csv` ranks an
-HLA-DRB1 compound-het (epcr 0.32) above BUB1B (0.064) - a classic MHC
+MHC-region compound-het (epcr 0.32) above BUB1B (0.064) - a classic MHC
 hypervariable-region artifact that Exomiser also surfaces (rank 2). Being
 handled via the disclosed `artifact_loci` exclusion in the active plan; no
 data change required.

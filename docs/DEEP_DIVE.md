@@ -333,7 +333,7 @@ impossible - GRCh38 REF there is G.
   burned all 6 submissions and still ended partial. A second entry, kathya-sanchez-2002
   (`hybrid-prioritization`), shows the same 50/0.500 single-hit signature.
 - Conclusion: GT contains exactly ONE of the two variants mateoosm submitted - a T>G (either
-  40209701 nonsense or 40220612 missense, both exist in the list) plus the 40216470 A>G intron -
+  40209701 nonsense or 40220612 missense, both exist in the list) plus the [withheld] A>G intron -
   paired with a second true variant not in their row. All three leaked candidates stay live.
 - Biological prior: canonical MVA1 genotype = one LoF allele + one missense/hypomorphic allele
   (biallelic truncating is usually embryonic-lethal). That points to GT =
@@ -391,7 +391,7 @@ repurposing screen they're already funding.
   never produced a full match.
 - **Forensic update: both hypotheses still live, asymmetrically.** Under H1
   {40209701 T>G + 40220612 T>G} both failed rows are trivial {1 true + 1 junk} partials and
-  the 40216470 A>G intron is simply wrong. Under H2 {40216470 A>G + 40220612 T>G} the data
+  the [withheld] A>G intron is simply wrong. Under H2 {[withheld] A>G + 40220612 T>G} the data
   forces a specific coincidence: their m6 row must have been {nonsense, intron} (partial via
   the intron) AND their m4 anchor must be the missense - i.e., they tried each partner with
   the wrong mate, never intron+missense together. Possible, but H2 now needs a fully

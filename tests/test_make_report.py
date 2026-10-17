@@ -354,7 +354,7 @@ def test_new_slots_fill_from_fixtures(tmp_path):
                         "notes": []}}))
     off = tmp_path / "off.json"
     off.write_text(json.dumps(
-        {"site": "15:40216470 A>G", "distance_to_nearest_exon_bp": 1026,
+        {"site": "15:40000000 A>G", "distance_to_nearest_exon_bp": 1026,
          "ad": "28/18", "spliceai_deltas": 0.0,
          "gnomad_genome_cov": "absent",
          "verdict": "evaluated; splice-benign; does not change the call"}))

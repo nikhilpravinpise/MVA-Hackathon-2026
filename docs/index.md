@@ -34,7 +34,7 @@ approved-drug portfolio, plus the open engine that produced it.
 
 ```sh
 python -m pip install -r requirements.txt
-python -m pytest tests -q                                  # 562 tests
+python -m pytest tests -q                                  # 575 tests
 python tools/verify_citations.py --offline --coverage-strict
 python tools/audit_freshness.py
 ```

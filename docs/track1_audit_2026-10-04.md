@@ -78,8 +78,8 @@ three hypotheses the repo itself considers live (DEEP_DIVE s.9c-9d):
 | Assumed ground truth | rank_points | f_max | match |
 |---|---|---|---|
 | {40209701 T>G, 40220612 T>G} (our pair, leading hypothesis) | 100.0 | 1.000 | full @1 |
-| {40209701 T>G, 40216470 A>G} | 50.0 | 0.500 | partial @1 |
-| {40216470 A>G, 40220612 T>G} | 50.0 | 0.500 | partial @1 |
+| {40209701 T>G, [withheld] A>G} | 50.0 | 0.500 | partial @1 |
+| {[withheld] A>G, 40220612 T>G} | 50.0 | 0.500 | partial @1 |
 
 The public forensics favour our pair: 116 entries at 100/1.0, plus a 50/0.5
 entry whose pair matches the "one T>G + the A>G" signature. That is still
@@ -174,7 +174,7 @@ curation?" Report s.5 answers that it is automated and that "No variant was
 added, removed, or re-ordered by hand". But:
 
 - The extended-MHC mask was a human decision, made after seeing the patient
-  output (all emitted run-2 rows were HLA-DRB1). It turned the run-2 CSV
+  output (all emitted run-2 rows were MHC-region hypotheses). It turned the run-2 CSV
   (BUB1B at row 4, epcr 0.0637) into the final CSV (BUB1B sole row).
 - decisions.md:18 lists among rejected alternatives "accept the ~25-pt score
   (unacceptable vs the frozen first-upload goal)". In other words, the stated
@@ -331,7 +331,7 @@ result, rewrite the abstract around the actual patient result, and add a
   289,725 + 6,353 = 296,078, no monotonicity violations.
 - **Evidence arms present and consistent with the report**: DeepVariant 1.9.0
   (both sites 0/1 PASS, GQ 42/35), manta+cnvpytor (0 calls at BUB1B), mosdepth
-  (WGS 42.08x, locus 45.26x), fastp x4, off-slice 15:40216470 evaluation, read-
+  (WGS 42.08x, locus 45.26x), fastp x4, off-slice [intronic site withheld] evaluation, read-
   level phasing (0 spanning / 75 partial, `unknown`).
 - **Report regeneration**: the reconstructed `make_report.py` invocation
   reproduces `docs/report.md` (3 diff lines, all explained above).

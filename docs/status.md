@@ -62,7 +62,7 @@ passed 2026-10-03).
 | Inheritance aggregation (comp-het, hom-alt, dominant, X-linked) | DONE | `src/genes.py` enumerate_genotypes; hemizygous for haploid calls |
 | Phenotype scoring (Resnik/BMA + gene->disease prior) | DONE | `src/pheno.py` OBO parse + hpoa aspect filter + BMA scorer + `gene2disease` prior |
 | Rank -> epcr (documented as ranking artifact) | DONE | `src/prioritize.py`; report section 1 documents non-calibration |
-| **Post-freeze: `artifact_loci` locus mask** | DONE | `src/loci.py` + `config/pipeline.yaml` (`chr6:28500000-33500000` extended-MHC exclusion after observed HLA-DRB1 pseudo-LoF comp-het clusters; decisions.md row) - funnel stage `locus_masked` 289725 (+`locus_masked_out` 6353 = 296078 candidates) |
+| **Post-freeze: `artifact_loci` locus mask** | DONE | `src/loci.py` + `config/pipeline.yaml` (`chr6:28500000-33500000` extended-MHC exclusion after observed MHC-region pseudo-LoF comp-het clusters; decisions.md row) - funnel stage `locus_masked` 289725 (+`locus_masked_out` 6353 = 296078 candidates) |
 | **Arm A Exomiser genome mode** | **DONE** | exomiser-cli-14.0.0 + `2406` bundles; `tools/run_exomiser.py` emits the verified shipped schema; run on real-spike + synthetic |
 | Both arms on the synthetic spike-in first | DONE | synthetic run: VWF-overlapping TTN-decoy locus paired correctly, scored 0.0003 (no false confidence) |
 | Arm A on real-spike + top-20 concordance | DONE | **PAH rank 1 in BOTH arms** - `results/arm_concordance.json` via `tools/compare_arms.py` or `run_track1 --arm-a-tsv` |
@@ -140,7 +140,7 @@ re-verified 2026-10-04 on the indel-fix bytes staged at
 |---|---|---|---|
 | emitted hypotheses | 1 | 1 | PASS |
 | CSV rows | 1 | 1 | PASS |
-| HLA-DRB1 rows in hypotheses.tsv | 0 | 0 | PASS |
+| MHC-region rows in hypotheses.tsv | 0 | 0 | PASS |
 | BUB1B pair epcr | 0.1324 | 0.1324 | PASS |
 | Ablation artifacts | 5 | 5 landed (gnomad via nonpreemptible retry, rank 2) | PASS |
 | funnel arithmetic | masked+out = candidates | 289725 + 6353 = 296078 | PASS |
@@ -151,7 +151,7 @@ re-verified 2026-10-04 on the indel-fix bytes staged at
 |---|---|---|---|
 | emitted hypotheses | 1 | 1 | PASS |
 | CSV rows | 1 | 1 | PASS |
-| HLA-DRB1 rows in hypotheses.tsv | 0 | 0 | PASS |
+| MHC-region rows in hypotheses.tsv | 0 | 0 | PASS |
 | BUB1B pair rank | top emitted | rank 7, epcr 0.0749 | PASS |
 | Indel annotation recovery | >845,688 facts | 923,952 (+78k) | PASS |
 | Ablation artifacts | 5 | 5 landed + merged ablations.json (gnomad rank 2, clinvar 9, phasing 7, hpo 159, damage_predictors 230) | PASS |

@@ -56,12 +56,9 @@ Submissions close 2026-10-24 23:59 UTC and qualitative evaluation runs
 to 2026-11-24, so the repo must be public by then.
 1. Re-check thread #20 for an IRB ruling. This repo reports 0 secondary
    findings, so it is low risk, but the organizers asked for caution.
-2. Decide the loci question (audit item A7). Tracked docs name patient
-   loci beyond the causal pair: the HLA-DRB1 pseudo-LoF cluster
-   (an artifact explained as the reason for the MHC mask) and the benign
-   off-slice site `15:40216470`. Recommended: accept, since they are
-   method evidence and non-clinical. Alternative: redact them from tracked
-   docs and regenerate.
+2. The loci question (audit item A7) is resolved: the MHC-region artifact
+   cluster and the benign off-slice intronic site are redacted from all
+   tracked files (`tools/redact.py`, guarded by `tests/test_redaction.py`).
 3. Run `python tools/public_release_check.py`. Known history-only hits are
    the organizer Synapse emails and one Synapse ID in commit 265b686;
    accept and record in `docs/decisions.md`, or rewrite history.

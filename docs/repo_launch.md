@@ -2,11 +2,16 @@
 title: Repo launch checklist
 nav_order: 17
 ---
-# Repo launch checklist - going public on 2026-10-20
+# Repo launch checklist - going public on 2026-10-24
 
 The repo is furnished but private. These are the operator steps for the
-insurance-submission day. Everything here is a one-shot command or click;
-nothing below touches code. Re-run the citation gate + suite first if more
+public flip on the close date. The flip is deliberately NOT done earlier:
+the FAQ allows a private repo while the hackathon runs, organizers asked
+another team (thread #20) to stay private pending IRB guidance on
+incidental findings, and `docs/track1_closeout.md` (A8) fixes the flip at
+close. Both Track 2 submissions (Oct 20, Oct 23) go in with the repo
+private; it must be public before 23:59 UTC on Oct 24. Everything here is a
+one-shot command or click; nothing below touches code. Re-run the citation gate + suite first if more
 than a day has passed since the last green run.
 
 ```sh
@@ -16,7 +21,10 @@ python tools/verify_citations.py --offline --coverage-strict
 python tools/public_release_check.py   # re-scan history before flipping
 ```
 
-## 1. Flip visibility (morning, Oct 20)
+## 1. Flip visibility (Oct 24, after the final submission)
+
+First resolve open decision A7 in `docs/track1_closeout.md` and re-check
+thread #20 (`python tools/check_discussions.py --since 2026-10-12`).
 
 ```sh
 gh repo edit nikhilpravinpise/MVA-Hackathon-2026 \
@@ -53,8 +61,9 @@ Repo > Settings > General > Social preview > upload
 
 ## 4. Video upload
 
-Upload `pitch.mp4` (from the `track2-submission` release assets, or
-`.claude/worktrees/track2/video/out/`) to YouTube or Vimeo as **unlisted**.
+Do this BEFORE the Oct 20 submission. Upload `pitch.mp4` (from the
+`track2-submission` release assets, or `.claude/worktrees/track2/video/out/`)
+to YouTube or Vimeo as **unlisted**.
 Verify playback logged out. Then:
 
 - paste the URL into `docs/track2/submission_fields.md` (pitch video field)
@@ -76,12 +85,13 @@ Zenodo only hooks public repos, so do this after the flip:
 
 3. Add the DOI badge to `README.md` and a `doi:` field in `CITATION.cff`.
 
-## 6. Submit (insurance entry, Oct 20)
+## 6. Submissions (done before the flip)
 
-Follow `docs/track2/submission_fields.md` exactly - all five form values
-are paste-ready there.
+Insurance entry Oct 20, final Oct 23. Follow
+`docs/track2/submission_fields.md` exactly - all five form values are
+paste-ready there.
 
-## Oct 23 - final submission
+## Oct 23 - final submission (before this flip)
 
 ```sh
 python tools/check_discussions.py --since 2026-10-19   # rule drift check
