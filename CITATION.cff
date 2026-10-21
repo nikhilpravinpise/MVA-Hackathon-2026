@@ -7,6 +7,7 @@ authors:
   - family-names: Pise
     given-names: Nikhil Pravin
 type: software
+version: 1.0.0
 license: MIT
 repository-code: https://github.com/nikhilpravinpise/MVA-Hackathon-2026
 keywords:
@@ -24,4 +25,4 @@ abstract: >-
   mosaic variegated aneuploidy proband. All reports are generated from
   committed evidence artifacts; every citation is resolved live and
   retraction-checked.
-date-released: 2026-10-13
+date-released: 2026-10-21
