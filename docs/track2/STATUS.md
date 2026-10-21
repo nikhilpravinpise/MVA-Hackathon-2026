@@ -28,19 +28,17 @@ Build complete and merged to `main` (PR #4, lanes L1-L16); refreshed
 | Red team | L9 and L13 reviews closed through L14/L15/L16 (R1 approval-gate wording fixed in report, abstract and video script); `redteam.md`, `redteam2.md`, `rubric_self_assessment.md` |
 | Release | `track2-submission` GitHub release holds the upload `.md`, the PDF, `pitch.mp4` and `pitch.srt` (byte-identical to the repo upload copy) |
 | Pitch video | <https://youtu.be/YD2dIVnmMME> - unlisted, uploaded 2026-10-21; verified playing in an Incognito window |
+| Insurance submission | **Submission 1 accepted 2026-10-21** (`nikhilpise` / `@T0X1N`); repo, video and report echoed correctly. This is the judged entry unless replaced. |
 | Rules re-check (2026-10-21) | 5 organizer threads since Oct 12; no Track 2 rule change and the submission form is unchanged. The deletion-confirmation address is now `cnb@sagebase.org` |
 
 ## Next, in order (operator steps only)
 
-1. **Insurance submission (now, if the Oct 20 slot was not used).** The repo
-   stays private - the FAQ allows this while the hackathon runs. Paste the
-   five values from `submission_fields.md` and log the confirmation in
-   `docs/decisions.md`.
-2. **Oct 23:** run the pre-flight block in `submission_fields.md`, then the
-   final submission. Only the latest of 3 is reviewed.
-3. **Oct 24 (before 23:59 UTC):** flip the repo public, then Pages, Zenodo
+1. **Oct 23 (optional): re-submit only if the package changes.** Submission
+   1 is accepted and remains the judged entry while it is the latest. Run
+   the pre-flight block in `submission_fields.md` before any replacement.
+2. **Oct 24 (before 23:59 UTC):** flip the repo public, then Pages, Zenodo
    release, social preview - `docs/repo_launch.md`.
-4. **By Nov 23:** send the deletion email (now to `cnb@sagebase.org` plus the
+3. **By Nov 23:** send the deletion email (now to `cnb@sagebase.org` plus the
    attested mailbox) and wipe the data - `docs/deletion_runbook.md`.
 
 ## Open items worth knowing

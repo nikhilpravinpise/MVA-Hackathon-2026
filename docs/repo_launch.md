@@ -9,10 +9,10 @@ public flip on the close date. The flip is deliberately NOT done earlier:
 the FAQ allows a private repo while the hackathon runs, organizers asked
 another team (thread #20) to stay private pending IRB guidance on
 incidental findings, and `docs/track1_closeout.md` (A8) fixes the flip at
-close. The Track 2 insurance and final submissions go in with the repo
-private; it must be public before 23:59 UTC on Oct 24. Everything here is a
-one-shot command or click; nothing below touches code. Re-run the citation gate + suite first if more
-than a day has passed since the last green run.
+close. The Track 2 submission goes in with the repo private; it must be
+public before 23:59 UTC on Oct 24. Everything here is a one-shot command
+or click; nothing below touches code. Re-run the citation gate + suite
+first if more than a day has passed since the last green run.
 
 ```sh
 python -m pytest tests -q
@@ -21,7 +21,7 @@ python tools/verify_citations.py --offline --coverage-strict
 python tools/public_release_check.py   # re-scan history before flipping
 ```
 
-## 1. Flip visibility (Oct 24, after the final submission)
+## 1. Flip visibility (Oct 24, after the submission is locked)
 
 A7 is resolved (both non-causal loci were redacted on 2026-10-17). Re-check
 thread #20 and the rest of the Space (`python tools/check_discussions.py
@@ -85,17 +85,21 @@ Zenodo only hooks public repos, so do this after the flip:
 
 3. Add the DOI badge to `README.md` and a `doi:` field in `CITATION.cff`.
 
-## 6. Submissions (done before the flip)
+## 6. Submission (done before the flip)
 
-Insurance entry now (the Oct 20 slot slipped), final Oct 23. Follow
-`docs/track2/submission_fields.md` exactly - all five form values are
-paste-ready there.
+**Submission 1 accepted 2026-10-21** (`nikhilpise` / `@T0X1N`). Only the
+latest entry is reviewed, so this is the judged submission unless a later
+one replaces it. Follow `docs/track2/submission_fields.md`; all five form
+values are paste-ready there.
 
-## Oct 23 - final submission (before this flip)
+## Oct 23 - optional final check (before this flip)
+
+Do **not** re-submit an identical package. Use the spare slot only if a
+real change lands before close, and run the pre-flight block in
+`submission_fields.md` first:
 
 ```sh
 python tools/check_discussions.py --since 2026-10-21   # rule drift check
-# then the pre-flight block in submission_fields.md, then submit entry 2
 ```
 
 ## Later (post-deadline)

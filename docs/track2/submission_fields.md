@@ -61,9 +61,17 @@ per team.
 
 | When | What | Why |
 |---|---|---|
-| **Now (Oct 21/22)** | Full insurance submission (skip if the Oct 20 slot was used) | A Space outage on deadline day costs more than a quota slot |
-| **Oct 23** | Final submission - this is the judged one | Leaves a spare slot and a clear day before close |
+| **2026-10-21** | Insurance submission - **accepted** (submission 1) | A Space outage on deadline day costs more than a quota slot |
+| **Oct 23 (optional)** | Re-submit only if the package changes | Submission 1 is judged while it remains the latest; an identical re-submit adds risk without benefit |
 | Oct 24 23:59 UTC | Deadline | Do not plan to use it |
 
 After each upload, record the confirmation (submission number and
 timestamp) in `docs/decisions.md`.
+
+## Submission log
+
+| # | Date (UTC) | Status | Confirmation |
+|---|---|---|---|
+| 1 | 2026-10-21 | **Accepted - judged entry unless replaced** | "Track 2 submission received"; `nikhilpise (T0X1N)`; repo, video and report echoed correctly |
+| 2 | unused | Optional | Only for a real change before close |
+| 3 | unused | Spare | Deadline-day fix only |
