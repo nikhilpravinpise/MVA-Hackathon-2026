@@ -92,7 +92,7 @@ for completeness.
 | Attestation | Where honored |
 |-------------|---------------|
 | #5 delete all data after hackathon | `docs/deletion_runbook.md`, `data/RETENTION.md`, `results/RETENTION.md` (DELETE/KEEP doctrine) |
-| #6 email deletion confirmation | `docs/deletion_runbook.md` - NOTE: the attested mailbox `MVAHackathon2026@synapse.org` differs from the address in the runbook/rules (`RarediseaserealkidMVAhackathon2026@synapse.org`, which rejects unregistered senders per discussion #15). Send to BOTH mailboxes at deletion time; if either bounces, post the attempt in Discussions as documented. |
+| #6 email deletion confirmation | `docs/deletion_runbook.md` - the rules now name `cnb@sagebase.org` (updated 2026-10-13); copy the attested mailbox `MVAHackathon2026@synapse.org`. The older `RarediseaserealkidMVAhackathon2026@synapse.org` address rejects unregistered senders per discussion #15 and is a legacy copy only. If anything bounces, post the attempt in Discussions as documented. |
 | #7 no recontact | no patient/family/society contact made or planned; community artifact offered via the public Information Hub channel only |
 | #8 compliance + unauthorized-disclosure reporting | privacy scrub (decisions.md M3 rows, commit 20c8b3f); Sage Help Center link recorded here |
 | #9 no data release + safeguards | gated data stays on operator machine + Modal volume only; `.gitignore` containment (data/, results genotype-scale dumps); per-person access (single operator) |

@@ -28,7 +28,8 @@ citation is resolved live and retraction-checked, and the whole suite
 ## Start here (judges)
 
 - **Track 2 report** (the judged artifact): [`nikhilpise_track2_report.md`](nikhilpise_track2_report.md)
-- **PDF + pitch video + captions**: the [`track2-submission` release](https://github.com/nikhilpravinpise/MVA-Hackathon-2026/releases/tag/track2-submission)
+- **3-minute pitch video** (YouTube, unlisted): <https://youtu.be/YD2dIVnmMME>
+- **PDF + captions + video file**: the [`track2-submission` release](https://github.com/nikhilpravinpise/MVA-Hackathon-2026/releases/tag/track2-submission)
 - **Plain-language summary for families**: [`docs/track2/FAMILY_SUMMARY.md`](docs/track2/FAMILY_SUMMARY.md)
 - **How the portfolio was chosen**: [`docs/track2/candidates.md`](docs/track2/candidates.md) + [`docs/track2/engine.md`](docs/track2/engine.md)
 - **Scored against the official rubric**: [`docs/track2/rubric_self_assessment.md`](docs/track2/rubric_self_assessment.md) (two hostile red-team passes: [`redteam.md`](docs/track2/redteam.md), [`redteam2.md`](docs/track2/redteam2.md))

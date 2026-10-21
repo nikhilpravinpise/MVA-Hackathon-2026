@@ -157,9 +157,10 @@ Submit: report (PDF/MD) + GitHub URL + 3-min pitch video URL (YouTube/Vimeo) + o
 
 - 18+, HF account, per-person gated-data approval. No institution required.
 - Data deletion within 30 days of close, all environments + derived genotype-scale files. Confirm
-  by email to RarediseaserealkidMVAhackathon2026@synapse.org - NOTE: this mailbox rejects senders
-  without registered Synapse accounts (documented in discussion #15); if it bounces, post in
-  Discussions and organizers log your attempt.
+  by email to `cnb@sagebase.org` (address updated in the rules on 2026-10-13). Copy the attested
+  mailbox `MVAHackathon2026@synapse.org`; the older Synapse address rejects senders without
+  registered accounts (discussion #15). If anything bounces, post in Discussions and organizers
+  log your attempt.
 - KEEP (explicitly allowed to retain): your ranked variant list (the submission), HPO terms,
   gene/pathway rankings, mechanism analyses, drug candidates, code, report, leaderboard entry.
   DELETE: VCF/BAM/FASTQ copies, index files, genotype-scale variant tables, notebook state with

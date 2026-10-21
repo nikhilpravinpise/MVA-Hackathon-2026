@@ -42,3 +42,6 @@ see `docs/track2_report.md` for the sourced version of each claim.
 2. Open the link in a logged-out window to confirm it plays.
 3. Paste it into the Track 2 submit form (see
    `docs/track2/submission_fields.md`).
+
+Uploaded 2026-10-21 as unlisted: <https://youtu.be/YD2dIVnmMME>
+(verified playing in a logged-out Incognito window).

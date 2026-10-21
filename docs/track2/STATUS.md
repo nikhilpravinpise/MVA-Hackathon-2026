@@ -6,7 +6,7 @@ parent: Track 2
 # Track 2 - where we are
 
 Build complete and merged to `main` (PR #4, lanes L1-L16); refreshed
-2026-10-17. Submissions close **2026-10-24 23:59 UTC**; judging now runs to Dec 17 and winners are announced Dec 18
+2026-10-21. Submissions close **2026-10-24 23:59 UTC**; judging now runs to Dec 17 and winners are announced Dec 18
 (discussion #26, `docs/track2/rules_refresh.md`).
 
 ## Done
@@ -27,23 +27,21 @@ Build complete and merged to `main` (PR #4, lanes L1-L16); refreshed
 | Tests | 575 collected (572 pass, 3 skip: patient VCF, PDF, video); green in a fresh clone |
 | Red team | L9 and L13 reviews closed through L14/L15/L16 (R1 approval-gate wording fixed in report, abstract and video script); `redteam.md`, `redteam2.md`, `rubric_self_assessment.md` |
 | Release | `track2-submission` GitHub release holds the upload `.md`, the PDF, `pitch.mp4` and `pitch.srt` (byte-identical to the repo upload copy) |
+| Pitch video | <https://youtu.be/YD2dIVnmMME> - unlisted, uploaded 2026-10-21; verified playing in an Incognito window |
+| Rules re-check (2026-10-21) | 5 organizer threads since Oct 12; no Track 2 rule change and the submission form is unchanged. The deletion-confirmation address is now `cnb@sagebase.org` |
 
 ## Next, in order (operator steps only)
 
-1. **Video.** Upload `pitch.mp4` (release asset `track2-submission`) to
-   YouTube or Vimeo as unlisted; confirm it plays logged out; paste the URL
-   into `submission_fields.md` and the README Start-here section.
-2. **Decide A7** (`docs/track1_closeout.md`): accept or redact the two
-   non-causal patient loci named in tracked docs before the public flip.
-3. **Oct 19:** re-run `python tools/check_discussions.py --since 2026-10-12`
-   and the Space file diff (commands in `rules_refresh.md`).
-4. **Oct 20:** insurance submission on the Space (repo still private - the
-   FAQ allows this while the hackathon runs). Log the confirmation in
+1. **Insurance submission (now, if the Oct 20 slot was not used).** The repo
+   stays private - the FAQ allows this while the hackathon runs. Paste the
+   five values from `submission_fields.md` and log the confirmation in
    `docs/decisions.md`.
-5. **Oct 23:** pre-flight block in `submission_fields.md`, then the final
-   submission. Only the latest of 3 is reviewed.
-6. **Oct 24 (before 23:59 UTC):** flip the repo public, then Pages, Zenodo
+2. **Oct 23:** run the pre-flight block in `submission_fields.md`, then the
+   final submission. Only the latest of 3 is reviewed.
+3. **Oct 24 (before 23:59 UTC):** flip the repo public, then Pages, Zenodo
    release, social preview - `docs/repo_launch.md`.
+4. **By Nov 23:** send the deletion email (now to `cnb@sagebase.org` plus the
+   attested mailbox) and wipe the data - `docs/deletion_runbook.md`.
 
 ## Open items worth knowing
 

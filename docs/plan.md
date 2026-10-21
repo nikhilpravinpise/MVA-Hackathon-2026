@@ -392,8 +392,9 @@ incl. GenAI disclosure; video ≤ 3:00, uploaded, link verified; submitted as th
       (c) the answer-blind protocol packaged as a reusable template for future N-of-1 teams.
 - [ ] Post-Oct-24 runbook: repo public; delete all `data/` + derived genotype-scale files everywhere
       (local, cloud, caches, notebook state, prompt logs); email confirmation to
-      RarediseaserealkidMVAhackathon2026@synapse.org - if it bounces (unregistered-sender rejection
-      documented in discussion #15), post the attempt in Discussions.
+      `cnb@sagebase.org` (rules updated 2026-10-13) with the attested mailbox copied - if anything
+      bounces (unregistered-sender rejection documented in discussion #15), post the attempt in
+      Discussions.
 
 **GATE 8:** repo public-ready; deletion runbook executed and logged; confirmation email sent/logged.
 

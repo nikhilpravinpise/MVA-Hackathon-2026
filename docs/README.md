@@ -65,7 +65,7 @@ Repo-level docs (README, CONTRIBUTING, SECURITY, LICENSE) live at the root.
 | [attestation_hf_gated_access.md](attestation_hf_gated_access.md) | Verbatim archive of the gated-dataset access attestation |
 | [deletion_runbook.md](deletion_runbook.md) | Post-deadline patient-data deletion runbook (rules: within 30 days of close) |
 | [deletion_email_draft.md](deletion_email_draft.md) | Draft confirmation email for the deletion step |
-| [repo_launch.md](repo_launch.md) | Going-public checklist for Oct 20: visibility flip, Pages, Zenodo, video upload, submissions |
+| [repo_launch.md](repo_launch.md) | Going-public checklist for Oct 24: visibility flip, Pages, Zenodo, video upload, submissions |
 | [../data/RETENTION.md](../data/RETENTION.md), [../results/RETENTION.md](../results/RETENTION.md), [../env/RETENTION.md](../env/RETENTION.md) | Manifests for the gitignored data trees |
 
 ## Track 2 build record (lane artifacts)
