@@ -2,18 +2,24 @@
 title: Repo launch checklist
 nav_order: 17
 ---
-# Repo launch checklist - going public on 2026-10-24
+# Repo launch checklist - going public (executed 2026-10-21)
 
-The repo is furnished but private. These are the operator steps for the
-public flip on the close date. The flip is deliberately NOT done earlier:
+> **Done 2026-10-21:** the repo is public, Pages is live at
+> <https://nikhilpravinpise.github.io/MVA-Hackathon-2026/>, and the
+> homepage points there. The flip happened earlier than the planned Oct 24
+> close at the operator's direction, so the Track 1 answer and the
+> pre-redaction commit history were public before the leaderboard closed.
+> Step 3 (social preview) and step 5 (Zenodo DOI) remain.
+
+The repo was furnished private; these are the operator steps used for the
+public flip. The original plan was to flip on the close date, not earlier:
 the FAQ allows a private repo while the hackathon runs, organizers asked
 another team (thread #20) to stay private pending IRB guidance on
-incidental findings, and `docs/track1_closeout.md` (A8) fixes the flip at
-close. **Do not flip before the Track 1 leaderboard closes at 23:59 UTC on
-Oct 24:** the repo contains the Track 1 answer (the BUB1B variants and the
-submitted CSV), so publishing it early would leak the answer to teams still
-submitting. The Track 2 submission goes in with the repo private; it must
-be public before 23:59 UTC on Oct 24. Everything here is a one-shot command
+incidental findings, and `docs/track1_closeout.md` (A8) fixed the flip at
+close. The repo contains the Track 1 answer (the BUB1B variants and the
+submitted CSV), so the planned flip was after the leaderboard closed. The
+operator chose to flip on 2026-10-21 instead; that override and its risk
+are recorded in `docs/decisions.md`. Everything here is a one-shot command
 or click; nothing below touches code. Re-run the citation gate + suite
 first if more than a day has passed since the last green run.
 
@@ -24,7 +30,7 @@ python tools/verify_citations.py --offline --coverage-strict
 python tools/public_release_check.py   # re-scan history before flipping
 ```
 
-## 1. Flip visibility (Oct 24, after the submission is locked)
+## 1. Flip visibility (done 2026-10-21)
 
 A7 is resolved (both non-causal loci were redacted on 2026-10-17). Re-check
 thread #20 and the rest of the Space (`python tools/check_discussions.py
@@ -39,7 +45,7 @@ The public-release audit already documents the accepted history-only
 identifiers (`docs/public_release_audit.md`); this command publishes what
 that audit reviewed.
 
-## 2. Activate the docs site (Pages)
+## 2. Activate the docs site (Pages) - done 2026-10-21
 
 ```sh
 gh api repos/nikhilpravinpise/MVA-Hackathon-2026/pages \
