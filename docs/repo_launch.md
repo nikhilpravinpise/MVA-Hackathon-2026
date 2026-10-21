@@ -9,8 +9,11 @@ public flip on the close date. The flip is deliberately NOT done earlier:
 the FAQ allows a private repo while the hackathon runs, organizers asked
 another team (thread #20) to stay private pending IRB guidance on
 incidental findings, and `docs/track1_closeout.md` (A8) fixes the flip at
-close. The Track 2 submission goes in with the repo private; it must be
-public before 23:59 UTC on Oct 24. Everything here is a one-shot command
+close. **Do not flip before the Track 1 leaderboard closes at 23:59 UTC on
+Oct 24:** the repo contains the Track 1 answer (the BUB1B variants and the
+submitted CSV), so publishing it early would leak the answer to teams still
+submitting. The Track 2 submission goes in with the repo private; it must
+be public before 23:59 UTC on Oct 24. Everything here is a one-shot command
 or click; nothing below touches code. Re-run the citation gate + suite
 first if more than a day has passed since the last green run.
 
