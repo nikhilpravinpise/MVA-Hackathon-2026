@@ -1,6 +1,6 @@
 # Runtime deps for the Track-1 funnel (src/, tools/).
 # Install into a fresh venv: python -m pip install -r requirements.txt
-PyYAML>=6.0.1,<7.0          # config/pipeline.yaml loading (src/config.py)
+PyYAML>=6.0.3,<7.0          # config/pipeline.yaml loading (src/config.py)
 
 # Test suite
 pytest>=8.0,<10.0           # tests/ + gate battery
