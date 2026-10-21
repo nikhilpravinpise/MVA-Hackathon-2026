@@ -4,6 +4,7 @@
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](requirements.txt)
 [![release](https://img.shields.io/github/v/release/nikhilpravinpise/MVA-Hackathon-2026)](https://github.com/nikhilpravinpise/MVA-Hackathon-2026/releases)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23529208.svg)](https://doi.org/10.5281/zenodo.23529208)
 [![competition space](https://img.shields.io/badge/competition-MVA%20Hackathon%202026-blueviolet)](https://huggingface.co/spaces/SageBio/rare-disease-real-kid-mva-hackathon-2026)
 
 ![Rescue, Remove, Intercept - a testable approved-drug portfolio for BUB1B

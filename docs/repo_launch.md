@@ -79,20 +79,16 @@ It was checked in a logged-out Incognito window. The URL is in
 `docs/track2/submission_fields.md` and the `README.md` Start-here section.
 If the video is ever replaced, re-check it logged out and update both.
 
-## 5. Zenodo DOI (optional but planned)
+## 5. Zenodo DOI (done 2026-10-21)
 
-Zenodo only hooks public repos, so do this after the flip:
+The repo was linked in Zenodo and `v1.0.0` was released. Zenodo minted:
 
-1. zenodo.org > Account > GitHub - OAuth link, then toggle this repo on.
-2. Cut the versioned release (the webhook mints the DOI on release):
+- Version DOI: **10.5281/zenodo.23529208**
+- Concept DOI: **10.5281/zenodo.23529207**
 
-   ```sh
-   git tag -a v1.0.0 -m "Hackathon submission state"
-   git push origin v1.0.0
-   gh release create v1.0.0 --title "v1.0.0 - hackathon submission"
-   ```
-
-3. Add the DOI badge to `README.md` and a `doi:` field in `CITATION.cff`.
+The version DOI is in `CITATION.cff`; the badge is at the top of `README.md`.
+To mint a future version, create a new GitHub release with the repo still
+toggled on in Zenodo.
 
 ## 6. Submission (done before the flip)
 
