@@ -9,7 +9,7 @@ public flip on the close date. The flip is deliberately NOT done earlier:
 the FAQ allows a private repo while the hackathon runs, organizers asked
 another team (thread #20) to stay private pending IRB guidance on
 incidental findings, and `docs/track1_closeout.md` (A8) fixes the flip at
-close. Both Track 2 submissions (Oct 20, Oct 23) go in with the repo
+close. The Track 2 insurance and final submissions go in with the repo
 private; it must be public before 23:59 UTC on Oct 24. Everything here is a
 one-shot command or click; nothing below touches code. Re-run the citation gate + suite first if more
 than a day has passed since the last green run.
@@ -23,8 +23,9 @@ python tools/public_release_check.py   # re-scan history before flipping
 
 ## 1. Flip visibility (Oct 24, after the final submission)
 
-First resolve open decision A7 in `docs/track1_closeout.md` and re-check
-thread #20 (`python tools/check_discussions.py --since 2026-10-12`).
+A7 is resolved (both non-causal loci were redacted on 2026-10-17). Re-check
+thread #20 and the rest of the Space (`python tools/check_discussions.py
+--since 2026-10-12`) immediately before the flip.
 
 ```sh
 gh repo edit nikhilpravinpise/MVA-Hackathon-2026 \
@@ -59,16 +60,15 @@ and a figure in `report.html` all render.
 Repo > Settings > General > Social preview > upload
 `docs/assets/social.png` (1280x640, generated from the video title slide).
 
-## 4. Video upload
+## 4. Video upload (done 2026-10-21)
 
-Do this BEFORE the Oct 20 submission. Upload `pitch.mp4` (from the
-`track2-submission` release assets, or `.claude/worktrees/track2/video/out/`)
-to YouTube or Vimeo as **unlisted**.
-Verify playback logged out. Then:
+`pitch.mp4` is on YouTube as **unlisted**:
 
-- paste the URL into `docs/track2/submission_fields.md` (pitch video field)
-- update the video link in `README.md` (Start here section)
-- commit both edits
+<https://youtu.be/YD2dIVnmMME>
+
+It was checked in a logged-out Incognito window. The URL is in
+`docs/track2/submission_fields.md` and the `README.md` Start-here section.
+If the video is ever replaced, re-check it logged out and update both.
 
 ## 5. Zenodo DOI (optional but planned)
 
@@ -87,14 +87,14 @@ Zenodo only hooks public repos, so do this after the flip:
 
 ## 6. Submissions (done before the flip)
 
-Insurance entry Oct 20, final Oct 23. Follow
+Insurance entry now (the Oct 20 slot slipped), final Oct 23. Follow
 `docs/track2/submission_fields.md` exactly - all five form values are
 paste-ready there.
 
 ## Oct 23 - final submission (before this flip)
 
 ```sh
-python tools/check_discussions.py --since 2026-10-19   # rule drift check
+python tools/check_discussions.py --since 2026-10-21   # rule drift check
 # then the pre-flight block in submission_fields.md, then submit entry 2
 ```
 

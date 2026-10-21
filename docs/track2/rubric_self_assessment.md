@@ -238,4 +238,8 @@ R1 (the openFDA-label clause) is closed: the report (line 88), abstract
 and `video/scenes.yaml` now say the label is looked up per candidate and
 is not part of the gate. L14/L15/L16 closed the remaining listed fixes.
 The scores above were not re-run; this note only records that the
-condition for the Rigor margin (R1 unfixed) no longer holds.
+condition for the Rigor margin (R1 unfixed) no longer holds. Current
+counts at HEAD on 2026-10-21: 137/137 citations resolve, and the suite is
+575 collected (572 pass, 3 environment-only skips: patient VCF, PDF,
+video). The 136/136 and 531-test figures above are the 2026-10-13
+snapshot.

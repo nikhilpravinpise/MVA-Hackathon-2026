@@ -185,9 +185,10 @@ log row is the compliance record.
 
 ## 7. Confirmation email
 
-Send the deletion confirmation to BOTH mailboxes - the attestation text
-(docs/attestation_hf_gated_access.md #6) names
-`MVAHackathon2026@synapse.org`, while the rules/runbook text names
-`RarediseaserealkidMVAhackathon2026@synapse.org` (rejects senders
-without registered Synapse accounts - discussion #15). If either
-bounces, post the attempt in Discussions; organizers log it.
+The rules were updated on 2026-10-13: send the confirmation to
+**`cnb@sagebase.org`**. Also copy the attested mailbox
+`MVAHackathon2026@synapse.org` (docs/attestation_hf_gated_access.md #6).
+The older `RarediseaserealkidMVAhackathon2026@synapse.org` address is no
+longer named in the rules; it rejects senders without registered Synapse
+accounts (discussion #15), so include it only as a belt-and-braces copy.
+If anything bounces, post the attempt in Discussions; organizers log it.

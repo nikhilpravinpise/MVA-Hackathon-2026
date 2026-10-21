@@ -1,14 +1,16 @@
 # Deletion-confirmation email - staged draft
 
 Send **after** the post-deadline deletions execute (runbook
-`docs/deletion_runbook.md` sections 1-6), **to BOTH mailboxes** (the
-attested mailbox per `docs/attestation_hf_gated_access.md` item 6, and
-the rules-text mailbox which rejects unregistered senders per discussion
-#15). If either bounces, post the attempt in the hackathon Space's
-Discussions tab.
+`docs/deletion_runbook.md` sections 1-6). The current rules (updated
+2026-10-13) name `cnb@sagebase.org`; also copy the attested mailbox per
+`docs/attestation_hf_gated_access.md` item 6. The older Synapse address is
+a legacy belt-and-braces copy only - it rejects unregistered senders per
+discussion #15. If anything bounces, post the attempt in the hackathon
+Space's Discussions tab.
 
-- To: `MVAHackathon2026@synapse.org`
-- To: `RarediseaserealkidMVAhackathon2026@synapse.org`
+- To: `cnb@sagebase.org`
+- Cc: `MVAHackathon2026@synapse.org`
+- Cc: `RarediseaserealkidMVAhackathon2026@synapse.org` *(legacy)*
 - From: the Synapse-registered address used for the gated-data attestation
 - Subject: MVA Hackathon 2026 - data deletion confirmation (team: nikhilpise, HF: @T0X1N)
 

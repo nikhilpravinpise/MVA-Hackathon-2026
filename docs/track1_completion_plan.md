@@ -72,11 +72,10 @@ Threads #19 and #27 show a second leaderboard entry forces organizers to
 retract one. The model1 entry is final. `submissions/` stays as an archive.
 
 ### Step 5 - Deletion (you, by 2026-11-23)
-- Send the email from `docs/deletion_email_draft.md` to BOTH mailboxes
-  named in `docs/deletion_runbook.md` section on confirmation (the
-  attestation names `MVAHackathon2026@synapse.org`; the rules name
-  `RarediseaserealkidMVAhackathon2026@synapse.org`; the runbook explains
-  the discrepancy).
+- Send the email from `docs/deletion_email_draft.md` to `cnb@sagebase.org`
+  (the address in the rules, updated 2026-10-13), copying the attested
+  mailbox `MVAHackathon2026@synapse.org`. The older Synapse address is a
+  legacy copy only; `docs/deletion_runbook.md` explains the history.
 - Delete local patient-derived data per `data/RETENTION.md` and
   `results/RETENTION.md` (about 80 GB in `data/`, 11 GB in `results/`, 3.6 GB
   in `env/`). Do this only after the repo is public and you have no further

@@ -185,6 +185,30 @@ requirement, team submission rules, judging criteria, or deadline.
 ## 5. Next re-check
 
 Re-run `tools/check_discussions.py --since 2026-10-12` and re-diff the five
-files on **Oct 19** (before the v1 submission) and **Oct 23** (before final).
+files on **Oct 23** (before the final submission); the 2026-10-21 re-check
+in section 6 is the current one.
 Pinned threads (#10, #18, #26) carry organizer announcements; #26 is the
 current calendar authority.
+
+## 6. Re-check 2026-10-21
+
+`python tools/check_discussions.py --since 2026-10-12` now returns five
+threads (#28-#32). None changes Track 2 eligibility, the deadline, the
+judging criteria or the form:
+
+- **#28** (organizer, 2026-10-16): prizes. Track 2 is ranked 1st-3rd by the
+  expert panel; Track 1 perfect scores are recognised by consortium
+  authorship. Deadline unchanged.
+- **#29** (closed): how safety findings reach a care team; governed by the
+  study IRB, nothing for us to route.
+- **#30, #31**: Colab/gated data and alternative (non-GitHub) submission
+  routes for other teams. Not applicable.
+- **#32** (closed): a pitch may use a clearly labelled published example
+  instead of challenge-case findings. Our video uses the challenge case,
+  which remains allowed.
+
+Live Space diff, 2026-10-21: `tabs/submit_track2.py`, `config.py` and
+`tabs/faq.py` are unchanged; `app.py` adds a "final days" banner. The only
+rule-text change is in `tabs/rules.py` (2026-10-13): the data-deletion
+confirmation address is now **cnb@sagebase.org** instead of the Synapse
+address. The submission form is unaffected; the deletion docs are updated.
