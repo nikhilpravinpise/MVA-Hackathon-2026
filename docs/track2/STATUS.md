@@ -24,7 +24,7 @@ Build complete and merged to `main` (PR #4, lanes L1-L16); refreshed
 | Rules refresh, competitor landscape, methods-form map | `docs/track2/rules_refresh.md`, `landscape.md`, `form_map.md` |
 | Report generated from evidence only (~10,780 words) | `tools/make_track2_report.py`, `docs/track2_report_template.md`, `docs/track2_report.md` |
 | 3-minute pitch video (179.4 s rendered) | `video/` (`out/` is gitignored - rebuild with `video/build.py`) |
-| Tests | 575 collected (572 pass, 3 skip: patient VCF, PDF, video); green in a fresh clone |
+| Tests | 576 collected (573 pass, 3 skip: patient VCF, PDF, video); green in a fresh clone |
 | Red team | L9 and L13 reviews closed through L14/L15/L16 (R1 approval-gate wording fixed in report, abstract and video script); `redteam.md`, `redteam2.md`, `rubric_self_assessment.md` |
 | Release | `track2-submission` GitHub release holds the upload `.md`, the PDF, `pitch.mp4` and `pitch.srt` (byte-identical to the repo upload copy) |
 | Pitch video | <https://youtu.be/YD2dIVnmMME> - unlisted, uploaded 2026-10-21; verified playing in an Incognito window |

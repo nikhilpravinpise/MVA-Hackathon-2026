@@ -184,7 +184,7 @@ def canonical_pmc(digits: str) -> str:
 def canonical_doi(doi: str) -> str:
     # A DOI written inside a markdown code span keeps its closing backtick
     # in the match, which would make a real DOI look unresolvable.
-    doi = doi.strip().rstrip(".,;:)]}'\"`").lower()
+    doi = doi.strip().rstrip(".,;:)]}'\"`*").lower()
     for pre in ("doi:", "https://doi.org/", "http://doi.org/",
                 "https://dx.doi.org/", "http://dx.doi.org/", "doi.org/"):
         if doi.startswith(pre):

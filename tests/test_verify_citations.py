@@ -135,6 +135,15 @@ def test_doi_in_markdown_code_span_drops_backtick():
                       "DOI:10.6084/m9.figshare.11384241"}
 
 
+def test_doi_in_markdown_bold_drops_asterisks():
+    """**DOI** emphasis must not leak `*` into the canonical id."""
+    canons = {r.canon for r in vc.scan_text_for_citations(
+        "version **10.5281/zenodo.23529208** and concept "
+        "**10.5281/zenodo.23529207**", "STATUS.md")}
+    assert canons == {"DOI:10.5281/zenodo.23529208",
+                      "DOI:10.5281/zenodo.23529207"}
+
+
 # ---------------------------------------------------------------------------
 # resolution against fixtures
 # ---------------------------------------------------------------------------

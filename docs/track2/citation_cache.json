@@ -497,6 +497,28 @@
    "via": "crossref",
    "year": 2012
   },
+  "DOI:10.5281/zenodo.23529207": {
+   "found": true,
+   "title": "MVA Hackathon 2026: N-of-1 variant prioritization and drug repurposing for BUB1B mosaic variegated aneuploidy",
+   "year": 2026,
+   "pubtypes": [
+    "Software"
+   ],
+   "retracted": false,
+   "via": "datacite",
+   "resolved_at": "2026-10-21"
+  },
+  "DOI:10.5281/zenodo.23529208": {
+   "found": true,
+   "title": "MVA Hackathon 2026: N-of-1 variant prioritization and drug repurposing for BUB1B mosaic variegated aneuploidy",
+   "year": 2026,
+   "pubtypes": [
+    "Software"
+   ],
+   "retracted": false,
+   "via": "datacite",
+   "resolved_at": "2026-10-21"
+  },
   "DOI:10.6084/m9.figshare.11384241": {
    "found": true,
    "pubtypes": [

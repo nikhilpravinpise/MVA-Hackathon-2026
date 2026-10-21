@@ -12,11 +12,12 @@ sys.path.insert(0, str(REPO))
 
 from tools import make_track2_pdf as mp  # noqa: E402
 
-# markdown-it-py and playwright are optional extras: the .md is the primary
-# upload artifact and the PDF is a reading copy, so the base venv stays
-# dependency-light (same doctrine as matplotlib in tools/make_figures.py).
-pytest.importorskip("markdown_it", reason="PDF extra not installed "
-                    "(pip install markdown-it-py playwright)")
+# markdown-it-py is a test dependency (installed via requirements.txt);
+# playwright remains the optional extra for the Chrome print step, so the
+# base venv stays dependency-light (same doctrine as matplotlib in
+# tools/make_figures.py).
+pytest.importorskip("markdown_it", reason="markdown-it-py not installed "
+                    "(pip install markdown-it-py)")
 
 
 def test_repo_markers_become_code_not_links():
