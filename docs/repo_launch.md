@@ -9,7 +9,7 @@ nav_order: 17
 > homepage points there. The flip happened earlier than the planned Oct 24
 > close at the operator's direction, so the Track 1 answer and the
 > pre-redaction commit history were public before the leaderboard closed.
-> Step 3 (social preview) and step 5 (Zenodo DOI) remain.
+> Steps 3 (social preview) and 5 (Zenodo DOI) are also done.
 
 The repo was furnished private; these are the operator steps used for the
 public flip. The original plan was to flip on the close date, not earlier:
@@ -64,10 +64,11 @@ gh repo edit nikhilpravinpise/MVA-Hackathon-2026 \
 Spot-check: the landing page, `track2/engine.html`, `track2/STATUS.html`,
 and a figure in `report.html` all render.
 
-## 3. Social preview (web UI only - no API)
+## 3. Social preview (done 2026-10-21)
 
-Repo > Settings > General > Social preview > upload
-`docs/assets/social.png` (1280x640, generated from the video title slide).
+Uploaded `docs/assets/social.png` (1280x640, generated from the video title
+slide) under Settings > General > Social preview. The repo's `og:image` now
+serves the custom image.
 
 ## 4. Video upload (done 2026-10-21)
 
