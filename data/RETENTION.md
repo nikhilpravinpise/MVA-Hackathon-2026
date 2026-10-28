@@ -1,5 +1,10 @@
 # data/ retention manifest
 
+**2026-10-28 disposition:** The locally present DELETE entries below were
+removed. The listed deletion targets were checked again and no matches remained;
+`hpo_terms.json` and this manifest remain. This does not verify other devices or
+backups. See `docs/runtime_log.md` for the execution record.
+
 Pre-registered keep/delete rules for every artifact under `data/` (plan.md
 section 2.3 - deletion-day is part of the plan). `data/` is gitignored,
 single root for patient data, never committed, never in logs/prompts.

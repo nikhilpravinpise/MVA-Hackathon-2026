@@ -1,5 +1,10 @@
 # env/ retention manifest
 
+**2026-10-28 disposition:** The locally present patient-derived DELETE targets
+`env/exomiser/patient.chr.vcf`, `env/realign*`, and top-level BAM/BAI files
+were removed or absent; the specified patterns were rechecked with no matches.
+Public reference data was retained. See `docs/runtime_log.md`.
+
 Everything under `env/` is gitignored. Every artifact here is either:
 
 | Path | Class | Disposition |

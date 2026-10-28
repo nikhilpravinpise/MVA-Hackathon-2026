@@ -2,7 +2,13 @@
 title: Deletion runbook
 nav_order: 16
 ---
-# Post-deadline deletion runbook (documented, not executed)
+# Post-deadline deletion runbook
+
+**2026-10-28 local execution:** The listed workspace DELETE targets were removed
+and the named temporary files and four identified session summaries were absent.
+Both Modal profiles list no volumes. The user confirmed the confirmation email was sent;
+other devices and backups have not been audited. See `docs/runtime_log.md` and
+the retention manifests for the scope and verification record.
 
 Plan.md Phase 8 + hackathon rules item 10: all patient data must be deleted
 from participant systems **within 30 days of hackathon close** (deadline

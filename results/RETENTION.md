@@ -1,5 +1,10 @@
 # results/ retention manifest
 
+**2026-10-28 disposition:** The locally present DELETE paths listed below were
+removed, while listed KEEP artifacts and synthetic/public fixtures were retained.
+The specified workspace deletion patterns were rechecked with no matches. See
+`docs/runtime_log.md`; other devices and backups were not audited.
+
 Pre-registered keep/delete rules for every artifact under `results/`
 (plan.md section 2.3). Unlike `data/`, this tree holds pipeline OUTPUTS -
 most are KEEP-class findings, but anything derived at genotype scale from
