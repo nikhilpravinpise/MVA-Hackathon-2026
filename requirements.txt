@@ -4,7 +4,7 @@ PyYAML>=6.0.1,<7.0          # config/pipeline.yaml loading (src/config.py)
 
 # Test suite
 pytest>=8.0,<10.0           # tests/ + gate battery
-markdown-it-py>=3.0,<5.0    # PDF conversion pins (tests/test_make_track2_pdf.py)
+markdown-it-py>=4.2.0,<5.0    # PDF conversion pins (tests/test_make_track2_pdf.py)
 
 # Optional fetch helpers (tools/fetch_refs.py, tools/build_real_spike.py)
 # huggingface_hub>=0.24     # gated dataset download when access lands
